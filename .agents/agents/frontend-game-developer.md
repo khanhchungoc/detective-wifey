@@ -34,7 +34,7 @@ tools:
 
 ## 2. Operating Principles (Non-Negotiable Gates)
 
-- **Ponytail Lazy Senior Dev Gate (Full Intensity — Globally Active)**:
+- **Ponytail Lazy Senior Dev Gate (Full Intensity - Globally Active)**:
   Operate strictly under Ponytail Full Mode as globally defined in [AGENTS.md](../../AGENTS.md) and [`ponytail`](../skills/ponytail/SKILL.md). Conclude every response with 1–2 lines: what was skipped or not checked, and any risks the user must know.
 - **Pure Virtual OS & Wireframe-to-Production Distillation Gate (Zero Documentation Chrome & Zero Hardware Chassis Shell)**:
   - **Wireframe Scaffolding vs In-Game Runtime Separation**:
@@ -74,7 +74,7 @@ tools:
   - *Shell Fallback*: The micro-app viewport in `PhoneShell.tsx` maintains a safety net `useSwipeBack` listener returning to Home (`setActiveAppId('home')`) if any child view fails to handle it.
   - *Touch & Pointer Support*: Supports both touch devices (`onTouchStart` / `onTouchEnd`) and desktop mouse drag testing (`onPointerDown` / `onPointerUp` with `pointerType === 'mouse'`), with horizontal dominance checking ($|\Delta Y| \le \Delta X \times 0.8$) to prevent triggering during vertical list scrolling.
 - **Universal Long-Press Evidence Pinning Invariant (Story Data Only)**:
-  - The universal 380ms long-press gesture (`StoryEvidenceTarget`) triggering the blurred evidence overlay (`UniversalEvidenceModal`) MUST strictly apply **exclusively to narrative story data dynamically loaded from case JSON (`data.json`)** — e.g. chat messages, call logs, SMS texts, bank transaction memos, order receipts, social posts, and cloud documents.
+  - The universal 380ms long-press gesture (`StoryEvidenceTarget`) triggering the blurred evidence overlay (`UniversalEvidenceModal`) MUST strictly apply **exclusively to narrative story data dynamically loaded from case JSON (`data.json`)** - e.g. chat messages, call logs, SMS texts, bank transaction memos, order receipts, social posts, and cloud documents.
   - Long-press evidence overlays MUST NEVER be attached to static app structure, navigation headers, contact headers, filter pills, search inputs, bottom tabs, or functional utility buttons.
   - Permanent "Ghim" buttons are strictly forbidden in normal app screens and modals; evidence can ONLY be inspected and pinned via long-pressing legitimate story data elements.
 - **Strict Zero-Emoji Invariant & Canonical Icon Pack Gate**:
@@ -145,14 +145,19 @@ Execute following the 5 sequential development stages:
    - For wireframe inspection: Distill only the canonical in-game view hierarchy. Actively filter out and discard all documentation scaffolding (multi-view comparison tabs, simulated Safari/Chrome browser chrome, immersion prompts, and outer hardware casing frames).
 2. **Implementation Strategy: Direct Mode vs. Parallel Swarm Mode**:
    - *Scope Sizing & Triage*:
-     - **Mode A: Direct Execution (Standard / Single-Module Scope — Default)**:
+     - **Mode A: Direct Execution (Standard / Single-Module Scope - Default)**:
        - Apply when implementing a single virtual app, single screen, bug fix, or sequential feature change.
        - Implement directly in the active thread to eliminate subagent spawn latency and duplicate token consumption. Never spawn a single ($N = 1$) subagent.
        - Apply Ponytail's 6-rung ladder: first check if the feature needs to exist; reuse existing components in `src/shared/ui/` and `src/shell/`; prefer platform features over new dependencies; write the shortest readable diff.
        - For bug fixes: grep every caller of the touched function before editing; fix the root cause once in shared code.
        - For non-trivial logic: author one small test or assert check covering edge cases.
        - For virtual apps: Dispatch directly to [`develop-virtual-app`](../skills/develop-virtual-app/SKILL.md) or implement directly adhering to `app-design.md`.
-       - For level cases & content: Translate approved story design specs (`.agent-artifacts/requirements/stories/husband-<name>/level-0<N>.md`) into declarative `CaseConfig` datasets in `src/data/cases/<husbandId>/level_0<N>.json`.
+       - For level cases & content: Translate the approved story package under `.agent-artifacts/requirements/stories/husband-<name>/` into declarative `CaseConfig` datasets in `src/data/cases/<husbandId>/level_0<N>.json` (conforming to `src/shared/contracts/case-schema.ts` and `src/shared/contracts/knowledge-graph.ts`) using this exact mapping:
+         1. `husband-profile.md` -> `husbandId`, `husbandName`, `appsData['internet-messaging'].currentUser`, and reusable `avatarUrl` paths for the husband, wife, and recurring cast.
+         2. `level-0<N>-storyboard.md` (Section 1 & Section 4 `ALL_SUSPECTS -> ALIASES -> APPS -> CLUE_NODES` graph) + `level-0<N>.md` (Section 2 & Section 5.2) -> `suspectPool[]` and `knowledgeGraph` (`nodes[]`, `edges[]`, `requiredSmokingGunEdgeIds[]`).
+         3. `level-0<N>.md` (Sections 3, 4, 5.3) -> `allowedStrikes`, `groundTruth`, `lockChallenges[]`, `deviceMetadata`, `activeAppIds`, `grayedOutAppIds`, and `notifications[]`.
+         4. `level-0<N>-phone-data.md` -> `appsData.<appId>` records (recent D-Day $\pm$ 2-3 days; deep history filler is supplied automatically by `src/data/defaults/<appId>.json` via `mergeWithDefaultAppsData` in `src/features/case-runtime/caseRuntime.ts`).
+         5. Register new cases/husbands in `src/data/cases/index.ts` and `LEVEL_CATALOG` in `src/features/case-runtime/caseRuntime.ts`.
        - For core engines (Shell, Suspicion, Notebook, Canvas Roast Card): Implement modular TypeScript components under `src/shell/` and `src/features/`.
      - **Mode B: Parallel Swarm ($N \ge 2$, Big Multi-Module Tasks Only)**:
        - Apply ONLY when a task is large and divisible into $\ge 2$ independent, concurrent work packages (e.g., 2+ independent parody apps or separate decoupled modules).

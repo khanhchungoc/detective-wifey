@@ -1,6 +1,6 @@
 # Màn 1 - Dữ liệu sinh hoạt và lời thoại
 
-> Phần dữ liệu của [hồ sơ Màn 1](level-01.md), dùng cùng hồ sơ khi hiện thực hóa. Đây là nội dung thiết kế, chưa phải dữ liệu đã có trong trò chơi. Các ngày bên dưới thuộc đồng hồ hư cấu của màn chơi; D = 15/10, thời điểm kiểm tra máy 23:45, không gắn với ngày chạy ứng dụng.
+> Phần dữ liệu của [hồ sơ Màn 1](level-01.md) và [Storyboard](level-01-storyboard.md), dùng cùng hồ sơ khi hiện thực hóa. Các ngày bên dưới thuộc đồng hồ hư cấu của màn chơi; D = 15/10/2026, thời điểm kiểm tra máy 23:45, không gắn với ngày chạy ứng dụng.
 
 ## 1. Quy tắc phân bố
 
@@ -18,7 +18,7 @@ Mỗi dòng có tiền tố người nói và giờ; ngày chung ở tiêu đề
 
 Số liên hệ `0988886677`; danh tính thật chỉ dành cho tác giả: `suspect_huong`. Hương chính là kẻ đóng giả vỏ bọc thợ điện ("fake electrician"). Hoàng cố tình lưu tên danh bạ là "Anh Tuấn Thợ Điện" để đánh lừa vợ, và hai người thống nhất dùng cớ dịch vụ sửa điện làm bình phong nhắn tin. Tuy nhiên, nội dung hội thoại giữa người liên hệ (Hương đóng vai thợ điện xưng "em") và Hoàng (khách hàng xưng "anh") lại tràn ngập những ẩn ý vụng trộm, mập mờ và dấu hiệu ngoại tình phản bội (bảo hành tận nơi vì anh thấy người nóng ran, lắp đèn ngủ ấm áp đòi khao cơm niêu, hẹn chỗ cũ tầng 2 kín đáo mừng tròn 1 tháng ngày nhận sửa điện lần đầu, ăn xong về bảo dưỡng đường dây tiếp, nửa đêm nhắn treo áo khoác của khách hàng lên tủ).
 
-- 13/10 10:10 - Hoàng: “Anh Tuấn ơi, tối mai qua kiểm tra lại cái đường dây điện giúp a đc ko?”
+- 13/10 10:10 - Hoàng: “Tuấn ơi, tối mai qua kiểm tra lại cái đường dây điện giúp a đc ko?”
 - 13/10 10:14 - Người liên hệ: “Mai e kín lịch rùi a. Để tối thứ Năm (15/10) em ghé kiểm tra toàn bộ nhé.”
 - 13/10 10:18 - Người liên hệ: “Kiểm tra xong nhớ khao thợ điện bữa cơm niêu như a hứa đấy.”
 - 14/10 12:45 - Người liên hệ: “E gửi lại a 160k tiền thừa hôm trc a đưa mua cuộn băng dính vs cầu chì nhé.”
@@ -146,7 +146,7 @@ Số tiền có dấu là dòng tiền của Hoàng. Đây là các giao dịch 
 | `order_polo` | 14/10 / chưa nhận | Áo polo nam, xanh, L | 0đ, hoàn 89.000đ ngày 14/10 | Nguyễn Huy Hoàng, nhà / Đã hủy |
 | `order_bag` | 14/10 / chưa nhận | Túi rác, cỡ vừa | 39.000đ | Nguyễn Huy Hoàng, nhà / Đang vận chuyển |
 
-Quy ước giao nhận thống nhất cho cả đơn nòng cốt và lịch sử (địa chỉ hư cấu phục vụ cốt truyện):
+Quy ước giao nhận thống nhất cho cả đơn nòng cốt và dữ liệu chi tiết (địa chỉ hư cấu phục vụ cốt truyện):
 
 | Người nhận | Định danh | Số điện thoại | Địa chỉ giao đầy đủ |
 |---|---|---|---|
@@ -162,7 +162,7 @@ Tên gọi ngắn “Hoàng” trong hội thoại không thay tên đầy đủ
 - `seller_polo`, 14/10 18:20 - Shop: “Màu xanh hết L, anh đổi màu không?”; 18:25 - Hoàng: “Thôi hủy giúp mình, mình cần đúng màu.”; 18:30 - Shop: “Dạ shop xác nhận hoàn 89.000đ.”
 - `seller_coffee`, 10/10 08:10 - Hoàng: “Shop để nguyên hạt giúp mình nhé.”; 08:15 - Shop: “Dạ bên em đóng túi 500g nguyên hạt, có van một chiều.”; 08:18 - Hoàng: “Đúng loại mình cần, cảm ơn shop.”
 
-Chi tiết giao `order_01` hiển thị người nhận hàng “Nguyễn Thị Thu Hương”, số liên hệ `0988886677`. Cùng số đầy đủ với danh bạ thợ điện; tên pháp lý chỉ hiện trong chi tiết giao nhận, không đổi tên người gửi chat hoặc thêm nhãn Marketing trên đơn. `CLUE-POSH-05` gắn đơn và đoạn thiệp như một nhóm; chỉ đọc đơn có thể nhận ra khả nghi, cần mở chat người bán để hiểu mốc ngày. Không thêm trường dữ liệu mới nếu chưa đối chiếu hợp đồng runtime.
+Chi tiết giao `order_01` hiển thị người nhận hàng “Nguyễn Thị Thu Hương”, số liên hệ `0988886677`. Cùng số đầy đủ với danh bạ thợ điện; tên pháp lý chỉ hiện trong chi tiết giao nhận, không đổi tên người gửi chat hoặc thêm nhãn Marketing trên đơn. `CLUE-POSH-05` gắn đơn và đoạn thiệp như một nhóm; chỉ đọc đơn có thể nhận ra khả nghi, cần mở chat người bán để hiểu mốc ngày.
 
 Tìm kiếm gần đây: “bàn phím không dây”, “cà phê hạt 500g”, “túi rác vừa”, “váy lụa be”, “đèn học”. Thông báo: đơn túi rác đang giao; đơn polo đã hoàn tiền; nhắc đánh giá bàn phím. Không đánh dấu riêng đơn manh mối.
 
@@ -185,9 +185,9 @@ Tìm kiếm gần đây: “bàn phím không dây”, “cà phê hạt 500g”
 | `call_building` | D 21:05 | Ban Quản Lý | Đến | 51 |
 | `call_tuan_late` | D 23:30 | Anh Tuấn Thợ Điện | Đi | 96 |
 
-13 liên hệ: 12 tên riêng trong bảng và Bách Dev. “Anh Tuấn Thợ Điện” hiển thị `0988886677`, không kèm ảnh Hương, tên thật, ghi chú phòng Marketing hoặc nhãn quan hệ. Liên hệ khác dùng số hư cấu riêng khi triển khai, không trùng số này. Không cần tạo số để giải câu đố khác.
+13 liên hệ: 12 tên riêng trong bảng và Bách Dev. “Anh Tuấn Thợ Điện” hiển thị `0988886677`, không kèm ảnh Hương, tên thật, ghi chú phòng Marketing hoặc nhãn quan hệ. Liên hệ khác dùng số hư cấu riêng khi triển khai, không trùng số này.
 
-Chỉ `call_tuan_late` mang `CLUE-PHONE-01`; cuộc 19:22 là ngữ cảnh. Cuộc gọi đêm không chứng minh ngoại tình. Căn cứ xác định người liên hệ là sự trùng khớp số đầy đủ ở đơn hàng, không phải trùng ba số cuối của tài khoản ngân hàng. Không gọi ra hoặc nhắn đi trong chế độ điều tra.
+Chỉ `call_tuan_late` mang `CLUE-PHONE-01`; cuộc 19:22 là ngữ cảnh. Cuộc gọi đêm không chứng minh ngoại tình. Căn cứ xác định người liên hệ là sự trùng khớp số đầy đủ ở đơn hàng, không phải trùng ba số cuối của tài khoản ngân hàng.
 
 ## 6. `messages` - 6 luồng nòng cốt, hoàn toàn sinh hoạt
 
@@ -210,11 +210,11 @@ Mỗi mục dưới là một bản ghi có nội dung, không phải chỉ tên
 
 | ID | Ngày giờ | Nội dung | Giá |
 |---|---|---|---:|
-| `ride_work` | 10/10 08:00 | Nhà → Technosoft, xe máy, hoàn thành | 38.000đ |
-| `ride_home` | 10/10 18:10 | Technosoft → Nhà, xe máy, hoàn thành | 41.000đ |
+| `ride_work` | 10/10 08:00 | Nhà -> Technosoft, xe máy, hoàn thành | 38.000đ |
+| `ride_home` | 10/10 18:10 | Technosoft -> Nhà, xe máy, hoàn thành | 41.000đ |
 | `food_lunch` | 11/10 11:45 | Cơm gà văn phòng, một phần, ít cay, giao Technosoft | 45.000đ |
-| `ride_market` | 12/10 16:30 | Nhà → Siêu thị, xe máy, hoàn thành | 24.000đ |
-| `ride_cancel` | 13/10 07:50 | Nhà → Technosoft, hủy trước khi có tài xế, không thu phí | 0đ |
+| `ride_market` | 12/10 16:30 | Nhà -> Siêu thị, xe máy, hoàn thành | 24.000đ |
+| `ride_cancel` | 13/10 07:50 | Nhà -> Technosoft, hủy trước khi có tài xế, không thu phí | 0đ |
 | `food_coffee` | 14/10 08:20 | Cà phê đen ít đá, giao Technosoft | 29.000đ |
 
 Không có chuyến xe ngày D định vị bữa tối. Các hoạt động thanh toán bằng số dư ví của ứng dụng; không tự thêm khoản trừ trực tiếp trùng vào bảng ngân hàng.
@@ -225,7 +225,7 @@ Lịch sử: 11/10 09:10 “React cập nhật trạng thái”; 11/10 09:25 “
 
 ### `photos` - 10 ảnh
 
-10/10: bàn phím mới, hộp bàn phím; 11/10: mâm cơm nhà, chậu húng quế ban công; 12/10: hai túi đồ siêu thị, ảnh gia đình ở quê; 13/10: ghi chú bảng họp, cáp sạc bị gãy; 14/10: bưởi mẹ gửi, giày đá bóng đang phơi. Mô tả ảnh đúng nội dung và ngày; không thêm phản chiếu, hóa đơn, địa chỉ hoặc ảnh đôi liên quan vụ án. Không có album khóa. Ảnh mới là yêu cầu nội dung cho triển khai, chưa có tài sản hình ảnh được tạo ở bước thiết kế này.
+10/10: bàn phím mới, hộp bàn phím; 11/10: mâm cơm nhà, chậu húng quế ban công; 12/10: hai túi đồ siêu thị, ảnh gia đình ở quê; 13/10: ghi chú bảng họp, cáp sạc bị gãy; 14/10: bưởi mẹ gửi, giày đá bóng đang phơi. Mô tả ảnh đúng nội dung và ngày; không thêm phản chiếu, hóa đơn, địa chỉ hoặc ảnh đôi liên quan vụ án. Không có album khóa.
 
 ### `personal-notes` - 6 ghi chú
 
@@ -277,19 +277,19 @@ Mỗi thư có người gửi theo vai trò và đoạn thân thư như trên, k
 
 ## 9. Mạch sự kiện liên tục - chỉ dành cho tác giả
 
-Đọc cùng [mục 6.3–6.4 của hồ sơ](level-01.md#63-dòng-thời-gian-câu-chuyện-chỉ-dành-cho-tác-giả). Không hiển thị bảng kết nối hoàn chỉnh này trên điện thoại.
+Đọc cùng [level-01-storyboard.md](level-01-storyboard.md) và [level-01.md](level-01.md). Không hiển thị bảng kết nối hoàn chỉnh này trên điện thoại.
 
-- **Chuẩn bị**: Hoàng đặt váy ngày 12/10, nhờ ghi hai mốc 15/09–15/10. Cuộc trao đổi sửa file ngày 13/10 giữ quan hệ công việc có thật; không phải mọi tin với Hương đều là tán tỉnh.
-- **Lấy đồ**: Hai kiện đến sảnh D 11:35; Mai báo và giữ hộ. Tới 15:05 Hoàng đã lấy đủ. Tin 15:12 cho người liên hệ ngụy trang biết anh sẽ mang đồ tối nay, nhưng không gọi tên món đồ.
-- **Hẹn gặp**: Người liên hệ đặt bàn 19h30 như tháng trước. Lúc 18:55 Hoàng nói với vợ đang họp; 19:22 gọi 26 giây, 19:24 người kia báo đã tới, 19:25 Hoàng nói hộp ở ghế cạnh áo. Đây là cùng một cuộc gặp, không phải ba cuộc hẹn rời rạc.
+- **Chuẩn bị**: Hoàng đặt váy ngày 12/10, nhờ ghi hai mốc 15/09 - 15/10. Cuộc trao đổi sửa file ngày 13/10 giữ quan hệ công việc có thật; không phải mọi tin với Hương đều là tán tỉnh.
+- **Lấy đồ**: Hai kiện đến sảnh D 11:35; Mai báo và giữ hộ. Tới 15:05 Hoàng đã lấy đủ. Tin 15:20 cho người liên hệ ngụy trang biết anh sẽ mang đồ tối nay, nhưng không gọi tên món đồ.
+- **Hẹn gặp**: Người liên hệ đặt bàn 19h30 như tháng trước. Lúc 18:55 Hoàng nói với vợ đang họp; 19:22 gọi 26 giây, 19:20 người kia báo đã tới quán. Đây là cùng một cuộc gặp, không phải các cuộc hẹn rời rạc.
 - **Che giấu**: 20:46 Hoàng vẫn báo ở phòng họp; 20:48 có thanh toán tại Cơm Niêu Phố Cổ. Chỉ biên lai mới nêu quán; chat không lặp nguyên tên quán để người chơi tìm bằng từ khóa.
-- **Dư âm**: Cuộc gọi 23:30 có cùng số liên hệ, nhưng nội dung không được biết. Tin 23:44 nói chiếc áo đang được người kia giữ, khép lại chi tiết chiếc ghế lúc 19:25. Sự thật tác giả: Hoàng quên áo khi rời bữa tối, Hương cầm về; người chơi chỉ được suy rằng hai người đã trao đồ/ở cùng dịp, không được suy họ về chung nhà.
+- **Dư âm**: Cuộc gọi 23:30 có cùng số liên hệ, nhưng nội dung không được biết. Tin 23:44 nói chiếc áo đang được người kia giữ, khép lại việc để quên đồ. Sự thật tác giả: Hoàng quên áo khi rời bữa tối, Hương cầm về; người chơi chỉ được suy rằng hai người đã trao đồ/ở cùng dịp, không được suy họ về chung nhà.
 
 Khoản hoàn tiền trưa D 12:40 là một nhánh nhận diện có thật trong sinh hoạt đồng nghiệp, không phải tiền trả váy hoặc tiền bữa tối. Không ép mọi giao dịch thành mắt xích tình cảm.
 
-## 10. Lịch sử mở rộng và danh bạ thống nhất
+## 10. Dữ liệu nòng cốt và danh bạ thống nhất
 
-[Lịch sử sinh hoạt mở rộng](level-01-history.md) bổ sung nội dung chi tiết và là hợp đồng số đếm hiện hành, thay các tổng số ban đầu trong mục 2–8. Giữ nguyên dữ liệu nòng cốt và bốn Clue ID; các bản ghi bổ sung là sinh hoạt, không mở thêm đường kết tội.
+Toàn bộ dữ liệu mở rộng chi tiết của Màn 1 đã được biên soạn và đồng bộ trực tiếp vào file cấu hình runtime `src/data/cases/hoang/level_01.json`. Từ Màn 2 trở đi tuân thủ Chuẩn gói 3 file (`husband-profile.md` dùng chung, kèm `level-XX-storyboard.md`, `level-XX.md`, `level-XX-phone-data.md`), tuyệt đối không tạo thêm file `level-XX-history.md` (dữ liệu nền do phía frontend nạp từ shared mock fixtures).
 
 - Ảnh Zola nằm trong luồng Mẹ Ở Quê và Tuấn Đụt, có chú thích, văn bản thay thế và tài sản đi kèm được đóng gói trong ứng dụng. Nhấn giữ vẫn áp dụng cho nội dung truyện; không tải ảnh từ máy chủ bên ngoài.
 - 16 liên hệ chuẩn nằm trong Phone, gồm 13 người/liên hệ ban đầu và ba đầu mối dịch vụ. Cả Phone và SMS đọc cùng nguồn; từng luồng SMS liên kết bằng ID và số đầy đủ. Tên giống nhau không đủ để nối khi số/ID khác.

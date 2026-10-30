@@ -154,8 +154,6 @@ def cmd_validate(args):
     inv_clues = extract_inventory_clues(inv_text)
     matrix_clues = extract_matrix_clues(matrix_text)
 
-    all_catalog_ids = set(inv_clues.keys()) | set(matrix_clues.keys())
-
     test_ids = []
     if args.ids:
         test_ids = [i.strip() for i in args.ids.split(",") if i.strip()]
@@ -183,7 +181,7 @@ def cmd_validate(args):
         if in_inv and in_matrix:
             valid.append(cid)
 
-    print(f"\n[Validation Results]")
+    print("\n[Validation Results]")
     print(f"Total checked: {len(test_ids)}")
     print(f"Valid in both catalog files: {len(valid)}")
     if missing_inv:
@@ -213,20 +211,15 @@ def cmd_add(args):
         print(f"[Warning] Clue {clue_id} already exists in inventory. Skipping append.")
         return
 
-    # Determine section in inventory
     section_title = APP_SECTION_MAP.get(app)
     if not section_title:
-        # Generic match or append at end
         target_marker = "---"
     else:
         target_marker = f"### {section_title}"
 
-    # Prepare inventory row
-    # | `CLUE-ID` | **Title:** Description | Sub-Type | Intended Truth / Twist | Difficulty |
     inv_row = f"| `{clue_id}` | **{args.title}:** {args.desc} | {args.type} | {args.truth} | {args.difficulty} |"
 
     if target_marker in inv_text:
-        # Find table under section
         sec_idx = inv_text.find(target_marker)
         table_end = inv_text.find("\n\n---", sec_idx)
         if table_end == -1:
@@ -234,30 +227,25 @@ def cmd_add(args):
         if table_end == -1:
             table_end = len(inv_text)
         
-        # Insert before section boundary
         new_inv_text = inv_text[:table_end].rstrip() + "\n" + inv_row + "\n" + inv_text[table_end:]
     else:
-        # Append at end
         new_inv_text = inv_text.rstrip() + f"\n\n### {app.capitalize()}\n\n| Clue ID | Clue Description | Sub-Type | Intended Truth / Twist | Difficulty |\n|---|---|---|---|---|\n{inv_row}\n"
 
     write_text(INVENTORY_FILE, new_inv_text)
     print(f"[Success] Added {clue_id} to {INVENTORY_FILE.name}")
 
-    # Prepare matrix row
-    # | `CLUE-ID` | [App](Link) | Component • Feature | Sub-Type | Intended Truth / Twist | Target Level | Forensic AC |
     app_display = args.app_display or app.replace("-", " ").title()
     if app in ("photos", "comms"):
         default_link = f"../../../project-knowledge-base/solution-context/apps/phone-os/{app}/features.md"
     else:
         default_link = f"../../../project-knowledge-base/solution-context/apps/{app}/features.md"
     app_link = args.app_link or default_link
-    component = args.component or f"{app_display}View • Interactive Clue Element"
+    component = args.component or f"{app_display}View - Interactive Clue Element"
     level = args.level or "Level 1, 2"
     ac = args.ac or args.desc
 
     matrix_row = f"| `{clue_id}` | [{app_display}]({app_link}) | {component} | {args.type} | {args.truth} | {level} | {ac} |"
 
-    # Append to master table before end of section 1
     mat_marker = "## 2."
     if mat_marker in matrix_text:
         mat_idx = matrix_text.find(mat_marker)
@@ -270,7 +258,7 @@ def cmd_add(args):
 
 
 def cmd_verify_spec(args):
-    """Verify completeness and rules of a story design spec."""
+    """Verify completeness and rules of a story design spec and its companion files."""
     spec_path = Path(args.spec_file)
     if not spec_path.exists():
         print(f"Error: Spec file not found: {spec_path}")
@@ -291,6 +279,44 @@ def cmd_verify_spec(args):
     parent_dir = spec_path.parent.name
     is_husband_dir = parent_dir.startswith("husband-")
     print(f" - Folder convention: {'PASS (husband-<name>)' if is_husband_dir else f'FAIL (folder \"{parent_dir}\" must follow \"husband-<name>\")'}")
+
+    # 1c. Check companion files (husband-profile.md, level-XX-storyboard.md, level-XX-phone-data.md)
+    stem = spec_path.stem  # e.g. level-01
+    profile_path = spec_path.parent / "husband-profile.md"
+    storyboard_path = spec_path.parent / f"{stem}-storyboard.md"
+    phone_data_path = spec_path.parent / f"{stem}-phone-data.md"
+
+    has_profile = profile_path.exists()
+    print(f" - Husband Profile SSOT (husband-profile.md): {'PASS' if has_profile else 'WARN (missing husband-profile.md in husband folder)'}")
+
+    storyboard_ok = False
+    if storyboard_path.exists():
+        sb_content = read_text(storyboard_path)
+        mermaid_blocks = re.findall(r"```mermaid[\s\S]*?```", sb_content)
+        required_containers = ["subgraph ALL_SUSPECTS", "subgraph ALIASES", "subgraph APPS", "subgraph CLUE_NODES"]
+        has_all_containers = all(c in sb_content for c in required_containers)
+        storyboard_ok = len(mermaid_blocks) >= 2 and has_all_containers
+        print(
+            f" - Storyboard & Diagrams ({storyboard_path.name}): "
+            f"{'PASS (Found ' + str(len(mermaid_blocks)) + ' Mermaid diagrams with ALL_SUSPECTS > ALIASES > APPS > CLUE_NODES)' if storyboard_ok else 'FAIL (Requires >=2 Mermaid diagrams and 4 containers: ALL_SUSPECTS, ALIASES, APPS, CLUE_NODES)'}"
+        )
+    else:
+        print(f" - Storyboard & Diagrams ({storyboard_path.name}): WARN (missing {storyboard_path.name})")
+
+    pronoun_warnings = []
+    if phone_data_path.exists():
+        pd_content = read_text(phone_data_path)
+        # Detect self-contradictory Vietnamese address vs self-pronoun in the same utterance
+        contradiction_pattern = re.compile(
+            r"(?:Anh|Chị)\s+[A-ZÀ-Ỹ][\wÀ-ỹ]*\s+ơi[^\n”\"]*\b(?:giúp\s+a|giúp\s+anh|cho\s+a|cho\s+anh)\b",
+            re.IGNORECASE,
+        )
+        for m in contradiction_pattern.finditer(pd_content):
+            pronoun_warnings.append(m.group(0))
+        if pronoun_warnings:
+            print(f" - Vietnamese Pronoun Check ({phone_data_path.name}): WARN (Self-contradictory address/pronoun: {pronoun_warnings[0]!r})")
+        else:
+            print(f" - Vietnamese Pronoun Check ({phone_data_path.name}): PASS")
 
     # 2. Check essential numbered sections (supports both Vietnamese and English)
     required_prefixes = ["## 1.", "## 2.", "## 3.", "## 4.", "## 5.", "## 6.", "## 7."]
@@ -327,10 +353,11 @@ def cmd_verify_spec(args):
     else:
         print(" - Level number: FAIL (missing 'level: <1|2|3>' in frontmatter)")
 
-    # 4. Check clue references against catalog
+    # 4. Check clue references against catalog (from both level-XX.md and level-XX-storyboard.md if present)
     inv_text = read_text(INVENTORY_FILE)
     inv_clues = extract_inventory_clues(inv_text)
-    spec_clues = sorted(list(set(re.findall(r"`(CLUE-[A-Z]+-\d+)`", content))))
+    combined_spec_text = content + ("\n" + read_text(storyboard_path) if storyboard_path.exists() else "")
+    spec_clues = sorted(list(set(re.findall(r"`(CLUE-[A-Z]+-\d+)`", combined_spec_text))))
     missing_clues = [c for c in spec_clues if c not in inv_clues]
 
     if missing_clues:
@@ -338,7 +365,7 @@ def cmd_verify_spec(args):
     else:
         print(f" - Clue catalog integrity: PASS ({len(spec_clues)} clues registered in catalog)")
 
-    if missing_sec or missing_clues or spoilers_failed or not is_husband_dir:
+    if missing_sec or missing_clues or spoilers_failed or not is_husband_dir or (storyboard_path.exists() and not storyboard_ok):
         sys.exit(1)
     else:
         print("\nStory spec passed all validation checks!")
