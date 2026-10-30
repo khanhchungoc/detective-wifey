@@ -143,6 +143,6 @@ As a **Player (Wife)**, I want to browse my husband's photo library, inspect EXI
 - [Photos Features Specification (SSOT)](../../../project-knowledge-base/solution-context/apps/phone-os/photos/features.md)
 - [Photos App Design & UI/UX Specification](../../../project-knowledge-base/solution-context/apps/phone-os/photos/app-design.md)
 - [US-011 Zero-Spoiler Universal Long-Press Clue Pinning](../../epic-02-investigation-suspicion-mechanics/us-011-zero-spoiler-universal-long-press-clue-suspect-pinning.md)
-- [Clue Traceability Matrix](../../stories/clues/clue-traceability-matrix.md)
+- [Clue Ideas Inventory](../../stories/clues/clue-ideas-inventory.md)
 - [Canonical ASCII Wireframe](./wireframes/wireframe-photos-investigation.md)
 

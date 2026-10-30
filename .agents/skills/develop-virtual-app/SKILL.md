@@ -40,7 +40,7 @@ Query these files on demand using progressive disclosure:
 
 - **Target App ID**: One of `zola`, `vietpay`, `poshee`, `grap`, `netsurf`, `photos`, `comms`, `husband_notes`.
 - **Design & Component SSOT**: Target app's canonical `app-design.md` and shared primitives under `src/shared/ui/`, `src/shell/`. Always reuse existing assets first.
-- **Clue Mapping**: Target clue IDs verified against [clue-traceability-matrix.md](../../../.agent-artifacts/requirements/stories/clues/clue-traceability-matrix.md) or `caseData.appsData`.
+- **Clue Mapping**: Target clue IDs verified against level design specs (`husband-<name>/level-XX.md`) or `caseData.appsData`.
 
 ## Procedure
 

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
 sync_clues.py - Clue Catalog Management & Story Spec Verification Tool
-Governs bi-directional synchronization and validation of clues between:
+Governs ideation catalog inspection and story spec verification:
   - clue-ideas-inventory.md
-  - clue-traceability-matrix.md
   - story design specs (.agent-artifacts/requirements/stories/husband-<name>/level-XX.md)
 """
 
@@ -26,7 +25,6 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[3]
 CLUES_DIR = REPO_ROOT / ".agent-artifacts" / "requirements" / "stories" / "clues"
 INVENTORY_FILE = CLUES_DIR / "clue-ideas-inventory.md"
-MATRIX_FILE = CLUES_DIR / "clue-traceability-matrix.md"
 
 APP_PREFIX_MAP = {
     # Generic app names (Canonical SSOT)
@@ -103,28 +101,6 @@ def extract_inventory_clues(content: str) -> dict:
     return clues
 
 
-def extract_matrix_clues(content: str) -> dict:
-    """Extract clue IDs and metadata from clue-traceability-matrix.md"""
-    clues = {}
-    pattern = re.compile(
-        r"\|\s*`(CLUE-[A-Z]+-\d+)`\s*\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|"
-    )
-    for match in pattern.finditer(content):
-        clue_id, app, link, comp, sub_type, truth, level, ac = match.groups()
-        clues[clue_id] = {
-            "id": clue_id,
-            "app": app.strip(),
-            "app_link": link.strip(),
-            "component": comp.strip(),
-            "sub_type": sub_type.strip(),
-            "truth": truth.strip(),
-            "level": level.strip(),
-            "ac": ac.strip(),
-            "source": "matrix",
-        }
-    return clues
-
-
 def cmd_list(args):
     """List clues from catalog."""
     inv_text = read_text(INVENTORY_FILE)
@@ -148,11 +124,8 @@ def cmd_list(args):
 
 
 def cmd_validate(args):
-    """Validate clue IDs or a story design spec file."""
-    inv_text = read_text(INVENTORY_FILE)
-    matrix_text = read_text(MATRIX_FILE)
-    inv_clues = extract_inventory_clues(inv_text)
-    matrix_clues = extract_matrix_clues(matrix_text)
+    """Validate clue IDs or format in a story design spec file."""
+    inv_clues = extract_inventory_clues(read_text(INVENTORY_FILE)) if INVENTORY_FILE.exists() else {}
 
     test_ids = []
     if args.ids:
@@ -167,32 +140,19 @@ def cmd_validate(args):
         print("No clue IDs supplied or found to validate.")
         return
 
-    missing_inv = []
-    missing_matrix = []
-    valid = []
-
-    for cid in test_ids:
-        in_inv = cid in inv_clues
-        in_matrix = cid in matrix_clues
-        if not in_inv:
-            missing_inv.append(cid)
-        if not in_matrix:
-            missing_matrix.append(cid)
-        if in_inv and in_matrix:
-            valid.append(cid)
+    invalid_ids = [cid for cid in test_ids if not re.match(r"^CLUE-[A-Z]+-\d+$", cid)]
+    matched_inv = [cid for cid in test_ids if cid in inv_clues]
 
     print("\n[Validation Results]")
     print(f"Total checked: {len(test_ids)}")
-    print(f"Valid in both catalog files: {len(valid)}")
-    if missing_inv:
-        print(f"Missing in clue-ideas-inventory.md: {', '.join(missing_inv)}")
-    if missing_matrix:
-        print(f"Missing in clue-traceability-matrix.md: {', '.join(missing_matrix)}")
-
-    if missing_inv or missing_matrix:
+    print(f"Valid format: {len(test_ids) - len(invalid_ids)}")
+    if inv_clues:
+        print(f"Matched in ideation catalog: {len(matched_inv)} of {len(test_ids)}")
+    if invalid_ids:
+        print(f"Invalid format IDs: {', '.join(invalid_ids)}")
         sys.exit(1)
     else:
-        print("All clue IDs are registered and valid!")
+        print("All clue IDs follow valid naming convention!")
 
 
 def cmd_add(args):
@@ -204,8 +164,6 @@ def cmd_add(args):
         raise ValueError(f"Clue ID must follow pattern 'CLUE-<APP>-XX', got: {clue_id}")
 
     inv_text = read_text(INVENTORY_FILE)
-    matrix_text = read_text(MATRIX_FILE)
-
     inv_clues = extract_inventory_clues(inv_text)
     if clue_id in inv_clues:
         print(f"[Warning] Clue {clue_id} already exists in inventory. Skipping append.")
@@ -233,28 +191,6 @@ def cmd_add(args):
 
     write_text(INVENTORY_FILE, new_inv_text)
     print(f"[Success] Added {clue_id} to {INVENTORY_FILE.name}")
-
-    app_display = args.app_display or app.replace("-", " ").title()
-    if app in ("photos", "comms"):
-        default_link = f"../../../project-knowledge-base/solution-context/apps/phone-os/{app}/features.md"
-    else:
-        default_link = f"../../../project-knowledge-base/solution-context/apps/{app}/features.md"
-    app_link = args.app_link or default_link
-    component = args.component or f"{app_display}View - Interactive Clue Element"
-    level = args.level or "Level 1, 2"
-    ac = args.ac or args.desc
-
-    matrix_row = f"| `{clue_id}` | [{app_display}]({app_link}) | {component} | {args.type} | {args.truth} | {level} | {ac} |"
-
-    mat_marker = "## 2."
-    if mat_marker in matrix_text:
-        mat_idx = matrix_text.find(mat_marker)
-        new_matrix_text = matrix_text[:mat_idx].rstrip() + "\n" + matrix_row + "\n\n" + matrix_text[mat_idx:]
-    else:
-        new_matrix_text = matrix_text.rstrip() + "\n" + matrix_row + "\n"
-
-    write_text(MATRIX_FILE, new_matrix_text)
-    print(f"[Success] Added {clue_id} to {MATRIX_FILE.name}")
 
 
 def cmd_verify_spec(args):
@@ -353,19 +289,17 @@ def cmd_verify_spec(args):
     else:
         print(" - Level number: FAIL (missing 'level: <1|2|3>' in frontmatter)")
 
-    # 4. Check clue references against catalog (from both level-XX.md and level-XX-storyboard.md if present)
-    inv_text = read_text(INVENTORY_FILE)
-    inv_clues = extract_inventory_clues(inv_text)
+    # 4. Check clue formatting and extraction
     combined_spec_text = content + ("\n" + read_text(storyboard_path) if storyboard_path.exists() else "")
     spec_clues = sorted(list(set(re.findall(r"`(CLUE-[A-Z]+-\d+)`", combined_spec_text))))
-    missing_clues = [c for c in spec_clues if c not in inv_clues]
+    invalid_clues = [c for c in spec_clues if not re.match(r"^CLUE-[A-Z]+-\d+$", c)]
 
-    if missing_clues:
-        print(f" - Clue catalog integrity: FAIL (Clues not in catalog: {', '.join(missing_clues)})")
+    if invalid_clues:
+        print(f" - Clue formatting: FAIL (Invalid clue IDs: {', '.join(invalid_clues)})")
     else:
-        print(f" - Clue catalog integrity: PASS ({len(spec_clues)} clues registered in catalog)")
+        print(f" - Clue formatting: PASS ({len(spec_clues)} valid clue IDs detected: {', '.join(spec_clues)})")
 
-    if missing_sec or missing_clues or spoilers_failed or not is_husband_dir or (storyboard_path.exists() and not storyboard_ok):
+    if missing_sec or invalid_clues or spoilers_failed or not is_husband_dir or (storyboard_path.exists() and not storyboard_ok):
         sys.exit(1)
     else:
         print("\nStory spec passed all validation checks!")
@@ -386,7 +320,7 @@ def main():
     p_val.add_argument("--file", help="Path to markdown story spec file to extract clue IDs from")
 
     # add
-    p_add = subparsers.add_parser("add", help="Add a new clue to inventory & matrix")
+    p_add = subparsers.add_parser("add", help="Add a new clue to ideation inventory")
     p_add.add_argument("--id", required=True, help="Clue ID (e.g. CLUE-ZOLA-07)")
     p_add.add_argument("--app", required=True, help="App identifier (internet-messaging, banking, ecommerce, etc.)")
     p_add.add_argument("--title", required=True, help="Short clue title")

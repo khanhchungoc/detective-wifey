@@ -7,7 +7,7 @@ description: "Design story-first game levels: establish reusable husband persona
 
 - Thiết kế các màn chơi game phá án, xây dựng các kịch bản bắt ghen trào phúng mang đậm bản sắc văn hóa mạng xã hội Việt Nam (*Tâm sự Eva*, *Vén khéo*, *quỹ đen*).
 - **Phương pháp thiết kế**: Tuân theo [truyện trước ứng dụng](references/story-first-design.md); quy tắc độ khó, chuẩn xưng hô tiếng Việt theo nhân khẩu học và bằng chứng gián tiếp thuộc [quy tắc thiết kế](references/level-design-rules.md).
-- Quản trị vòng đời manh mối 2 chiều: tái sử dụng danh mục manh mối có sẵn hoặc tạo mới manh mối gián tiếp, tự động đồng bộ vào danh mục SSOT (`stories/clues/`).
+- Quản trị vòng đời manh mối 2 chiều: tham khảo danh mục ý tưởng (`clue-ideas-inventory.md`) hoặc sáng tạo manh mối mới theo cấu trúc chuẩn.
 - Sản xuất hồ sơ theo cấu trúc chuẩn tại `.agent-artifacts/requirements/stories/husband-<name>/`:
   - **Cấp độ Người Chồng (Định nghĩa 1 lần, tái sử dụng cho mọi màn của người chồng đó)**:
     - `husband-profile.md`: Hồ sơ gốc chứa chân dung người chồng + ảnh đại diện gốc (`husbandAvatar`), mỏ neo thông tin người vợ (tuổi, size quần áo/giày, dị ứng, địa chỉ nhà), dàn nhân vật cố định xuyên màn (Mẹ, Sếp, Bạn thân) và lộ trình tiến hóa chiêu trò qua các màn.
@@ -31,7 +31,6 @@ description: "Design story-first game levels: establish reusable husband persona
 - **Mẫu Storyboard & Sơ đồ Mermaid (`level-XX-storyboard.md`)**: [references/storyboard-template.md](references/storyboard-template.md) - Khung mẫu nhân khẩu học nghi phạm, bảng tương tác dòng thời gian, sơ đồ Timeline và sơ đồ Clue-to-Clue / Clue-to-Suspect.
 - **Mẫu Đặc tả Pháp y Màn chơi (`level-XX.md`)**: [references/story-spec-template.md](references/story-spec-template.md) - Khung mẫu hoàn chỉnh cho tài liệu `level-XX.md`.
 - **Danh mục Manh mối SSOT**: [clue-ideas-inventory.md](../../../.agent-artifacts/requirements/stories/clues/clue-ideas-inventory.md) - Danh mục ý tưởng manh mối trào phúng Việt Nam.
-- **Ma trận Khả năng Truy vết (Traceability Matrix)**: [clue-traceability-matrix.md](../../../.agent-artifacts/requirements/stories/clues/clue-traceability-matrix.md) - Liên kết manh mối với màn chơi và tính năng ứng dụng.
 - **Kiến trúc Hệ thống (SAD)**: [apps-features-architecture.md](../../../.agent-artifacts/project-knowledge-base/solution-context/architecture/apps-features-architecture.md) - Hệ sinh thái ứng dụng giả lập hiện hành.
 - **Bề mặt ảnh Shopoo**: [app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/ecommerce/app-design.md) và [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/ecommerce/features.md) - Xác nhận vị trí ảnh sản phẩm, thẻ sản phẩm trong chat và nội dung đơn hàng trước khi tạo asset.
 
@@ -74,8 +73,8 @@ Thực hiện [phương pháp, mục 2-3](references/story-first-design.md#2-chu
 2. **Biên soạn `level-XX-phone-data.md` (D-Day $\pm$ 2-3 ngày, $\ge 75\%$ sinh hoạt/giải oan)**:
    - **Tuân thủ Tuyệt đối Nhân khẩu học & Chuẩn Xưng hô Tiếng Việt**: Toàn bộ bong bóng chat, SMS, ghi chú, chuyển khoản ngân hàng, email phải bám sát persona, khẩu khí viết tắt (`generationTag`, `chatTone`) và **cách xưng hô tiếng Việt chuẩn (`anh`, `em`, `chị`, `cô`, `chú`, `con`, `mày`, `tao`, `sếp`)** theo đúng độ tuổi và vai vế giữa người chồng với người đối thoại (ví dụ: nếu chồng nhắn tin cho người lớn tuổi hơn mình, đại từ của chồng bắt buộc là `em` và gọi đối phương là `anh`/`chị`/`sếp`; cấm tự mâu thuẫn đại từ trong cùng câu).
 
-### Bước 4: Đồng bộ Clue & Đối chất
-Tra cứu bằng `python -B .agents/skills/level-designer/scripts/sync_clues.py list --app <appId>`; dùng `add --help` để đăng ký clue mới trong cả hai danh mục. Chỉ tái dùng ID nếu cùng ý nghĩa.
+### Bước 4: Kiểm tra & Tham khảo Manh mối
+Tra cứu ý tưởng bằng `python -B .agents/skills/level-designer/scripts/sync_clues.py list --app <appId>`; dùng `add --help` để lưu clue mới vào danh mục ý tưởng nếu muốn tái sử dụng cho các màn khác.
 
 ### Bước 5: Xác thực & Đọc duyệt
 Kiểm tra bộ hồ sơ của màn chơi (`husband-profile.md` + 3 files của màn: `level-XX-storyboard.md`, `level-XX.md`, `level-XX-phone-data.md`):

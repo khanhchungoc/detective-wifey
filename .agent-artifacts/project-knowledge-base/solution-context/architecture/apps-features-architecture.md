@@ -10,7 +10,7 @@ timestamp: "2026-10-13T14:35:00+07:00"
 
 > **Document Classification**: Canonical Technical Software Architecture Document (SAD).
 > 
-> Detailed app-specific UI/UX branding and screen features are modularized in the [`apps/`](../apps/) directory. Narrative clue ideas and cross-app puzzle chains are cataloged in [clue-traceability-matrix.md](../../requirements/stories/clues/clue-traceability-matrix.md).
+> Detailed app-specific UI/UX branding and screen features are modularized in the [`apps/`](../apps/) directory. Narrative clue ideas and cross-app puzzle chains are cataloged in [clue-ideas-inventory.md](../../requirements/stories/clues/clue-ideas-inventory.md).
 
 ---
 
@@ -295,7 +295,6 @@ To support long play sessions and prevent progress loss across page refreshes or
 
 | Artifact | Location | Purpose |
 |---|---|---|
-| **Clue Traceability Matrix** | [clue-traceability-matrix.md](../../requirements/stories/clues/clue-traceability-matrix.md) | Maps all 26 clue archetypes to apps, truth twists, and puzzle chains |
 | **Clue Ideas Inventory** | [clue-ideas-inventory.md](../../requirements/stories/clues/clue-ideas-inventory.md) | Canonical narrative catalog of viral Vietnamese marital tropes |
 | **Hosting & Deployment** | [hosting-deployment.md](hosting-deployment.md) | GitHub Pages static hosting, GitHub Actions CI/CD, and bundler rules |
 | **Virtual Phone OS & Native Suite** | [apps/phone-os/](../apps/phone-os/app-design.md) | [Shell](../apps/phone-os/shell/features.md), [Phone](../apps/phone-os/phone/features.md), [Messages](../apps/phone-os/messages/features.md), [Photos](../apps/phone-os/photos/features.md) |

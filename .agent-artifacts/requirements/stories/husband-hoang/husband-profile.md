@@ -21,8 +21,9 @@ husband: hoang
 - **Thói quen Ứng dụng & Lối sống (`lifestyleHabits`)**: Banking Techcombank kiểm tra lương thưởng và quỹ đen, Shopee áp mã Freeship Extra giao giờ hành chính, GrapCar đi làm, NetSurf đọc tin công nghệ/thể thao, ghi chú bảo dưỡng xe máy. Vỏ bọc ngụy trang bồ nhí là danh bạ kỹ thuật "Anh Tuấn Thợ Điện".
 - **Tính cách Đặc trưng**: Vẻ ngoài hiền lành, mẫu mực, luôn miệng khen cơm vợ nấu ngon nhất trần đời, tự nhận là người "sợ vợ số một thiên hạ", lương tháng nộp đủ 90% (31.500.000đ / 35.000.000đ). Tuy nhiên có tật xấu che giấu: hay úp màn hình điện thoại xuống mặt bàn mỗi khi ngồi cạnh vợ, hay mang máy vào phòng tắm "ngâm" hàng tiếng đồng hồ, và thường xuyên viện cớ "thức đêm ôm laptop fix bug giỏ hàng gấp cho kịp sprint".
 - **Ảnh Đại diện Chuẩn (`husbandAvatar`)**:
-  - **Đường dẫn Asset**: `public/assets/avatars/hoang/husband_hoang.png`
-  - **Mô tả Chân dung & Bối cảnh Ảnh**: Chân dung đời thường nam 29 tuổi, phong cách IT công sở, áo polo hoặc thun tối màu, đeo kính cận gọng mảnh, biểu cảm hiền lành, chụp tự nhiên tạo cảm giác đáng tin cậy.
+  - **Đường dẫn Asset**: `src/shell/assets/hoang-technosoft-selfie-wallpaper.jpg`
+  - **Mô tả Chân dung & Bối cảnh Ảnh**: Chân dung đời thường nam 29 tuổi, phong cách IT công sở, áo polo hoặc thun tối màu, đeo kính cận gọng mảnh, biểu cảm hiền lành, chụp tự nhiên tại văn phòng Technosoft.
+  - **Cơ chế Avatar Hệ thống**: Tích hợp qua sprite sheet dùng chung `src/shared/assets/contact-avatar-persona-sheet.jpg` và component `ContactAvatar.tsx`.
 
 ---
 
@@ -44,12 +45,12 @@ husband: hoang
 
 *Các nhân vật xuất hiện lặp lại qua nhiều màn chơi của cùng người chồng để tạo cảm giác chiếc điện thoại sống động, liền mạch:*
 
-| Character ID | Họ tên & Tên lưu trong máy | Tuổi & Giới tính | Quan hệ với Chồng | Khẩu khí & Văn phong | Ảnh Đại diện (`avatarPath`) |
+| Character ID | Họ tên & Tên lưu trong máy | Tuổi & Giới tính | Quan hệ với Chồng | Khẩu khí & Văn phong | Ánh xạ Avatar (`ContactAvatar` Sprite Sheet) |
 |---|---|---|---|---|---|
-| `char_wife` | Vợ (Trần Minh Thư) | 28 tuổi, Nữ | Vợ hợp pháp | Quan tâm gia đình, nhắc nhở việc nhà, xưng hô `anh - em` | `public/assets/avatars/hoang/wife_thu.png` |
-| `char_mom` | Mẹ Ở Quê | 56 tuổi, Nữ | Mẹ ruột Hoàng | Mẫu mực, chu đáo, chính tả chuẩn mực, không viết tắt; chồng xưng `con` gọi `mẹ` | `public/assets/avatars/hoang/mom.png` |
-| `char_best_friend` | Tuấn Đụt | 29 tuổi, Nam | Bạn thân chí cốt cùng tuổi | Suồng sã, thoải mái, xưng hô `tôi - ông`, hẹn đá bóng sân cỏ nhân tạo | `public/assets/avatars/hoang/friend_tuan.png` |
-| `char_boss` | Nam Dev | 30 tuổi, Nam | Đồng nghiệp / Tech Lead bạn cùng nhóm Technosoft | Lịch sự công việc, từ lóng dev, xưng hô `ông - tôi` / `anh - em` | `public/assets/avatars/hoang/colleague_nam.png` |
+| `char_wife` | Vợ (Trần Minh Thư) | 28 tuổi, Nữ | Vợ hợp pháp | Quan tâm gia đình, nhắc nhở việc nhà, xưng hô `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 6) |
+| `char_mom` | Mẹ Ở Quê | 56 tuổi, Nữ | Mẹ ruột Hoàng | Mẫu mực, chu đáo, chính tả chuẩn mực, không viết tắt; chồng xưng `con` gọi `mẹ` | `contact-avatar-persona-sheet.jpg` (Index 5) |
+| `char_best_friend` | Tuấn Đụt | 29 tuổi, Nam | Bạn thân chí cốt cùng tuổi | Suồng sã, thoải mái, xưng hô `tôi - ông`, hẹn đá bóng sân cỏ nhân tạo | `contact-avatar-persona-sheet.jpg` (Index 7) |
+| `char_boss` | Nam Dev | 30 tuổi, Nam | Đồng nghiệp / Tech Lead bạn cùng nhóm Technosoft | Lịch sự công việc, từ lóng dev, xưng hô `ông - tôi` / `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 8) |
 
 ---
 

@@ -37,7 +37,7 @@ Neither `.agent-artifacts/project-knowledge-base/` nor `.agent-artifacts/require
 ## 4-Tier Fallback Progression
 
 1. **Tier 1 — Knowledge Base**: `.agent-artifacts/project-knowledge-base/` (`solution-context/apps/`, `solution-context/architecture/`, `glossary/`).
-2. **Tier 2 — Requirements & Stories**: `.agent-artifacts/requirements/output/` (`vision-scope.md`, `functional-decomposition.md`, `elicitation/`, `<epic-slug>/`) and `.agent-artifacts/requirements/stories/` (`clues/clue-ideas-inventory.md`, `clues/clue-traceability-matrix.md`, `husband-<name>/level-XX.md`). Only `status: signed-off` is confirmed baseline (`draft` is in-flight).
+2. **Tier 2 - Requirements & Stories**: `.agent-artifacts/requirements/output/` (`vision-scope.md`, `functional-decomposition.md`, `elicitation/`, `<epic-slug>/`) and `.agent-artifacts/requirements/stories/` (`clues/clue-ideas-inventory.md`, `husband-<name>/level-XX.md`). Only `status: signed-off` is confirmed baseline (`draft` is in-flight).
 3. **Tier 3 — Codebase Evidence (Confirmation Required)**: Application code in `src/`. **Must ask user confirmation before searching.**
 4. **Tier 4 — External Standards**: Web research via `search_web` / `read_url_content` for third-party APIs/standards.
 
