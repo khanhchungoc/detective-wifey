@@ -53,11 +53,12 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 * [US-003 - `Zola` Private Messaging App Module](us-003-zola-private-messaging-app-module.md) - *Status: draft*
 * [US-004 - `Techcornbank` Bank & E-Wallet App Module](us-004-techcornbank-bank-e-wallet-app-module.md) - *Status: draft*
 * [US-005 - `Shopoo` E-Commerce App Module](us-005-poshee-e-commerce-app-module.md) - *Status: draft*
+* [US-008 - `Photos` Gallery & Media Forensics App Module](us-008-photos-gallery-media-forensics-app-module.md) - *Status: draft*
 * [US-009 - `Phone` Mobile Dialer & Contacts App Module](us-009-phone-mobile-dialer-contacts-app-module.md) - *Status: draft*
 * [US-026 - `Messages` SMS & Parody Chat App Module](us-026-messages-sms-parody-chat-app-module.md) - *Status: draft*
 * [US-023 - AssistiveTouch Floating Quick Action Menu & Viewport Controls](us-023-assistivetouch-floating-quick-action-menu-viewport-controls.md) - *Status: planned*
 * [US-024 - Unified Virtual Phone Motion Choreography, Transitions & App Animations](us-024-unified-virtual-phone-motion-choreography-transitions-app-animations.md) - *Status: planned*
-* [US-025 - Game Boot Title Screen & Parody Virtual App Launch Splash Screens](us-025-game-boot-title-screen-parody-virtual-app-launch-splash-screens.md) - *Status: planned*
+* [US-025 - Game Boot Title Screen & Parody Virtual App Launch Splash Screens](us-025-game-boot-title-screen-parody-virtual-app-launch-splash-screens.md) - *Status: draft; ASCII approved*.
 * [US-030 - `Zola` Group Chat & Multi-Participant Thread Module](us-030-zola-group-chat-multi-participant-messaging.md) - *Status: draft*
 * [US-031 - Level 0 Entry, Skip & Replay](us-031-level-0-entry-skip-replay.md) - *Status: draft; revision-2 ASCII approved*.
 
@@ -76,6 +77,7 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 * [Phone Investigation ASCII Wireframe](wireframes/wireframe-phone-investigation.md)
 * [Messages Investigation ASCII Wireframe](wireframes/wireframe-messages-investigation.md)
 * [Màn 0: bắt đầu, bỏ qua và chơi lại](wireframes/wireframe-level-0-entry.md) - *Status: signed-off, revision 2*.
+* [Game Boot & Parody App Launch Splash Screens ASCII Wireframe](wireframes/wireframe-us-025-boot-and-splash-screens.md) - *Status: signed-off*.
 
 ## Diagrams
 

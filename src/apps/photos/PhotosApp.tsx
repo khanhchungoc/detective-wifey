@@ -1,29 +1,13 @@
-import { useMotionState } from '../../shared/motion/useMotionState';
-import { readPhotosData } from './data';
-import React from 'react';
-import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
-import { IoChevronBack, IoImageOutline, IoLockClosedOutline } from 'react-icons/io5';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { IoImages } from 'react-icons/io5';
+import type { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
+import { readPhotosData } from './data';
+import { PhotoGridView } from './components/PhotoGridView';
+import { PhotoLightboxView } from './components/PhotoLightboxView';
+import { PhotoInfoDrawer } from './components/PhotoInfoDrawer';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
-import { StoryEvidenceTarget } from '../../features/investigation';
-import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/investigation';
-import type { PhotoArtwork } from './data';
+import { UniversalEvidenceModal, type UniversalEvidenceItem } from '../../features/investigation';
 import photosIcon from './assets/photos-icon.svg';
-
-const PhotoPreview: React.FC<{ artwork?: PhotoArtwork; className: string }> = ({ artwork, className }) => (
-  <div
-    aria-hidden="true"
-    className={`flex items-center justify-center overflow-hidden bg-[#1C1C1E] ${className}`}
-    style={artwork ? {
-      backgroundImage: `url("${artwork.src}")`,
-      backgroundPosition: artwork.position,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '204% 204%',
-    } : undefined}
-  >
-    {!artwork && <IoImageOutline className="w-6 h-6 shrink-0 text-slate-400" />}
-  </div>
-);
 
 export const PhotosApp: React.FC<VirtualAppProps> = ({
   caseData,
@@ -32,144 +16,153 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
   onRequestUnlock,
   unlockedChallenges,
 }) => {
-  const photosData = readPhotosData(caseData.appsData?.photos);
-  const albums = photosData.albums || [];
-  const publicPhotos = albums.filter(album => !album.isLocked).flatMap(album => album.photos);
-  const hiddenAlbums = albums.filter(album => album.isLocked);
-  const [activeTab, setActiveTab] = useMotionState<'all' | 'hidden'>('all', 'fade');
-  const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
+  const photosData = useMemo(() => readPhotosData(caseData.appsData?.photos), [caseData.appsData?.photos]);
 
-  const isHiddenUnlocked = unlockedChallenges.has('lock_photos');
+  const [activePhotoId, setActivePhotoId] = useState<string | null>(null);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [activeSegment, setActiveSegment] = useState<'year' | 'month' | 'all'>('all');
+  const [isViewingHidden, setIsViewingHidden] = useState(false);
+  const [evidenceItem, setEvidenceItem] = useState<UniversalEvidenceItem | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleBack = () => {
-    if (activeTab === 'hidden') {
-      setActiveTab('all');
+  const lockChallengeKey = photosData.lockChallengeId || 'lock_photos';
+  const isHiddenUnlocked = unlockedChallenges.has(lockChallengeKey);
+
+  // Group photos
+  const publicPhotos = useMemo(() => {
+    return photosData.photos.filter((p) => !p.isHiddenAlbum);
+  }, [photosData.photos]);
+
+  const hiddenPhotos = useMemo(() => {
+    return photosData.photos.filter((p) => p.isHiddenAlbum);
+  }, [photosData.photos]);
+
+  // Selected photo for Lightbox
+  const selectedPhoto = useMemo(() => {
+    if (!activePhotoId) return null;
+    return photosData.photos.find((p) => p.id === activePhotoId) || null;
+  }, [activePhotoId, photosData.photos]);
+
+  // Toast handler
+  const showToast = useCallback((msg: string) => {
+    setToastMessage(msg);
+  }, []);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => setToastMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
+  // Root swipe-back handler
+  const handleRootBack = useCallback(() => {
+    if (isInfoOpen) {
+      setIsInfoOpen(false);
+    } else if (activePhotoId) {
+      setActivePhotoId(null);
+    } else if (isViewingHidden) {
+      setIsViewingHidden(false);
     } else {
       onReturnHome();
     }
-  };
+  }, [isInfoOpen, activePhotoId, isViewingHidden, onReturnHome]);
 
-  const swipeHandlers = useSwipeBack({ onBack: handleBack });
+  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack });
+
+  const handleTriggerEvidence = useCallback((item: UniversalEvidenceItem) => {
+    try {
+      if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+        navigator.vibrate(50);
+      }
+    } catch {
+      // Haptics safe fallback
+    }
+    setEvidenceItem(item);
+  }, []);
+
+  const handleRequestUnlock = useCallback(() => {
+    if (onRequestUnlock) {
+      onRequestUnlock(lockChallengeKey);
+    }
+  }, [onRequestUnlock, lockChallengeKey]);
 
   return (
     <div
-      {...swipeHandlers}
-      className="flex flex-col h-full w-full bg-[#000000] text-[#FFFFFF] select-none font-sans"
+      {...rootSwipeHandlers}
+      className="relative flex flex-col h-full w-full bg-[#000000] text-white select-none font-sans overflow-hidden"
     >
-      <header className="flex items-center justify-between px-3 h-14 bg-[#1C1C1E] text-white shadow-md shrink-0 border-b border-white/10">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="flex items-center gap-1 min-w-[44px] min-h-[44px] px-2 text-ios-subheadline font-semibold rounded-lg hover:bg-white/10 active:scale-95 transition-all text-[#2979FF]"
-          aria-label={activeTab === 'hidden' ? 'Tất cả ảnh' : 'Trang chủ'}
-        >
-          <IoChevronBack className="w-5 h-5" />
-          <span>{activeTab === 'hidden' ? 'Tất cả ảnh' : 'Trang chủ'}</span>
-        </button>
-        <div className="flex items-center gap-2">
-          <IoImageOutline className="w-5 h-5 text-[#2979FF]" />
-          <h1 className="text-ios-headline font-bold tracking-tight">Photos</h1>
-        </div>
-        <div className="w-11" />
-      </header>
+      {/* Photo Library Grid View */}
+      <PhotoGridView
+        photos={publicPhotos}
+        hiddenPhotos={hiddenPhotos}
+        hasHiddenPhotos={photosData.hasHiddenPhotos}
+        isHiddenUnlocked={isHiddenUnlocked}
+        caseId={caseData.caseId}
+        husbandName={caseData.husbandName}
+        onSelectPhoto={(id) => {
+          setActivePhotoId(id);
+          setIsInfoOpen(false);
+        }}
+        onRequestUnlock={handleRequestUnlock}
+        onTriggerEvidence={handleTriggerEvidence}
+        onShowToast={showToast}
+        activeSegment={activeSegment}
+        onChangeSegment={setActiveSegment}
+        isViewingHidden={isViewingHidden}
+        onToggleViewHidden={setIsViewingHidden}
+      />
 
-      <div className="flex border-b border-white/10 bg-[#1C1C1E] shrink-0">
-        <button
-          type="button"
-          onClick={() => setActiveTab('all')}
-          className={`flex-1 min-h-[44px] flex items-center justify-center text-ios-footnote font-bold transition-all border-b-2 ${
-            activeTab === 'all'
-              ? 'border-[#2979FF] text-[#2979FF]'
-              : 'border-transparent text-slate-400 hover:text-white'
-          }`}
-        >
-          Tất cả ảnh
-        </button>
-        {hiddenAlbums.length > 0 && <button
-          type="button"
-          onClick={() => {
-            if (!isHiddenUnlocked && onRequestUnlock) {
-              onRequestUnlock('lock_photos');
-            } else {
-              setActiveTab('hidden');
-            }
+      {/* Forensic Lightbox View (When photo selected) */}
+      {selectedPhoto && (
+        <PhotoLightboxView
+          photo={selectedPhoto}
+          caseId={caseData.caseId}
+          husbandName={caseData.husbandName}
+          onBack={() => {
+            setActivePhotoId(null);
+            setIsInfoOpen(false);
           }}
-          className={`flex-1 min-h-[44px] flex items-center justify-center gap-1.5 text-ios-footnote font-bold transition-all border-b-2 ${
-            activeTab === 'hidden'
-              ? 'border-[#2979FF] text-[#2979FF]'
-              : 'border-transparent text-slate-400 hover:text-white'
-          }`}
-        >
-          {!isHiddenUnlocked && <IoLockClosedOutline className="w-3.5 h-3.5 text-[#FFC107]" />}
-          <span>Mục bị ẩn</span>
-        </button>}
-      </div>
+          onToggleInfo={() => setIsInfoOpen((prev) => !prev)}
+          isInfoOpen={isInfoOpen}
+          onTriggerEvidence={handleTriggerEvidence}
+          onShowToast={showToast}
+        />
+      )}
 
-      <main className="flex-1 overflow-y-auto p-3 space-y-3">
-        {activeTab === 'all' ? (
-          <div className="grid grid-cols-3 gap-2">
-            {publicPhotos.map(photo => (
-              <StoryEvidenceTarget
-                key={photo.id}
-                item={{
-                  title: photo.title,
-                  subtitle: photo.date,
-                  snippet: photo.description || photo.title,
-                  suspectToTag: photo.suspectName || caseData.husbandName,
-                  source: { caseId: caseData.caseId, recordId: photo.id, clueRefId: photo.clueRefId, title: photo.title, snippet: photo.description || photo.title },
-                }}
-                onTriggerEvidence={setEvidenceItem}
-              >
-                <div className="relative aspect-square overflow-hidden rounded-lg bg-[#1C1C1E] border border-white/5 text-left text-ios-caption-1">
-                  <PhotoPreview artwork={photo.artwork} className="absolute inset-0" />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent px-2 pb-2 pt-7">
-                    <span className="block truncate font-semibold text-white">{photo.title}</span>
-                    {photo.date && <span className="block truncate text-white/75">{photo.date}</span>}
-                  </div>
-                </div>
-              </StoryEvidenceTarget>
-            ))}
-            {publicPhotos.length === 0 && <p className="col-span-3 py-6 text-center text-ios-subheadline text-slate-400">Chưa có ảnh.</p>}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <div className="p-3 bg-amber-500/10 border border-[#FFC107]/30 rounded-xl text-ios-footnote text-amber-200">
-              Thư mục ảnh bị ẩn đã mở khóa thành công.
-            </div>
-            {hiddenAlbums.map((album) => (
-              <div key={album.id} className="space-y-2">
-                {album.photos?.map((photo) => (
-                  <StoryEvidenceTarget
-                    key={photo.id}
-                    item={{
-                      title: photo.title,
-                      subtitle: `Mục bị ẩn • ${album.title || 'Album'}`,
-                      snippet: photo.description || photo.title,
-                      suspectToTag: photo.suspectName || photo.title || 'Ảnh kỷ niệm PNJ',
-                    }}
-                    onTriggerEvidence={setEvidenceItem}
-                  >
-                    <div
-                      className="p-2 bg-[#1C1C1E] rounded-xl border border-white/10 flex items-center gap-3 cursor-pointer hover:bg-white/5 transition-all min-h-[68px]"
-                    >
-                      <PhotoPreview artwork={photo.artwork} className="h-14 w-14 shrink-0 rounded-md border border-white/10" />
-                      <span className="min-w-0 flex-1 truncate text-ios-subheadline font-medium text-white">{photo.title}</span>
-                      <span className="text-ios-caption-2 text-slate-400">Nhấn giữ</span>
-                    </div>
-                  </StoryEvidenceTarget>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
+      {/* Photo Info & EXIF Drawer */}
+      {selectedPhoto && (
+        <PhotoInfoDrawer
+          photo={selectedPhoto}
+          caseId={caseData.caseId}
+          husbandName={caseData.husbandName}
+          isOpen={isInfoOpen}
+          onClose={() => setIsInfoOpen(false)}
+          onNavigateToGrid={() => {
+            setIsInfoOpen(false);
+            setActivePhotoId(null);
+          }}
+          onTriggerEvidence={handleTriggerEvidence}
+          onShowToast={showToast}
+        />
+      )}
 
-      {/* Universal Blurred Pop-up on Long Press */}
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#1C1C1E]/95 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+          {toastMessage}
+        </div>
+      )}
+
+      {/* Universal Evidence Modal */}
       {evidenceItem && (
         <UniversalEvidenceModal
           isOpen={Boolean(evidenceItem)}
           item={evidenceItem}
-          onPinEvidence={(suspect) => onTagSuspect(suspect, 'photos')}
+          onPinEvidence={(suspect) => {
+            onTagSuspect(suspect, 'photos', evidenceItem.source);
+            setEvidenceItem(null);
+            showToast('Đã ghim bằng chứng vào Sổ tay thám tử');
+          }}
           onClose={() => setEvidenceItem(null)}
         />
       )}
@@ -184,7 +177,7 @@ export const appDefinition: AppDefinition = {
   icon: IoImages,
   iconAsset: photosIcon,
   themeGradient: 'from-amber-400 via-rose-500 to-indigo-600',
-  themeColor: '#2979FF',
+  themeColor: '#000000',
   bottomBarColor: '#000000',
   notificationBadgeCount: 0,
   isLocked: false,
@@ -192,4 +185,3 @@ export const appDefinition: AppDefinition = {
 };
 
 export default PhotosApp;
-

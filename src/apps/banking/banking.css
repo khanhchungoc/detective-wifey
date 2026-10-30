@@ -2,21 +2,41 @@
   --bank-brand: #ed1c24;
   --bank-deep: #b71c1c;
   --bank-inflow: #00a86b;
-  --bank-outflow: #e53935;
+  --bank-outflow: #111827;
+  --bank-outflow-alert: #e53935;
   --bank-canvas: #f5f6f8;
-  --bank-card: #1f242d;
-  --bank-surface: #fff;
+  --bank-card: #ffffff;
+  --bank-surface: #ffffff;
   --bank-text: #111827;
   --bank-muted: #6b7280;
+  --bank-date: #8e8e93;
   --bank-border: #e5e7eb;
+  --bank-hairline: #f3f4f6;
+  --bank-blue: #007aff;
+  --bank-coral-wave-1: #ffa07a;
+  --bank-coral-wave-2: #ff7f50;
+  --bank-coral-wave-3: #ff6b6b;
+  --bank-slogan: #e85d04;
   background: var(--bank-canvas);
   color: var(--bank-text);
   color-scheme: light;
 }
 
-.app-banking .bank-card {
-  background: var(--bank-card);
+.app-banking .bank-dashboard-canvas {
+  background: linear-gradient(180deg, #fff8f2 0%, #ffeadf 35%, #f5f6f8 70%);
+}
+
+.app-banking .bank-card-elevated {
+  background: #ffffff;
   border-radius: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(229, 231, 235, 0.6);
+}
+
+.app-banking .bank-card-vault-hero {
+  background: linear-gradient(135deg, #121212 0%, #1f242d 100%);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
 
 .app-banking .bank-card[data-tier='standard'] {
@@ -65,8 +85,8 @@
 
 .app-banking .bank-quick-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 3rem), 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.25rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
