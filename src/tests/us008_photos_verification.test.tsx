@@ -1,12 +1,10 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
-import { PhotosApp, appDefinition } from '../apps/photos/PhotosApp';
+import { PhotosApp } from '../apps/photos/PhotosApp';
 import { readPhotosData } from '../apps/photos/data';
-import { PhotoGridView } from '../apps/photos/components/PhotoGridView';
 import { PhotoLightboxView } from '../apps/photos/components/PhotoLightboxView';
 import { PhotoInfoDrawer } from '../apps/photos/components/PhotoInfoDrawer';
-import type { PhotoItem } from '../apps/photos/types';
 import type { AppCaseContext } from '../shared/contracts/app-contracts';
 
 const mockCaseContext: AppCaseContext = {
