@@ -46,19 +46,29 @@ export const PhotoPreview: React.FC<PhotoPreviewProps> = ({
   }
 
   if (artwork) {
+    const isRight = artwork.position.startsWith('100%');
+    const isBottom = artwork.position.endsWith('100%');
+    const x = isRight ? -627 : 0;
+    const y = isBottom ? -627 : 0;
+
     return (
       <div className={`relative flex items-center justify-center overflow-hidden bg-[#1C1C1E] ${className}`}>
-        <div
-          aria-label={title}
+        <svg
+          viewBox="0 0 627 627"
+          preserveAspectRatio="xMidYMid slice"
           className="w-full h-full pointer-events-none"
-          style={{
-            backgroundImage: `url("${artwork.src}")`,
-            backgroundPosition: artwork.position,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: '204% 204%',
-            ...transformStyle,
-          }}
-        />
+          style={transformStyle}
+          aria-label={title}
+        >
+          <image
+            href={artwork.src}
+            xlinkHref={artwork.src}
+            x={x}
+            y={y}
+            width="1254"
+            height="1254"
+          />
+        </svg>
       </div>
     );
   }

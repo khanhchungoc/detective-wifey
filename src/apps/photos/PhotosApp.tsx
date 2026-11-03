@@ -20,7 +20,6 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
 
   const [activePhotoId, setActivePhotoId] = useState<string | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const [activeSegment, setActiveSegment] = useState<'year' | 'month' | 'all'>('all');
   const [isViewingHidden, setIsViewingHidden] = useState(false);
   const [evidenceItem, setEvidenceItem] = useState<UniversalEvidenceItem | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -106,8 +105,6 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
         onRequestUnlock={handleRequestUnlock}
         onTriggerEvidence={handleTriggerEvidence}
         onShowToast={showToast}
-        activeSegment={activeSegment}
-        onChangeSegment={setActiveSegment}
         isViewingHidden={isViewingHidden}
         onToggleViewHidden={setIsViewingHidden}
       />
