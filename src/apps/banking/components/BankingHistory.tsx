@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IoArrowDownOutline, IoArrowUpOutline } from 'react-icons/io5';
 import { StoryEvidenceTarget } from '../../../features/investigation';
 import type { UniversalEvidenceItem } from '../../../features/investigation';
@@ -20,12 +20,6 @@ const directionalFilters: { value: TransactionFilter; label: string }[] = [
   { value: 'all', label: 'Tất cả' },
   { value: 'inflow', label: 'Tiền vào (+)' },
   { value: 'outflow', label: 'Tiền ra (-)' },
-];
-
-const periodFilters = [
-  { id: '7d', label: '7 ngày trước' },
-  { id: '30d', label: '30 ngày trước' },
-  { id: '60d', label: '60 ngày trước' },
 ];
 
 const VIETNAMESE_DAYS = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
@@ -59,7 +53,6 @@ function extractDateKey(timestamp: string): string {
 }
 
 export function BankingHistory({ caseData, transactions, filter, onFilter, onOpen, onEvidence }: BankingHistoryProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('7d');
   const visible = filterTransactions(transactions, filter);
 
   // Group transactions chronologically by date
@@ -91,30 +84,8 @@ export function BankingHistory({ caseData, transactions, filter, onFilter, onOpe
         <h2 className="text-2xl font-bold tracking-tight text-[#000000]">Hoạt động gần đây</h2>
       </div>
 
-      {/* 2. Time Period Quick-Filter Pills */}
-      <div aria-label="Bộ lọc thời gian" className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        {periodFilters.map(period => {
-          const isActive = selectedPeriod === period.id;
-          return (
-            <button
-              key={period.id}
-              type="button"
-              onClick={() => setSelectedPeriod(period.id)}
-              aria-pressed={isActive}
-              className={`bank-control rounded-full px-4 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
-                isActive
-                  ? 'bg-black text-white'
-                  : 'bg-white text-black border border-[#E5E7EB] hover:bg-neutral-50'
-              }`}
-            >
-              {period.label}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Directional Layer Filters */}
-      <div aria-label="Bộ lọc giao dịch" className="mt-1 flex items-center gap-2 overflow-x-auto pb-3 border-b border-[#F3F4F6] scrollbar-none">
+      <div aria-label="Bộ lọc giao dịch" className="flex items-center gap-2 overflow-x-auto pb-3 border-b border-[#F3F4F6] scrollbar-none">
         {directionalFilters.map(({ value, label }) => {
           const isActive = filter === value;
           return (
@@ -211,18 +182,6 @@ export function BankingHistory({ caseData, transactions, filter, onFilter, onOpe
             {transactions.length ? 'Không có giao dịch phù hợp.' : 'Chưa có giao dịch.'}
           </p>
         )}
-      </div>
-
-      {/* 5. Floating Support Tooltip */}
-      <div className="sticky bottom-2 flex justify-end px-2 pointer-events-none mt-6">
-        <button
-          type="button"
-          onClick={() => {}}
-          aria-label="Không tìm thấy giao dịch?"
-          className="pointer-events-auto rounded-2xl bg-white px-4 py-2.5 text-center text-xs font-semibold text-[#007AFF] shadow-lg border border-[#E5E7EB] hover:bg-[#F5F6F8] active:scale-95 transition-all"
-        >
-          Không tìm thấy<br />giao dịch?
-        </button>
       </div>
     </section>
   );
