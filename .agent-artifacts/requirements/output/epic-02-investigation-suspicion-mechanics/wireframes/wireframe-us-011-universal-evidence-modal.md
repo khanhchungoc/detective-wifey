@@ -18,7 +18,7 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 
 - [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md): Mục 2.2 cơ chế nhấn giữ không lộ manh mối.
 - [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md): Mục 2.2 ghim bằng chứng và đối tượng.
-- [Thẻ manh mối dùng chung](../../wireframes/wireframe-clue-card.md): Quy chuẩn gom nhóm manh mối theo từng liên hệ/cuộc trò chuyện thành 1 thẻ duy nhất.
+- [Thẻ manh mối dùng chung](../../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md): Quy chuẩn gom nhóm manh mối theo từng liên hệ/cuộc trò chuyện thành 1 thẻ duy nhất.
 - [Biên bản khám phá](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md): Xác nhận ngưỡng 380ms, nút ghim duy nhất, gom nhóm thẻ và loại trừ thanh điều hướng.
 - Thành phần mã nguồn thực tế: `StoryEvidenceTarget.tsx`, `UniversalEvidenceModal.tsx`, `evidence.ts`.
 
@@ -27,7 +27,7 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 | Mã | Trạng thái / Màn hình | Thành phần chính |
 |---|---|---|
 | M1 | Nhấn giữ dữ liệu câu chuyện | Phản hồi xúc giác `scale-98`, rung haptic 50ms khi đạt ngưỡng 380ms |
-| M2 | Hộp thoại Bằng Chứng Nghi Vấn | Lớp nền mờ, huy hiệu tiêu đề, trích dẫn nội dung, đối tượng liên quan, nút ghim và bỏ qua |
+| M2 | Hộp thoại Bằng Chứng Nghi Vấn (iOS Alert) | Lớp nền mờ, thẻ cảnh báo bo tròn chuẩn iOS, trích dẫn nội dung, hàng 2 nút viên thuốc ngang (Bỏ qua - Ghim) |
 | M3 | Phản hồi sau khi ghim | Thông báo trên Đảo động (Dynamic Island) và gom nhóm vào thẻ trong Sổ tay |
 
 ---
@@ -63,37 +63,39 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 
 ---
 
-### M2 - Hộp thoại Bằng Chứng Nghi Vấn (`UniversalEvidenceModal`)
+### M2 - Hộp thoại Bằng Chứng Nghi Vấn (`UniversalEvidenceModal` - Phong cách iOS Alert)
 
 ```text
 +------------------------------------------------+
+| [15:42]              [Đảo động]      [Sóng][Pin]|
+|================================================|
+|           (Lớp nền tối mờ bg-black/60)         |
 |                                                |
-|  +==========================================+  |
-|  | Anh Tuấn Thợ Điện                        |  |
-|  | Thời gian: 15/10 · 20:48                 |  |
-|  |                                          |  |
-|  | +--------------------------------------+ |  |
-|  | | "Tối nay 20h48 anh qua kiểm tra      | |  |
-|  | | đường điện cho em nhé!"              | |  |
-|  | +--------------------------------------+ |  |
-|  |                                          |  |
-|  | +--------------------------------------+ |  |
-|  | |           Ghim Vào Sổ Tay            | |  |
-|  | +--------------------------------------+ |  |
-|  | +--------------------------------------+ |  |
-|  | |               Bỏ qua                 | |  |
-|  | +--------------------------------------+ |  |
-|  +==========================================+  |
+|      +----------------------------------+      |
+|      | Ghim vào Sổ Tay Bắt Ghen?        |      |
+|      | Anh Tuấn Thợ Điện · 15/10 20:48  |      |
+|      |                                  |      |
+|      | +------------------------------+ |      |
+|      | | "Tối nay 20h48 anh qua kiểm  | |      |
+|      | | tra đường điện cho em nhé!"  | |      |
+|      | +------------------------------+ |      |
+|      |                                  |      |
+|      |  [ Bỏ qua ]        [   Ghim   ]  |      |
+|      |  (Pill Xanh)       (Pill Xám)   |      |
+|      +----------------------------------+      |
 |                                                |
 +------------------------------------------------+
 ```
 
-- Nền phía sau: Phủ màu tối `bg-black/60` kết hợp làm mờ sâu (`backdrop-blur-md`).
-- Hộp thoại: Bo góc lớn `rounded-3xl`, bóng đổ nổi `shadow-2xl`, viền sáng `border-white/40`.
-- Vùng trích dẫn: Nền `slate-50`, viền trái màu hồng cánh sen (`border-l-4 border-l-rose-500`), chữ in nghiêng màu `slate-700`.
-- Dòng đối tượng: Hiển thị tên hiển thị hoặc bí danh được gán (`suspectToTag`), biểu tượng khiên bảo vệ `IoShieldOutline`.
-- Nút chính: `[📌 Ghim Vào Sổ Tay Bắt Ghen]` (nền gradient hồng đậm, cao 48px, biểu tượng `IoPin`).
-- Nút phụ: `[Bỏ qua]` (nền xám nhạt `slate-100`, chữ `slate-600`, cao 44px). Chạm nền đen bên ngoài cũng đóng hộp thoại.
+- Nền phía sau: Phủ màu tối `bg-black/60` kết hợp làm mờ sâu (`backdrop-blur-md`). Chạm ngoài để hủy bỏ.
+- Hộp thoại cảnh báo (iOS Popup Alert): Khung nhỏ gọn (`max-w-[340px]`), bo góc lớn chuẩn iOS (`rounded-[26px]`), nền xám sáng `bg-[#F2F2F6]`, bóng đổ nổi `shadow-2xl`. Bỏ nút đóng `[✕]` ở góc trên để tuân thủ triệt để giao diện iOS Alert nguyên bản.
+- Tiêu đề & Thông tin đối tượng:
+  - Tiêu đề câu hỏi: In đậm rõ ràng (`text-ios-headline font-bold text-[#0F172A]`), ví dụ "Ghim vào Sổ Tay Bắt Ghen?".
+  - Dòng phụ: Tên đối tượng và mốc thời gian (`text-ios-footnote text-[#64748B]`), ví dụ "Anh Tuấn Thợ Điện · 15/10 20:48".
+- Khung trích dẫn manh mối: Nền thẻ `bg-white/90`, bo góc `rounded-2xl`, viền mảnh `border border-slate-200/80` kèm dải màu hồng cánh sen bên trái (`border-l-4 border-l-rose-500`), chữ in nghiêng màu `slate-700`.
+- Hàng nút hành động ngang (Side-by-side pill buttons): Bố trí dàn ngang theo 2 cột cân đối:
+  - Nút [Bỏ qua] (Trái): Dạng viên thuốc (`rounded-full`), nền xanh iOS đặc trưng (`bg-[#007AFF]`), chữ trắng in đậm (`text-white font-semibold`), chiều cao tối thiểu 44px.
+  - Nút [Ghim] (Phải): Dạng viên thuốc (`rounded-full`), nền xám nhạt (`bg-[#E5E5EA]`), chữ màu hồng cánh sen/đỏ (`text-rose-600 font-semibold`), chiều cao tối thiểu 44px.
 
 ---
 
@@ -101,7 +103,7 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 
 ```text
 +------------------------------------------------+
-|           [📌 Đã thêm vào Sổ tay]              | <- Thông báo Đảo động
+|         [Ghim: Đã thêm vào Sổ tay]             | <- Thông báo Đảo động
 |------------------------------------------------|
 | SỔ TAY BẮT GHEN - KHAY MANH MỐI                |
 |                                                |
@@ -122,7 +124,7 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 - Dữ liệu được đưa vào Khay Manh Mối của Sổ Tay:
   - Nếu đã tồn tại thẻ của liên hệ này (ví dụ "Anh Tuấn Thợ Điện"), tin nhắn mới được nối tiếp vào danh sách gạch đầu dòng (`• DD/MM · HH:mm: "..."`) bên dưới cùng một thẻ.
   - Không tạo ra nhiều thẻ rời rạc cho cùng một cuộc trò chuyện/liên hệ trong cùng một ứng dụng.
-  - Thẻ hiển thị trên Khay hoặc Bảng manh mối tuân thủ chuẩn tại [wireframe-clue-card.md](../../wireframes/wireframe-clue-card.md).
+  - Thẻ hiển thị trên Khay hoặc Bảng manh mối tuân thủ chuẩn tại [wireframe-clue-card.md](../../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md).
 
 ---
 
@@ -132,7 +134,7 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 |---|---|---|
 | Cử chỉ nhấn giữ | Thời gian giữ $\ge 380\text{ms}$, dung sai xê dịch ngón tay $\le 18\text{px}$ | Kích hoạt `onTriggerEvidence`, chặn `contextmenu` mặc định của trình duyệt |
 | Phản hồi xúc giác | Web Vibration API (`navigator.vibrate(50)`) | Bỏ qua mượt mà trên thiết bị không hỗ trợ rung |
-| Vùng chạm nút | Tối thiểu 44px × 44px (nút Đóng, Bỏ qua) và 48px (Ghim) | Đạt chuẩn tiếp cận Apple HIG và WCAG 2.1 AA |
-| Biểu tượng | Bộ Ionicons chuẩn (`IoPin`, `IoClose`, `IoShieldOutline`) | Tuyệt đối không dùng emoji thô hoặc thư viện Lucide |
+| Vùng chạm nút | Tối thiểu 44px × 44px (nút Bỏ qua và Ghim dạng viên thuốc bo tròn) | Đạt chuẩn tiếp cận Apple HIG và WCAG 2.1 AA |
+| Biểu tượng | Giao diện iOS Alert tối giản, loại bỏ nút đóng [✕] góc trên; sử dụng typography và màu nút chuẩn iOS | Tuyệt đối không dùng emoji thô hoặc thư viện Lucide |
 | Tính bảo mật manh mối | Mọi tin nhắn (thật hoặc bẫy) đều mở modal giống nhau | Không gắn nhãn hay viền màu trước khi người chơi nhấn giữ |
 

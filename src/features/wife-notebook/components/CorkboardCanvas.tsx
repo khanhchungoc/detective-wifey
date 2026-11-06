@@ -110,11 +110,32 @@ const CorkboardContents = memo(function CorkboardContents({
     startY: number;
     origX: number;
     origY: number;
+    pendingX: number;
+    pendingY: number;
     hasMoved: boolean;
   } | null>(null);
+  const dragFrameRef = useRef<number | null>(null);
+  const flushDragMove = () => {
+    if (dragFrameRef.current !== null) {
+      cancelAnimationFrame(dragFrameRef.current);
+      dragFrameRef.current = null;
+    }
+    const drag = cardDragRef.current;
+    if (drag && drag.hasMoved) {
+      onMoveNode(drag.nodeId, drag.pendingX, drag.pendingY);
+    }
+  };
+
+  useEffect(() => () => {
+    if (dragFrameRef.current !== null) cancelAnimationFrame(dragFrameRef.current);
+  }, []);
 
   useEffect(() => {
     if (isPinching) {
+      if (dragFrameRef.current !== null) {
+        cancelAnimationFrame(dragFrameRef.current);
+        dragFrameRef.current = null;
+      }
       cardDragRef.current = null;
       setActiveDragId(null);
     }
@@ -170,6 +191,8 @@ const CorkboardContents = memo(function CorkboardContents({
                   startY: e.clientY,
                   origX: node.x,
                   origY: node.y,
+                  pendingX: node.x,
+                  pendingY: node.y,
                   hasMoved: false,
                 };
                 (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -183,13 +206,20 @@ const CorkboardContents = memo(function CorkboardContents({
                 if (Math.hypot(dx, dy) > 4) {
                   drag.hasMoved = true;
                 }
-                const newX = Math.max(20, Math.min(CANVAS_SIZE - 230, drag.origX + dx));
-                const newY = Math.max(20, Math.min(CANVAS_SIZE - 180, drag.origY + dy));
-                onMoveNode(node.nodeId, newX, newY);
+                drag.pendingX = Math.max(20, Math.min(CANVAS_SIZE - 230, drag.origX + dx));
+                drag.pendingY = Math.max(20, Math.min(CANVAS_SIZE - 180, drag.origY + dy));
+                if (dragFrameRef.current === null) {
+                  dragFrameRef.current = requestAnimationFrame(() => {
+                    dragFrameRef.current = null;
+                    const active = cardDragRef.current;
+                    if (active) onMoveNode(active.nodeId, active.pendingX, active.pendingY);
+                  });
+                }
               }}
               onPointerUp={e => {
                 const drag = cardDragRef.current;
                 if (!drag || drag.nodeId !== node.nodeId || drag.pointerId !== e.pointerId || isPinching) return;
+                flushDragMove();
                 try {
                   (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
                 } catch {
@@ -204,14 +234,18 @@ const CorkboardContents = memo(function CorkboardContents({
                 setActiveDragId(null);
               }}
               onPointerCancel={() => {
+                if (dragFrameRef.current !== null) {
+                  cancelAnimationFrame(dragFrameRef.current);
+                  dragFrameRef.current = null;
+                }
                 cardDragRef.current = null;
                 setActiveDragId(null);
               }}
-              className={`corkboard-node-card absolute rounded-xl border p-2.5 pt-[15px] cursor-grab active:cursor-grabbing transition-[box-shadow,transform] duration-150 ${
+              className={`corkboard-node-card absolute left-0 top-0 rounded-xl border p-2.5 pt-[15px] cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 isDraggingThis
                   ? 'z-30 border-rose-400 bg-[#FFFDF5] shadow-[0_22px_40px_-4px_rgba(0,0,0,0.3),0_12px_22px_-6px_rgba(0,0,0,0.18)] ring-2 ring-rose-400/60'
                   : isSelected
-                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 scale-105 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
+                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
                   : isUnmasked && isAlias
                   ? 'z-20 border-rose-400 bg-[#FFF5F5] ring-1 ring-rose-300 shadow-[0_4px_12px_rgba(30,20,10,0.25)]'
                   : hasContradiction
@@ -220,9 +254,9 @@ const CorkboardContents = memo(function CorkboardContents({
               }`}
               style={{
                 width: `${CARD_WIDTH}px`,
-                left: `${node.x}px`,
-                top: `${node.y}px`,
-                transform: isDraggingThis ? 'scale(1.05) rotate(0deg)' : effectiveTilt ? `rotate(${effectiveTilt}deg)` : undefined,
+                transform: `translate3d(${node.x}px, ${node.y}px, 0)${
+                  isDraggingThis || isSelected ? ' scale(1.05)' : effectiveTilt ? ` rotate(${effectiveTilt}deg)` : ''
+                }`,
                 touchAction: 'none',
               }}
             >
@@ -231,10 +265,10 @@ const CorkboardContents = memo(function CorkboardContents({
                 <div className={`relative h-5 w-5 rounded-full bg-gradient-to-br from-red-500 via-rose-600 to-red-900 border border-rose-300/60 flex items-center justify-center transition-transform duration-150 ${
                   isDraggingThis ? 'scale-110 shadow-[0_4px_8px_rgba(0,0,0,0.5)]' : 'shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
                 }`}>
-                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/75 blur-[0.3px]" />
+                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/75" />
                   <div className="h-1 w-1 rounded-full bg-red-950/80 shadow-inner" />
                 </div>
-                <div className={`w-1 h-0.5 bg-stone-900/35 rounded-full blur-[0.5px] -mt-0.5 transition-opacity duration-150 ${
+                <div className={`w-1 h-0.5 bg-stone-900/35 rounded-full -mt-0.5 transition-opacity duration-150 ${
                   isDraggingThis ? 'opacity-30' : 'opacity-100'
                 }`} />
               </div>
@@ -438,7 +472,6 @@ const CorkboardContents = memo(function CorkboardContents({
                   strokeOpacity={strokeOpacity}
                   fill="none"
                   strokeLinecap="round"
-                  className="transition-all duration-150"
                 />
               </g>
             );
@@ -456,7 +489,8 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
     left: '50%',
     top: '50%',
     transformOrigin: '0 0',
-    transform: `scale(${viewport.zoom}) translate(${-viewport.x}px, ${-viewport.y}px)`,
+    willChange: 'transform',
+    transform: `scale(${viewport.zoom}) translate3d(${-viewport.x}px, ${-viewport.y}px, 0)`,
   };
   return (
     <div

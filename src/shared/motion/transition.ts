@@ -51,7 +51,6 @@ export function appTransition(kind: 'open' | 'close', appId: string, update: () 
 }
 
 function prepareAppTransition(appId: string): void {
-  const flights: { name: string; x: number; y: number }[] = [];
   if (typeof document !== 'undefined') {
     const viewport = document.querySelector('[data-app-transition-bounds]')?.getBoundingClientRect();
     const buttons = Array.from(document.querySelectorAll<HTMLElement>('[data-launch-app]'));
@@ -59,44 +58,11 @@ function prepareAppTransition(appId: string): void {
       ?.querySelector('.phone-app-icon')?.getBoundingClientRect();
     const style = document.documentElement.style;
     const measured = viewport && icon && viewport.width > 0 && viewport.height > 0;
-    if (measured) {
-      for (const button of buttons) {
-        const bounds = button.querySelector('.phone-app-icon')?.getBoundingClientRect();
-        if (!bounds) continue;
-        const flight = launcherFlight(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2,
-          icon.x + icon.width / 2, icon.y + icon.height / 2, viewport.width, viewport.height);
-        flights.push({ name: `launcher-${button.dataset.launchApp}`, ...flight });
-      }
-    }
     // Finish geometry reads before invalidating styles.
     style.setProperty('--app-dx', measured ? `${icon.x + icon.width / 2 - viewport.x - viewport.width / 2}px` : '0px');
     style.setProperty('--app-dy', measured ? `${icon.y + icon.height / 2 - viewport.y - viewport.height / 2}px` : '0px');
     style.setProperty('--app-scale-x', measured ? `${icon.width / viewport.width}` : '.96');
     style.setProperty('--app-scale-y', measured ? `${icon.height / viewport.height}` : '.96');
-    let rules = document.getElementById('ios-launcher-motion');
-    if (!rules) {
-      rules = document.createElement('style');
-      rules.id = 'ios-launcher-motion';
-      document.head.append(rules);
-    }
-    // Named snapshot pseudo-elements do not inherit the source icon's variables.
-    // Supply each flight directly to its snapshot; only numbers and local app IDs enter CSS.
-    rules.textContent = flights.map(flight => {
-      const name = flight.name.replace(/[^a-zA-Z0-9_-]/g, '');
-      const variables = `--icon-flight-x:${flight.x}px;--icon-flight-y:${flight.y}px;`;
-      const openTiming = 'animation-duration:var(--ios-app-open-duration);animation-timing-function:var(--ease-ios-default);animation-fill-mode:both;';
-      const closeTiming = 'animation-duration:var(--ios-app-close-duration);animation-timing-function:var(--ease-ios-default);animation-fill-mode:both;';
-      // The destination stays hidden until the app reaches it, then dissolves
-      // in over the same interval as the outgoing app. Neighboring icons fly in.
-      const destination = flight.name === `launcher-${appId}`;
-      const incoming = destination
-        ? 'animation:ios-app-fade-in var(--ios-app-close-fade-duration) var(--ease-ios-default) calc(var(--ios-app-close-duration) - var(--ios-app-close-fade-duration)) both;'
-        : `${closeTiming}animation-name:ios-launcher-in;`;
-      return `html[data-motion="open"]::view-transition-old(${name}){${variables}${openTiming}animation-name:ios-launcher-out;}`
-        + `html[data-motion="close"]::view-transition-new(${name}){${variables}${incoming}}`
-        // A swipe exits horizontally rather than contracting into its icon.
-        + (destination ? `html[data-swipe-motion][data-motion="close"]::view-transition-new(${name}){animation:none;opacity:1;}` : '');
-    }).join('\n');
   }
 }
 

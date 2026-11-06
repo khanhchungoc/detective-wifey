@@ -15,7 +15,7 @@ import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
 import { useSwipeBack } from '../shared/gestures/useSwipeBack';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
-import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.png';
+import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
 export interface PhoneShellProps {

@@ -16,7 +16,7 @@ As a Player (Wife), I want to long-press on narrative elements across parody app
 ### Canonical Wireframe Reference
 
 - [ASCII Wireframe - Screen SSOT](./wireframes/wireframe-us-011-universal-evidence-modal.md)
-- [Clue Card Wireframe Reference](../wireframes/wireframe-clue-card.md)
+- [Clue Card Wireframe Reference](../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md)
 - Interactive HTML: pending ASCII signoff; not generated.
 
 ### Acceptance Criteria
@@ -24,12 +24,17 @@ As a Player (Wife), I want to long-press on narrative elements across parody app
 1. Pressing and holding any dynamic story narrative element (chat messages, call records, transaction notes, purchase orders, photos) for at least 380ms activates the pointer hold state (`scale-98`) and triggers a 50ms haptic vibration pulse via `navigator.vibrate(50)`.
 2. Releasing the pointer before reaching 380ms or dragging/scrolling more than 18px cancels the timer immediately without opening any modal or logging evidence. Normal taps execute their default app action.
 3. Structural app chrome (navigation headers, back buttons, tab bars, search bars, contact action rows, and settings buttons) strictly ignores long-press gestures and never displays evidence inspection overlays.
-4. Completing the 380ms hold opens `UniversalEvidenceModal` centered over a blurred, dimmed backdrop (`bg-black/60 backdrop-blur-md`).
-5. `UniversalEvidenceModal` displays the "Bằng Chứng Nghi Vấn" badge, source title, formatted timestamp/subtitle, an italicized quotation block of the evidence text, attributed suspect name or alias (`suspectToTag`), a primary "Ghim Vào Sổ Tay Bắt Ghen" button, and a "Bỏ qua" button.
+4. Completing the 380ms hold opens `UniversalEvidenceModal` centered over a blurred, dimmed backdrop (`bg-black/60 backdrop-blur-md`) formatted as an iOS system popup alert dialog (`rounded-[26px]`, light gray alert surface `bg-[#F2F2F6]`).
+5. `UniversalEvidenceModal` displays an iOS popup alert structure:
+   - Header with bold prompt title ("Ghim vào Sổ Tay Bắt Ghen?") and source attribution/timestamp subtitle ("Anh Tuấn Thợ Điện · 15/10 20:48").
+   - Content block with an italicized quotation preview of the evidence text (`item.snippet`).
+   - A horizontal side-by-side 2-button action row at the bottom with pill-shaped buttons (`rounded-full`, min-h-[44px]):
+     - Left button: Solid blue pill (`bg-[#007AFF]`, `text-white font-semibold`) labeled "Bỏ qua" (Cancel).
+     - Right button: Soft light gray pill (`bg-[#E5E5EA]`, `text-rose-600 font-semibold`) labeled "Ghim" (Action).
 6. Both genuine forensic clues and innocent decoy narrative items exhibit identical long-press behavior and modal presentations; parody apps contain zero glowing borders, clue indicators, or visual tells prior to or during inspection.
-7. Tapping "Ghim Vào Sổ Tay Bắt Ghen" saves the item to the active session (`PlaySession.taggedSuspects`), closes the modal, and triggers a confirmation notification toast in the Dynamic Island area for 2 seconds.
+7. Tapping "Ghim" saves the item to the active session (`PlaySession.taggedSuspects`), closes the modal, and triggers a confirmation notification toast in the Dynamic Island area for 2 seconds.
 8. Pinned evidence items belonging to the same contact, thread, or conversation consolidate into a single corkboard card bearing the suspect's name/alias; subsequent pinned messages from that conversation append as timestamped bullet entries (`• DD/MM · HH:mm: "..."`) rather than creating duplicate cards.
-9. Tapping "Bỏ qua", tapping the close icon button (`[✕]`, minimum 44px × 44px touch target), or tapping the backdrop outside the modal dismisses the modal without pinning the item or modifying case state.
+9. Tapping "Bỏ qua" (the blue cancel pill button) or tapping the backdrop outside the alert card dismisses the modal without pinning the item or modifying case state. In accordance with native iOS popup alert ergonomics, the top-right close button (`[X]`) is removed.
 10. Permanent or visible "Ghim" buttons are strictly absent across all parody application screens, feeds, and dialogs.
 11. Inspecting and pinning evidence operates entirely client-side without altering the source narrative data or making network requests.
 
@@ -60,6 +65,6 @@ None for confirmed behavior. ASCII signoff and team sizing remain pending; statu
 - [Signed-off target discovery](../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md)
 - [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md)
 - [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md)
-- [Canonical Clue Card Wireframe](../wireframes/wireframe-clue-card.md)
+- [Canonical Clue Card Wireframe](../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md)
 - Implemented runtime contracts: `src/features/investigation/components/StoryEvidenceTarget.tsx`, `src/features/investigation/components/UniversalEvidenceModal.tsx`, `src/features/wife-notebook/WifeNotebookModal.tsx`
 

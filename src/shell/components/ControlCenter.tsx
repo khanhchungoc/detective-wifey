@@ -152,7 +152,7 @@ export function ControlCenter({ disabled, isFullscreen, showStatusBar = true, on
       {showChevron && (
         <span
           data-notification-swipe-hint
-          className="mt-1 flex h-4 w-7 items-center justify-center rounded-full bg-slate-900/50 backdrop-blur-sm border border-white/20 text-white/90 shadow-sm animate-bounce"
+          className="mt-1 flex h-4 w-7 items-center justify-center rounded-full bg-slate-900/80 border border-white/20 text-white/90 shadow-sm animate-[bounce_1s_ease-in-out_3]"
           aria-hidden="true"
         >
           <IoChevronDown className="h-3 w-3" />

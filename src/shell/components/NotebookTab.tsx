@@ -126,8 +126,10 @@ export function NotebookTab({
       active.point = clampFloatingPoint({ x: active.origin.x + dx, y: active.origin.y + dy }, bounds.current);
       event.currentTarget.dataset.floating = String(isFloatingDetached(active.point, bounds.current));
       const nextEdge = active.point.x < (bounds.current.left + bounds.current.right) / 2 ? 'left' : 'right';
-      event.currentTarget.dataset.edge = nextEdge;
-      setCurrentEdge(nextEdge);
+      if (event.currentTarget.dataset.edge !== nextEdge) {
+        event.currentTarget.dataset.edge = nextEdge;
+        setCurrentEdge(nextEdge);
+      }
       if (frame.current === null) frame.current = requestAnimationFrame(() => {
         frame.current = null;
         if (gesture.current === active && ref.current) ref.current.style.transform = transform(active.point);
@@ -151,7 +153,7 @@ export function NotebookTab({
       }
     }}>
       <span data-tab-surface aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 flex h-[var(--tab-dock-height)] w-[var(--tab-dock-width)] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-l-2xl border-y border-l border-white/35 bg-slate-900/55 shadow-lg backdrop-blur-xl transition-[width,height,border-radius] duration-150 ease-out motion-reduce:transition-none group-data-[edge=left]:rounded-l-none group-data-[edge=left]:rounded-r-2xl group-data-[edge=left]:border-l-0 group-data-[edge=left]:border-r group-data-[floating=true]:h-[var(--tab-float-size)] group-data-[floating=true]:w-[var(--tab-float-size)] group-data-[floating=true]:!rounded-2xl group-data-[floating=true]:!border"
+        className="pointer-events-none absolute left-1/2 top-1/2 flex h-[var(--tab-dock-height)] w-[var(--tab-dock-width)] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-l-2xl border-y border-l border-white/35 bg-slate-900/85 shadow-lg transition-[width,height,border-radius] duration-150 ease-out motion-reduce:transition-none group-data-[edge=left]:rounded-l-none group-data-[edge=left]:rounded-r-2xl group-data-[edge=left]:border-l-0 group-data-[edge=left]:border-r group-data-[floating=true]:h-[var(--tab-float-size)] group-data-[floating=true]:w-[var(--tab-float-size)] group-data-[floating=true]:!rounded-2xl group-data-[floating=true]:!border"
         style={{ '--tab-dock-width': `${NOTEBOOK_TAB_WIDTH}px`, '--tab-dock-height': `${NOTEBOOK_TAB_HEIGHT}px`, '--tab-float-size': `${NOTEBOOK_FLOAT_SIZE}px`,
         } as React.CSSProperties}>
         {open ? (

@@ -23,12 +23,10 @@ html[data-motion='open'] [data-app-surface],
 html[data-motion='close'] [data-app-surface] { view-transition-name: phone-app; }
 html:is([data-motion='open'], [data-motion='close']) .phone-system-status { view-transition-name: system-status; }
 html:is([data-motion='open'], [data-motion='close']) .phone-system-home { view-transition-name: system-home; }
-html[data-motion='open'] [data-launch-app],
-html[data-motion='close'] [data-launch-app] { view-transition-name: var(--launcher-motion-name); }
-.ios-sheet { view-transition-name: phone-sheet; }
-.ios-evidence-modal { view-transition-name: evidence-modal; }
-.ios-lock-screen { view-transition-name: lock-screen; }
-.ios-notification { view-transition-name: notification-banner; }
+html:is([data-motion='sheet-in'], [data-motion='sheet-out'], [data-swipe-motion]) .ios-sheet { view-transition-name: phone-sheet; }
+html:is([data-motion='sheet-in'], [data-motion='sheet-out'], [data-swipe-motion]) .ios-evidence-modal { view-transition-name: evidence-modal; }
+html:is([data-motion='sheet-in'], [data-motion='sheet-out'], [data-swipe-motion]) .ios-lock-screen { view-transition-name: lock-screen; }
+html:is([data-motion='sheet-in'], [data-motion='sheet-out']) .ios-notification { view-transition-name: notification-banner; }
 /* Keep the notebook above app snapshots as well as the live app surface. */
 [data-notebook-tab] { view-transition-name: notebook-tab; }
 ::view-transition-group(notebook-tab) { z-index: 80; }
@@ -69,13 +67,12 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-pop { to { transform: translateX(calc(100% - var(--swipe-distance, 0px))); } }
 @keyframes ios-reveal { from { transform: translateX(-25%); opacity: .6; } }
 @keyframes ios-app-in {
-  /* Round with the launcher icon, then settle to the square full-screen app. */
-  from { transform: translate(var(--app-dx, 0px), var(--app-dy, 0px)) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: 90px; }
-  to { transform: none; border-radius: 0; }
+  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
+  to { transform: none; }
 }
 @keyframes ios-app-out {
-  from { transform: none; border-radius: 0; }
-  to { transform: translate(var(--app-dx, 0px), var(--app-dy, 0px)) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: 90px; }
+  from { transform: none; }
+  to { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
 }
 @keyframes ios-app-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ios-app-fade-out { from { opacity: 1; } to { opacity: 0; } }
@@ -85,12 +82,6 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-banner-out { to { transform: translateY(-120%); opacity: 0; } }
 @keyframes ios-dialog-in { from { transform: scale(.94); opacity: 0; } }
 @keyframes ios-dialog-out { to { transform: scale(.94); opacity: 0; } }
-@keyframes ios-launcher-out {
-  to { transform: translate3d(var(--icon-flight-x), var(--icon-flight-y), 0) scale(1.15); opacity: 0; }
-}
-@keyframes ios-launcher-in {
-  from { transform: translate3d(var(--icon-flight-x), var(--icon-flight-y), 0) scale(1.15); opacity: 0; }
-}
 html[data-motion='push']::view-transition-new(phone-content) { animation-name: ios-push; }
 html[data-motion='push']::view-transition-old(phone-content) { animation-name: ios-under; }
 html[data-motion='pop']::view-transition-old(phone-content) { animation-name: ios-pop; z-index: 2; }

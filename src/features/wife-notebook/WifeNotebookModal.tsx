@@ -414,15 +414,16 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     });
   }, [allTaggedNodes, caseId, edges]);
 
-  // All suspects placed or tagged on the corkboard
+  // All suspects placed or tagged on the corkboard (only needed when confirming confrontation)
   const suspectsOnBoard = useMemo(() => {
+    if (!isConfirmingConfrontation) return [];
     return getSuspectsOnBoard({
       placedNodes,
       taggedSuspects,
       caseConfig,
       knowledgeGraph,
     });
-  }, [placedNodes, taggedSuspects, caseConfig, knowledgeGraph]);
+  }, [isConfirmingConfrontation, placedNodes, taggedSuspects, caseConfig, knowledgeGraph]);
 
   const [activePairing, setActivePairing] = useState<PairingState>({ sourceNodeId: null });
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
