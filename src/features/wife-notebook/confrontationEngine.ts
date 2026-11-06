@@ -403,38 +403,39 @@ export function calculateConfrontationPreflight({
     };
   } else {
     // Correct culprit: Clue count is based strictly on actual clues found
-    const verifiedSmokingGunEdges = canonicalActiveEdges.filter(
-      e => e.isSmokingGun ||
-        requiredEdgeIds.includes(e.edgeId) ||
-        (e.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
-        (e.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect')),
-    );
+    const requiredCount = requiredEdgeIds.length;
+    const verifiedSmokingGunEdgeIds: string[] = [];
+    for (const edge of canonicalActiveEdges) {
+      const matchesRequired = requiredEdgeIds.includes(edge.edgeId) ||
+        (edge.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
+        (edge.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect'));
+      if (edge.isCanonical !== false && (edge.isSmokingGun || matchesRequired) && !verifiedSmokingGunEdgeIds.includes(edge.edgeId)) {
+        verifiedSmokingGunEdgeIds.push(edge.edgeId);
+      }
+    }
+    const verifiedCount = verifiedSmokingGunEdgeIds.length;
 
-    const hasAnyPlacedClues = placedNodes.length > 0 || taggedSuspects.length > 0;
+    // US-016 AC 6: 100% of required smoking-gun chain (or >= 3 verified links) yields watertight 3-star victory
+    const isCompleteSmokingGunChain = requiredCount > 0
+      ? verifiedCount >= requiredCount
+      : verifiedCount >= 3;
+
+    let smokingGunClueFloor = 0;
+    if (isCompleteSmokingGunChain) {
+      smokingGunClueFloor = 10;
+    } else if (verifiedCount >= 2) {
+      smokingGunClueFloor = 9;
+    } else if (verifiedCount === 1) {
+      smokingGunClueFloor = 5;
+    } else {
+      smokingGunClueFloor = 0;
+    }
 
     if (explicitCluesFound !== undefined) {
       cluesFound = explicitCluesFound;
-    } else if (hasAnyPlacedClues) {
-      // In-game board: strictly actual clues found relating to culprit, with floor guaranteed by verified smoking guns
-      const smokingGunClueFloor = verifiedSmokingGunEdges.length >= 3
-        ? 10
-        : verifiedSmokingGunEdges.length === 2
-          ? 9
-          : verifiedSmokingGunEdges.length === 1
-            ? 5
-            : 0;
-      cluesFound = Math.max(verifiedCluesList.length, smokingGunClueFloor);
     } else {
-      // Fallback for pure graph testing without placed nodes
-      if (verifiedSmokingGunEdges.length >= 3) {
-        cluesFound = 10;
-      } else if (verifiedSmokingGunEdges.length === 2) {
-        cluesFound = 9;
-      } else if (verifiedSmokingGunEdges.length === 1) {
-        cluesFound = 5;
-      } else {
-        cluesFound = verifiedCluesList.length;
-      }
+      // In-game board & pure graph testing: actual clues found relating to culprit, with floor guaranteed by verified smoking guns
+      cluesFound = Math.max(verifiedCluesList.length, smokingGunClueFloor);
     }
 
     cluesFound = Math.max(0, Math.min(totalClues, cluesFound));

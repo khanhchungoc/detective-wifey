@@ -262,9 +262,17 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     });
 
     it('AC 5: 2 verified smoking-gun links yield 2 stars and stammering partial explanation', () => {
+      const caseWith3RequiredGraph: CaseKnowledgeGraph = {
+        ...LEVEL_01_KNOWLEDGE_GRAPH,
+        requiredSmokingGunEdgeIds: [
+          'edge_order_name',
+          'edge_alibi_contradiction',
+          'test_third_smoking_gun',
+        ],
+      };
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
-        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        knowledgeGraph: caseWith3RequiredGraph,
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
         unmaskedSuspectIds: ['node_suspect_huong'],
         currentStrikes: 5,
@@ -272,6 +280,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
       expect(result.stars).toBe(2);
       expect(result.verifiedSmokingGunCount).toBe(2);
+      expect(result.requiredSmokingGunCount).toBe(3);
       expect(result.husbandMood).toBe('nervous');
       expect(result.husbandDialogue).toContain('Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi mà em');
     });
@@ -322,7 +331,14 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Renders 2-star partial verdict with "Tha thứ & Qua màn" and "Điều tra tiếp để đạt 3 sao" buttons', () => {
       const eval2 = evaluateConfrontation({
         caseConfig: mockCaseConfig,
-        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        knowledgeGraph: {
+          ...LEVEL_01_KNOWLEDGE_GRAPH,
+          requiredSmokingGunEdgeIds: [
+            'edge_order_name',
+            'edge_alibi_contradiction',
+            'test_third_smoking_gun',
+          ],
+        },
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
         unmaskedSuspectIds: ['node_suspect_huong'],
         currentStrikes: 5,
@@ -860,7 +876,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(suspects.some(s => s.displayName === 'Vợ')).toBe(false);
     });
 
-    it('verifies 2/2 smoking guns with edge_order_name and edge_alibi_contradiction for 2 stars', () => {
+    it('verifies 2/2 smoking guns with edge_order_name and edge_alibi_contradiction achieves 3-star victory (US-016 AC 6)', () => {
       const edgeOrderName: CaseGraphEdge = {
         edgeId: 'edge_order_name',
         sourceNodeId: 'node_record_ecommerce_order',
@@ -890,11 +906,13 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
       expect(result.verifiedSmokingGunCount).toBe(2);
       expect(result.requiredSmokingGunCount).toBe(2);
-      expect(result.stars).toBe(2);
+      expect(result.stars).toBe(3);
       expect(result.successRate).toBe(100);
       expect(result.isRedHerringAccusation).toBe(false);
-      expect(result.husbandMood).toBe('nervous');
-      expect(result.husbandDialogue).toContain('Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra');
+      expect(result.husbandMood).toBe('broken');
+      expect(result.husbandDialogue).toContain('Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu');
+      expect(result.wifeTitle).toBe('Nữ thám tử ghen tuông');
+      expect(result.narrativeRoast).toBe(mockCaseConfig.groundTruth.narrativeRoast);
     });
   });
 });
