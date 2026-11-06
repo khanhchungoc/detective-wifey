@@ -88,7 +88,7 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 ```
 
 - Nền phía sau: Phủ màu tối `bg-black/60` kết hợp làm mờ sâu (`backdrop-blur-md`). Chạm ngoài để hủy bỏ.
-- Hộp thoại cảnh báo (iOS Popup Alert): Khung nhỏ gọn (`max-w-[340px]`), bo góc lớn chuẩn iOS (`rounded-[26px]`), nền xám sáng `bg-[#F2F2F6]`, bóng đổ nổi `shadow-2xl`. Bỏ nút đóng `[✕]` ở góc trên để tuân thủ triệt để giao diện iOS Alert nguyên bản.
+- Hộp thoại cảnh báo (iOS Popup Alert): Khung nhỏ gọn (`max-w-[340px]`), bo góc lớn chuẩn iOS (`rounded-[26px]`), nền xám sáng `bg-[#F2F2F6]`, bóng đổ nổi `shadow-2xl`. Bỏ nút đóng `[X]` ở góc trên để tuân thủ triệt để giao diện iOS Alert nguyên bản.
 - Tiêu đề & Thông tin đối tượng:
   - Tiêu đề câu hỏi: In đậm rõ ràng (`text-ios-headline font-bold text-[#0F172A]`), ví dụ "Ghim vào Sổ Tay Bắt Ghen?".
   - Dòng phụ: Tên đối tượng và mốc thời gian (`text-ios-footnote text-[#64748B]`), ví dụ "Anh Tuấn Thợ Điện · 15/10 20:48".
@@ -135,6 +135,6 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 | Cử chỉ nhấn giữ | Thời gian giữ $\ge 380\text{ms}$, dung sai xê dịch ngón tay $\le 18\text{px}$ | Kích hoạt `onTriggerEvidence`, chặn `contextmenu` mặc định của trình duyệt |
 | Phản hồi xúc giác | Web Vibration API (`navigator.vibrate(50)`) | Bỏ qua mượt mà trên thiết bị không hỗ trợ rung |
 | Vùng chạm nút | Tối thiểu 44px × 44px (nút Bỏ qua và Ghim dạng viên thuốc bo tròn) | Đạt chuẩn tiếp cận Apple HIG và WCAG 2.1 AA |
-| Biểu tượng | Giao diện iOS Alert tối giản, loại bỏ nút đóng [✕] góc trên; sử dụng typography và màu nút chuẩn iOS | Tuyệt đối không dùng emoji thô hoặc thư viện Lucide |
+| Biểu tượng | Giao diện iOS Alert tối giản, loại bỏ nút đóng [X] góc trên; sử dụng typography và màu nút chuẩn iOS | Tuyệt đối không dùng emoji thô hoặc thư viện Lucide |
 | Tính bảo mật manh mối | Mọi tin nhắn (thật hoặc bẫy) đều mở modal giống nhau | Không gắn nhãn hay viền màu trước khi người chơi nhấn giữ |
 

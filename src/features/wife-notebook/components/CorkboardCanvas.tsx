@@ -206,8 +206,8 @@ const CorkboardContents = memo(function CorkboardContents({
                 if (Math.hypot(dx, dy) > 4) {
                   drag.hasMoved = true;
                 }
-                drag.pendingX = Math.max(20, Math.min(CANVAS_SIZE - 230, drag.origX + dx));
-                drag.pendingY = Math.max(20, Math.min(CANVAS_SIZE - 180, drag.origY + dy));
+                drag.pendingX = Math.round(Math.max(20, Math.min(CANVAS_SIZE - 230, drag.origX + dx)));
+                drag.pendingY = Math.round(Math.max(20, Math.min(CANVAS_SIZE - 180, drag.origY + dy)));
                 if (dragFrameRef.current === null) {
                   dragFrameRef.current = requestAnimationFrame(() => {
                     dragFrameRef.current = null;
@@ -241,11 +241,11 @@ const CorkboardContents = memo(function CorkboardContents({
                 cardDragRef.current = null;
                 setActiveDragId(null);
               }}
-              className={`corkboard-node-card absolute left-0 top-0 rounded-xl border p-2.5 pt-[15px] cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
+              className={`corkboard-node-card absolute rounded-xl border p-2.5 pt-[15px] cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 isDraggingThis
                   ? 'z-30 border-rose-400 bg-[#FFFDF5] shadow-[0_22px_40px_-4px_rgba(0,0,0,0.3),0_12px_22px_-6px_rgba(0,0,0,0.18)] ring-2 ring-rose-400/60'
                   : isSelected
-                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
+                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 scale-105 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
                   : isUnmasked && isAlias
                   ? 'z-20 border-rose-400 bg-[#FFF5F5] ring-1 ring-rose-300 shadow-[0_4px_12px_rgba(30,20,10,0.25)]'
                   : hasContradiction
@@ -254,9 +254,9 @@ const CorkboardContents = memo(function CorkboardContents({
               }`}
               style={{
                 width: `${CARD_WIDTH}px`,
-                transform: `translate3d(${node.x}px, ${node.y}px, 0)${
-                  isDraggingThis || isSelected ? ' scale(1.05)' : effectiveTilt ? ` rotate(${effectiveTilt}deg)` : ''
-                }`,
+                left: `${node.x}px`,
+                top: `${node.y}px`,
+                transform: isDraggingThis ? 'scale(1.05) rotate(0deg)' : effectiveTilt ? `rotate(${effectiveTilt}deg)` : undefined,
                 touchAction: 'none',
               }}
             >
@@ -489,8 +489,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
     left: '50%',
     top: '50%',
     transformOrigin: '0 0',
-    willChange: 'transform',
-    transform: `scale(${viewport.zoom}) translate3d(${-viewport.x}px, ${-viewport.y}px, 0)`,
+    transform: `scale(${viewport.zoom}) translate(${-viewport.x}px, ${-viewport.y}px)`,
   };
   return (
     <div
