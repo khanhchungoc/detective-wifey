@@ -262,9 +262,17 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     });
 
     it('AC 5: 2 verified smoking-gun links yield 2 stars and stammering partial explanation', () => {
+      const caseWith3RequiredGraph: CaseKnowledgeGraph = {
+        ...LEVEL_01_KNOWLEDGE_GRAPH,
+        requiredSmokingGunEdgeIds: [
+          'edge_order_name',
+          'edge_alibi_contradiction',
+          'test_third_smoking_gun',
+        ],
+      };
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
-        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        knowledgeGraph: caseWith3RequiredGraph,
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
         unmaskedSuspectIds: ['node_suspect_huong'],
         currentStrikes: 5,
@@ -272,6 +280,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
       expect(result.stars).toBe(2);
       expect(result.verifiedSmokingGunCount).toBe(2);
+      expect(result.requiredSmokingGunCount).toBe(3);
       expect(result.husbandMood).toBe('nervous');
       expect(result.husbandDialogue).toContain('Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi mà em');
     });
@@ -322,7 +331,14 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Renders 2-star partial verdict with "Tha thứ & Qua màn" and "Điều tra tiếp để đạt 3 sao" buttons', () => {
       const eval2 = evaluateConfrontation({
         caseConfig: mockCaseConfig,
-        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        knowledgeGraph: {
+          ...LEVEL_01_KNOWLEDGE_GRAPH,
+          requiredSmokingGunEdgeIds: [
+            'edge_order_name',
+            'edge_alibi_contradiction',
+            'test_third_smoking_gun',
+          ],
+        },
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
         unmaskedSuspectIds: ['node_suspect_huong'],
         currentStrikes: 5,
@@ -835,6 +851,68 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         const rawEmojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
         expect(rawEmojiRegex.test(html)).toBe(false);
       }
+    });
+  });
+
+  describe('Level 1 Identity Smoking Gun & Suspect Deduplication Fixes', () => {
+    it('deduplicates multiple contact pins of Anh Tuấn Thợ Điện across apps and excludes Vợ', () => {
+      const placedNodes = [
+        { nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', type: 'alias' as const, sourceAppId: 'internet-messaging' as AppId, x: 0, y: 0 },
+        { nodeId: 'node_alias_tuan_sms', label: 'Anh Tuấn Thợ Điện', type: 'alias' as const, sourceAppId: 'messages' as AppId, x: 0, y: 100 },
+        { nodeId: 'node_bridge_phone', label: 'Anh Tuấn Thợ Điện', type: 'alias' as const, sourceAppId: 'phone' as AppId, x: 0, y: 200 },
+        { nodeId: 'node_record_wife_alibi', label: 'Vợ', type: 'record_clue' as const, sourceAppId: 'internet-messaging' as AppId, x: 0, y: 300 },
+      ];
+
+      const suspects = getSuspectsOnBoard({
+        placedNodes,
+        caseConfig: mockCaseConfig,
+        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+      });
+
+      // Must have exactly 1 entry for Anh Tuấn Thợ Điện (mapped to suspect_huong) and 0 for Vợ
+      expect(suspects).toHaveLength(1);
+      expect(suspects[0].displayName).toBe('Anh Tuấn Thợ Điện');
+      expect(suspects[0].id).toBe('suspect_huong');
+      expect(suspects.some(s => s.displayName === 'Vợ')).toBe(false);
+    });
+
+    it('verifies 2/2 smoking guns with edge_order_name and edge_alibi_contradiction achieves 3-star victory (US-016 AC 6)', () => {
+      const edgeOrderName: CaseGraphEdge = {
+        edgeId: 'edge_order_name',
+        sourceNodeId: 'node_record_ecommerce_order',
+        targetNodeId: 'node_bridge_name',
+        relationship: 'bridges_identity',
+        isSmokingGun: true,
+      };
+      const edgeAlibi: CaseGraphEdge = {
+        edgeId: 'edge_alibi_contradiction',
+        sourceNodeId: 'node_record_wife_alibi',
+        targetNodeId: 'node_record_bank_receipt',
+        relationship: 'contradicts_alibi',
+        isSmokingGun: true,
+      };
+
+      const result = evaluateConfrontation({
+        caseConfig: mockCaseConfig,
+        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        activeEdges: [edgeOrderName, edgeAlibi],
+        unmaskedSuspectIds: [],
+        currentStrikes: 5,
+        accusedSuspectId: 'suspect_huong',
+        placedNodes: [
+          { nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', type: 'alias', sourceAppId: 'internet-messaging', x: 0, y: 0 },
+        ],
+      });
+
+      expect(result.verifiedSmokingGunCount).toBe(2);
+      expect(result.requiredSmokingGunCount).toBe(2);
+      expect(result.stars).toBe(3);
+      expect(result.successRate).toBe(100);
+      expect(result.isRedHerringAccusation).toBe(false);
+      expect(result.husbandMood).toBe('broken');
+      expect(result.husbandDialogue).toContain('Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu');
+      expect(result.wifeTitle).toBe('Nữ thám tử ghen tuông');
+      expect(result.narrativeRoast).toBe(mockCaseConfig.groundTruth.narrativeRoast);
     });
   });
 });

@@ -4,18 +4,16 @@ import {
   IoCard,
   IoCardOutline,
   IoChevronBack,
-  IoGiftOutline,
   IoLockClosedOutline,
   IoNotificationsOutline,
   IoPieChartOutline,
   IoSearchOutline,
-  IoSwapHorizontalOutline,
 } from 'react-icons/io5';
 import type { AppDefinition, VirtualAppProps } from '../../shared/contracts/app-contracts';
 import { UniversalEvidenceModal, type UniversalEvidenceItem } from '../../features/investigation';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { bankingAppChallenge, bankingVaultChallenge, readBankingData } from './bankingData';
-import { BankingDashboard, BankingProfile, BankingTransferView } from './components/BankingDashboard';
+import { BankingDashboard, BankingProfile } from './components/BankingDashboard';
 import { BankingHistory } from './components/BankingHistory';
 import { BankingReceipt } from './components/BankingReceipt';
 import { BankingVaultDetail, BankingVaults } from './components/BankingVaults';
@@ -38,8 +36,6 @@ function TechcornHomeIcon({ className }: { className?: string }) {
 const tabs: { id: BankingTab; label: string; icon: ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'Trang chủ', icon: TechcornHomeIcon },
   { id: 'history', label: 'Tài khoản & Thẻ', icon: IoCardOutline },
-  { id: 'transfer', label: 'Chuyển tiền & TT', icon: IoSwapHorizontalOutline },
-  { id: 'profile', label: 'Techcornbank OneU', icon: IoGiftOutline },
   { id: 'vaults', label: 'Tổng quan tài sản', icon: IoPieChartOutline },
 ];
 
@@ -84,7 +80,9 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
   };
 
   const title = appLocked || activeTab === 'home' ? 'Ngân hàng'
-    : selectedVault ? 'Chi tiết hũ quỹ' : tabs.find(tab => tab.id === activeTab)?.label || 'Ngân hàng';
+    : selectedVault ? 'Chi tiết hũ quỹ'
+    : activeTab === 'profile' ? 'Thông tin tài khoản'
+    : tabs.find(tab => tab.id === activeTab)?.label || 'Ngân hàng';
 
   const initials = caseData.husbandName
     ? caseData.husbandName.split(' ').filter(Boolean).slice(-2).map(p => p[0]).join('').toUpperCase()
@@ -219,9 +217,6 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                   onEvidence={setEvidenceItem}
                 />
               )}
-              {activeTab === 'transfer' && (
-                <BankingTransferView onOpenHistory={() => navigate('history')} />
-              )}
               {activeTab === 'vaults' && (
                 <>
                   <BankingVaults
@@ -245,11 +240,11 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
           )}
         </main>
 
-        {/* 5-Tab Sticky Bottom Navigation Bar */}
+        {/* 3-Tab Sticky Bottom Navigation Bar */}
         {!appLocked && (
           <nav
             aria-label={`Điều hướng ${BRAND.brandName}`}
-            className="app-bottom-nav grid grid-cols-5 border-t border-[#E5E7EB] bg-white px-1 py-1 shadow-lg"
+            className="app-bottom-nav grid grid-cols-3 border-t border-[#E5E7EB] bg-white px-1 py-1 shadow-lg"
           >
             {tabs.map(({ id, label, icon: Icon }) => {
               const isActive = activeTab === id;

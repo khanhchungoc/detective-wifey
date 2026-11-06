@@ -124,7 +124,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       className="absolute inset-0 z-30 flex flex-col bg-[#000000] text-white select-none overflow-hidden"
     >
       {/* Top iOS Header */}
-      <header className="h-14 px-3 flex items-center justify-between border-b border-white/10 bg-black/80 backdrop-blur-md shrink-0 z-20">
+      <header className="relative h-14 px-3 flex items-center justify-between border-b border-white/10 bg-black/80 backdrop-blur-md shrink-0 z-20">
         <button
           type="button"
           onClick={onBack}
@@ -135,7 +135,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
           <span>Thư viện</span>
         </button>
 
-        <span className="text-ios-subheadline font-medium text-white/90 truncate max-w-[180px]">
+        <span className="absolute left-1/2 -translate-x-1/2 text-ios-subheadline font-medium text-white/90 truncate max-w-[180px] pointer-events-none">
           {photo.date || 'Ảnh'}
         </span>
 
@@ -157,7 +157,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
 
       {/* Main Photo Viewport */}
       <main
-        className="flex-1 relative flex items-center justify-center overflow-hidden bg-[#000000] p-4 pb-8"
+        className="flex-1 relative flex items-center justify-center overflow-hidden bg-[#000000]"
         onClick={handleDoubleTap}
       >
         <StoryEvidenceTarget
@@ -165,10 +165,10 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
           onTriggerEvidence={onTriggerEvidence}
           className="w-full h-full flex items-center justify-center"
         >
-          <div className="relative w-full max-w-[420px] aspect-square max-h-[70vh] flex items-center justify-center cursor-pointer">
+          <div className="relative w-full h-full flex items-center justify-center cursor-pointer">
             <PhotoPreview
               photo={photo}
-              className="w-full h-full rounded-2xl shadow-2xl"
+              className="w-full h-full"
               zoomLevel={zoomLevel}
               centerCoordinates={isMagnifierActive && hotspot ? { x: hotspot.x, y: hotspot.y } : undefined}
             />

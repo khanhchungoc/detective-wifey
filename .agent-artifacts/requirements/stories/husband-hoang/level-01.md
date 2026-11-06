@@ -155,13 +155,13 @@ level: 1
 | `edge_alias_sms_phone` | `node_alias_tuan_sms` | `node_bridge_phone` | `bridges_identity` | `false` | `sms_contact_10` / `call_tuan_late` | Khớp số điện thoại trong SMS và cuộc gọi | *"Tin nhắn SMS với số điện thoại danh bạ cùng một người!"* |
 | `edge_alias_zola_sms` | `node_alias_tuan` | `node_alias_tuan_sms` | `bridges_identity` | `false` | `thread_tuan` / `sms_contact_10` | Cùng liên hệ ngụy trang Anh Tuấn trên Zola và SMS | *"Cùng một người liên hệ Anh Tuấn Thợ Điện trên cả Zola và SMS!"* |
 | `edge_order_phone` | `node_record_ecommerce_order` | `node_bridge_phone` | `bridges_identity` | `false` | `order_01` / `call_tuan_late` | Số nhận hàng đơn Shopee trùng SĐT thợ điện | *"Đơn hàng giao tới số điện thoại của thợ điện"* |
-| `edge_order_name` | `node_record_ecommerce_order` | `node_bridge_name` | `bridges_identity` | `false` | `order_01` / `tx_02` | Tên người nhận đơn trùng tên chủ tài khoản nhận hoàn tiền | *"Tên người nhận đơn trùng với tên pháp lý tài khoản"* |
+| `edge_order_name` | `node_record_ecommerce_order` | `node_bridge_name` | `bridges_identity` | `true` | `order_01` / `tx_02` | Tên người nhận đơn trùng tên chủ tài khoản nhận hoàn tiền | *"Ơ... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
 | `edge_name_suspect` | `node_bridge_name` | `node_suspect_huong` | `bridges_identity` | `true` | `tx_02` / `suspect_huong` | Tên pháp lý `Nguyen Thi Thu Huong` khớp nhân sự Marketing | *"À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
 | `edge_alibi_contradiction` | `node_record_wife_alibi` | `node_record_bank_receipt` | `contradicts_alibi` | `true` | `thread_wife` / `tx_01` | Khai với vợ 20:46 họp ở công ty vs quẹt thẻ 20:48 Cơm Niêu Phố Cổ | *"Anh... lúc đó cả nhóm kéo nhau ra quán ăn đêm làm việc tiếp mà..."* |
 | `edge_zola_dinner_receipt` | `node_record_zola_chat` | `node_record_bank_receipt` | `occurred_at` | `false` | `thread_tuan` / `tx_01` | Hẹn ăn bàn 19h30 Phố Cổ khớp giao dịch quán Cơm Niêu Phố Cổ | *"Tin nhắn hẹn ăn tại Cơm Niêu Phố Cổ trùng với giao dịch thanh toán tại quán tối 15/10."* |
 
 - **Danh sách Cạnh Bắt buộc để Thắng 3 Sao (`requiredSmokingGunEdgeIds`)**:
-  `['edge_name_suspect', 'edge_alibi_contradiction']`
+  `['edge_order_name', 'edge_alibi_contradiction']`
 
 ### 5.3. Thử thách Mã khóa & Câu đố
 *(Màn 1 không có câu đố mã khóa: `lockChallenges: []`)*

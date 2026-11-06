@@ -1,4 +1,4 @@
-export type BankingTab = 'home' | 'history' | 'transfer' | 'vaults' | 'profile';
+export type BankingTab = 'home' | 'history' | 'vaults' | 'profile';
 export type TransactionDirection = 'inflow' | 'outflow';
 export type TransactionFilter = 'all' | TransactionDirection;
 export type BankingQuickAction = 'transfer' | 'qr_pay' | 'vaults' | 'bills' | 'growth' | 'other';

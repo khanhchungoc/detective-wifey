@@ -70,7 +70,7 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
     ],
   };
 
-  it('AC01: mounts photo library grid view with Obsidian Black theme, header, video badges, and floating bottom capsule', () => {
+  it('AC01: mounts photo library grid view with Obsidian Black theme, header, and video badges', () => {
     const html = renderToStaticMarkup(
       createElement(PhotosApp, {
         caseData: { ...mockCaseContext, appsData: { photos: samplePhotosData } },
@@ -95,11 +95,6 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
 
     // Video duration overlay badge
     expect(html).toContain('0:26');
-
-    // Floating frosted bottom navigation capsule with segmented filter pills
-    expect(html).toContain('Năm');
-    expect(html).toContain('Tháng');
-    expect(html).toContain('Tất cả');
 
     // Smart Collections section
     expect(html).toContain('BỘ SƯU TẬP THÔNG MINH');
@@ -174,7 +169,7 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
 
     // Formatted Vietnamese date and time
     expect(html).toContain('Lúc 21:30 Thứ Năm, ngày 13 tháng 10, 2026');
-    expect(html).toContain('Điều chỉnh');
+    expect(html).not.toContain('Điều chỉnh');
 
     // Original filename
     expect(html).toContain('IMG_9422.HEIC');
@@ -196,8 +191,8 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
     expect(html).toContain('XA LỘ HÀ NỘI');
     expect(html).toContain('Nhà hàng The Deck Saigon - Thảo Điền');
 
-    // Full-width action button
-    expect(html).toContain('Xem trong Tất cả ảnh');
+    // Redundant action button removed
+    expect(html).not.toContain('Xem trong Tất cả ảnh');
   });
 
   it('AC04: locked hidden album gates access until unlocked via PIN challenge', () => {

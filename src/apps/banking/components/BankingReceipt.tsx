@@ -1,4 +1,3 @@
-import { IoDownloadOutline, IoShareOutline } from 'react-icons/io5';
 import { BottomSheet } from '../../../shared/ui/BottomSheet';
 import { StoryEvidenceTarget } from '../../../features/investigation';
 import type { UniversalEvidenceItem } from '../../../features/investigation';
@@ -65,33 +64,13 @@ export function BankingReceipt({ caseData, transaction, onClose, onEvidence, evi
           ))}
         </dl>
 
-        <div className="py-4">
+        <div className="py-4 pb-6">
           <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">
             Lời nhắn (Nội dung CK)
           </h3>
           <p className="mt-2 whitespace-pre-wrap break-words rounded-2xl bg-[#F5F6F8] p-4 text-sm italic leading-relaxed text-[#111827] border border-[#E5E7EB]">
             {transaction.memo || '-'}
           </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 pt-2 pb-4">
-          <button
-            type="button"
-            disabled
-            aria-label="Chia sẻ biên lai"
-            className="bank-control flex items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white py-2.5 text-xs font-semibold text-[#111827] opacity-60 cursor-not-allowed shadow-sm"
-          >
-            <IoShareOutline className="h-4 w-4" /> Chia sẻ
-          </button>
-          <button
-            type="button"
-            disabled
-            aria-label="Lưu ảnh biên lai"
-            className="bank-control flex items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white py-2.5 text-xs font-semibold text-[#111827] opacity-60 cursor-not-allowed shadow-sm"
-          >
-            <IoDownloadOutline className="h-4 w-4" /> Lưu ảnh
-          </button>
         </div>
       </StoryEvidenceTarget>
     </BottomSheet>

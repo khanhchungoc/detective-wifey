@@ -15,9 +15,9 @@ interface PhotoInfoDrawerProps {
   husbandName: string;
   isOpen: boolean;
   onClose: () => void;
-  onNavigateToGrid: () => void;
+  onNavigateToGrid?: () => void;
   onTriggerEvidence: (item: UniversalEvidenceItem) => void;
-  onShowToast: (message: string) => void;
+  onShowToast?: (message: string) => void;
 }
 
 function formatVietnameseDate(photo: PhotoItem): string {
@@ -48,9 +48,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
   husbandName,
   isOpen,
   onClose,
-  onNavigateToGrid,
   onTriggerEvidence,
-  onShowToast,
 }) => {
   if (!isOpen) return null;
 
@@ -80,25 +78,26 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
       className="absolute inset-x-0 bottom-0 max-h-[85%] z-40 bg-[#000000] text-white rounded-t-3xl shadow-2xl border-t border-white/10 flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-200"
     >
       {/* Top Grab Handle */}
-      <div className="pt-2.5 pb-1 flex justify-center items-center relative">
+      <div className="pt-2.5 pb-1.5 flex justify-center items-center shrink-0">
         <div className="w-10 h-1 bg-white/20 rounded-full" />
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-3 top-2 w-8 h-8 rounded-full bg-[#1C1C1E] flex items-center justify-center text-slate-400 hover:text-white"
-          aria-label="Đóng bảng thông tin"
-        >
-          <IoCloseOutline className="w-5 h-5" />
-        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-8 space-y-4">
         {/* Top Cropped Photo Preview */}
         <div className="h-28 w-full rounded-2xl overflow-hidden relative border border-white/10 shrink-0">
           <PhotoPreview photo={photo} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2.5">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2.5 pointer-events-none">
             <span className="text-xs font-semibold text-white truncate">{photo.title}</span>
           </div>
+          {/* Close button overlaid on top-right of the photo */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/90 hover:text-white transition-all active:scale-95 shadow-md"
+            aria-label="Đóng bảng thông tin"
+          >
+            <IoCloseOutline className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Caption Header */}
@@ -110,16 +109,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
 
         {/* Date, Time & Filename */}
         <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <p className="text-ios-subheadline font-semibold text-white">{formattedDate}</p>
-            <button
-              type="button"
-              onClick={() => onShowToast('Không khả dụng trong chế độ điều tra')}
-              className="text-ios-subheadline text-[#2979FF] font-medium hover:underline min-h-[32px] px-1"
-            >
-              Điều chỉnh
-            </button>
-          </div>
+          <p className="text-ios-subheadline font-semibold text-white">{formattedDate}</p>
           <div className="flex items-center gap-1.5 text-ios-caption-1 text-slate-400">
             <IoCloudOutline className="w-4 h-4 text-[#2979FF]" />
             <span>{exif.filename}</span>
@@ -200,30 +190,12 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
             </div>
 
             {/* Location Row */}
-            <div className="flex items-center justify-between text-ios-subheadline">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="font-semibold text-white truncate">{exif.locationName}</span>
-                <IoChevronForward className="w-4 h-4 text-slate-400 shrink-0" />
-              </div>
-              <button
-                type="button"
-                onClick={() => onShowToast('Không khả dụng trong chế độ điều tra')}
-                className="text-[#2979FF] font-medium hover:underline shrink-0 min-h-[32px] px-1"
-              >
-                Điều chỉnh
-              </button>
+            <div className="flex items-center gap-1.5 min-w-0 text-ios-subheadline">
+              <span className="font-semibold text-white truncate">{exif.locationName}</span>
+              <IoChevronForward className="w-4 h-4 text-slate-400 shrink-0" />
             </div>
           </div>
         </StoryEvidenceTarget>
-
-        {/* View in All Photos Full-Width Action */}
-        <button
-          type="button"
-          onClick={onNavigateToGrid}
-          className="w-full py-3.5 rounded-2xl bg-[#1C1C1E] hover:bg-white/10 border border-white/10 text-[#2979FF] font-semibold text-ios-subheadline text-center transition-all active:scale-[0.99] min-h-[44px]"
-        >
-          Xem trong Tất cả ảnh
-        </button>
       </div>
     </div>
   );

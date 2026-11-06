@@ -3,8 +3,6 @@ import {
   IoCopyOutline,
   IoEyeOffOutline,
   IoEyeOutline,
-  IoFlowerOutline,
-  IoCloseOutline,
   IoGridOutline,
   IoLeafOutline,
   IoQrCodeOutline,
@@ -13,7 +11,6 @@ import {
   IoWalletOutline,
   IoFingerPrintOutline,
   IoKeyOutline,
-  IoSwapHorizontalOutline,
   IoCheckmarkCircleOutline,
 } from 'react-icons/io5';
 import type { BankingData } from '../types';
@@ -34,7 +31,6 @@ interface BankingDashboardProps {
 export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingDashboardProps) {
   const [showBalance, setShowBalance] = useState(false);
   const [copyMessage, setCopyMessage] = useState('');
-  const [showBanner, setShowBanner] = useState(true);
 
   const copyAccount = async () => {
     try {
@@ -46,43 +42,8 @@ export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingD
     }
   };
 
-  const tierName = data.tier ? tierLabels[data.tier] : 'Inspire';
-
   return (
     <section aria-label="Tổng quan tài khoản" className="bank-dashboard-canvas flex min-h-full flex-col space-y-4 p-4 pb-8">
-      {/* 2. Hero Waveform Canvas & Slogan */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#FFF5ED] via-[#FFEADF] to-[#FFD8C4] p-4 pt-3 border border-[#FFD3BC]/60">
-        <div className="flex items-center justify-between">
-          {/* Animated/Styled Soundwave Bars */}
-          <div aria-hidden="true" className="flex items-end gap-1 h-10 w-28">
-            <span className="w-1.5 h-4 rounded-full bg-[#FFA07A] animate-pulse" />
-            <span className="w-1.5 h-8 rounded-full bg-[#FF7F50]" />
-            <span className="w-1.5 h-6 rounded-full bg-[#FF6B6B]" />
-            <span className="w-1.5 h-10 rounded-full bg-[#FFA07A]" />
-            <span className="w-1.5 h-7 rounded-full bg-[#FF7F50] animate-pulse" />
-            <span className="w-1.5 h-9 rounded-full bg-[#FF6B6B]" />
-            <span className="w-1.5 h-5 rounded-full bg-[#FFA07A]" />
-            <span className="w-1.5 h-8 rounded-full bg-[#FF7F50]" />
-          </div>
-
-          <div className="text-right">
-            <p className="text-xs font-bold tracking-widest text-[#111827] uppercase">BE INSPIRED</p>
-            <p className="font-serif italic text-base text-[#E85D04] font-medium">why not!</p>
-          </div>
-        </div>
-
-        {/* Floating marketing badge */}
-        <div className="mt-3 flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 backdrop-blur-sm px-3 py-1 text-ios-caption-2 font-semibold text-[#111827] border border-[#FFD3BC]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#ED1C24]" />
-            Quét QR Chạm vận may
-          </span>
-          <span className="text-ios-caption-2 font-medium text-[#6B7280]">
-            Hạng: <strong className="text-[#ED1C24]">{tierName}</strong>
-          </span>
-        </div>
-      </div>
-
       {/* 3. Floating Account Hero Card ("Số dư hiện có") */}
       <div className="bank-card-elevated p-4">
         <div className="flex items-center justify-between">
@@ -225,24 +186,6 @@ export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingD
         </button>
       </div>
 
-      {/* 5. Promotional Banner Strip */}
-      {showBanner && (
-        <div className="flex items-center justify-between rounded-2xl bg-[#FFF0F2] border border-[#FFE0E3] p-3 text-[#B71C1C] shadow-sm">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <IoFlowerOutline aria-hidden="true" className="h-5 w-5 shrink-0 text-[#ED1C24]" />
-            <span className="truncate text-xs font-semibold">Gửi lời yêu thương (20/10)</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowBanner(false)}
-            aria-label="Đóng biểu ngữ khuyến mãi"
-            className="bank-control flex h-7 w-7 min-h-0 min-w-0 items-center justify-center rounded-full text-[#B71C1C] hover:bg-black/5"
-          >
-            <IoCloseOutline aria-hidden="true" className="h-5 w-5" />
-          </button>
-        </div>
-      )}
-
       {/* 6. "Dành cho bạn" Section */}
       <div className="space-y-2">
         <h2 className="text-sm font-bold text-[#111827]">Dành cho bạn</h2>
@@ -333,43 +276,6 @@ export function BankingProfile({ data, husbandName = 'Pham Quoc Bao' }: { data: 
             </span>
           </li>
         </ul>
-      </div>
-    </section>
-  );
-}
-
-export function BankingTransferView({ onOpenHistory }: { onOpenHistory: () => void }) {
-  return (
-    <section aria-label="Chuyển tiền &amp; Thanh toán" className="space-y-4 p-4">
-      <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-sm text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#ED1C24]/10 text-[#ED1C24]">
-          <IoSwapHorizontalOutline className="h-7 w-7" />
-        </div>
-        <h2 className="mt-3 text-lg font-bold text-[#111827]">Chuyển tiền &amp; Thanh toán 24/7</h2>
-        <p className="mt-1 text-xs text-[#6B7280] leading-relaxed">
-          Chuyển tiền siêu tốc Napas 247, quét mã VietQR và thanh toán mọi hóa đơn tiện ích không mất phí.
-        </p>
-        <button
-          type="button"
-          onClick={onOpenHistory}
-          className="bank-control mt-4 inline-flex items-center justify-center rounded-full bg-[#ED1C24] px-6 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-[#B71C1C] transition-colors"
-        >
-          Xem lịch sử giao dịch
-        </button>
-      </div>
-
-      <div className="rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-sm">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">Phương thức chuyển tiền</h3>
-        <div className="mt-3 space-y-2">
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F5F6F8]">
-            <span className="text-sm font-medium text-[#111827]">Chuyển tới số tài khoản / thẻ</span>
-            <span className="text-xs text-[#6B7280]">Napas 247</span>
-          </div>
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#F5F6F8]">
-            <span className="text-sm font-medium text-[#111827]">Quét mã VietQR</span>
-            <span className="text-xs text-[#6B7280]">Tức thì</span>
-          </div>
-        </div>
       </div>
     </section>
   );

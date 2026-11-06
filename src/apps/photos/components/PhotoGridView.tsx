@@ -1,15 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
-  IoImages,
   IoFilterOutline,
-  IoSearchOutline,
   IoLockClosedOutline,
   IoLockOpenOutline,
   IoPeopleOutline,
   IoLocationOutline,
   IoCalendarOutline,
   IoPlay,
-  IoCloseOutline,
 } from 'react-icons/io5';
 import type { PhotoItem } from '../types';
 import { PhotoPreview } from './PhotoPreview';
@@ -26,8 +23,6 @@ interface PhotoGridViewProps {
   onRequestUnlock: () => void;
   onTriggerEvidence: (item: UniversalEvidenceItem) => void;
   onShowToast: (message: string) => void;
-  activeSegment: 'year' | 'month' | 'all';
-  onChangeSegment: (segment: 'year' | 'month' | 'all') => void;
   isViewingHidden: boolean;
   onToggleViewHidden: (viewHidden: boolean) => void;
 }
@@ -55,43 +50,16 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
   onRequestUnlock,
   onTriggerEvidence,
   onShowToast,
-  activeSegment,
-  onChangeSegment,
   isViewingHidden,
   onToggleViewHidden,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   const displayedPhotos = useMemo(() => {
-    let list = isViewingHidden ? hiddenPhotos : photos;
-
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(
-        (p) => p.title.toLowerCase().includes(q)
-          || p.description.toLowerCase().includes(q)
-          || (p.locationTag && p.locationTag.toLowerCase().includes(q)),
-      );
-    }
-
-    if (activeSegment === 'month') {
-      // In month segment mode, represent aggregated/grouped monthly slice
-      return list.slice(0, Math.min(list.length, 12));
-    }
-    if (activeSegment === 'year') {
-      // In year segment mode, represent yearly highlighted slice
-      return list.slice(0, Math.min(list.length, 6));
-    }
-
-    return list;
-  }, [photos, hiddenPhotos, isViewingHidden, searchQuery, activeSegment]);
+    return isViewingHidden ? hiddenPhotos : photos;
+  }, [photos, hiddenPhotos, isViewingHidden]);
 
   const dateRangeSubtitle = useMemo(() => {
-    if (activeSegment === 'year') return 'Năm 2026';
-    if (activeSegment === 'month') return 'Tháng 10, 2026';
     return calculateDateRange(photos);
-  }, [photos, activeSegment]);
+  }, [photos]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#000000] text-white overflow-hidden relative">
@@ -137,34 +105,10 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
             )}
           </div>
         </div>
-
-        {/* Search Input Bar */}
-        {isSearchOpen && (
-          <div className="mt-2.5 flex items-center gap-2 bg-[#1C1C1E] rounded-xl px-3 py-1.5 border border-white/10">
-            <IoSearchOutline className="w-4 h-4 text-slate-400 shrink-0" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm kiếm ảnh, địa điểm..."
-              className="w-full bg-transparent text-sm text-white focus:outline-hidden placeholder:text-slate-500"
-              autoFocus
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="text-slate-400 hover:text-white"
-              >
-                <IoCloseOutline className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-        )}
       </header>
 
       {/* Main Scrollable Photostream & Collections */}
-      <main className="flex-1 overflow-y-auto pb-24">
+      <main className="flex-1 overflow-y-auto pb-8">
         {isViewingHidden && (
           <div className="m-3 p-3 bg-amber-500/10 border border-[#FFC107]/30 rounded-xl text-xs text-amber-200">
             Thư mục ảnh bị ẩn đã mở khóa thành công.
@@ -318,74 +262,6 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
           </section>
         )}
       </main>
-
-      {/* Floating Frosted Bottom Navigation Capsule */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1C1C1E]/80 backdrop-blur-md border border-white/10 shadow-2xl">
-        <button
-          type="button"
-          onClick={() => {
-            onToggleViewHidden(false);
-            onChangeSegment('all');
-          }}
-          className="p-1.5 text-[#2979FF] hover:opacity-80 transition-opacity"
-          aria-label="Thư viện ảnh"
-        >
-          <IoImages className="w-5 h-5" />
-        </button>
-
-        <div className="h-4 w-px bg-white/20 mx-0.5" />
-
-        {/* Segmented Filter Pills */}
-        <div className="flex items-center gap-1 bg-black/40 rounded-full p-0.5 border border-white/5">
-          <button
-            type="button"
-            onClick={() => onChangeSegment('year')}
-            className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-              activeSegment === 'year'
-                ? 'bg-white/20 text-white shadow-xs'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Năm
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeSegment('month')}
-            className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-              activeSegment === 'month'
-                ? 'bg-white/20 text-white shadow-xs'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Tháng
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeSegment('all')}
-            className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-              activeSegment === 'all'
-                ? 'bg-white/20 text-white shadow-xs'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Tất cả
-          </button>
-        </div>
-
-        <div className="h-4 w-px bg-white/20 mx-0.5" />
-
-        {/* Search Icon Button */}
-        <button
-          type="button"
-          onClick={() => setIsSearchOpen((prev) => !prev)}
-          className={`p-1.5 rounded-full transition-colors ${
-            isSearchOpen ? 'text-[#2979FF] bg-white/10' : 'text-slate-300 hover:text-white'
-          }`}
-          aria-label="Tìm kiếm ảnh"
-        >
-          <IoSearchOutline className="w-5 h-5" />
-        </button>
-      </div>
     </div>
   );
 };
