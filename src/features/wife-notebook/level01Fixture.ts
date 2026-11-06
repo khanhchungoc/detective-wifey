@@ -153,7 +153,8 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
       sourceNodeId: 'node_record_ecommerce_order',
       targetNodeId: 'node_bridge_name',
       relationship: 'bridges_identity',
-      isSmokingGun: false,
+      isSmokingGun: true,
+      explanationRoastHint: 'Ơ... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra...',
     },
     {
       edgeId: 'edge_name_suspect',
@@ -161,7 +162,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
       targetNodeId: 'node_suspect_huong',
       relationship: 'bridges_identity',
       isSmokingGun: true,
-      explanationRoastHint: 'À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra...',
+      explanationRoastHint: 'Ơ... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra...',
     },
     {
       edgeId: 'edge_alibi_contradiction',
@@ -181,7 +182,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
     },
   ],
   requiredSmokingGunEdgeIds: [
-    'edge_name_suspect',
+    'edge_order_name',
     'edge_alibi_contradiction',
   ],
 };

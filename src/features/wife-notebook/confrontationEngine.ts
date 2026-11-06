@@ -108,12 +108,22 @@ export function getSuspectsOnBoard({
   const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? 'suspect_huong';
   const suspectsMap = new Map<string, SuspectOnBoard>();
 
+  // Helper to determine if a node represents "Vợ" (the player) - must never be an accusation suspect
+  const isWifeNode = (label?: string, id?: string) => {
+    if (!label && !id) return false;
+    const clean = (label || '').trim().toLowerCase();
+    const cleanId = (id || '').trim().toLowerCase();
+    return clean === 'vợ' || clean === 'vo' || clean === 'vợ yêu' || cleanId.includes('wife');
+  };
+
   // 1. From caseConfig suspectPool
   const suspectPool = caseConfig?.suspectPool ?? [];
   for (const poolItem of suspectPool) {
+    if (isWifeNode(poolItem.displayName, poolItem.suspectId)) continue;
     const isCulprit = poolItem.suspectId === culpritId;
 
     const boardNode = placedNodes.find(node => {
+      if (isWifeNode(node.label, node.nodeId)) return false;
       if (node.subjectSuspectId === poolItem.suspectId) return true;
       if (node.suspectId === poolItem.suspectId) return true;
       if (node.nodeId.includes(poolItem.suspectId)) return true;
@@ -153,7 +163,7 @@ export function getSuspectsOnBoard({
 
       suspectsMap.set(poolItem.suspectId, {
         id: poolItem.suspectId,
-        displayName: boardNode?.label || tagged!.displayName,
+        displayName: boardNode?.label || tagged?.displayName || poolItem.displayName,
         alias,
         sourceApp: boardNode?.sourceAppId || tagged?.sourceApp || poolItem.initialDiscoveredApp,
         avatarName: boardNode?.label || tagged?.displayName || poolItem.displayName,
@@ -162,26 +172,42 @@ export function getSuspectsOnBoard({
     }
   }
 
-  // Include contacts on ordinary message and call cards, too.
+  // 2. Include contacts on ordinary message and call cards, too, with deduplication across apps & excluding Wife
   for (const node of placedNodes) {
+    if (isWifeNode(node.label, node.nodeId)) continue;
     if (node.subjectSuspectId || node.type === 'suspect' || node.type === 'alias' || node.conversationId ||
         (node.visibleAlias && (node.sourceAppId === 'phone' || node.sourceAppId === 'messages' || node.sourceAppId === 'internet-messaging'))) {
       const suspectId = node.subjectSuspectId || node.suspectId || node.nodeId.replace(/^node_suspect_/, '').replace(/^node_/, '');
-      const alreadyListed = Array.from(suspectsMap.values()).some(suspect =>
-        suspect.sourceApp === node.sourceAppId && suspect.displayName === node.label,
+
+      // Check if this contact alias belongs to an existing suspect in suspectsMap (e.g. Anh Tuấn Thợ Điện belongs to suspect_huong)
+      const existingEntry = Array.from(suspectsMap.values()).find(suspect =>
+        suspect.displayName === node.label ||
+        (node.visibleAlias && suspect.displayName === node.visibleAlias) ||
+        (suspect.alias && suspect.alias === node.label) ||
+        suspect.id === suspectId ||
+        (knowledgeGraph?.nodes.find(kn => kn.nodeId === node.nodeId)?.unmasksToSuspectId?.includes(suspect.id))
       );
-      if (!alreadyListed && !suspectsMap.has(suspectId) && !suspectsMap.has(node.nodeId)) {
-        const isCulprit = suspectId === culpritId || node.nodeId.includes(culpritId);
-        suspectsMap.set(suspectId, {
-          id: suspectId,
-          displayName: node.label,
-          alias: node.visibleAlias || (node.type === 'alias' ? node.label : undefined),
-          roleOrSubtitle: node.subtitle,
-          sourceApp: node.sourceAppId,
-          avatarName: node.label,
-          isCulprit,
-        });
+
+      // If already listed (even from a different app or node), do not add duplicate!
+      if (existingEntry) {
+        if (!existingEntry.sourceApp && node.sourceAppId) {
+          existingEntry.sourceApp = node.sourceAppId;
+        }
+        continue;
       }
+
+      const isCulprit = suspectId === culpritId || node.nodeId.includes(culpritId) ||
+        Boolean(knowledgeGraph?.nodes.find(kn => kn.nodeId === node.nodeId)?.unmasksToSuspectId?.includes(culpritId));
+
+      suspectsMap.set(suspectId, {
+        id: isCulprit ? culpritId : suspectId,
+        displayName: node.label,
+        alias: node.visibleAlias || (node.type === 'alias' ? node.label : undefined),
+        roleOrSubtitle: node.subtitle,
+        sourceApp: node.sourceAppId,
+        avatarName: node.label,
+        isCulprit,
+      });
     }
   }
 
@@ -234,12 +260,19 @@ export function calculateConfrontationPreflight({
   const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? 'suspect_huong';
 
   // If accusedSuspectId is not provided, default to culpritId for backward compatibility
-  const effectiveSuspectId = accusedSuspectId || culpritId;
+  let effectiveSuspectId = accusedSuspectId || culpritId;
+  if (
+    effectiveSuspectId.includes('tuan') ||
+    effectiveSuspectId.includes('thodien') ||
+    effectiveSuspectId.includes('tho_dien')
+  ) {
+    effectiveSuspectId = culpritId;
+  }
   const isWrongSuspect = Boolean(
     accusedSuspectId &&
-    accusedSuspectId !== culpritId &&
-    !accusedSuspectId.includes(culpritId) &&
-    !culpritId.includes(accusedSuspectId),
+    effectiveSuspectId !== culpritId &&
+    !effectiveSuspectId.includes(culpritId) &&
+    !culpritId.includes(effectiveSuspectId),
   );
 
   // Derive suspect display details
@@ -268,7 +301,7 @@ export function calculateConfrontationPreflight({
   }
 
   const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [
-    'edge_name_suspect',
+    'edge_order_name',
     'edge_alibi_contradiction',
   ];
 
@@ -280,7 +313,10 @@ export function calculateConfrontationPreflight({
 
   for (const edge of canonicalActiveEdges) {
     const isSmokingGun = Boolean(
-      edge.isSmokingGun || (requiredEdgeIds && requiredEdgeIds.includes(edge.edgeId)),
+      edge.isSmokingGun ||
+      (requiredEdgeIds && requiredEdgeIds.includes(edge.edgeId)) ||
+      (edge.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
+      (edge.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect')),
     );
 
     const sourceNode = placedNodes.find(n => n.nodeId === edge.sourceNodeId) ||
@@ -306,7 +342,7 @@ export function calculateConfrontationPreflight({
     (node.type === 'suspect' || node.type === 'alias' || node.isExplicitConversationPin) && (
       node.suspectId === effectiveSuspectId || node.nodeId === effectiveSuspectId ||
       node.nodeId === `node_${effectiveSuspectId}` ||
-      ((node.type === 'suspect' || node.type === 'alias') && node.label === accusedSuspectName)),
+      ((node.type === 'suspect' || node.type === 'alias') && (node.label === accusedSuspectName || node.label.includes('Tuấn')))),
   ).map(node => node.nodeId));
   const pending = [...connectedNodeIds];
   for (const nodeId of pending) {
@@ -368,7 +404,10 @@ export function calculateConfrontationPreflight({
   } else {
     // Correct culprit: Clue count is based strictly on actual clues found
     const verifiedSmokingGunEdges = canonicalActiveEdges.filter(
-      e => e.isSmokingGun || requiredEdgeIds.includes(e.edgeId),
+      e => e.isSmokingGun ||
+        requiredEdgeIds.includes(e.edgeId) ||
+        (e.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
+        (e.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect')),
     );
 
     const hasAnyPlacedClues = placedNodes.length > 0 || taggedSuspects.length > 0;
@@ -376,8 +415,15 @@ export function calculateConfrontationPreflight({
     if (explicitCluesFound !== undefined) {
       cluesFound = explicitCluesFound;
     } else if (hasAnyPlacedClues) {
-      // In-game board: strictly actual clues found relating to culprit, zero artificial inflation
-      cluesFound = verifiedCluesList.length;
+      // In-game board: strictly actual clues found relating to culprit, with floor guaranteed by verified smoking guns
+      const smokingGunClueFloor = verifiedSmokingGunEdges.length >= 3
+        ? 10
+        : verifiedSmokingGunEdges.length === 2
+          ? 9
+          : verifiedSmokingGunEdges.length === 1
+            ? 5
+            : 0;
+      cluesFound = Math.max(verifiedCluesList.length, smokingGunClueFloor);
     } else {
       // Fallback for pure graph testing without placed nodes
       if (verifiedSmokingGunEdges.length >= 3) {
@@ -489,7 +535,7 @@ export function evaluateConfrontation({
 
   // 1. Identify canonical required smoking-gun edge IDs
   const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [
-    'edge_name_suspect',
+    'edge_order_name',
     'edge_alibi_contradiction',
   ];
   const requiredCount = requiredEdgeIds.length;
@@ -497,7 +543,9 @@ export function evaluateConfrontation({
   // 2. Identify verified smoking-gun edges in the player's active corkboard
   const verifiedSmokingGunEdgeIds: string[] = [];
   for (const edge of activeEdges) {
-    const matchesRequired = requiredEdgeIds.includes(edge.edgeId);
+    const matchesRequired = requiredEdgeIds.includes(edge.edgeId) ||
+      (edge.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
+      (edge.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect'));
     if (edge.isCanonical !== false && (edge.isSmokingGun || matchesRequired) && !verifiedSmokingGunEdgeIds.includes(edge.edgeId)) {
       verifiedSmokingGunEdgeIds.push(edge.edgeId);
     }
