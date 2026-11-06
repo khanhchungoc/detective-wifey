@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { anchoredCornerRadius, anchoredTransform, animateOverlay } from '../motion/anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, animateOverlay } from '../motion/anchoredOverlay';
 import { useDialogFocus } from './useDialogFocus';
 
-/** Keeps content alive while hidden and throughout exit, preserving scroll and notebook state. */
+/** Keeps content pre-laid out off-screen so pulling or opening the notebook never triggers layout reflow. */
 export function AnchoredOverlay({ open, anchorSelector, label, onClose, children }: {
   open: boolean; anchorSelector: string; label: string; onClose: () => void; children: ReactNode;
 }) {
@@ -15,27 +15,33 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
-    if (!open && !initialized.current) return;
-    element.hidden = false;
+    if (!open && !initialized.current) {
+      element.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
+      return;
+    }
+    element.style.visibility = 'visible';
     const anchor = document.querySelector<HTMLElement>(anchorSelector);
-    // Measure the layout rectangle without the in-flight animation transform.
-    const parent = element.offsetParent as HTMLElement | null;
-    const bounds = parent?.getBoundingClientRect() ?? element.getBoundingClientRect();
-    const anchorBounds = anchor?.getBoundingClientRect();
-    const closed = anchoredTransform(bounds, anchorBounds);
-    const closedBorderRadius = anchoredCornerRadius(bounds, anchorBounds);
     if (!initialized.current) {
-      element.style.transform = closed;
-      element.style.opacity = '0';
+      if (!element.style.transform || element.style.transform === 'none') {
+        element.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
+      }
       initialized.current = true;
     }
-    animation.current = animateOverlay(element, open, closed, () => {
-      if (!open) { element.hidden = true; setPresent(false); initialized.current = false; anchor?.focus({ preventScroll: true }); }
-    }, animation.current, window.matchMedia('(prefers-reduced-motion: reduce)').matches, closedBorderRadius);
+    animation.current = animateOverlay(element, open, NOTEBOOK_CLOSED_TRANSFORM, () => {
+      if (!open) {
+        element.style.visibility = 'hidden';
+        setPresent(false);
+        initialized.current = false;
+        anchor?.focus({ preventScroll: true });
+      }
+    }, animation.current, window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, [open, anchorSelector]);
   useEffect(() => () => animation.current?.cancel(), []);
-  return <div ref={ref} hidden={!present && !open} inert={!open} role="dialog" aria-modal={open}
+  return <div ref={ref} data-notebook-overlay inert={!open} role="dialog" aria-modal={open}
     aria-hidden={!open} aria-label={label} className="absolute inset-0 z-50 overflow-hidden"
-    style={{ transformOrigin: '0 0', pointerEvents: open ? 'auto' : 'none' }}
+    style={{
+      visibility: open || present ? 'visible' : 'hidden',
+      pointerEvents: open ? 'auto' : 'none',
+    }}
     onKeyDown={onKeyDown}>{children}</div>;
 }

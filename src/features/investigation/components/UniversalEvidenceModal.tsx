@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { IoClose, IoPin } from 'react-icons/io5';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import type { UniversalEvidenceItem } from '../../../shared/contracts/evidence';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
@@ -68,7 +67,7 @@ export const UniversalEvidenceModal = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="universal-evidence-title"
-        className="ios-evidence-modal w-full max-w-[420px] max-h-[calc(100%-2rem)] overflow-y-auto bg-white rounded-3xl p-5 shadow-2xl border border-white/40 animate-scaleUp flex flex-col gap-4"
+        className="ios-evidence-modal w-full max-w-[340px] max-h-[calc(100%-2rem)] overflow-y-auto bg-[#F2F2F7] rounded-[26px] p-5 shadow-2xl flex flex-col gap-3.5"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={e => {
           if (e.key === 'Escape') {
@@ -84,49 +83,40 @@ export const UniversalEvidenceModal = ({
           }
         }}
       >
-        <div className="flex items-start gap-2">
+        <div className="flex items-start gap-2.5">
           {avatar !== undefined ? avatar : (hasContactVisual && profileName?.trim() ? <ContactAvatar name={profileName} size={44} /> : null)}
           <div className="min-w-0 flex-1">
-            <h3 id="universal-evidence-title" className="text-ios-headline font-bold text-[#0F172A] leading-snug break-words">
+            <h3 id="universal-evidence-title" className="text-[17px] font-semibold text-black leading-snug break-words">
               {item.title}
             </h3>
-            {subtitle && <p className="text-ios-footnote text-[#64748B] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
+            {subtitle && <p className="text-[13px] text-[#8E8E93] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
           </div>
+        </div>
+
+        {/* Evidence Snippet - direct on alert surface without nested box */}
+        {item.snippet && (
+          <div className="text-[15px] text-[#3C3C43] leading-relaxed whitespace-pre-line select-text max-h-52 overflow-y-auto px-0.5">
+            <EvidenceSnippet text={item.snippet} fieldIconsEnabled={kind === 'order'} />
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3 pt-1">
           <button
             type="button"
             onClick={onClose}
-            className="min-w-[44px] min-h-[44px] shrink-0 -mr-2 -mt-2 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 active:scale-95 transition-all"
-            aria-label="Đóng"
+            className="w-full min-h-[44px] bg-[#E5E5EA] hover:bg-[#D1D1D6] active:scale-[0.98] text-black rounded-full font-semibold text-[15px] flex items-center justify-center transition-all"
           >
-            <IoClose className="w-5 h-5" />
+            <span>Bỏ qua</span>
           </button>
-        </div>
 
-        {/* Evidence Snippet Quote */}
-        {item.snippet && <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 border-l-4 border-l-rose-500 max-h-60 overflow-y-auto shrink-0">
-          <p className="text-ios-subheadline text-slate-700 leading-relaxed italic whitespace-pre-line select-text font-normal">
-            <EvidenceSnippet text={item.snippet} fieldIconsEnabled={kind === 'order'} />
-          </p>
-        </div>}
-
-        {/* Action Buttons */}
-        <div className="space-y-2 pt-1">
           <button
             type="button"
             onClick={handlePin}
             disabled={!canPin}
-            className="w-full min-h-[48px] bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 active:scale-[0.98] text-white rounded-2xl font-bold text-ios-headline flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-[44px] bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white rounded-full font-semibold text-[15px] flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
           >
-            <IoPin className="w-4 h-4 fill-white" />
-            <span>Ghim Vào Sổ Tay</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-full min-h-[44px] bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-600 rounded-2xl font-semibold text-ios-subheadline flex items-center justify-center transition-all"
-          >
-            <span>Bỏ qua</span>
+            <span>Ghim</span>
           </button>
         </div>
       </div>

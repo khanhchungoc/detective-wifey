@@ -16,8 +16,7 @@ import { RetainedAppView } from './RetainedAppView';
 export function GameRoot({ repository, initialCaseConfig }: {
   repository?: GameStateRepository; initialCaseConfig?: CaseConfig;
 }) {
-  const [isNotebookOpen, setNotebookOpen] = useState(false);
-  const [notebookVisitedCase, setNotebookVisitedCase] = useState<string | null>(null);
+  const [openNotebookCase, setOpenNotebookCase] = useState<string | null>(null);
   const [messageRoute, setMessageRoute] = useState<{ sessionId: number; threadId: string; request: number } | null>(null);
   const [game] = useState(() => new PlaySession({
     repository: repository ?? new LocalStorageAdapter(), loadCaseByLevel, getAvailableLevels, getAppDefinition,
@@ -29,7 +28,7 @@ export function GameRoot({ repository, initialCaseConfig }: {
   useEffect(() => { void game.initialize(); return game.stop; }, [game]);
   const { caseConfig, activeAppId, pendingChallenge } = state;
   const currentMessageRoute = messageRoute?.sessionId === state.appSessionId ? messageRoute : null;
-  const notebookOpen = isNotebookOpen && notebookVisitedCase === caseConfig.caseId;
+  const notebookOpen = openNotebookCase === caseConfig.caseId;
   const activeApp = activeAppId !== 'home' ? getAppDefinition(activeAppId) ?? null : null;
   const contexts = useMemo(() => Object.fromEntries(Object.values(APP_REGISTRY)
     .map(app => [app.appId, createAppContext(caseConfig, app.appId)])), [caseConfig]);
@@ -60,8 +59,8 @@ export function GameRoot({ repository, initialCaseConfig }: {
     grayedOutAppIds={caseConfig.grayedOutAppIds}
     systemAlertToast={state.systemAlertToast}
     onLaunchApp={launch} onReturnHome={returnHome} onRestartLevel={game.restart}
-    onOpenNotebook={() => { setNotebookVisitedCase(caseConfig.caseId); setNotebookOpen(true); }}
-    onCloseNotebook={() => setNotebookOpen(false)}
+    onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
+    onCloseNotebook={() => setOpenNotebookCase(null)}
     notebookOpen={notebookOpen}
     onNotify={game.notify}
     renderLevelSelector={onClose => <LevelSelectorSheet levels={game.availableLevels()}
@@ -70,8 +69,8 @@ export function GameRoot({ repository, initialCaseConfig }: {
       onSelectLevel={level => { if (game.selectLevel(level)) onClose(); }} onClose={onClose} />}
     overlays={<>
       <AnchoredOverlay key={caseConfig.caseId} open={notebookOpen} anchorSelector="[data-notebook-tab]"
-        label="Sổ tay của vợ" onClose={() => setNotebookOpen(false)}>
-      {notebookVisitedCase === caseConfig.caseId && <WifeNotebookModal
+        label="Sổ tay của vợ" onClose={() => setOpenNotebookCase(null)}>
+      <WifeNotebookModal
         caseId={caseConfig.caseId}
         caseConfig={caseConfig}
         knowledgeGraph={caseConfig.knowledgeGraph}
@@ -80,20 +79,20 @@ export function GameRoot({ repository, initialCaseConfig }: {
         getSourceApp={id => APP_REGISTRY[id]}
         taggedSuspects={state.taggedSuspects}
         isOpen={notebookOpen}
-        onClose={() => setNotebookOpen(false)}
+        onClose={() => setOpenNotebookCase(null)}
         onReturnHome={() => {
-          setNotebookOpen(false);
+          setOpenNotebookCase(null);
           returnHome();
         }}
         onNavigateToSource={(appId) => {
-          setNotebookOpen(false);
+          setOpenNotebookCase(null);
           launch(appId);
         }}
         onUpdateTaggedSuspects={game.updateTaggedSuspects}
         onApplyConfrontationStrike={game.applyConfrontationPenalty}
         onConfrontationVictory={game.recordConfrontationVerdict}
         onNextLevel={game.forgiveAndAdvanceLevel}
-      />}
+      />
       </AnchoredOverlay>
       {pendingChallenge && <SharedPinLockpad key={`${caseConfig.caseId}:${pendingChallenge.challenge.challengeId}`}
         appName={pendingChallenge.appName} targetChallengeId={pendingChallenge.challenge.challengeId}

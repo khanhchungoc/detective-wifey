@@ -1,10 +1,12 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import { IoBookOutline, IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
+import { useLayoutEffect, useRef } from 'react';
+import { IoBookOutline, IoChevronForwardOutline } from 'react-icons/io5';
+import { NOTEBOOK_CLOSED_TRANSFORM, animateOverlay } from '../../shared/motion/anchoredOverlay';
 import {
-  clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock, isFloatingDetached,
+  clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock,
+  notebookPullOffset, shouldCommitNotebookPull,
   FLOATING_SAMPLE_MS, FLOATING_SETTLE_MS,
   NOTEBOOK_TAB_WIDTH, NOTEBOOK_TAB_HEIGHT, NOTEBOOK_FLOAT_SIZE,
-  type DockEdge, type FloatingBounds, type FloatingPoint, type FloatingSample,
+  type FloatingBounds, type FloatingPoint, type FloatingSample,
 } from './floatingControlPosition';
 
 const transform = (point: FloatingPoint) => `translate3d(${point.x}px, ${point.y}px, 0)`;
@@ -21,14 +23,14 @@ export function NotebookTab({
   onClose?: () => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const position = useRef<{ edge: DockEdge; fraction: number }>({ edge: 'right', fraction: .68 });
-  const [currentEdge, setCurrentEdge] = useState<DockEdge>('right');
+  const position = useRef<{ fraction: number }>({ fraction: .68 });
   const bounds = useRef<FloatingBounds>({ left: 0, right: 0, top: 0, bottom: 0 });
   const settling = useRef<Animation | null>(null);
   const frame = useRef<number | null>(null);
   const gesture = useRef<{
     id: number; startX: number; startY: number; origin: FloatingPoint; point: FloatingPoint;
-    scaleX: number; scaleY: number; moved: boolean; samples: FloatingSample[];
+    scaleX: number; scaleY: number; moved: boolean; mode: 'vertical' | 'pull' | null;
+    surfaceWidth: number; pullOffsetX: number; overlay: HTMLElement | null; samples: FloatingSample[];
   } | null>(null);
   const suppressClick = useRef(false);
 
@@ -49,9 +51,8 @@ export function NotebookTab({
       const top = Math.max(59, statusHeight, parseFloat(style.paddingTop) || 0) + 8;
       bounds.current = { left, right: Math.max(left, parent.clientWidth - NOTEBOOK_TAB_WIDTH - (parseFloat(style.paddingRight) || 0)), top,
         bottom: Math.max(top, parent.clientHeight - NOTEBOOK_TAB_HEIGHT - Math.max(34, parseFloat(style.paddingBottom) || 0) - 8) };
-      element.style.transform = transform(floatingDockPosition(position.current.edge, position.current.fraction, bounds.current));
-      element.dataset.edge = position.current.edge;
-      setCurrentEdge(position.current.edge);
+      element.style.transform = transform(floatingDockPosition('right', position.current.fraction, bounds.current));
+      element.dataset.edge = 'right';
       element.dataset.floating = 'false';
     };
     place();
@@ -77,27 +78,48 @@ export function NotebookTab({
     suppressClick.current = active.moved || cancelled;
     if (!active.moved && !cancelled) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const point = cancelled ? active.point : clampFloatingPoint({ x: active.origin.x + dx, y: active.origin.y + dy }, bounds.current);
     const velocity = floatingVelocity(active.samples, { x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
-    const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced);
-    position.current = { edge: dock.edge, fraction: dock.fraction };
-    setCurrentEdge(dock.edge);
     const button = event.currentTarget;
     const from = getComputedStyle(button).transform;
     settling.current?.cancel();
-    button.dataset.edge = dock.edge;
+    button.dataset.edge = 'right';
     button.dataset.floating = 'false';
+
+    if (active.mode === 'pull') {
+      const dockPoint = floatingDockPosition('right', position.current.fraction, bounds.current);
+      const to = transform(dockPoint);
+      button.style.transform = to;
+      if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
+        { duration: FLOATING_SETTLE_MS, easing: 'cubic-bezier(.32,.72,0,1)' });
+      const offsetX = notebookPullOffset(active.surfaceWidth, dx, open);
+      const shouldOpen = !cancelled && shouldCommitNotebookPull(offsetX, active.surfaceWidth, velocity.x, open);
+      if (shouldOpen && !open) {
+        onOpen();
+      } else if (!shouldOpen && open) {
+        onClose?.();
+      } else if (!shouldOpen && !open && active.overlay) {
+        const overlay = active.overlay;
+        animateOverlay(overlay, false, NOTEBOOK_CLOSED_TRANSFORM, () => {
+          overlay.style.visibility = 'hidden';
+        }, undefined, reduced);
+      }
+      return;
+    }
+
+    const point = cancelled ? active.point : clampFloatingPoint({ x: bounds.current.right, y: active.origin.y + dy }, bounds.current);
+    const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced);
+    position.current = { fraction: dock.fraction };
     const to = transform(dock.point);
     button.style.transform = to;
     if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
       { duration: FLOATING_SETTLE_MS, easing: 'cubic-bezier(.32,.72,0,1)' });
   };
 
-  return <button ref={ref} data-notebook-tab data-edge={currentEdge} data-floating="false" type="button"
+  return <button ref={ref} data-notebook-tab data-edge="right" data-floating="false" type="button"
     aria-label={open ? 'Đóng sổ tay của vợ' : 'Mở sổ tay của vợ'}
     aria-haspopup="dialog" aria-expanded={open} tabIndex={hidden ? -1 : 0} aria-hidden={hidden}
-    title={open ? 'Sổ tay của vợ · Chạm để đóng, kéo hoặc vuốt để di chuyển' : 'Sổ tay của vợ · Chạm để mở, kéo hoặc vuốt để di chuyển'}
-    className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:right-0 data-[edge=left]:before:left-0 data-[edge=left]:before:-right-4 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
+    title={open ? 'Sổ tay của vợ · Chạm để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
+    className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:right-0 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
     style={{ width: NOTEBOOK_TAB_WIDTH, height: NOTEBOOK_TAB_HEIGHT, touchAction: 'none', opacity: hidden ? 0 : 1, pointerEvents: hidden ? 'none' : 'auto' }}
     onPointerDown={event => {
       if (event.button !== 0 || !event.isPrimary) return;
@@ -107,11 +129,19 @@ export function NotebookTab({
       if (!parent) return;
       const rect = button.getBoundingClientRect(), host = parent.getBoundingClientRect();
       const scaleX = host.width / parent.offsetWidth || 1, scaleY = host.height / parent.offsetHeight || 1;
+      const surfaceWidth = parent.offsetWidth || host.width || 390;
+      if (bounds.current.right === 0 && surfaceWidth > 0) {
+        bounds.current = { left: 0, right: Math.max(0, surfaceWidth - NOTEBOOK_TAB_WIDTH), top: 67, bottom: Math.max(67, (parent.offsetHeight || host.height || 844) - NOTEBOOK_TAB_HEIGHT - 42) };
+      }
       const point = { x: (rect.left - host.left) / scaleX - parent.clientLeft, y: (rect.top - host.top) / scaleY - parent.clientTop };
+      const overlay = typeof parent.querySelector === 'function' ? parent.querySelector<HTMLElement>('[data-notebook-overlay]') : null;
       settling.current?.cancel();
       button.style.transform = transform(point);
-      gesture.current = { id: event.pointerId, startX: event.clientX, startY: event.clientY, origin: point, point,
-        scaleX, scaleY, moved: false, samples: [{ x: event.clientX / scaleX, y: event.clientY / scaleY, time: event.timeStamp }] };
+      gesture.current = {
+        id: event.pointerId, startX: event.clientX, startY: event.clientY, origin: point, point,
+        scaleX, scaleY, moved: false, mode: null, surfaceWidth, pullOffsetX: open ? 0 : surfaceWidth, overlay,
+        samples: [{ x: event.clientX / scaleX, y: event.clientY / scaleY, time: event.timeStamp }],
+      };
       suppressClick.current = false;
       button.setPointerCapture(event.pointerId);
     }}
@@ -123,29 +153,37 @@ export function NotebookTab({
       active.samples.push({ x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
       active.moved ||= isFloatingDrag(dx, dy);
       if (!active.moved) return;
-      active.point = clampFloatingPoint({ x: active.origin.x + dx, y: active.origin.y + dy }, bounds.current);
-      event.currentTarget.dataset.floating = String(isFloatingDetached(active.point, bounds.current));
-      const nextEdge = active.point.x < (bounds.current.left + bounds.current.right) / 2 ? 'left' : 'right';
-      if (event.currentTarget.dataset.edge !== nextEdge) {
-        event.currentTarget.dataset.edge = nextEdge;
-        setCurrentEdge(nextEdge);
+      if (active.mode === null) {
+        const isHorizontalPull = Math.abs(dx) >= Math.abs(dy) && (open ? dx > 0 : dx < 0);
+        active.mode = isHorizontalPull ? 'pull' : 'vertical';
+        if (active.mode === 'pull' && active.overlay) {
+          active.overlay.getAnimations?.().forEach(anim => anim.cancel());
+          active.overlay.style.visibility = 'visible';
+          active.overlay.style.opacity = '1';
+        }
+      }
+      if (active.mode === 'pull') {
+        active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);
+        const tabX = open ? bounds.current.right : clampFloatingPoint({ x: active.origin.x + dx, y: active.origin.y }, bounds.current).x;
+        active.point = { x: tabX, y: active.origin.y };
+      } else {
+        active.point = clampFloatingPoint({ x: bounds.current.right, y: active.origin.y + dy }, bounds.current);
       }
       if (frame.current === null) frame.current = requestAnimationFrame(() => {
         frame.current = null;
-        if (gesture.current === active && ref.current) ref.current.style.transform = transform(active.point);
+        if (gesture.current !== active) return;
+        if (ref.current) ref.current.style.transform = transform(active.point);
+        if (active.mode === 'pull' && active.overlay) {
+          active.overlay.style.transform = `translate3d(${Math.round(active.pullOffsetX)}px, 0, 0)`;
+        }
       });
     }} onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish}
     onClick={event => {
       event.stopPropagation();
       if (suppressClick.current && event.detail !== 0) { suppressClick.current = false; return; }
-      // Finish docking before the notebook measures its origin, including taps during inertia.
       settling.current?.cancel();
-      event.currentTarget.style.transform = transform(floatingDockPosition(position.current.edge, position.current.fraction, bounds.current));
+      event.currentTarget.style.transform = transform(floatingDockPosition('right', position.current.fraction, bounds.current));
       event.currentTarget.dataset.floating = 'false';
-      // Force final shape before the overlay captures the docked anchor bounds.
-      const surface = event.currentTarget.querySelector<HTMLElement>('[data-tab-surface]');
-      surface?.getBoundingClientRect();
-      surface?.getAnimations?.().forEach(animation => animation.finish());
       if (open) {
         onClose?.();
       } else {
@@ -153,11 +191,11 @@ export function NotebookTab({
       }
     }}>
       <span data-tab-surface aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 flex h-[var(--tab-dock-height)] w-[var(--tab-dock-width)] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-l-2xl border-y border-l border-white/35 bg-slate-900/85 shadow-lg transition-[width,height,border-radius] duration-150 ease-out motion-reduce:transition-none group-data-[edge=left]:rounded-l-none group-data-[edge=left]:rounded-r-2xl group-data-[edge=left]:border-l-0 group-data-[edge=left]:border-r group-data-[floating=true]:h-[var(--tab-float-size)] group-data-[floating=true]:w-[var(--tab-float-size)] group-data-[floating=true]:!rounded-2xl group-data-[floating=true]:!border"
+        className="pointer-events-none absolute left-1/2 top-1/2 flex h-[var(--tab-dock-height)] w-[var(--tab-dock-width)] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-l-2xl border-y border-l border-white/35 bg-slate-900/85 shadow-lg"
         style={{ '--tab-dock-width': `${NOTEBOOK_TAB_WIDTH}px`, '--tab-dock-height': `${NOTEBOOK_TAB_HEIGHT}px`, '--tab-float-size': `${NOTEBOOK_FLOAT_SIZE}px`,
         } as React.CSSProperties}>
         {open ? (
-          currentEdge === 'left' ? <IoChevronBackOutline className="h-4 w-4" /> : <IoChevronForwardOutline className="h-4 w-4" />
+          <IoChevronForwardOutline className="h-4 w-4" />
         ) : (
           <IoBookOutline className="h-4 w-4" />
         )}

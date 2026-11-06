@@ -67,12 +67,13 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-pop { to { transform: translateX(calc(100% - var(--swipe-distance, 0px))); } }
 @keyframes ios-reveal { from { transform: translateX(-25%); opacity: .6; } }
 @keyframes ios-app-in {
-  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
-  to { transform: none; }
+  /* Round with the launcher icon, then settle to the square full-screen app. */
+  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: 90px; }
+  to { transform: none; border-radius: 0; }
 }
 @keyframes ios-app-out {
-  from { transform: none; }
-  to { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
+  from { transform: none; border-radius: 0; }
+  to { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: 90px; }
 }
 @keyframes ios-app-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ios-app-fade-out { from { opacity: 1; } to { opacity: 0; } }

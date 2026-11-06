@@ -30,13 +30,21 @@ export function floatingDockPosition(edge: DockEdge, fraction: number, bounds: F
   return { x: edge === 'left' ? bounds.left : bounds.right,
     y: bounds.top + clamp(fraction, 0, 1) * Math.max(0, bounds.bottom - bounds.top) };
 }
-/** Project both axes before docking: a flick can cross the midline or travel farther vertically. */
+/** Dock strictly on the right edge while projecting vertical momentum so left-edge OS back gestures stay clear. */
 export function projectFloatingDock(point: FloatingPoint, velocity: FloatingPoint, bounds: FloatingBounds, inertia = true) {
   const horizon = inertia ? FLOATING_PROJECTION_MS : 0;
-  const projected = clampFloatingPoint({ x: point.x + velocity.x * horizon, y: point.y + velocity.y * horizon }, bounds);
-  const horizontalThrow = inertia && Math.abs(velocity.x) >= FLOATING_THROW_SPEED && Math.abs(velocity.x) > Math.abs(velocity.y);
-  const edge: DockEdge = horizontalThrow ? (velocity.x < 0 ? 'left' : 'right')
-    : point.x < (bounds.left + bounds.right) / 2 ? 'left' : 'right';
-  return { edge, point: { x: edge === 'left' ? bounds.left : bounds.right, y: projected.y },
+  const projected = clampFloatingPoint({ x: bounds.right, y: point.y + velocity.y * horizon }, bounds);
+  const edge: DockEdge = 'right';
+  return { edge, point: { x: bounds.right, y: projected.y },
     fraction: bounds.bottom > bounds.top ? (projected.y - bounds.top) / (bounds.bottom - bounds.top) : 0 };
+}
+export function notebookPullOffset(surfaceWidth: number, dx: number, open = false): number {
+  const width = Math.max(0, surfaceWidth);
+  return clamp((open ? 0 : width) + dx, 0, width);
+}
+export function shouldCommitNotebookPull(offsetX: number, surfaceWidth: number, velocityX: number, open = false): boolean {
+  if (surfaceWidth <= 0) return !open;
+  if (velocityX <= -FLOATING_THROW_SPEED) return true;
+  if (velocityX >= FLOATING_THROW_SPEED) return false;
+  return open ? offsetX < surfaceWidth * .3 : offsetX <= surfaceWidth * .7;
 }

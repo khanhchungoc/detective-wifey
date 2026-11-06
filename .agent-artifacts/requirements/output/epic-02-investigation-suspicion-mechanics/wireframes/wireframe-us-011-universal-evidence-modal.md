@@ -72,30 +72,29 @@ tags: [requirement, wireframe, evidence, long-press, modal]
 |           (Lớp nền tối mờ bg-black/60)         |
 |                                                |
 |      +----------------------------------+      |
-|      | Ghim vào Sổ Tay Bắt Ghen?        |      |
-|      | Anh Tuấn Thợ Điện · 15/10 20:48  |      |
+|      | Anh Tuấn Thợ Điện                |      |
+|      | 15/10/2026 · 20:48               |      |
 |      |                                  |      |
-|      | +------------------------------+ |      |
-|      | | "Tối nay 20h48 anh qua kiểm  | |      |
-|      | | tra đường điện cho em nhé!"  | |      |
-|      | +------------------------------+ |      |
+|      | Tối nay 20h48 anh qua kiểm tra   |      |
+|      | đường điện cho em nhé!           |      |
 |      |                                  |      |
 |      |  [ Bỏ qua ]        [   Ghim   ]  |      |
-|      |  (Pill Xanh)       (Pill Xám)   |      |
+|      |  (Pill Xám)        (Pill Đỏ)    |      |
 |      +----------------------------------+      |
 |                                                |
 +------------------------------------------------+
 ```
 
 - Nền phía sau: Phủ màu tối `bg-black/60` kết hợp làm mờ sâu (`backdrop-blur-md`). Chạm ngoài để hủy bỏ.
-- Hộp thoại cảnh báo (iOS Popup Alert): Khung nhỏ gọn (`max-w-[340px]`), bo góc lớn chuẩn iOS (`rounded-[26px]`), nền xám sáng `bg-[#F2F2F6]`, bóng đổ nổi `shadow-2xl`. Bỏ nút đóng `[X]` ở góc trên để tuân thủ triệt để giao diện iOS Alert nguyên bản.
-- Tiêu đề & Thông tin đối tượng:
-  - Tiêu đề câu hỏi: In đậm rõ ràng (`text-ios-headline font-bold text-[#0F172A]`), ví dụ "Ghim vào Sổ Tay Bắt Ghen?".
-  - Dòng phụ: Tên đối tượng và mốc thời gian (`text-ios-footnote text-[#64748B]`), ví dụ "Anh Tuấn Thợ Điện · 15/10 20:48".
-- Khung trích dẫn manh mối: Nền thẻ `bg-white/90`, bo góc `rounded-2xl`, viền mảnh `border border-slate-200/80` kèm dải màu hồng cánh sen bên trái (`border-l-4 border-l-rose-500`), chữ in nghiêng màu `slate-700`.
-- Hàng nút hành động ngang (Side-by-side pill buttons): Bố trí dàn ngang theo 2 cột cân đối:
-  - Nút [Bỏ qua] (Trái): Dạng viên thuốc (`rounded-full`), nền xanh iOS đặc trưng (`bg-[#007AFF]`), chữ trắng in đậm (`text-white font-semibold`), chiều cao tối thiểu 44px.
-  - Nút [Ghim] (Phải): Dạng viên thuốc (`rounded-full`), nền xám nhạt (`bg-[#E5E5EA]`), chữ màu hồng cánh sen/đỏ (`text-rose-600 font-semibold`), chiều cao tối thiểu 44px.
+- Hộp thoại cảnh báo (iOS Popup Alert): Khung nhỏ gọn (`max-w-[340px]`), bo góc lớn chuẩn iOS (`rounded-[26px]`), nền xám sáng `bg-[#F2F2F7]`, bóng đổ nổi `shadow-2xl`. Bỏ nút đóng `[X]` ở góc trên để tuân thủ triệt để giao diện iOS Alert nguyên bản.
+- Loại bỏ hoàn toàn lỗi "hộp trong hộp" (Box-in-a-box): Nội dung manh mối hiển thị trực tiếp trên bề mặt thẻ thông báo, không bọc thêm thẻ viền trắng hay thanh màu phụ.
+- Hệ thống phân cấp kiểu chữ và màu sắc tối giản (Chuẩn Apple Human Interface Guidelines):
+  - Tiêu đề (Title): 17px chữ in đậm vừa (`font-semibold text-black`).
+  - Phụ đề (Subtitle): 13px dạng thường màu xám hệ thống (`text-[13px] text-[#8E8E93]`).
+  - Nội dung manh mối (Body): 15px dạng đứng tự nhiên (`text-[15px] text-[#3C3C43] leading-relaxed`), tuyệt đối không dùng chữ nghiêng (`italic`).
+  - Hàng nút hành động ngang (Side-by-side pill buttons):
+    - Nút [Bỏ qua] (Trái, Thứ cấp): Dạng viên thuốc (`rounded-full`), nền xám hệ thống nhạt (`bg-[#E5E5EA]`), chữ đen in đậm vừa (`text-black font-semibold text-[15px]`), cao 44px.
+    - Nút [Ghim] (Phải, Chính): Dạng viên thuốc (`rounded-full`), nền đỏ hồng nổi bật (`bg-rose-600`), chữ trắng in đậm vừa (`text-white font-semibold text-[15px]`), cao 44px.
 
 ---
 

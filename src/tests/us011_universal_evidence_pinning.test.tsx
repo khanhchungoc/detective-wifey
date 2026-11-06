@@ -53,15 +53,14 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
 
     // Evidence Quotation Block
     expect(html).toContain('Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!');
-    expect(html).toContain('border-l-rose-500');
 
     // Overlay width
-    expect(html).toContain('max-w-[420px]');
+    expect(html).toContain('max-w-[340px]');
 
     // Primary and Secondary Buttons
-    expect(html).toContain('Ghim Vào Sổ Tay');
+    expect(html).toContain('Ghim');
     expect(html).toContain('Bỏ qua');
-    expect(html).toContain('aria-label="Đóng"');
+    expect(html).not.toContain('aria-label="Đóng"');
     expect(html).not.toContain('shadow-rose-500/25');
   });
 
@@ -89,7 +88,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     expect(html).toContain('Giao sau 20:48 nhé!');
     expect(html.indexOf('universal-evidence-title" class')).toBeLessThan(html.indexOf('15/10 · 20:48'));
     expect(html.indexOf('15/10 · 20:48')).toBeLessThan(html.indexOf('Giao sau'));
-    expect(html.indexOf('Giao sau')).toBeLessThan(html.indexOf('Ghim Vào Sổ Tay'));
+    expect(html.indexOf('Giao sau')).toBeLessThan(html.indexOf('Ghim'));
   });
 
   it('preserves supplied subtitles and renders title-only conversations without a duplicate quote', () => {
@@ -97,8 +96,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
       evidenceSnippet="" suspectToTag="Anh Tuấn" onPinEvidence={vi.fn()} onClose={vi.fn()} />);
     expect(html.match(/Anh Tuấn/g)).toHaveLength(1);
     expect(html).toContain('Zola · Liên hệ');
-    expect(html).not.toContain('border-l-rose-500');
-    expect(html).toContain('Ghim Vào Sổ Tay');
+    expect(html).toContain('Ghim');
   });
 
   it('reuses the pinned contact profile picture instead of a different attributed identity', () => {

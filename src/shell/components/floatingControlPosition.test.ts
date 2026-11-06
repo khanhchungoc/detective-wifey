@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { clampFloatingPoint, floatingDockPosition, floatingVelocity, projectFloatingDock, isFloatingDetached, NOTEBOOK_FLOAT_SIZE, NOTEBOOK_TAB_WIDTH, NOTEBOOK_TAB_HEIGHT } from './floatingControlPosition';
+import {
+  clampFloatingPoint, floatingDockPosition, floatingVelocity, projectFloatingDock, isFloatingDetached,
+  notebookPullOffset, shouldCommitNotebookPull,
+  NOTEBOOK_FLOAT_SIZE, NOTEBOOK_TAB_WIDTH, NOTEBOOK_TAB_HEIGHT,
+} from './floatingControlPosition';
 
 const bounds = { left: 0, right: 362, top: 67, bottom: 746 };
-describe('floating notebook tab docking', () => {
+describe('floating notebook tab docking and pull physics', () => {
   it('detaches only with enough inward clearance for a centered floating square', () => {
     expect(NOTEBOOK_TAB_HEIGHT).toBe(80);
     expect(NOTEBOOK_FLOAT_SIZE).toBe(NOTEBOOK_TAB_HEIGHT);
@@ -17,16 +21,20 @@ describe('floating notebook tab docking', () => {
       expect(visualLeft + NOTEBOOK_FLOAT_SIZE).toBeLessThanOrEqual(bounds.right + NOTEBOOK_TAB_WIDTH);
     }
   });
-  it('throws to either edge even when a short flick does not cross a wide screen midline', () => {
+  it('always docks on the right edge even when flicked left to avoid overlapping iOS back gestures', () => {
     const wide = { ...bounds, right: 1400 };
-    expect(projectFloatingDock({ x: 1300, y: 400 }, { x: -.6, y: 0 }, wide).edge).toBe('left');
-    expect(projectFloatingDock({ x: 60, y: 400 }, { x: .6, y: 0 }, wide).edge).toBe('right');
+    expect(projectFloatingDock({ x: 1300, y: 400 }, { x: -.6, y: 0 }, wide).edge).toBe('right');
+    expect(projectFloatingDock({ x: 60, y: 400 }, { x: -.9, y: 0 }, bounds).edge).toBe('right');
+    expect(projectFloatingDock({ x: 150, y: 400 }, { x: .2, y: 0 }, bounds).point.x).toBe(bounds.right);
   });
-  it('keeps vertical flicks on their current side and slow drags on the nearest edge', () => {
-    expect(projectFloatingDock({ x: 350, y: 400 }, { x: -.6, y: 2 }, bounds).edge).toBe('right');
-    expect(projectFloatingDock({ x: 10, y: 400 }, { x: .6, y: -2 }, bounds).edge).toBe('left');
-    expect(projectFloatingDock({ x: 200, y: 400 }, { x: -.2, y: 0 }, bounds).edge).toBe('right');
-    expect(projectFloatingDock({ x: 150, y: 400 }, { x: .2, y: 0 }, bounds).edge).toBe('left');
+  it('computes 1:1 horizontal pull offset and commit threshold when dragging the notebook', () => {
+    expect(notebookPullOffset(390, -140, false)).toBe(250);
+    expect(notebookPullOffset(390, -500, false)).toBe(0);
+    expect(notebookPullOffset(390, 40, false)).toBe(390);
+    expect(shouldCommitNotebookPull(250, 390, 0, false)).toBe(true);
+    expect(shouldCommitNotebookPull(320, 390, 0, false)).toBe(false);
+    expect(shouldCommitNotebookPull(350, 390, -.6, false)).toBe(true);
+    expect(shouldCommitNotebookPull(100, 390, .6, false)).toBe(false);
   });
   it('carries vertical momentum and clamps away from status and home areas', () => {
     expect(projectFloatingDock({ x: 340, y: 400 }, { x: 0, y: 1 }, bounds).point.y).toBe(580);
@@ -39,7 +47,7 @@ describe('floating notebook tab docking', () => {
   });
   it('preserves relative dock position across resize and safely handles tiny hosts', () => {
     const dock = projectFloatingDock({ x: 0, y: (67 + 746) / 2 }, { x: 0, y: 0 }, bounds);
-    expect(floatingDockPosition(dock.edge, dock.fraction, { left: 10, right: 700, top: 50, bottom: 550 })).toEqual({ x: 10, y: 300 });
+    expect(floatingDockPosition(dock.edge, dock.fraction, { left: 10, right: 700, top: 50, bottom: 550 })).toEqual({ x: 700, y: 300 });
     expect(floatingDockPosition('right', 2, { left: 0, right: 0, top: 52, bottom: 52 })).toEqual({ x: 0, y: 52 });
   });
   it('uses recent release velocity and discards paused or stale flicks', () => {

@@ -11,16 +11,14 @@
         <circle cx="15" cy="75" r="1.1" opacity=".18"/>
         <circle cx="45" cy="75" r=".9" opacity=".17"/>
         <circle cx="75" cy="75" r="1" opacity=".20"/>
+        <circle cx="30" cy="28" r=".7" opacity=".12"/>
+        <circle cx="62" cy="58" r=".75" opacity=".13"/>
+        <circle cx="24" cy="82" r=".65" opacity=".12"/>
       </g>
     </pattern>
-    <filter id="grain" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="3" seed="12" stitchTiles="stitch"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0.42 0 0 0 0 0.28 0 0 0 0 0.10 0 0 0 0.2 0"/>
-    </filter>
   </defs>
   <path fill="#765225" opacity=".08" d="m8 20 8-1v1l-8 1zm37 41 10-2v1l-10 2zm70-47 7 2v1l-7-2zm25 65 9-1v1l-9 1zM17 136l8 1v1l-8-1zm68-25 7-1v1l-7 1zm33 44 11-2v1l-11 2zm39-32 6 1v1l-6-1z"/>
   <path stroke="#fff8db" stroke-width=".7" opacity=".24" d="m22 49 9-1m47-14 7 1m51 17 6-1M8 95l9 1m43 52 8-1m37-60 7 1m39 81 8-1"/>
   <path fill="#765225" opacity=".1" d="M35 18h1v1h-1zm64 51h1v1h-1zm69-43h1v1h-1zM9 164h1v1H9zm91-31h1v1h-1z"/>
-  <path fill="#fff" filter="url(#grain)" d="M0 0h180v180H0z"/>
   <path fill="url(#pinpricks)" d="M0 0h180v180H0z"/>
 </svg>
