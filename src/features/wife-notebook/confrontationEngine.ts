@@ -420,16 +420,13 @@ export function calculateConfrontationPreflight({
       ? verifiedCount >= requiredCount
       : verifiedCount >= 3;
 
-    let smokingGunClueFloor = 0;
-    if (isCompleteSmokingGunChain) {
-      smokingGunClueFloor = 10;
-    } else if (verifiedCount >= 2) {
-      smokingGunClueFloor = 9;
-    } else if (verifiedCount === 1) {
-      smokingGunClueFloor = 5;
-    } else {
-      smokingGunClueFloor = 0;
-    }
+    const smokingGunClueFloor = isCompleteSmokingGunChain
+      ? 10
+      : verifiedCount >= 2
+        ? 9
+        : verifiedCount === 1
+          ? 5
+          : 0;
 
     if (explicitCluesFound !== undefined) {
       cluesFound = explicitCluesFound;
