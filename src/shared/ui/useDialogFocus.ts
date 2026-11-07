@@ -3,8 +3,15 @@ import { useEffect, type KeyboardEvent, type RefObject } from 'react';
 export function useDialogFocus(open: boolean, ref: RefObject<HTMLElement | null>, onClose: () => void) {
   useEffect(() => {
     if (!open) return;
-    const scope = ref.current?.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]') ?? ref.current;
-    scope?.querySelector<HTMLElement>('button:not(:disabled), [tabindex="0"]')?.focus({ preventScroll: true });
+    const focusFirst = () => {
+      const scope = ref.current?.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]') ?? ref.current;
+      scope?.querySelector<HTMLElement>('button:not(:disabled), [tabindex="0"]')?.focus({ preventScroll: true });
+    };
+    if (typeof requestAnimationFrame === 'function') {
+      const id = requestAnimationFrame(focusFirst);
+      return () => cancelAnimationFrame(id);
+    }
+    focusFirst();
   }, [open, ref]);
   return (event: KeyboardEvent) => {
     if (!open) return;

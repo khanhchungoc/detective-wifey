@@ -38,7 +38,7 @@ description: "Architect, develop, style, and test the virtual smartphone shell, 
 - **Mandatory Component & Design Reuse-First Gate**:
   Inspect `src/shared/ui/` and `src/shell/` to reuse existing primitives. Adhere to canonical `.agent-artifacts/project-knowledge-base/solution-context/apps/<appId>/app-design.md` (and `phone-os/app-design.md` for shell) for brand tokens, typography, and touch ergonomics ($\ge 44 \times 44\text{px}$).
 - **iOS-Style App Lifecycle & State Transition Gate**:
-  Implement iOS-inspired motion conforming to [behaviors-motion.md](../../.agent-artifacts/project-knowledge-base/solution-context/design-system/behaviors-motion.md). Shell owns lifecycle motion; `src/shared/ui/` owns view/sheet transitions. Cleanly cancel/retarget rapid interruptions without blank frames. Respect `prefers-reduced-motion` and commit state independently of animation completion.
+  Implement iOS-inspired motion conforming to [behaviors-motion.md](../../.agent-artifacts/project-knowledge-base/solution-context/design-system/behaviors-motion.md). Shell owns lifecycle motion; `src/shared/ui/` owns view/sheet transitions. Cleanly cancel/retarget rapid interruptions without blank frames. Respect `prefers-reduced-motion` and commit state independently of animation completion. Query `motion-dev` MCP when calibrating spring physics, gesture thresholds, and transition curves.
 - **Pluggable Session State Persistence Gate**:
   Sync active session state (case ID, active app, strikes, tagged suspects, challenges, time) via async `GameStateRepository` (`LocalStorageAdapter` for Phase 1), decoupled for future cloud BaaS.
 - **Universal 8-App Grid Invariant**:
@@ -66,6 +66,7 @@ description: "Architect, develop, style, and test the virtual smartphone shell, 
 ### MCP Servers
 - **`codegraph`**: `codegraph_explore` (or CLI `codegraph explore`). Maps symbols, caller chains, and contracts before modifying code. Requires `.codegraph/` index at repo root.
 - **`chrome-devtools`**: `list_pages`, `new_page`, `navigate_page`, `take_snapshot`, `take_screenshot`, `evaluate_script`, `get_css_styles`, `wait_for`. Audits touch targets, gestures, and session recovery on active Vite dev server.
+- **`motion-dev`**: `search_motion_docs`, `get_motion_docs`, `get_component_api`, `get_examples_by_category`, `generate_motion_component`, `optimize_motion_code`. Provides offline Motion.dev documentation, spring curves, gesture patterns, and animation component generation.
 
 ---
 
@@ -82,6 +83,7 @@ description: "Architect, develop, style, and test the virtual smartphone shell, 
      - For virtual apps: Dispatch to [`develop-virtual-app`](../skills/develop-virtual-app/SKILL.md) or implement directly adhering to `app-design.md`.
      - For level cases: Map story packages under `.agent-artifacts/requirements/stories/husband-<name>/` into `CaseConfig` in `src/data/cases/<husbandId>/level_0<N>.json` (conforming to `case-schema.ts` and `knowledge-graph.ts`), following [`develop-virtual-app`](../skills/develop-virtual-app/SKILL.md) and [`story-first-design.md`](../skills/level-designer/references/story-first-design.md#5-đọc-duyệt-khi-triển-khai-hoặc-sửa-dữ-liệu-truyện). Register in `src/data/cases/index.ts` and `LEVEL_CATALOG` in `src/features/case-runtime/caseRuntime.ts`.
      - For core engines: Implement modular TypeScript components under `src/shell/` and `src/features/`.
+     - For interactive motion: Query `motion-dev` MCP (`search_motion_docs`, `get_examples_by_category`) for standard spring parameters (`stiffness`, `damping`, `mass`) or Motion.dev patterns, maintaining 60fps compositor-only (`transform`, `opacity`) transforms.
    - **Mode B: Parallel Swarm ($N \ge 2$, Large Multi-Module Tasks)**:
      - Partition into orthogonal work packages with disjoint directories (e.g., Subagent 1: `src/apps/zola/`, Subagent 2: `src/apps/vietpay/`). Withhold shared files (`appRegistry.ts`, barrel files, root shell).
      - Dispatch via `invoke_subagent` in a single tool call enforcing leaf-only worker constraint: *"You are a leaf worker subagent. You are strictly forbidden from calling invoke_subagent or spawning further subagents. Ponytail Full Mode is strictly active."*

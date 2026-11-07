@@ -147,6 +147,9 @@ describe('app surface and stationary system chrome', () => {
     expect(htmlOpen).toContain('data-phone-screen="true"');
     expect(htmlOpen).toContain('data-notebook-open="true"');
     expect(htmlOpen).not.toContain('filter:brightness');
+    const overlayIdx = htmlOpen.indexOf('data-notebook-overlay');
+    const overlayTag = htmlOpen.slice(overlayIdx, htmlOpen.indexOf('>', overlayIdx));
+    expect(overlayTag).not.toContain('transform:');
 
     const htmlClosed = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={false} />);
     expect(htmlClosed).toContain('data-notebook-open="false"');

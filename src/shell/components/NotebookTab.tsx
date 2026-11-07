@@ -159,9 +159,7 @@ export function NotebookTab({
       const appSurface = active.appSurface;
       if (active.screen) {
         if (active.screen.dataset) delete active.screen.dataset.notebookDragging;
-        active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
-          `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
-          `box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
+        active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         if (shouldOpen) {
           active.screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
           active.screen.style.borderRadius = '28px';
@@ -175,7 +173,6 @@ export function NotebookTab({
         }
       }
       if (appSurface) {
-        appSurface.style.transition = `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         appSurface.style.borderRadius = shouldOpen ? '28px' : '0px';
       }
 
@@ -270,6 +267,7 @@ export function NotebookTab({
     onPointerMove={event => {
       const active = gesture.current;
       if (!active || active.id !== event.pointerId) return;
+      event.stopPropagation?.();
       const dx = (event.clientX - active.startX) / active.scaleX, dy = (event.clientY - active.startY) / active.scaleY;
       active.samples = active.samples.filter(sample => event.timeStamp - sample.time <= FLOATING_SAMPLE_MS);
       active.samples.push({ x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
@@ -307,24 +305,19 @@ export function NotebookTab({
         active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);
         const tabX = notebookTabPullX(active.pullOffsetX, bounds.current);
         active.point = { x: tabX, y: active.origin.y };
+        if (ref.current) ref.current.style.transform = transform(active.point);
+        if (active.overlay) {
+          active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
+        }
+        const progress = Math.max(0, Math.min(1, 1 - active.pullOffsetX / active.surfaceWidth));
+        if (active.backdrop) {
+          active.backdrop.style.opacity = progress.toFixed(3);
+        }
       } else {
         const edgeX = open ? bounds.current.left : bounds.current.right;
         active.point = clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
-      }
-      if (frame.current === null) frame.current = requestAnimationFrame(() => {
-        frame.current = null;
-        if (gesture.current !== active) return;
         if (ref.current) ref.current.style.transform = transform(active.point);
-        if (active.mode === 'pull') {
-          if (active.overlay) {
-            active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
-          }
-          const progress = Math.max(0, Math.min(1, 1 - active.pullOffsetX / active.surfaceWidth));
-          if (active.backdrop) {
-            active.backdrop.style.opacity = progress.toFixed(3);
-          }
-        }
-      });
+      }
     }} onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish}
     onClick={event => {
       event.stopPropagation();

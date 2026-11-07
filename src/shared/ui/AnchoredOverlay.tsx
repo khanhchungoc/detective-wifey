@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
-import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_OPEN_TRANSFORM, NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS, animateOverlay } from '../motion/anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS, animateOverlay } from '../motion/anchoredOverlay';
 import { useDialogFocus } from './useDialogFocus';
 
 /** Keeps content pre-laid out and GPU-promoted off-screen so pulling or opening the notebook never triggers layout reflow or tile eviction. */
@@ -79,8 +79,6 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         style={{
           top: 'calc(var(--phone-system-top, 59px) + 6px)',
           bottom: 'max(28px, var(--phone-system-bottom, 34px))',
-          transform: open ? NOTEBOOK_OPEN_TRANSFORM : NOTEBOOK_CLOSED_TRANSFORM,
-          opacity: open ? 1 : 0,
           pointerEvents: open ? 'auto' : 'none',
           willChange: 'transform, opacity',
           backfaceVisibility: 'hidden',
