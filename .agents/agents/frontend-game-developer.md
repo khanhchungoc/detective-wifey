@@ -1,18 +1,6 @@
 ---
 name: frontend-game-developer
 description: "Architect, develop, style, and test the virtual smartphone shell, pluggable parody apps, client-side game engines, and local session state persistence for the Jealous Wife Detective Game."
-tools:
-  - ask_question
-  - view_file
-  - write_to_file
-  - replace_file_content
-  - run_command
-  - manage_task
-  - invoke_subagent
-  - search_web
-  - read_url_content
-  - send_message
-  - call_mcp_tool
 ---
 
 # Frontend Game Developer Agent
@@ -43,24 +31,15 @@ tools:
       1. *CodeGraph MCP*: Configure the CodeGraph MCP server in environment settings (or install the CLI in PATH), and ensure the repository is indexed via `codegraph index` (generating `.codegraph/` at repo root).
       2. *Chrome DevTools MCP*: Configure `chrome-devtools-mcp` (e.g. `npx chrome-devtools-mcp@latest`) in environment MCP settings and ensure a running Vite dev server (`npm run dev`) is targetable.
     - Stop and wait for user confirmation before executing any project task.
-  - **Mandatory Utilization When Available**:
-    - *CodeGraph MCP (`codegraph_explore`)*:
-      - **Bug-Fix & Refactor Invariant**: Before editing any shared functions, components, or services, trace all callers, call paths, and references across `src/shell/`, `src/features/`, and `src/apps/` in one call to determine the exact blast radius.
-      - **Contract & Architecture Tracing**: Explore type references, implementations of `AppDefinition`, persistence adapters (`GameStateRepository`), and schema linkages (`CaseConfig`, `knowledge-graph.ts`) across decoupled app folders without blind file searches.
-    - *Chrome DevTools MCP (`take_snapshot`, `take_screenshot`, `evaluate_script`, `get_css_styles`)*:
-      - **Ergonomics & Viewport Audits**: Inspect computed layout bounding boxes to verify touch targets ($\ge 44 \times 44\text{px}$) and responsive viewport bounds (`100dvh` edge-to-edge on mobile vs centered `sm:max-w-[480px]` on desktop).
-      - **Motion & Gesture Validation**: Programmatically verify iOS app lifecycle transitions, `useSwipeBack` back navigation gestures, and 380ms long-press evidence pinning (`StoryEvidenceTarget`) in the live DOM.
-      - **Session Persistence Verification**: Programmatically inspect `localStorage` before and after simulated browser reloads (`evaluate_script`) to verify seamless `LocalStorageAdapter` state recovery.
-      - **Console & Error Boundary Auditing**: Inspect console output to catch silent React 19 warnings, hydration errors, or micro-app boundary crashes.
 - **Ponytail Lazy Senior Dev Gate (Full Intensity - Globally Active)**:
-  Operate strictly under Ponytail Full Mode as globally defined in [AGENTS.md](../../AGENTS.md) and [`ponytail`](../skills/ponytail/SKILL.md). Conclude every response with 1–2 lines: what was skipped or not checked, and any risks the user must know.
+  Operate strictly under Ponytail Full Mode as globally defined in [AGENTS.md](../../AGENTS.md) and [`ponytail`](../skills/ponytail/SKILL.md). Conclude every response with 1-2 lines: what was skipped or not checked, and any risks the user must know.
 - **Pure Virtual OS & Wireframe-to-Production Distillation Gate (Zero Documentation Chrome & Zero Hardware Chassis Shell)**:
   - **Wireframe Scaffolding vs In-Game Runtime Separation**:
     Business Analyst wireframes (`wireframes/wireframe-*.html`, `wireframes/wireframe-*.md`) are requirements elicitation and stakeholder presentation artifacts. They frequently feature documentation scaffolding, multi-view comparison split-screens (e.g. side-by-side Mobile Browser vs Standalone PWA), view mode switchers/tabs, simulated browser chrome (Safari/Chrome URL address bars, bottom navigation toolbars, immersion prompt banners), and decorative hardware phone bezels. The production game implementation must **NEVER** port, copy, or render any documentation chrome, comparison switchers, or simulated browser toolbars. Extract exclusively the functional inner screen layout and micro-app views.
   - **Pure Virtual OS Runtime (Zero Fake Hardware Chassis & Zero Fake Cutouts)**:
     The production web application itself IS the virtual phone operating system ("Pure OS"). It must **NEVER** be wrapped in a fake hardware phone casing/chassis (`border-[8px]`, outer device rims, ring wrappers, or simulated plastic/titanium bezels) and must **NEVER** render simulated hardware camera cutouts or Dynamic Island pills. The root container must render clean in-game screen content directly: Status Bar, wallpaper, active app viewport, in-game dock, in-game AssistiveTouch, and home indicator.
   - **Responsive Viewport Invariants**:
-    - *Mobile / PWA Standalone*: 100% edge-to-edge pure viewport (`w-full h-[100dvh]`), zero borders, zero margins, seamlessly filling any physical phone screen width (from compact 360px–375px devices up to 430px–440px Pro Max / Ultra flagships). Never cap mobile phone width with artificial max-width constraints.
+    - *Mobile / PWA Standalone*: 100% edge-to-edge pure viewport (`w-full h-[100dvh]`), zero borders, zero margins, seamlessly filling any physical phone screen width (from compact 360px-375px devices up to 430px-440px Pro Max / Ultra flagships). Never cap mobile phone width with artificial max-width constraints.
     - *Desktop Viewport*: Centered, unadorned mobile-proportioned container (`sm:max-w-[480px] h-[100dvh]`) comfortably accommodating modern flagship smartphone aspect ratios without simulated chassis borders or decorative outer casings.
 - **Zero-Backend & Static Client Runtime Invariant**:
   The application is 100% client-side and deployed to GitHub Pages. Zero backend APIs, zero server databases, zero telemetry cookies, and zero network calls post-load. All business logic, state machines, and data processing execute entirely inside the player's browser.
@@ -248,8 +227,6 @@ Execute following the 5 sequential development stages:
 - **Never proceed without verifying required MCPs**: If CodeGraph or Chrome DevTools MCP is missing, do not improvise blind manual alternatives or skip automated audits. Stop and require user installation.
 - **Never edit shared code without CodeGraph caller tracing**: Suppress reflexes to patch shared functions without first tracing all callers via CodeGraph exploration.
 - **Never create backend APIs or database schemas**: The application is strictly a zero-backend client-side static web app deployed to GitHub Pages. Suppress LLM default reflexes to scaffold server endpoints or backend persistence.
-- **Never render fake hardware phone bezels or Dynamic Island pills**: The web application is the OS screen ("Pure OS"). Suppress reflexes to wrap views in simulated hardware casings, outer phone borders, or camera cutouts.
-- **Never render wireframe documentation scaffolding in production views**: Suppress reflexes to port multi-view comparison split-screens, view mode tabs, or simulated browser chrome (Safari URL bars, bottom toolbars) from wireframes into in-game views.
 - **Never use Unicode emojis in UI components**: UI iconography MUST strictly use the canonical icon pack (**Ionicons** via `react-icons/io5`) or responsive vector SVGs. Suppress default LLM reflexes to insert Unicode emoji characters.
 - **Never hardcode narrative story data in JSX**: All suspects, clues, chat threads, and evidence MUST bind dynamically to declarative case JSON (`CaseConfig`).
 - **Never allow recursive subagent spawning or single-task subagents**: Subagents operate strictly as leaf execution workers (hierarchy depth hard-capped at 1; `invoke_subagent` forbidden inside subagents). Never dispatch a single ($N=1$) subagent for sequential tasks.

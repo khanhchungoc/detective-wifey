@@ -19,18 +19,23 @@ export function animateOverlay(element: HTMLElement, open: boolean, closedTransf
   const fromTransform = hasCurrentTransform
     ? current.transform
     : (open ? closedTransform : NOTEBOOK_OPEN_TRANSFORM);
-  const toTransform = open ? NOTEBOOK_OPEN_TRANSFORM : closedTransform;
+  const closedTarget = !open && closedTransform === NOTEBOOK_CLOSED_TRANSFORM && element.offsetWidth > 0
+    ? `translate3d(${element.offsetWidth}px, 0px, 0px)`
+    : closedTransform;
+  const toTransform = open ? NOTEBOOK_OPEN_TRANSFORM : closedTarget;
   const restTransform = open ? 'none' : closedTransform;
 
   previous?.cancel();
   element.getAnimations?.().forEach(anim => anim.cancel());
   element.style.opacity = '1';
-  element.style.transform = restTransform;
 
   if (reducedMotion || !element.animate || closedTransform === 'none') {
+    element.style.transform = restTransform;
     complete();
     return;
   }
+
+  element.style.transform = toTransform;
 
   const keyframes: Keyframe[] = [
     { transform: fromTransform, offset: 0 },

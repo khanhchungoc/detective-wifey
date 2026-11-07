@@ -142,17 +142,15 @@ describe('app surface and stationary system chrome', () => {
     expect(html).toContain('--phone-system-top:59px');
   });
 
-  it('applies 3D backwards perspective zoom out to phone screen when notebook is open', () => {
+  it('applies 3D backwards perspective zoom out state to phone screen when notebook is open', () => {
     const htmlOpen = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={true} />);
     expect(htmlOpen).toContain('data-phone-screen="true"');
-    expect(htmlOpen).toContain('perspective(1000px) translate3d(0, 0, -24px) scale(0.94)');
-    expect(htmlOpen).toContain('border-radius:28px');
-    expect(htmlOpen).toContain('filter:brightness(0.6)');
+    expect(htmlOpen).toContain('data-notebook-open="true"');
+    expect(htmlOpen).not.toContain('filter:brightness');
 
     const htmlClosed = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={false} />);
-    expect(htmlClosed).toContain('perspective(1000px) translate3d(0, 0, 0px) scale(1)');
-    expect(htmlClosed).toContain('border-radius:0px');
-    expect(htmlClosed).toContain('filter:none');
+    expect(htmlClosed).toContain('data-notebook-open="false"');
+    expect(htmlClosed).not.toContain('filter:brightness');
   });
 });
 

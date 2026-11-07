@@ -19,6 +19,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
     const container = containerRef.current;
     if (!drawer) return;
     if (!open && !initialized.current) {
+      drawer.style.visibility = 'hidden';
       drawer.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
       return;
     }
@@ -68,7 +69,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         aria-label="Đóng sổ tay của vợ"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className="absolute inset-0 z-10 bg-slate-950/65 cursor-pointer"
+        className="absolute inset-0 z-10 bg-slate-950/75 cursor-pointer"
         style={{
           opacity: open ? 1 : 0,
           transition: `opacity ${open ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`,

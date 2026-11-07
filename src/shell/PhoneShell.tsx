@@ -17,7 +17,6 @@ import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
 import { useSwipeBack } from '../shared/gestures/useSwipeBack';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
-import { NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS } from '../shared/motion/anchoredOverlay';
 import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
@@ -225,21 +224,6 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           ...(isIOS || !showStatusBar ? { paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
-          transform: notebookOpen
-            ? 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)'
-            : 'perspective(1000px) translate3d(0, 0, 0px) scale(1)',
-          transformOrigin: 'center center',
-          borderRadius: notebookOpen ? '28px' : '0px',
-          outline: notebookOpen ? '1px solid rgba(255, 255, 255, 0.15)' : 'none',
-          WebkitMaskImage: notebookOpen ? '-webkit-radial-gradient(white, black)' : undefined,
-          boxShadow: notebookOpen ? '0 18px 42px rgba(0, 0, 0, 0.55)' : 'none',
-          filter: notebookOpen ? 'brightness(0.6)' : 'none',
-          transition: `transform ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `border-radius ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `outline ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `box-shadow ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `filter ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`,
-          willChange: 'transform',
         }}
       >
       {/* 1. Phone OS Status Bar */}
@@ -385,9 +369,6 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           style={{
             display: activeAppId === 'home' ? 'none' : undefined,
             backgroundColor: appTheme,
-            borderRadius: notebookOpen ? '28px' : '0px',
-            WebkitMaskImage: notebookOpen ? '-webkit-radial-gradient(white, black)' : undefined,
-            transition: `border-radius ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`,
             ...(isIOS ? { paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
             touchAction: 'pan-y',
           }}

@@ -44,7 +44,7 @@ export function notebookPullOffset(surfaceWidth: number, dx: number, open = fals
 }
 export function notebookTabPullX(offsetX: number, bounds: FloatingBounds): number {
   const span = Math.max(1, bounds.right + NOTEBOOK_TAB_WIDTH);
-  return clamp(Math.round((offsetX / span) * (bounds.right - bounds.left) + bounds.left), bounds.left, bounds.right);
+  return clamp(Number(((offsetX / span) * (bounds.right - bounds.left) + bounds.left).toFixed(2)), bounds.left, bounds.right);
 }
 export function shouldCommitNotebookPull(offsetX: number, surfaceWidth: number, velocityX: number, open = false): boolean {
   if (surfaceWidth <= 0) return !open;

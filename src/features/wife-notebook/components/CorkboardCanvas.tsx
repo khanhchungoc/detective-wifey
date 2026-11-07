@@ -49,18 +49,6 @@ interface CorkboardCanvasProps {
   onCancelPairing: () => void;
 }
 
-/**
- * Generates an organic, subtle paper note tilt angle based on the node ID.
- * Makes the corkboard look like a real hand-pinned detective board.
- */
-function getCardTilt(id: string): number {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash << 5) - hash + id.charCodeAt(i);
-  }
-  return ((Math.abs(hash) % 32) - 16) / 10; // -1.6deg to +1.6deg
-}
-
 export { calculateYarnStringCurve } from '../graphEngine';
 
 type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport'> & {
@@ -168,8 +156,6 @@ const CorkboardContents = memo(function CorkboardContents({
             (node.visibleAlias && ['phone', 'messages', 'internet-messaging'].includes(node.sourceAppId || ''))
             ? node.visibleAlias || node.label : undefined;
           const isDraggingThis = activeDragId === node.nodeId;
-          const tilt = getCardTilt(node.nodeId);
-          const effectiveTilt = zoomRef.current && zoomRef.current > 1.05 ? Number((tilt / zoomRef.current).toFixed(2)) : tilt;
           const timelineEntries = parseNodeToTimelineEntries(node);
           const hasBody = timelineEntries.length > 0;
 
@@ -245,7 +231,7 @@ const CorkboardContents = memo(function CorkboardContents({
                 isDraggingThis
                   ? 'z-30 border-rose-400 bg-[#FFFDF5] shadow-[0_22px_40px_-4px_rgba(0,0,0,0.3),0_12px_22px_-6px_rgba(0,0,0,0.18)] ring-2 ring-rose-400/60'
                   : isSelected
-                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 scale-105 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
+                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
                   : isUnmasked && isAlias
                   ? 'z-20 border-rose-400 bg-[#FFF5F5] ring-1 ring-rose-300 shadow-[0_4px_12px_rgba(30,20,10,0.25)]'
                   : hasContradiction
@@ -256,7 +242,7 @@ const CorkboardContents = memo(function CorkboardContents({
                 width: `${CARD_WIDTH}px`,
                 left: `${node.x}px`,
                 top: `${node.y}px`,
-                transform: isDraggingThis ? 'scale(1.05) rotate(0deg)' : effectiveTilt ? `rotate(${effectiveTilt}deg)` : undefined,
+                transform: isDraggingThis ? 'scale(1.05)' : undefined,
                 touchAction: 'none',
               }}
             >
@@ -489,12 +475,11 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
     left: '50%',
     top: '50%',
     transformOrigin: '0 0',
-    transform: `scale(${viewport.zoom}) translate(${-viewport.x}px, ${-viewport.y}px)`,
+    transform: `translate(${Math.round(-viewport.x * viewport.zoom)}px, ${Math.round(-viewport.y * viewport.zoom)}px) scale(${viewport.zoom})`,
   };
   return (
     <div
       className="notebook-cardboard relative w-full h-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
-      style={{ containerType: 'size' }}
       onClick={() => {
         onSelectCard?.(null);
         onSelectEdge?.(null);

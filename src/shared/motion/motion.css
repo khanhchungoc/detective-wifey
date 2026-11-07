@@ -201,19 +201,30 @@ html[data-swipe-motion][data-motion='close']::view-transition-old(phone-app) {
 /* 3D Phone Screen Recede Motion when Notebook Opens */
 [data-phone-screen] {
   transform-origin: center center;
+  transform: perspective(1000px) translate3d(0, 0, 0px) scale(1);
+  border-radius: 0px;
+  outline: none;
+  box-shadow: none;
+  transition:
+    transform 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 [data-phone-screen][data-notebook-open='true'] {
   transform: perspective(1000px) translate3d(0, 0, -24px) scale(0.94);
   border-radius: 28px;
-  filter: brightness(0.6);
   outline: 1px solid rgba(255, 255, 255, 0.15);
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
+  transition-duration: 380ms;
+}
+[data-phone-screen] [data-app-surface] {
+  border-radius: 0px;
+  transition: border-radius 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 [data-phone-screen][data-notebook-open='true'] [data-app-surface] {
   border-radius: 28px;
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  transition-duration: 380ms;
 }
 
 /* CSS entrances cover unsupported browsers and local UI state. Captured nodes

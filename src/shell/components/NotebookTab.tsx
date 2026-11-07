@@ -28,6 +28,7 @@ export function NotebookTab({
   const settling = useRef<Animation | null>(null);
   const frame = useRef<number | null>(null);
   const openRef = useRef(open);
+  const lastSettledOpen = useRef(open);
   openRef.current = open;
   const gesture = useRef<{
     id: number; startX: number; startY: number; origin: FloatingPoint; point: FloatingPoint;
@@ -71,15 +72,32 @@ export function NotebookTab({
         gesture.current.screen.style.removeProperty('transform');
         gesture.current.screen.style.removeProperty('border-radius');
         gesture.current.screen.style.removeProperty('outline');
-        gesture.current.screen.style.removeProperty('filter');
         gesture.current.screen.style.removeProperty('box-shadow');
       }
     };
   }, []);
 
+  const clearScreenOverrides = (screen: HTMLElement | null, appSurface: HTMLElement | null) => {
+    screen?.style.removeProperty('transition');
+    screen?.style.removeProperty('transform');
+    screen?.style.removeProperty('border-radius');
+    screen?.style.removeProperty('outline');
+    screen?.style.removeProperty('box-shadow');
+    appSurface?.style.removeProperty('transition');
+    appSurface?.style.removeProperty('border-radius');
+  };
+
   useLayoutEffect(() => {
     const element = ref.current;
-    if (!element || gesture.current) return;
+    if (!element || gesture.current || lastSettledOpen.current === open) return;
+    lastSettledOpen.current = open;
+    const parent = element.offsetParent as HTMLElement | null;
+    if (typeof parent?.querySelector === 'function') {
+      clearScreenOverrides(
+        parent.querySelector<HTMLElement>('[data-phone-screen]'),
+        parent.querySelector<HTMLElement>('[data-app-surface]'),
+      );
+    }
     const edge: DockEdge = open ? 'left' : 'right';
     const to = transform(floatingDockPosition(edge, position.current.fraction, bounds.current));
     const from = getComputedStyle(element).transform;
@@ -115,10 +133,14 @@ export function NotebookTab({
 
     if (active.mode === 'pull') {
       const offsetX = notebookPullOffset(active.surfaceWidth, dx, open);
+      if (active.overlay) {
+        active.overlay.style.transform = `translate3d(${Number(offsetX.toFixed(2))}px, 0, 0)`;
+      }
       const shouldOpen = !cancelled && shouldCommitNotebookPull(offsetX, active.surfaceWidth, velocity.x, open);
       const targetEdge: DockEdge = shouldOpen ? 'left' : 'right';
       const dockPoint = floatingDockPosition(targetEdge, position.current.fraction, bounds.current);
       const to = transform(dockPoint);
+      lastSettledOpen.current = shouldOpen;
       button.dataset.edge = targetEdge;
       button.style.transform = to;
       if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
@@ -137,21 +159,17 @@ export function NotebookTab({
       if (active.screen) {
         active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
           `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
-          `outline ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
-          `box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
-          `filter ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
+          `box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         if (shouldOpen) {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)';
           active.screen.style.borderRadius = '28px';
           active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
           active.screen.style.boxShadow = '0 18px 42px rgba(0, 0, 0, 0.55)';
-          active.screen.style.filter = 'brightness(0.6)';
         } else {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, 0px) scale(1)';
           active.screen.style.borderRadius = '0px';
           active.screen.style.outline = 'none';
           active.screen.style.boxShadow = 'none';
-          active.screen.style.filter = 'none';
         }
       }
       if (appSurface) {
@@ -160,8 +178,10 @@ export function NotebookTab({
       }
 
       if (shouldOpen && !open) {
+        active.screen?.addEventListener?.('transitionend', () => clearScreenOverrides(active.screen, appSurface), { once: true });
         onOpen();
       } else if (!shouldOpen && open) {
+        active.screen?.addEventListener?.('transitionend', () => clearScreenOverrides(active.screen, appSurface), { once: true });
         onClose?.();
       } else if (!shouldOpen && !open && active.overlay) {
         const overlay = active.overlay;
@@ -171,36 +191,19 @@ export function NotebookTab({
             container.style.visibility = 'hidden';
           }
           if (backdrop) {
-            backdrop.style.removeProperty('transition');
+            backdrop.style.transition = `opacity ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
             backdrop.style.opacity = '0';
           }
-          active.screen?.style.removeProperty('transition');
-          active.screen?.style.removeProperty('transform');
-          active.screen?.style.removeProperty('border-radius');
-          active.screen?.style.removeProperty('outline');
-          active.screen?.style.removeProperty('box-shadow');
-          active.screen?.style.removeProperty('filter');
-          appSurface?.style.removeProperty('transition');
-          appSurface?.style.removeProperty('border-radius');
+          clearScreenOverrides(active.screen, appSurface);
         }, undefined, reduced);
       } else if (shouldOpen && open && active.overlay) {
         animateOverlay(active.overlay, true, NOTEBOOK_CLOSED_TRANSFORM, () => {
           if (backdrop) {
-            backdrop.style.removeProperty('transition');
+            backdrop.style.transition = `opacity ${NOTEBOOK_OPEN_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
             backdrop.style.opacity = '1';
           }
-          if (active.screen) {
-            active.screen.style.removeProperty('transition');
-            active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)';
-            active.screen.style.borderRadius = '28px';
-            active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
-            active.screen.style.boxShadow = '0 18px 42px rgba(0, 0, 0, 0.55)';
-            active.screen.style.filter = 'brightness(0.6)';
-          }
-          if (appSurface) {
-            appSurface.style.removeProperty('transition');
-            appSurface.style.borderRadius = '28px';
-          }
+          active.screen?.style.removeProperty('transition');
+          appSurface?.style.removeProperty('transition');
         }, undefined, reduced);
       }
       return;
@@ -262,7 +265,9 @@ export function NotebookTab({
         const isHorizontalPull = Math.abs(dx) >= Math.abs(dy) && (open ? dx > 0 : dx < 0);
         active.mode = isHorizontalPull ? 'pull' : 'vertical';
         if (active.mode === 'pull' && active.overlay) {
+          active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);
           active.overlay.getAnimations?.().forEach(anim => anim.cancel());
+          active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
           active.overlay.style.visibility = 'visible';
           active.overlay.style.opacity = '1';
           if (active.overlay.parentElement) {
@@ -297,14 +302,17 @@ export function NotebookTab({
             }
           }
           if (active.screen) {
+            const radius = `${Math.round(28 * progress)}px`;
             active.screen.style.transition = 'none';
             active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-24 * progress).toFixed(2)}px) scale(${(1 - 0.06 * progress).toFixed(4)})`;
-            active.screen.style.borderRadius = progress > 0.05 ? '28px' : '0px';
-            active.screen.style.outline = progress > 0.05 ? '1px solid rgba(255, 255, 255, 0.15)' : 'none';
-            active.screen.style.filter = `brightness(${(1 - 0.4 * progress).toFixed(3)})`;
+            active.screen.style.borderRadius = radius;
+            active.screen.style.outline = progress > 0 ? '1px solid rgba(255, 255, 255, 0.15)' : 'none';
             const appSurface = typeof active.screen.querySelector === 'function'
               ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
-            if (appSurface) appSurface.style.borderRadius = progress > 0.05 ? '28px' : '0px';
+            if (appSurface) {
+              appSurface.style.transition = 'none';
+              appSurface.style.borderRadius = radius;
+            }
           }
         }
       });
