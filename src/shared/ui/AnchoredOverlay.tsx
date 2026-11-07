@@ -57,7 +57,6 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       className="absolute inset-0 z-50 overflow-hidden pointer-events-none"
       style={{
         visibility: open || present ? 'visible' : 'hidden',
-        '--notebook-shade-opacity': open ? '1' : '0',
       } as React.CSSProperties}
       onKeyDown={onKeyDown}
     >
@@ -71,8 +70,8 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         onClick={onClose}
         className="absolute inset-0 z-10 bg-slate-950/65 cursor-pointer"
         style={{
-          opacity: 'var(--notebook-shade-opacity, 0)',
-          transition: `opacity var(--notebook-shade-duration, ${open ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`}) ${NOTEBOOK_SLIDE_EASING}`,
+          opacity: open ? 1 : 0,
+          transition: `opacity ${open ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`,
           pointerEvents: open ? 'auto' : 'none',
         }}
       />

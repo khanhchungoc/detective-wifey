@@ -70,6 +70,7 @@ export function NotebookTab({
         gesture.current.screen.style.removeProperty('transition');
         gesture.current.screen.style.removeProperty('transform');
         gesture.current.screen.style.removeProperty('border-radius');
+        gesture.current.screen.style.removeProperty('outline');
         gesture.current.screen.style.removeProperty('filter');
         gesture.current.screen.style.removeProperty('box-shadow');
       }
@@ -124,32 +125,36 @@ export function NotebookTab({
         { duration: shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS, easing: NOTEBOOK_SLIDE_EASING });
 
       const container = active.overlay?.parentElement;
-      if (container) {
-        container.style.removeProperty('--notebook-shade-duration');
-        if (shouldOpen) {
-          container.style.setProperty('--notebook-shade-opacity', '1');
-        } else {
-          container.style.setProperty('--notebook-shade-opacity', '0');
-        }
+      const backdrop = container?.querySelector<HTMLElement>('[data-notebook-backdrop]');
+      const duration = shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS;
+      if (backdrop) {
+        backdrop.style.transition = `opacity ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
+        backdrop.style.opacity = shouldOpen ? '1' : '0';
       }
 
       const appSurface = typeof active.screen?.querySelector === 'function'
         ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
       if (active.screen) {
-        const duration = shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS;
-        active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}, border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}, box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
+        active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
+          `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
+          `outline ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
+          `box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
+          `filter ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         if (shouldOpen) {
-          active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
+          active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)';
           active.screen.style.borderRadius = '28px';
-          active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
+          active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
+          active.screen.style.boxShadow = '0 18px 42px rgba(0, 0, 0, 0.55)';
+          active.screen.style.filter = 'brightness(0.6)';
         } else {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, 0px) scale(1)';
           active.screen.style.borderRadius = '0px';
+          active.screen.style.outline = 'none';
           active.screen.style.boxShadow = 'none';
+          active.screen.style.filter = 'none';
         }
       }
       if (appSurface) {
-        const duration = shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS;
         appSurface.style.transition = `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         appSurface.style.borderRadius = shouldOpen ? '28px' : '0px';
       }
@@ -164,23 +169,33 @@ export function NotebookTab({
           overlay.style.visibility = 'hidden';
           if (container) {
             container.style.visibility = 'hidden';
-            container.style.removeProperty('--notebook-shade-opacity');
+          }
+          if (backdrop) {
+            backdrop.style.removeProperty('transition');
+            backdrop.style.opacity = '0';
           }
           active.screen?.style.removeProperty('transition');
           active.screen?.style.removeProperty('transform');
           active.screen?.style.removeProperty('border-radius');
+          active.screen?.style.removeProperty('outline');
           active.screen?.style.removeProperty('box-shadow');
+          active.screen?.style.removeProperty('filter');
           appSurface?.style.removeProperty('transition');
           appSurface?.style.removeProperty('border-radius');
         }, undefined, reduced);
       } else if (shouldOpen && open && active.overlay) {
         animateOverlay(active.overlay, true, NOTEBOOK_CLOSED_TRANSFORM, () => {
-          if (container) container.style.removeProperty('--notebook-shade-opacity');
+          if (backdrop) {
+            backdrop.style.removeProperty('transition');
+            backdrop.style.opacity = '1';
+          }
           if (active.screen) {
             active.screen.style.removeProperty('transition');
-            active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
+            active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)';
             active.screen.style.borderRadius = '28px';
-            active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
+            active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
+            active.screen.style.boxShadow = '0 18px 42px rgba(0, 0, 0, 0.55)';
+            active.screen.style.filter = 'brightness(0.6)';
           }
           if (appSurface) {
             appSurface.style.removeProperty('transition');
@@ -275,16 +290,21 @@ export function NotebookTab({
           const container = active.overlay?.parentElement;
           if (container) {
             container.style.visibility = 'visible';
-            container.style.setProperty('--notebook-shade-opacity', progress.toFixed(3));
-            container.style.setProperty('--notebook-shade-duration', '0ms');
+            const backdrop = container.querySelector<HTMLElement>('[data-notebook-backdrop]');
+            if (backdrop) {
+              backdrop.style.transition = 'none';
+              backdrop.style.opacity = progress.toFixed(3);
+            }
           }
           if (active.screen) {
             active.screen.style.transition = 'none';
-            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-18 * progress).toFixed(2)}px) scale(${(1 - 0.03 * progress).toFixed(4)})`;
-            active.screen.style.borderRadius = '28px';
+            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-24 * progress).toFixed(2)}px) scale(${(1 - 0.06 * progress).toFixed(4)})`;
+            active.screen.style.borderRadius = progress > 0.05 ? '28px' : '0px';
+            active.screen.style.outline = progress > 0.05 ? '1px solid rgba(255, 255, 255, 0.15)' : 'none';
+            active.screen.style.filter = `brightness(${(1 - 0.4 * progress).toFixed(3)})`;
             const appSurface = typeof active.screen.querySelector === 'function'
               ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
-            if (appSurface) appSurface.style.borderRadius = '28px';
+            if (appSurface) appSurface.style.borderRadius = progress > 0.05 ? '28px' : '0px';
           }
         }
       });

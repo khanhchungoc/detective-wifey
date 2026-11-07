@@ -153,8 +153,9 @@ describe('notebook tab pointer ownership', () => {
     expect(screen.style.transform).toContain('scale(');
 
     tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -18px) scale(0.97)');
+    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -24px) scale(0.94)');
     expect(screen.style.borderRadius).toBe('28px');
+    expect(screen.style.filter).toBe('brightness(0.6)');
     expect(onOpen).toHaveBeenCalledOnce();
   });
 
@@ -165,8 +166,9 @@ describe('notebook tab pointer ownership', () => {
     const overlay = { style: { visibility: 'visible', opacity: '1', transform: 'none' } };
     const screen = {
       style: {
-        transform: 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)',
-        borderRadius: '28px', boxShadow: '0 14px 34px rgba(0, 0, 0, 0.45)', transition: 'none',
+        transform: 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)',
+        borderRadius: '28px', outline: '1px solid rgba(255, 255, 255, 0.15)', filter: 'brightness(0.6)',
+        boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55)', transition: 'none',
         removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
       },
     };
@@ -191,7 +193,8 @@ describe('notebook tab pointer ownership', () => {
     expect(onClose).not.toHaveBeenCalled();
     expect(onOpen).not.toHaveBeenCalled();
     // Screen retains 3D zoom out and does NOT revert to full screen
-    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -18px) scale(0.97)');
+    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -24px) scale(0.94)');
     expect(screen.style.borderRadius).toBe('28px');
+    expect(screen.style.filter).toBe('brightness(0.6)');
   });
 });
