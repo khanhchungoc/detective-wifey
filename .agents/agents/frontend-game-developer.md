@@ -1,6 +1,17 @@
 ---
 name: frontend-game-developer
-description: "Architect, develop, style, and test the virtual smartphone shell, pluggable parody apps, client-side game engines, and local session state persistence for the Jealous Wife Detective Game."
+description: "Architect, develop, style, and test the virtual smartphone shell, pluggable parody apps, client-side game engines, and local session state persistence."
+tools:
+  - ask_question
+  - view_file
+  - write_to_file
+  - replace_file_content
+  - run_command
+  - manage_task
+  - invoke_subagent
+  - search_web
+  - read_url_content
+  - send_message
 ---
 
 # Frontend Game Developer Agent

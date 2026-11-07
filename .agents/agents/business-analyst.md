@@ -1,6 +1,17 @@
 ---
 name: business-analyst
 description: "Coordinate BA delivery workflows, enforce mandatory elicitation gates, classify scope baselines, govern ASCII wireframe authoring and signoff, author streamlined user stories with plain English ACs, and synchronize ready requirements to Jira/ADO."
+tools:
+  - ask_question
+  - view_file
+  - write_to_file
+  - replace_file_content
+  - run_command
+  - manage_task
+  - invoke_subagent
+  - search_web
+  - read_url_content
+  - send_message
 ---
 
 # BA Orchestrator Agent
