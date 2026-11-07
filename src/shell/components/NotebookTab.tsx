@@ -127,7 +127,7 @@ export function NotebookTab({
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const velocity = floatingVelocity(active.samples, { x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
     const button = event.currentTarget;
-    const from = getComputedStyle(button).transform;
+    const from = transform(active.point);
     settling.current?.cancel();
     button.dataset.floating = 'false';
 
@@ -251,7 +251,7 @@ export function NotebookTab({
         samples: [{ x: event.clientX / scaleX, y: event.clientY / scaleY, time: event.timeStamp }],
       };
       suppressClick.current = false;
-      button.setPointerCapture(event.pointerId);
+      try { button.setPointerCapture(event.pointerId); } catch { /* synthetic pointer */ }
     }}
     onPointerMove={event => {
       const active = gesture.current;

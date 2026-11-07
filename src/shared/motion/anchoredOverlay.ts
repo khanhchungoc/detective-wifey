@@ -14,19 +14,17 @@ export function anchoredTransform(_surface?: OverlayRect, _anchor?: OverlayRect)
 /** Retarget from the rendered frame before cancelling, so a reversal or pull release never jumps. */
 export function animateOverlay(element: HTMLElement, open: boolean, closedTransform = NOTEBOOK_CLOSED_TRANSFORM,
   complete: () => void, previous?: Pick<Animation, 'cancel'>, reducedMotion = false): Animation | undefined {
-  const current = getComputedStyle(element);
-  const hasCurrentTransform = Boolean(current.transform && current.transform !== 'none');
-  const fromTransform = hasCurrentTransform
-    ? current.transform
-    : (open ? closedTransform : NOTEBOOK_OPEN_TRANSFORM);
-  const closedTarget = !open && closedTransform === NOTEBOOK_CLOSED_TRANSFORM && element.offsetWidth > 0
-    ? `translate3d(${element.offsetWidth}px, 0px, 0px)`
-    : closedTransform;
-  const toTransform = open ? NOTEBOOK_OPEN_TRANSFORM : closedTarget;
+  const isRunning = Boolean(previous && (!('playState' in previous) || (previous as Animation).playState === 'running'));
+  const styleTransform = !isRunning ? element.style?.transform : '';
+  const current = styleTransform ? null : getComputedStyle(element);
+  const rawTransform = styleTransform && styleTransform !== 'none'
+    ? styleTransform
+    : (current?.transform && current.transform !== 'none' ? current.transform : '');
+  const fromTransform = rawTransform || (open ? closedTransform : NOTEBOOK_OPEN_TRANSFORM);
+  const toTransform = open ? NOTEBOOK_OPEN_TRANSFORM : closedTransform;
   const restTransform = open ? 'none' : closedTransform;
 
   previous?.cancel();
-  element.getAnimations?.().forEach(anim => anim.cancel());
   element.style.opacity = '1';
 
   if (reducedMotion || !element.animate || closedTransform === 'none') {
