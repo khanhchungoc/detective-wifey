@@ -1,4 +1,4 @@
-export { StoryEvidenceTarget } from './components/StoryEvidenceTarget';
+export { StoryEvidenceTarget, isEvidenceTriggerKey } from './components/StoryEvidenceTarget';
 export { UniversalEvidenceModal } from './components/UniversalEvidenceModal';
 export {
   tagSuspect,

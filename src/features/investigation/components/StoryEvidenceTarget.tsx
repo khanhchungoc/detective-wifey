@@ -9,15 +9,20 @@ interface StoryEvidenceTargetProps {
   disabled?: boolean;
 }
 
+export function isEvidenceTriggerKey(key: string): boolean {
+  return key === 'Enter' || key === ' ';
+}
+
 /**
  * Universal Story Evidence Target.
- * Implements resilient pointer/touch long-press (380ms) and desktop right-click
- * to open the Universal Evidence Pin Modal.
+ * Implements resilient pointer/touch long-press (380ms), desktop right-click,
+ * and accessible keyboard triggers (Enter / Space) to open the Universal Evidence Pin Modal.
  *
  * Invariants:
  * - Normal click/tap NEVER triggers evidence pinning.
  * - Long-press (>= 380ms) triggers evidence modal with haptic feedback.
  * - Suppresses browser contextmenu and native text-drag.
+ * - Keyboard Enter / Space triggers evidence modal.
  * - Provides active tactile feedback (scale-98 & cursor-pointer) while holding.
  */
 export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
@@ -122,16 +127,30 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (disabled) return;
+    if (isEvidenceTriggerKey(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+      clearTimer();
+      triggerEvidence();
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-disabled={disabled ? 'true' : undefined}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
       onClickCapture={handleClickCapture}
       onContextMenu={handleContextMenu}
+      onKeyDown={handleKeyDown}
       onDragStart={(e) => e.preventDefault()}
-      className={`select-none cursor-pointer transition-transform duration-150 ${
+      className={`select-none cursor-pointer transition-transform duration-150 focus-visible:outline-2 focus-visible:outline-sky-500 focus-visible:outline-offset-2 ${
         isPressing ? 'scale-[0.98] opacity-95' : ''
       } ${className}`}
       style={{

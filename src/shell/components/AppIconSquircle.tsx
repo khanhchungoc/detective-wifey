@@ -25,9 +25,10 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
       type="button"
       data-launch-app={app.appId ?? 'camera'}
       data-grayed-out={isGrayedOut ? 'true' : undefined}
+      aria-disabled={isGrayedOut ? 'true' : undefined}
       style={{ '--launcher-motion-name': `launcher-${app.appId ?? 'camera'}` } as CSSProperties}
       onClick={onClick}
-      className={`flex flex-col items-center justify-center p-1 min-h-[48px] min-w-[48px] w-full group touch-manipulation select-none -webkit-tap-highlight-transparent ${isGrayedOut ? 'opacity-70 active:scale-95' : 'active:scale-90'} transition-transform cursor-pointer focus:outline-none`}
+      className={`flex flex-col items-center justify-center p-1 min-h-[48px] min-w-[48px] w-full group touch-manipulation select-none -webkit-tap-highlight-transparent ${isGrayedOut ? 'opacity-40 active:scale-95' : 'active:scale-90'} transition-transform cursor-pointer focus:outline-none`}
       aria-label={isGrayedOut ? `Ứng dụng ${app.displayName} (Tính năng đang phát triển)` : `Mở ứng dụng ${app.displayName}`}
     >
       <div className="relative">

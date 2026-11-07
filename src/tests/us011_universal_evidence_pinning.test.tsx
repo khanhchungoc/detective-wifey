@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   StoryEvidenceTarget,
+  isEvidenceTriggerKey,
   UniversalEvidenceModal,
   tagSuspect,
   formatMessageBullet,
@@ -159,6 +160,26 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     expect(html).toContain('Nội dung tin nhắn');
     expect(html).toContain('select-none');
     expect(html).toContain('cursor-pointer');
+    expect(html).toContain('role="button"');
+    expect(html).toContain('tabindex="0"');
+    expect(html).toContain('focus-visible:outline-sky-500');
+  });
+
+  it('StoryEvidenceTarget supports accessible keyboard triggers (Enter / Space) and right-click', () => {
+    // Key validation invariant: Enter and Space trigger evidence, other keys ignored
+    expect(isEvidenceTriggerKey('Enter')).toBe(true);
+    expect(isEvidenceTriggerKey(' ')).toBe(true);
+    expect(isEvidenceTriggerKey('Escape')).toBe(false);
+    expect(isEvidenceTriggerKey('Tab')).toBe(false);
+    expect(isEvidenceTriggerKey('ArrowDown')).toBe(false);
+
+    const disabledHtml = renderToStaticMarkup(
+      <StoryEvidenceTarget item={mockEvidenceItem} onTriggerEvidence={vi.fn()} disabled>
+        <span>Disabled</span>
+      </StoryEvidenceTarget>,
+    );
+    expect(disabledHtml).toContain('tabindex="-1"');
+    expect(disabledHtml).toContain('aria-disabled="true"');
   });
 
   it('AC 8: Pinned items from the same conversation consolidate into a single card with timestamped bullets', () => {

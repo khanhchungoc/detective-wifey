@@ -72,12 +72,58 @@ describe('app surface and stationary system chrome', () => {
     expect(html).toContain('aria-label="Về trang chủ"');
   });
 
-  it('renders grayed out apps with data-grayed-out and future development aria label', () => {
+  it('renders grayed out apps with data-grayed-out, aria-disabled, and future development aria label', () => {
     const html = renderToStaticMarkup(
       <PhoneShell {...props} activeAppId="home" activeAppDefinition={null} grayedOutAppIds={['banking']} />
     );
     expect(html).toContain('data-grayed-out="true"');
+    expect(html).toContain('aria-disabled="true"');
     expect(html).toContain('aria-label="Ứng dụng Banking (Tính năng đang phát triển)"');
+  });
+
+  it('renders all 12 apps across upper grid and dock with level-scoped disabled states', () => {
+    const upperApps = [
+      { appId: 'ecommerce', displayName: 'Shopoo', icon: () => null, component: () => null, themeGradient: '', themeColor: '#f97316' },
+      { appId: 'ride-hailing', displayName: 'BeGo', icon: () => null, component: () => null, themeGradient: '', themeColor: '#eab308' },
+      { appId: 'web-browser', displayName: 'Sari', icon: () => null, component: () => null, themeGradient: '', themeColor: '#3b82f6' },
+      { appId: 'photos', displayName: 'Ảnh', icon: () => null, component: () => null, themeGradient: '', themeColor: '#ec4899' },
+      { appId: 'email', displayName: 'GeeMail', icon: () => null, component: () => null, themeGradient: '', themeColor: '#ef4444' },
+      { appId: 'professional-network', displayName: 'InkedLin', icon: () => null, component: () => null, themeGradient: '', themeColor: '#0284c7' },
+      { appId: 'team-collaboration', displayName: 'Tim', icon: () => null, component: () => null, themeGradient: '', themeColor: '#6366f1' },
+      { appId: 'personal-notes', displayName: 'Ghi chú', icon: () => null, component: () => null, themeGradient: '', themeColor: '#f59e0b' },
+    ] as unknown as AppDefinition[];
+    const dockApps = [
+      { appId: 'phone', displayName: 'Điện thoại', icon: () => null, component: () => null, themeGradient: '', themeColor: '#22c55e' },
+      { appId: 'internet-messaging', displayName: 'Zola', icon: () => null, component: () => null, themeGradient: '', themeColor: '#0068FF' },
+      { appId: 'banking', displayName: 'Techcornbank', icon: () => null, component: () => null, themeGradient: '', themeColor: '#ED1C24' },
+      { appId: 'messages', displayName: 'Tin nhắn', icon: () => null, component: () => null, themeGradient: '', themeColor: '#10b981' },
+    ] as unknown as AppDefinition[];
+
+    const html = renderToStaticMarkup(
+      <PhoneShell
+        {...props}
+        activeAppId="home"
+        activeAppDefinition={null}
+        activeUpperApps={upperApps}
+        activeDockApps={dockApps}
+        grayedOutAppIds={['ride-hailing', 'web-browser', 'email', 'professional-network', 'team-collaboration', 'personal-notes']}
+      />
+    );
+
+    expect(html).toContain('data-launch-app="ecommerce"');
+    expect(html).toContain('data-launch-app="ride-hailing"');
+    expect(html).toContain('data-launch-app="phone"');
+    expect(html).toContain('data-launch-app="messages"');
+
+    const ecommerceIdx = html.indexOf('data-launch-app="ecommerce"');
+    const ecommerceTag = html.slice(ecommerceIdx, ecommerceIdx + 200);
+    expect(ecommerceTag).not.toContain('aria-disabled="true"');
+    expect(ecommerceTag).not.toContain('data-grayed-out="true"');
+
+    const rideIdx = html.indexOf('data-launch-app="ride-hailing"');
+    const rideTag = html.slice(rideIdx, rideIdx + 200);
+    expect(rideTag).toContain('aria-disabled="true"');
+    expect(rideTag).toContain('data-grayed-out="true"');
   });
 
   it('hides status bar on mobile when not in fullscreen mode', () => {

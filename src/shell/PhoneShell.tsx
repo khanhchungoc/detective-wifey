@@ -333,12 +333,14 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                       />
                     );
                   })}
-                  <AppIconSquircle
-                    app={{ displayName: 'Camera', icon: IoCamera, themeGradient: 'from-slate-400 to-slate-600' }}
-                    hideLabel
-                    isGrayedOut
-                    onClick={() => onNotify('Camera: chức năng đang phát triển.')}
-                  />
+                  {activeDockApps.length < 4 && (
+                    <AppIconSquircle
+                      app={{ displayName: 'Camera', icon: IoCamera, themeGradient: 'from-slate-400 to-slate-600' }}
+                      hideLabel
+                      isGrayedOut
+                      onClick={() => onNotify('Camera: chức năng đang phát triển.')}
+                    />
+                  )}
                 </div>
               </div>
 

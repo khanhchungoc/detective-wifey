@@ -7,7 +7,7 @@ import {
   validateCaseConfig,
 } from '../features/case-runtime';
 import { case01 } from '../data/cases';
-import { APP_REGISTRY, DOCK_APP_IDS } from '../bootstrap/appRegistry';
+import { APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from '../bootstrap/appRegistry';
 import { LocalStorageAdapter } from '../features/session';
 import { CaseConfig } from '../shared/contracts/case-schema';
 import { readAppData as readRides } from '../apps/ride-hailing/data';
@@ -114,7 +114,9 @@ assert.ok(APP_REGISTRY['internet-messaging'], 'Internet Messaging must be regist
 assert.ok(APP_REGISTRY['banking'], 'Banking must be registered in APP_REGISTRY');
 assert.ok(APP_REGISTRY['ecommerce'], 'Ecommerce must be registered in APP_REGISTRY');
 assert.ok(APP_REGISTRY.comms, 'Comms must be registered in APP_REGISTRY');
-assert.deepEqual(DOCK_APP_IDS, ['phone', 'messages', 'photos'], 'Dock apps precede the shell camera placeholder');
+assert.deepEqual(DOCK_APP_IDS, ['phone', 'internet-messaging', 'banking', 'messages'], 'Dock apps match canonical 4-app frosted dock tray');
+assert.equal(UPPER_GRID_APP_IDS.length, 8, 'SpringBoard upper grid displays 8 apps');
+assert.equal(ALL_LAUNCHER_APP_IDS.length, 12, 'SpringBoard displays 12 apps total (8 upper grid + 4 dock)');
 console.log('  -> PASS: All micro-apps correctly registered with components and icons.\n');
 
 console.log('[US-002 - AC 7] Shared PIN Lockpad Puzzle Target Resolution');

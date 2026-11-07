@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { PhoneShell } from '../shell';
-import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS } from './appRegistry';
+import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
 import { LocalStorageAdapter, ResumeSessionModal, type GameStateRepository } from '../features/session';
@@ -8,7 +8,7 @@ import { PlaySession } from '../features/play-session';
 import { SharedPinLockpad } from '../features/locks';
 import { WifeNotebookModal } from '../features/wife-notebook';
 import type { CaseConfig } from '../shared/contracts/case-schema';
-import type { AppId } from '../shared/contracts/app-contracts';
+import type { AppDefinition, AppId } from '../shared/contracts/app-contracts';
 import { appTransition, transition } from '../shared/motion/transition';
 import { AnchoredOverlay } from '../shared/ui/AnchoredOverlay';
 import { RetainedAppView } from './RetainedAppView';
@@ -32,18 +32,30 @@ export function GameRoot({ repository, initialCaseConfig }: {
   const activeApp = activeAppId !== 'home' ? getAppDefinition(activeAppId) ?? null : null;
   const contexts = useMemo(() => Object.fromEntries(Object.values(APP_REGISTRY)
     .map(app => [app.appId, createAppContext(caseConfig, app.appId)])), [caseConfig]);
-  // Preserve the current level-based provisioning pending the documented launcher decision.
-  const provisioned = caseConfig.activeAppIds || ['ecommerce', 'internet-messaging', 'banking', 'photos', 'comms'];
-  const appIds = [...new Set(provisioned.flatMap(id => id === 'comms' ? ['phone', 'messages'] : [id]))];
-  const dock = DOCK_APP_IDS.map(getAppDefinition).filter(app => app !== undefined);
-  const upper = appIds.filter(id => !DOCK_APP_IDS.includes(id as AppId))
-    .map(id => getAppDefinition(id as AppId)).filter(app => app !== undefined);
+  // Level-scoped app enablement: up to 12 apps displayed on SpringBoard, with out-of-scope apps disabled.
+  const enabledAppIds = useMemo(() => new Set(
+    (caseConfig.activeAppIds || [])
+      .flatMap(id => id === 'comms' ? ['phone', 'messages'] : [id])
+      .filter(id => !(caseConfig.grayedOutAppIds || []).includes(id as AppId))
+  ), [caseConfig.activeAppIds, caseConfig.grayedOutAppIds]);
+
+  const disabledAppIds = useMemo(() => (
+    ALL_LAUNCHER_APP_IDS.filter(id => !enabledAppIds.has(id))
+  ), [enabledAppIds]);
+
+  const upper = useMemo(() => (
+    UPPER_GRID_APP_IDS.map(getAppDefinition).filter((app): app is AppDefinition => Boolean(app))
+  ), []);
+  const dock = useMemo(() => (
+    DOCK_APP_IDS.map(getAppDefinition).filter((app): app is AppDefinition => Boolean(app))
+  ), []);
+
   const returnHome = () => {
     if (activeAppId !== 'home') appTransition('close', activeAppId, game.returnHome);
   };
   const launch = (id: AppId) => {
     if (id === activeAppId) return;
-    if (caseConfig.grayedOutAppIds?.includes(id)) {
+    if (disabledAppIds.includes(id)) {
       const def = getAppDefinition(id);
       game.notify(`${def?.displayName ?? id}: Tính năng đang phát triển cho các màn sau.`);
       return;
@@ -56,7 +68,7 @@ export function GameRoot({ repository, initialCaseConfig }: {
     deviceMetadata={caseConfig.deviceMetadata}
     activeAppId={activeAppId} activeAppDefinition={activeApp}
     activeUpperApps={upper} activeDockApps={dock}
-    grayedOutAppIds={caseConfig.grayedOutAppIds}
+    grayedOutAppIds={disabledAppIds}
     systemAlertToast={state.systemAlertToast}
     onLaunchApp={launch} onReturnHome={returnHome} onRestartLevel={game.restart}
     onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
@@ -110,7 +122,7 @@ export function GameRoot({ repository, initialCaseConfig }: {
       unlockedChallenges={state.unlockedChallenges}
       initialThreadId={appId === 'messages' ? currentMessageRoute?.threadId : undefined}
       onOpenMessages={threadId => {
-        if (!appIds.includes('messages')) return false;
+        if (!enabledAppIds.has('messages')) return false;
         transition('push', () => {
           setMessageRoute(route => ({ sessionId: state.appSessionId, threadId, request: (route?.request ?? 0) + 1 }));
           game.launch('messages');

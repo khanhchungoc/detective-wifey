@@ -33,9 +33,36 @@ export const APP_REGISTRY: Record<string, AppDefinition> = {
 };
 
 /**
- * Fast access apps that mount into the frosted dock when active.
+ * Fast access apps that mount into the frosted dock across all levels.
  */
-export const DOCK_APP_IDS: AppId[] = ['phone', 'messages', 'photos'];
+export const DOCK_APP_IDS: AppId[] = [
+  'phone',
+  'internet-messaging',
+  'banking',
+  'messages',
+];
+
+/**
+ * Upper grid apps that mount into the SpringBoard launcher grid across all levels.
+ */
+export const UPPER_GRID_APP_IDS: AppId[] = [
+  'ecommerce',
+  'ride-hailing',
+  'web-browser',
+  'photos',
+  'email',
+  'professional-network',
+  'team-collaboration',
+  'personal-notes',
+];
+
+/**
+ * Full 12-app layout order (8 upper grid apps + 4 dock apps).
+ */
+export const ALL_LAUNCHER_APP_IDS: AppId[] = [
+  ...UPPER_GRID_APP_IDS,
+  ...DOCK_APP_IDS,
+];
 
 export function getAppDefinition(appId: AppId): AppDefinition | undefined {
   return APP_REGISTRY[appId];
