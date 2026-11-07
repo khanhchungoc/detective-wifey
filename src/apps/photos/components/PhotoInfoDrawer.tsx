@@ -82,7 +82,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
         <div className="w-10 h-1 bg-white/20 rounded-full" />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-8 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 pb-24 space-y-4">
         {/* Top Cropped Photo Preview */}
         <div className="h-28 w-full rounded-2xl overflow-hidden relative border border-white/10 shrink-0">
           <PhotoPreview photo={photo} className="w-full h-full object-cover" />
@@ -93,7 +93,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/90 hover:text-white transition-all active:scale-95 shadow-md"
+            className="absolute top-2.5 right-2.5 z-10 w-9 h-9 min-w-[44px] min-h-[44px] rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/90 hover:text-white transition-all active:scale-95 shadow-md"
             aria-label="Đóng bảng thông tin"
           >
             <IoCloseOutline className="w-5 h-5" />

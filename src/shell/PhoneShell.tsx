@@ -17,6 +17,7 @@ import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
 import { useSwipeBack } from '../shared/gestures/useSwipeBack';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
+import { NOTEBOOK_SLIDE_EASING } from '../shared/motion/anchoredOverlay';
 import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
@@ -207,18 +208,36 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
       ref={shellRef}
       data-app-transition-bounds
       data-device-mode={isIOS ? 'ios' : 'default'}
-      className="phone-shell flex flex-col relative overflow-hidden select-none font-sans"
-      style={{
-        ...systemInsets,
-        backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.5) 20%, transparent 42%), url(${defaultWallpaper})`,
-        ...(isIOS || !showStatusBar ? { paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
+      className="phone-shell flex flex-col relative overflow-hidden select-none font-sans bg-[#090d16]"
+      style={systemInsets}
       {...shellHomeSwipeHandlers}
     >
-      <div className="contents" inert={notebookOpen || controlCenterOpen || sheetOpen} aria-hidden={notebookOpen || controlCenterOpen || sheetOpen}>
+      <div
+        data-phone-screen
+        inert={notebookOpen || controlCenterOpen || sheetOpen}
+        aria-hidden={notebookOpen || controlCenterOpen || sheetOpen}
+        className="phone-screen-canvas flex-1 flex flex-col relative min-h-0 w-full h-full overflow-hidden"
+        style={{
+          ...systemInsets,
+          backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.5) 20%, transparent 42%), url(${defaultWallpaper})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          ...(isIOS || !showStatusBar ? { paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
+          transform: notebookOpen
+            ? 'perspective(1000px) translate3d(0, 0, -50px) scale(0.94)'
+            : 'perspective(1000px) translate3d(0, 0, 0px) scale(1)',
+          transformOrigin: 'center center',
+          borderRadius: notebookOpen ? '28px' : '0px',
+          boxShadow: notebookOpen ? '0 20px 50px rgba(0, 0, 0, 0.6)' : 'none',
+          filter: notebookOpen ? 'brightness(0.85)' : 'none',
+          transition: `transform ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
+            `border-radius ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
+            `box-shadow ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
+            `filter ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}`,
+          willChange: 'transform, border-radius',
+        }}
+      >
       {/* 1. Phone OS Status Bar */}
       {showStatusBar && <StatusBar
         overlay

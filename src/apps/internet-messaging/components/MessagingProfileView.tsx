@@ -84,7 +84,7 @@ export const MessagingProfileView: React.FC<MessagingProfileViewProps> = ({
   } | null>(null, 'sheet');
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto">
+    <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto pb-24">
       {/* Header: Search + Settings (red alert badge) */}
       <header className="h-14 px-3 bg-[#0088FF] text-white flex items-center gap-2 shrink-0 shadow-sm">
         <div className="flex-1 h-9 bg-white/20 rounded-lg flex items-center px-2.5 gap-2">

@@ -56,13 +56,13 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
           <div className="w-11" />
         </header>
 
-        <main className="flex-1 overflow-y-auto p-3 space-y-2">
-          <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#5F6368]">
+        <main className="flex-1 overflow-y-auto p-3 space-y-2 pb-24">
+          <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#52525B]">
             <span>HỘP THƯ ĐẾN</span>
           </div>
 
           {emails.length === 0 ? (
-            <div className="p-8 text-center text-ios-subheadline text-[#5F6368]">
+            <div className="p-8 text-center text-ios-subheadline text-[#52525B]">
               Hộp thư đến trống.
             </div>
           ) : (
@@ -87,7 +87,7 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
                     <IoStar className="w-4 h-4 text-amber-400" />
                   </div>
                   <h4 className="font-semibold text-ios-footnote text-[#1A73E8]">{mail.subject}</h4>
-                  <p className="text-ios-caption-1 text-[#5F6368] line-clamp-2">{mail.snippet}</p>
+                  <p className="text-ios-caption-1 text-[#52525B] line-clamp-2">{mail.snippet}</p>
                 </div>
               </StoryEvidenceTarget>
             ))
@@ -127,7 +127,7 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
             <div className="w-11" />
           </header>
 
-          <main className="flex-1 overflow-y-auto p-3 space-y-2">
+          <main className="flex-1 overflow-y-auto p-3 space-y-2 pb-24">
             <StoryEvidenceTarget
               item={{
                 title: selectedMail.subject,
@@ -142,9 +142,9 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-ios-subheadline text-[#202124]">{selectedMail.subject}</h3>
-                    <p className="text-ios-caption-1 text-[#5F6368] mt-0.5">{selectedMail.sender}</p>
+                    <p className="text-ios-caption-1 text-[#52525B] mt-0.5">{selectedMail.sender}</p>
                   </div>
-                  <span className="text-ios-caption-2 text-slate-400">{selectedMail.time || 'Hôm nay'}</span>
+                  <span className="text-ios-caption-2 text-[#64748B]">{selectedMail.time || 'Hôm nay'}</span>
                 </div>
                 <div className="pt-2 border-t border-slate-100 text-ios-body text-[#3C4043] leading-relaxed whitespace-pre-wrap">
                   {selectedMail.snippet}

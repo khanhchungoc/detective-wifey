@@ -51,7 +51,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
         </div>
       </div>
 
-      <main className="flex-1 overflow-y-auto p-3 space-y-2">
+      <main className="flex-1 overflow-y-auto p-3 space-y-2 pb-24">
         <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-slate-500">
           <span>LỊCH SỬ DUYỆT WEB HÔM NAY</span>
         </div>
@@ -81,10 +81,10 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
                     <IoGlobeOutline className="w-4 h-4 text-[#3F51B5] shrink-0" />
                     <h4 className="font-bold text-ios-subheadline text-[#111827] truncate">{item.title}</h4>
                   </div>
-                  <span className="text-ios-caption-2 text-slate-400">Nhấn giữ</span>
+                  <span className="text-ios-caption-2 text-[#64748B]">Nhấn giữ</span>
                 </div>
-                <p className="text-ios-caption-1 text-slate-400 font-mono truncate">{item.url}</p>
-                <span className="text-ios-caption-2 text-slate-400 block">{item.time}</span>
+                <p className="text-ios-caption-1 text-[#64748B] font-mono truncate">{item.url}</p>
+                <span className="text-ios-caption-2 text-[#64748B] block">{item.time}</span>
               </div>
             </StoryEvidenceTarget>
           ))

@@ -65,7 +65,7 @@ export function BankingReceipt({ caseData, transaction, onClose, onEvidence, evi
         </dl>
 
         <div className="py-4 pb-6">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#52525B]">
             Lời nhắn (Nội dung CK)
           </h3>
           <p className="mt-2 whitespace-pre-wrap break-words rounded-2xl bg-[#F5F6F8] p-4 text-sm italic leading-relaxed text-[#111827] border border-[#E5E7EB]">

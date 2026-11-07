@@ -246,7 +246,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
       </nav>
 
       {/* 3. Feed Canvas (Chat Stream UI) */}
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 pb-24">
         {/* Collections Tab Special View */}
         {activeCategory === 'collections' ? (
           <div className="space-y-3 py-2">

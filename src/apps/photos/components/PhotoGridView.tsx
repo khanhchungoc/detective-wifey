@@ -108,7 +108,7 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
       </header>
 
       {/* Main Scrollable Photostream & Collections */}
-      <main className="flex-1 overflow-y-auto pb-8">
+      <main className="flex-1 overflow-y-auto pb-24">
         {isViewingHidden && (
           <div className="m-3 p-3 bg-amber-500/10 border border-[#FFC107]/30 rounded-xl text-xs text-amber-200">
             Thư mục ảnh bị ẩn đã mở khóa thành công.

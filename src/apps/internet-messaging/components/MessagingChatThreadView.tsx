@@ -158,11 +158,11 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
       <main
         ref={messagesContainerRef}
         data-testid="chat-messages-container"
-        className="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-3"
+        className="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-3 pb-24"
       >
         {/* Floating Date Badge */}
         <div className="flex justify-center my-1">
-          <span className="px-3 py-0.5 rounded-full bg-[#B4B9BF] text-white text-ios-caption-1 font-medium shadow-xs">
+          <span className="px-3 py-0.5 rounded-full bg-slate-900/70 backdrop-blur-md text-white text-ios-caption-1 font-medium shadow-xs">
             Lịch sử trò chuyện
           </span>
         </div>
@@ -229,7 +229,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                       <span className="text-ios-caption-1 text-[#0088FF] font-semibold">
                         [Chạm để xem chi tiết bản đồ]
                       </span>
-                      <span className="text-ios-caption-1 text-[#8A9098]">{msg.time}</span>
+                      <span className="text-ios-caption-1 text-[#52525B]">{msg.time}</span>
                     </div>
                   </div>
                 </StoryEvidenceTarget>
@@ -291,7 +291,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
 
                   {/* Bubble Footer: Time & Read status */}
                   <div
-                    className={`flex items-center gap-1 text-ios-caption-1 text-[#8A9098] mt-1 ${
+                    className={`flex items-center gap-1 text-ios-caption-1 text-[#52525B] mt-1 ${
                       isMe ? 'justify-end' : 'justify-start'
                     }`}
                   >
@@ -303,7 +303,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                       </span>
                     )}
                     {!isMe && (
-                      <span className="flex items-center text-slate-400">
+                      <span className="flex items-center text-[#64748B]">
                         <IoCheckmark className="w-3 h-3" />
                         <span className="ml-0.5">Đã nhận</span>
                       </span>

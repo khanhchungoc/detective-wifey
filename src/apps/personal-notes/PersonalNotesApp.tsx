@@ -41,8 +41,8 @@ export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
         <div className="w-11" />
       </header>
 
-      <main className="flex-1 overflow-y-auto p-3 space-y-3">
-        <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-slate-500">
+      <main className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
+        <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#52525B]">
           <span>DANH SÁCH GHI CHÚ BÍ MẬT</span>
         </div>
 
@@ -68,7 +68,7 @@ export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <h4 className="font-bold text-ios-subheadline text-[#202124]">{note.title}</h4>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-50 text-[#F9A825] text-ios-caption-2 font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-amber-100 text-[#B45309] text-ios-caption-2 font-bold">
                     Bảo mật
                   </span>
                 </div>

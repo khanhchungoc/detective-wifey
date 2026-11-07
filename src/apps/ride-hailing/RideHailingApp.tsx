@@ -52,7 +52,7 @@ export const RideHailingApp: React.FC<VirtualAppProps> = ({
         <div className="w-11" />
       </header>
 
-      <main className="flex-1 overflow-y-auto p-3 space-y-3">
+      <main className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
         <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-slate-500">
           <span>LỊCH SỬ CHUYẾN ĐI & GIAO HÀNG</span>
         </div>
@@ -92,9 +92,9 @@ export const RideHailingApp: React.FC<VirtualAppProps> = ({
                     <span className="truncate">{trip.dropoff}</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-ios-caption-2 text-slate-400">
+                <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-ios-caption-2 text-[#64748B]">
                   <span>{trip.time}</span>
-                  <span className="text-slate-400">Nhấn giữ</span>
+                  <span className="text-[#64748B]">Nhấn giữ</span>
                 </div>
               </div>
             </StoryEvidenceTarget>

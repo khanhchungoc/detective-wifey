@@ -94,7 +94,7 @@ export function BankingHistory({ caseData, transactions, filter, onFilter, onOpe
               type="button"
               onClick={() => onFilter(value)}
               aria-pressed={isActive}
-              className={`bank-control rounded-full px-3.5 py-1 text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`bank-control rounded-full px-3.5 py-2 min-h-[44px] flex items-center text-xs font-medium whitespace-nowrap transition-colors ${
                 isActive
                   ? 'bg-[#111827] text-white'
                   : 'bg-[#F5F6F8] text-[#4B5563] hover:bg-[#E5E7EB]'
@@ -107,11 +107,11 @@ export function BankingHistory({ caseData, transactions, filter, onFilter, onOpe
       </div>
 
       {/* 3. Transaction Feed Grouped by Date */}
-      <div className="flex-1 space-y-4 pt-2">
+      <div className="flex-1 space-y-4 pt-2 pb-24">
         {groupedTransactions.map(group => (
           <div key={group.dateKey} className="space-y-1">
             {/* Date Section Header */}
-            <div className="pt-3 pb-1 px-1 text-ios-footnote font-normal text-[#8E8E93]">
+            <div className="pt-3 pb-1 px-1 text-ios-footnote font-normal text-[#52525B]">
               {group.displayDate}
             </div>
 
@@ -165,7 +165,7 @@ export function BankingHistory({ caseData, transactions, filter, onFilter, onOpe
                         >
                           {transaction.formattedAmount}
                         </p>
-                        <p className="mt-0.5 text-ios-caption-2 text-[#8E8E93]">
+                        <p className="mt-0.5 text-ios-caption-2 text-[#52525B]">
                           {transaction.timestamp}
                         </p>
                       </div>

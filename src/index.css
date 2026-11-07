@@ -26,6 +26,12 @@ nav.app-bottom-nav > button svg {
   flex-shrink: 0;
 }
 
+/* Accessibility touch-target minimum floor */
+.touch-target-min {
+  min-height: 44px;
+  min-width: 44px;
+}
+
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", -system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color-scheme: dark;
@@ -34,8 +40,8 @@ nav.app-bottom-nav > button svg {
 
   /* Apple HIG iOS Dynamic Label & Font Color Tokens */
   --ios-label-primary: #000000;
-  --ios-label-secondary: rgba(60, 60, 67, 0.60);
-  --ios-label-tertiary: rgba(60, 60, 67, 0.30);
+  --ios-label-secondary: #52525B;
+  --ios-label-tertiary: #64748B;
   --ios-label-quaternary: rgba(60, 60, 67, 0.18);
   --ios-label-dark-primary: #FFFFFF;
   --ios-label-dark-secondary: rgba(235, 235, 245, 0.60);

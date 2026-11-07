@@ -43,13 +43,13 @@ export const TeamCollaborationApp: React.FC<VirtualAppProps> = ({
         <div className="w-11" />
       </header>
 
-      <main className="flex-1 overflow-y-auto p-3 space-y-3">
-        <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#616161]">
+      <main className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
+        <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#52525B]">
           <span>KÊNH LÀM VIỆC NHÓM</span>
         </div>
 
         {channels.length === 0 ? (
-          <div className="p-8 text-center text-ios-subheadline text-[#616161]">
+          <div className="p-8 text-center text-ios-subheadline text-[#52525B]">
             Không có thông báo nhóm mới.
           </div>
         ) : (
@@ -69,7 +69,7 @@ export const TeamCollaborationApp: React.FC<VirtualAppProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <h4 className="font-bold text-ios-subheadline text-[#464EB8]">{ch.name}</h4>
-                  <span className="text-ios-caption-2 text-slate-400">Nhấn giữ</span>
+                  <span className="text-ios-caption-2 text-[#64748B]">Nhấn giữ</span>
                 </div>
                 <p className="text-ios-footnote text-[#252424]">{ch.lastMessage}</p>
               </div>

@@ -121,4 +121,43 @@ describe('notebook tab pointer ownership', () => {
     expect(tab.props['aria-hidden']).toBe(true);
     expect(tab.props.tabIndex).toBe(-1);
   });
+
+  it('updates phone screen with 3D backwards perspective zoom out while pulling notebook tab', () => {
+    const onOpen = vi.fn();
+    const tab = NotebookTab({ open: false, onOpen }) as ReactElement<ComponentProps<'button'>>;
+    const overlay = { style: { visibility: 'hidden', opacity: '0', transform: 'translate3d(100%, 0, 0)' } };
+    const screen = {
+      style: {
+        transform: 'perspective(1000px) translate3d(0, 0, 0px) scale(1)',
+        borderRadius: '0px', filter: 'none', boxShadow: 'none', transition: 'none',
+        removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
+      },
+    };
+    const host = {
+      getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }),
+      offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0,
+      querySelector: (selector: string) => (selector === '[data-phone-screen]' ? screen : overlay),
+    };
+    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 362, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
+    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
+      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
+      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
+    });
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
+    vi.stubGlobal('cancelAnimationFrame', () => undefined);
+
+    tab.props.onPointerDown?.(event(375, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
+    tab.props.onPointerMove?.(event(180, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
+
+    expect(screen.style.transform).toContain('perspective(1000px)');
+    expect(screen.style.transform).toContain('scale(');
+    expect(parseFloat(screen.style.borderRadius)).toBeGreaterThan(0);
+    expect(screen.style.filter).toContain('brightness(');
+
+    tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
+    expect(screen.style.removeProperty).toHaveBeenCalledWith('transition');
+    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -50px) scale(0.94)');
+    expect(screen.style.borderRadius).toBe('28px');
+    expect(onOpen).toHaveBeenCalledOnce();
+  });
 });

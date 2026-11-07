@@ -42,13 +42,13 @@ export const ProfessionalNetworkApp: React.FC<VirtualAppProps> = ({
         <div className="w-11" />
       </header>
 
-      <main className="flex-1 overflow-y-auto p-3 space-y-3">
-        <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#666666]">
+      <main className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
+        <div className="flex items-center justify-between px-1 text-ios-caption-1 font-semibold text-[#52525B]">
           <span>BẢNG TIN NGHỀ NGHIỆP</span>
         </div>
 
         {posts.length === 0 ? (
-          <div className="p-8 text-center text-ios-subheadline text-[#666666]">
+          <div className="p-8 text-center text-ios-subheadline text-[#52525B]">
             Không có bài đăng mới.
           </div>
         ) : (
@@ -70,9 +70,9 @@ export const ProfessionalNetworkApp: React.FC<VirtualAppProps> = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-bold text-ios-subheadline text-[#191919]">{post.author}</h4>
-                    <span className="text-ios-caption-2 text-[#666666]">{post.time}</span>
+                    <span className="text-ios-caption-2 text-[#52525B]">{post.time}</span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-50 text-[#B27B00] text-ios-caption-2 font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-amber-100 text-[#B45309] text-ios-caption-2 font-bold">
                     Kỷ niệm 5 năm
                   </span>
                 </div>

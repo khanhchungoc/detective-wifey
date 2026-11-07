@@ -27,7 +27,7 @@ export function BankingVaults({ caseData, vaults, unlockedChallenges, onSelect, 
   );
 
   return (
-    <section aria-label="Tiết kiệm" className="space-y-4 p-4 pb-12">
+    <section aria-label="Tiết kiệm" className="space-y-4 p-4 pb-24">
       {/* Tổng tích lũy Summary Card */}
       <div className="rounded-2xl bg-gradient-to-br from-[#121212] via-[#1E242E] to-[#2B3240] p-5 text-white shadow-md">
         <p className="text-ios-footnote font-medium text-neutral-400">Tổng tích lũy</p>
@@ -41,7 +41,7 @@ export function BankingVaults({ caseData, vaults, unlockedChallenges, onSelect, 
       </div>
 
       <div>
-        <h3 className="px-1 text-xs font-bold uppercase tracking-wider text-[#8E8E93]">
+        <h3 className="px-1 text-xs font-bold uppercase tracking-wider text-[#52525B]">
           Hũ đang hoạt động
         </h3>
       </div>
@@ -84,7 +84,7 @@ export function BankingVaults({ caseData, vaults, unlockedChallenges, onSelect, 
                   </>
                 )}
               </div>
-              <IoChevronForward aria-hidden="true" className="mt-2 h-5 w-5 shrink-0 text-[#8E8E93]" />
+              <IoChevronForward aria-hidden="true" className="mt-2 h-5 w-5 shrink-0 text-[#52525B]" />
             </button>
           );
 
@@ -121,7 +121,7 @@ export function BankingVaultDetail({
   onEvidence: (item: UniversalEvidenceItem) => void;
 }) {
   return (
-    <section aria-label="Chi tiết tiết kiệm" className="space-y-4 p-4 pb-12">
+    <section aria-label="Chi tiết tiết kiệm" className="space-y-4 p-4 pb-24">
       {/* Hero Vault Card */}
       <StoryEvidenceTarget
         item={bankingEvidence(caseData, vault, vault.name, `Số tiền gửi: ${vault.currentAmount}\n${vault.details || `Mục tiêu: ${vault.targetAmount}`}`)}
@@ -143,7 +143,7 @@ export function BankingVaultDetail({
       </StoryEvidenceTarget>
 
       <div>
-        <h3 className="px-1 text-xs font-bold uppercase tracking-wider text-[#8E8E93]">
+        <h3 className="px-1 text-xs font-bold uppercase tracking-wider text-[#52525B]">
           Lịch sử nộp tiền
         </h3>
       </div>
@@ -168,7 +168,7 @@ export function BankingVaultDetail({
           >
             <div className="rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between">
-                <p className="break-words text-ios-footnote text-[#8E8E93]">{deposit.date}</p>
+                <p className="break-words text-ios-footnote text-[#52525B]">{deposit.date}</p>
                 <p className="bank-amount text-sm font-bold text-[#00A86B]">+{deposit.amount}</p>
               </div>
               <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed text-[#111827]">

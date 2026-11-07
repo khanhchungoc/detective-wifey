@@ -43,7 +43,7 @@ export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingD
   };
 
   return (
-    <section aria-label="Tổng quan tài khoản" className="bank-dashboard-canvas flex min-h-full flex-col space-y-4 p-4 pb-8">
+    <section aria-label="Tổng quan tài khoản" className="bank-dashboard-canvas flex min-h-full flex-col space-y-4 p-4 pb-24">
       {/* 3. Floating Account Hero Card ("Số dư hiện có") */}
       <div className="bank-card-elevated p-4">
         <div className="flex items-center justify-between">
@@ -217,7 +217,7 @@ export function BankingProfile({ data, husbandName = 'Pham Quoc Bao' }: { data: 
   const tier = data.tier ? tierLabels[data.tier] : 'Inspire';
 
   return (
-    <section aria-label="Thông tin tài khoản" className="space-y-4 p-4">
+    <section aria-label="Thông tin tài khoản" className="space-y-4 p-4 pb-24">
       {/* Profile Header */}
       <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
         <div className="flex items-center gap-4">
@@ -236,7 +236,7 @@ export function BankingProfile({ data, husbandName = 'Pham Quoc Bao' }: { data: 
 
       {/* Membership Info */}
       <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">Thông tin hội viên</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#52525B]">Thông tin hội viên</h3>
         <dl className="mt-3 divide-y divide-[#F3F4F6] text-sm">
           <div className="flex items-center justify-between py-2.5">
             <dt className="text-[#6B7280]">Hạng hội viên hiện tại</dt>
@@ -255,7 +255,7 @@ export function BankingProfile({ data, husbandName = 'Pham Quoc Bao' }: { data: 
 
       {/* Security & Settings */}
       <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">Bảo mật &amp; Đăng nhập</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#52525B]">Bảo mật &amp; Đăng nhập</h3>
         <ul className="mt-3 divide-y divide-[#F3F4F6] text-sm">
           <li className="flex items-center justify-between py-2.5">
             <span className="flex items-center gap-2.5 text-[#111827]">

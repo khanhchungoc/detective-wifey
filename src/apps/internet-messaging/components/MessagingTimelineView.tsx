@@ -55,7 +55,7 @@ export const MessagingTimelineView: React.FC<MessagingTimelineViewProps> = ({
   ];
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto">
+    <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto pb-24">
       {/* Header */}
       <header className="h-14 px-4 bg-[#0088FF] text-white flex items-center justify-between shrink-0 shadow-sm">
         <h2 className="text-ios-headline font-bold tracking-tight">Nhật ký</h2>

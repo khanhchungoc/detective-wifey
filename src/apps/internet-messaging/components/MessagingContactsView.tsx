@@ -63,7 +63,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
       </header>
 
       {/* Main List */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pb-24">
         {/* Quick Contacts Actions */}
         <div className="p-3 border-b border-slate-100 space-y-2">
           <div className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-all cursor-pointer min-h-[44px]">
@@ -89,7 +89,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
                 Danh bạ máy (Đồng bộ)
               </span>
             </div>
-            <span className="text-ios-footnote text-[#8A9098]">(342 số)</span>
+            <span className="text-ios-footnote text-[#52525B]">(342 số)</span>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
           <button
             type="button"
             onClick={() => setSelectedFilter('all')}
-            className={`min-h-[36px] px-3 py-1 rounded-full text-ios-footnote font-bold transition-all ${
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-full text-ios-footnote font-bold transition-all ${
               selectedFilter === 'all'
                 ? 'bg-[#E4E6EB] text-[#050505]'
                 : 'bg-white text-slate-500 border border-slate-200'
@@ -109,7 +109,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
           <button
             type="button"
             onClick={() => setSelectedFilter('friends')}
-            className={`min-h-[36px] px-3 py-1 rounded-full text-ios-footnote font-bold transition-all ${
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-full text-ios-footnote font-bold transition-all ${
               selectedFilter === 'friends'
                 ? 'bg-[#E4E6EB] text-[#050505]'
                 : 'bg-white text-slate-500 border border-slate-200'
@@ -120,7 +120,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
           <button
             type="button"
             onClick={() => setSelectedFilter('oa')}
-            className={`min-h-[36px] px-3 py-1 rounded-full text-ios-footnote font-bold transition-all ${
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-full text-ios-footnote font-bold transition-all ${
               selectedFilter === 'oa'
                 ? 'bg-[#E4E6EB] text-[#050505]'
                 : 'bg-white text-slate-500 border border-slate-200'
@@ -132,7 +132,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
 
         {/* Grouped Contacts List */}
         {sections.length === 0 ? (
-          <div className="p-8 text-center text-ios-subheadline text-[#8A9098]">
+          <div className="p-8 text-center text-ios-subheadline text-[#52525B]">
             Không tìm thấy liên hệ phù hợp.
           </div>
         ) : (

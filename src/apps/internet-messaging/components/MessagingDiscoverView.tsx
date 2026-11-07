@@ -84,7 +84,7 @@ export const MessagingDiscoverView: React.FC<MessagingDiscoverViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto">
+    <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto pb-24">
       {/* Search Header */}
       <header className="h-14 px-3 bg-[#0088FF] text-white flex items-center gap-2 shrink-0 shadow-sm">
         <div className="flex-1 h-9 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
@@ -169,7 +169,7 @@ export const MessagingDiscoverView: React.FC<MessagingDiscoverViewProps> = ({
         ))}
       </div>
 
-      <div className="p-4 text-center text-ios-footnote text-[#8A9098] flex items-center justify-center gap-1.5">
+      <div className="p-4 text-center text-ios-footnote text-[#52525B] flex items-center justify-center gap-1.5">
         <IoShieldCheckmarkOutline className="w-3.5 h-3.5 text-emerald-500" />
         <span>Hệ sinh thái dịch vụ số được mã hoá đầu cuối</span>
       </div>

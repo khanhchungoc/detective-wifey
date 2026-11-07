@@ -138,7 +138,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
       </div>
 
       {/* 3. Main Chat Feed */}
-      <main className="flex-1 overflow-y-auto overflow-x-hidden divide-y divide-slate-100">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden divide-y divide-slate-100 pb-24">
         {/* Pinned Cloud của tôi (My Documents) entry item (Navigation link - zero long-press overlay) */}
         {activeTab === 'priority' && !searchQuery && onOpenMyDocuments && (
           <div
@@ -155,7 +155,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
                   Cloud của tôi (My Documents)
                 </span>
                 <div className="flex items-center gap-1 shrink-0 ml-2">
-                  <span className="text-ios-footnote text-[#8A9098]">{cloudDocuments[0]?.time || cloudDocuments[0]?.date}</span>
+                  <span className="text-ios-footnote text-[#52525B]">{cloudDocuments[0]?.time || cloudDocuments[0]?.date}</span>
                 </div>
               </div>
 
@@ -169,7 +169,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
         )}
 
         {filteredThreads.length === 0 ? (
-          <div className="p-8 text-center text-ios-subheadline text-[#8A9098]">
+          <div className="p-8 text-center text-ios-subheadline text-[#52525B]">
             Không có cuộc trò chuyện nào trong mục này.
           </div>
         ) : (
@@ -203,7 +203,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
                       {thread.contactName}
                     </span>
                     <div className="flex items-center gap-1 shrink-0 ml-2">
-                      <span className="text-ios-footnote text-[#8A9098]">
+                      <span className="text-ios-footnote text-[#52525B]">
                         {thread.timestamp}
                       </span>
                     </div>
@@ -216,7 +216,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
 
                     <div className="shrink-0 flex items-center gap-1">
                       {thread.isMuted && (
-                        <IoNotificationsOffOutline className="w-3.5 h-3.5 text-[#9E9E9E]" />
+                        <IoNotificationsOffOutline className="w-3.5 h-3.5 text-[#64748B]" />
                       )}
                     </div>
                   </div>
