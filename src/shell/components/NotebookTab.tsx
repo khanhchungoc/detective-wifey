@@ -92,7 +92,8 @@ export function NotebookTab({
 
   useLayoutEffect(() => {
     const element = ref.current;
-    if (!element || gesture.current) return;
+    if (!element || gesture.current || lastSettledOpen.current === open) return;
+    lastSettledOpen.current = open;
     const parent = element.offsetParent as HTMLElement | null;
     if (typeof parent?.querySelector === 'function') {
       clearScreenOverrides(
@@ -100,11 +101,9 @@ export function NotebookTab({
         parent.querySelector<HTMLElement>('[data-app-surface]'),
       );
     }
-    if (lastSettledOpen.current === open) return;
-    lastSettledOpen.current = open;
     const edge: DockEdge = open ? 'left' : 'right';
     const to = transform(floatingDockPosition(edge, position.current.fraction, bounds.current));
-    const from = getComputedStyle(element).transform;
+    const from = element.style.transform || getComputedStyle(element).transform;
     settling.current?.cancel();
     element.dataset.edge = edge;
     element.dataset.floating = 'false';
@@ -295,12 +294,11 @@ export function NotebookTab({
           }
           if (active.screen) {
             if (active.screen.dataset) active.screen.dataset.notebookDragging = 'true';
-            active.screen.style.transition = 'none';
+            active.screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
             active.screen.style.borderRadius = '28px';
             active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
           }
           if (active.appSurface) {
-            active.appSurface.style.transition = 'none';
             active.appSurface.style.borderRadius = '28px';
           }
         }
@@ -324,9 +322,6 @@ export function NotebookTab({
           const progress = Math.max(0, Math.min(1, 1 - active.pullOffsetX / active.surfaceWidth));
           if (active.backdrop) {
             active.backdrop.style.opacity = progress.toFixed(3);
-          }
-          if (active.screen) {
-            active.screen.style.transform = `translate3d(0, 0, 0) scale(${(1 - 0.06 * progress).toFixed(4)})`;
           }
         }
       });
