@@ -4,62 +4,13 @@
   --notebook-paper: #fff9e8;
   --notebook-border: #d4b977;
   position: relative;
+  border-left: 6px solid #bda261;
+  border-bottom: 6px solid #9c8243;
   border-top: 1px solid rgba(255, 255, 255, 0.45);
-  border-left: 1px solid #7d6628;
-  border-bottom: 1px solid #6b551c;
   box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.3),
-    inset 6px 0 8px -4px rgba(110, 88, 35, 0.16),
-    inset 0 -5px 7px -3px rgba(110, 88, 35, 0.14);
-}
-
-/* 3D Page Edge along Left (Dark Yellow Paper Stack Thickness) */
-.wife-notebook::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 7px;
-  z-index: 25;
-  pointer-events: none;
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
-  background: linear-gradient(
-    to right,
-    #7d6628 0%,
-    #9c8340 20%,
-    #bfa462 50%,
-    #ab904e 80%,
-    #8f7535 100%
-  );
-  box-shadow:
-    inset -1px 0 0 rgba(255, 255, 255, 0.22),
-    1px 0 2px rgba(100, 80, 30, 0.12);
-}
-
-/* 3D Page Edge along Bottom (Dark Yellow Paper Stack Thickness) */
-.wife-notebook::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 7px;
-  z-index: 24;
-  pointer-events: none;
-  border-bottom-left-radius: 1rem;
-  background: linear-gradient(
-    to bottom,
-    #7a6327 0px,
-    #ecd392 0.75px,
-    #b89d5c 1.5px,
-    #a28847 2.75px,
-    #c8ae6e 3.5px,
-    #987f3e 5px,
-    #6b551c 7px
-  );
-  border-bottom: 1px solid #5e4a16;
+    inset 1px 1px 0 rgba(255, 255, 255, 0.4),
+    -1px 0 0 #7d6628,
+    0 1px 0 #5c4715;
 }
 
 /* A small, repeating SVG tile keeps the cardboard grain static during gestures. */
