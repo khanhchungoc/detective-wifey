@@ -10,7 +10,9 @@ import { NotificationBanner } from './components/NotificationBanner';
 import { NotebookTab } from './components/NotebookTab';
 import { ControlCenter, isControlSwipe, setNotificationHintSeen } from './components/ControlCenter';
 import { PwaGuideSheet } from './components/PwaGuideSheet';
+import { ExitConfirmModal } from './components/ExitConfirmModal';
 import { usePwa } from './usePwa';
+import { useNavigationGuard } from './useNavigationGuard';
 import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
 import { useSwipeBack } from '../shared/gestures/useSwipeBack';
@@ -37,6 +39,7 @@ export interface PhoneShellProps {
   onCloseNotebook?: () => void;
   notebookOpen?: boolean;
   onNotify: (message: string) => void;
+  enableNavigationGuard?: boolean;
 }
 
 /** Phone presentation and transient OS state. Gameplay is supplied by the host. */
@@ -46,7 +49,11 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   systemAlertToast, incomingNotification, children, overlays, renderLevelSelector,
   onLaunchApp: handleLaunchApp, onReturnHome,
   onOpenNotebook, onCloseNotebook, notebookOpen = false, onNotify,
+  enableNavigationGuard = true,
 }) => {
+  const { showExitConfirm, handleStay, handleLeave } = useNavigationGuard({
+    enabled: enableNavigationGuard,
+  });
   const [isIOS] = useState(() => typeof navigator !== 'undefined' && detectDeviceMode(navigator) === 'ios');
   const [isMobile] = useState(() => typeof navigator !== 'undefined' && isMobileDevice(navigator));
   const [isFullscreen, setIsFullscreen] = useState(() => detectFullscreen());
@@ -306,31 +313,33 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
               </div>
 
               {/* Frosted Glass Dock Tray (Fast Access Apps) */}
-              <div className="glass-dock phone-dock grid grid-flow-col auto-cols-fr">
-                {activeDockApps.map((app) => {
-                  const isGrayedOut = Boolean(grayedOutAppIds?.includes(app.appId));
-                  return (
-                    <AppIconSquircle
-                      key={app.appId}
-                      app={app}
-                      hideLabel
-                      isGrayedOut={isGrayedOut}
-                      onClick={() => {
-                        if (isGrayedOut) {
-                          onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
-                        } else {
-                          handleLaunchApp(app.appId);
-                        }
-                      }}
-                    />
-                  );
-                })}
-                <AppIconSquircle
-                  app={{ displayName: 'Camera', icon: IoCamera, themeGradient: 'from-slate-400 to-slate-600' }}
-                  hideLabel
-                  isGrayedOut
-                  onClick={() => onNotify('Camera: chức năng đang phát triển.')}
-                />
+              <div className="glass-dock phone-dock">
+                <div className="phone-dock-grid grid grid-flow-col auto-cols-fr">
+                  {activeDockApps.map((app) => {
+                    const isGrayedOut = Boolean(grayedOutAppIds?.includes(app.appId));
+                    return (
+                      <AppIconSquircle
+                        key={app.appId}
+                        app={app}
+                        hideLabel
+                        isGrayedOut={isGrayedOut}
+                        onClick={() => {
+                          if (isGrayedOut) {
+                            onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
+                          } else {
+                            handleLaunchApp(app.appId);
+                          }
+                        }}
+                      />
+                    );
+                  })}
+                  <AppIconSquircle
+                    app={{ displayName: 'Camera', icon: IoCamera, themeGradient: 'from-slate-400 to-slate-600' }}
+                    hideLabel
+                    isGrayedOut
+                    onClick={() => onNotify('Camera: chức năng đang phát triển.')}
+                  />
+                </div>
               </div>
 
             </div>
@@ -424,6 +433,15 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
         />
       )}
       </div>
+
+      {/* 9. Exit Confirmation Modal */}
+      {showExitConfirm && (
+        <ExitConfirmModal
+          isOpen={showExitConfirm}
+          onStay={handleStay}
+          onLeave={handleLeave}
+        />
+      )}
 
     </div>
   );

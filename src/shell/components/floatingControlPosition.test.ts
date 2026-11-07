@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   clampFloatingPoint, floatingDockPosition, floatingVelocity, projectFloatingDock, isFloatingDetached,
-  notebookPullOffset, shouldCommitNotebookPull,
+  notebookPullOffset, notebookTabPullX, shouldCommitNotebookPull,
   NOTEBOOK_FLOAT_SIZE, NOTEBOOK_TAB_WIDTH, NOTEBOOK_TAB_HEIGHT,
 } from './floatingControlPosition';
 
@@ -31,6 +31,9 @@ describe('floating notebook tab docking and pull physics', () => {
     expect(notebookPullOffset(390, -140, false)).toBe(250);
     expect(notebookPullOffset(390, -500, false)).toBe(0);
     expect(notebookPullOffset(390, 40, false)).toBe(390);
+    expect(notebookTabPullX(390, bounds)).toBe(bounds.right);
+    expect(notebookTabPullX(0, bounds)).toBe(bounds.left);
+    expect(notebookTabPullX(195, bounds)).toBe(181);
     expect(shouldCommitNotebookPull(250, 390, 0, false)).toBe(true);
     expect(shouldCommitNotebookPull(320, 390, 0, false)).toBe(false);
     expect(shouldCommitNotebookPull(350, 390, -.6, false)).toBe(true);

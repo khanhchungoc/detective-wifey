@@ -21,6 +21,8 @@ html[data-motion='push'] [data-app-viewport],
 html[data-motion='pop'] [data-app-viewport] { view-transition-name: phone-content; }
 html[data-motion='open'] [data-app-surface],
 html[data-motion='close'] [data-app-surface] { view-transition-name: phone-app; }
+html:is([data-motion='open'], [data-motion='close']) .phone-app-grid { view-transition-name: phone-app-grid; }
+html:is([data-motion='open'], [data-motion='close']) .phone-dock-grid { view-transition-name: phone-dock-apps; }
 html:is([data-motion='open'], [data-motion='close']) .phone-system-status { view-transition-name: system-status; }
 html:is([data-motion='open'], [data-motion='close']) .phone-system-home { view-transition-name: system-home; }
 html:is([data-motion='sheet-in'], [data-motion='sheet-out'], [data-swipe-motion]) .ios-sheet { view-transition-name: phone-sheet; }
@@ -42,12 +44,25 @@ html[data-motion='close']::view-transition-group(*) { animation-duration: var(--
   will-change: transform, opacity;
   transform: translateZ(0);
 }
-/* System glyphs keep their screen geometry; only their contrast crossfades on
-   the app's timeline. Their colored surfaces belong to phone-app. */
+html:is([data-motion='open'], [data-motion='close'])::view-transition-old(root),
+html:is([data-motion='open'], [data-motion='close'])::view-transition-new(root) {
+  animation: none;
+}
+::view-transition-group(phone-app-grid),
+::view-transition-group(phone-dock-apps) { z-index: 5; }
+::view-transition-group(phone-app) { z-index: 10; }
 ::view-transition-group(system-status), ::view-transition-group(system-home) { z-index: 40; }
 ::view-transition-group(notification-banner),
 ::view-transition-group(phone-sheet), ::view-transition-group(evidence-modal),
 ::view-transition-group(lock-screen) { z-index: 50; }
+::view-transition-old(phone-app-grid),
+::view-transition-new(phone-app-grid) {
+  transform-origin: var(--app-origin-x, 50%) var(--app-origin-y, 50%);
+}
+::view-transition-old(phone-dock-apps),
+::view-transition-new(phone-dock-apps) {
+  transform-origin: var(--dock-origin-x, 50%) 50%;
+}
 html[data-motion='open'] :is(::view-transition-old(system-status), ::view-transition-new(system-status),
 ::view-transition-old(system-home), ::view-transition-new(system-home)) {
   animation-duration: var(--ios-app-open-duration);
@@ -77,6 +92,25 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 }
 @keyframes ios-app-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ios-app-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes ios-icons-out {
+  0% { transform: none; opacity: 1; }
+  45% { opacity: .85; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+@keyframes ios-icons-in {
+  0% { transform: scale(1.35); opacity: 0; }
+  30% { opacity: .7; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes ios-dock-out {
+  0% { transform: none; opacity: 1; }
+  100% { transform: scale(1.22); opacity: 0; }
+}
+@keyframes ios-dock-in {
+  0% { transform: scale(1.22); opacity: 0; }
+  30% { opacity: .7; }
+  100% { transform: none; opacity: 1; }
+}
 @keyframes ios-sheet-in { from { transform: translateY(100%); opacity: 0; } }
 @keyframes ios-sheet-out { to { transform: translateY(100%); opacity: 0; } }
 @keyframes ios-banner-in { from { transform: translateY(-120%); opacity: 0; } }
@@ -110,6 +144,14 @@ html[data-motion='open']::view-transition-new(phone-app) {
   animation-delay: 0s, 0s;
   overflow: clip;
 }
+html[data-motion='open']::view-transition-old(phone-app-grid) {
+  animation: ios-icons-out var(--ios-app-open-duration) var(--ease-ios-default) both;
+}
+html[data-motion='open']::view-transition-new(phone-app-grid) { animation: none; opacity: 0; }
+html[data-motion='open']::view-transition-old(phone-dock-apps) {
+  animation: ios-dock-out var(--ios-app-open-duration) var(--ease-ios-default) both;
+}
+html[data-motion='open']::view-transition-new(phone-dock-apps) { animation: none; opacity: 0; }
 html[data-motion='close']::view-transition-old(phone-app) {
   animation-name: ios-app-out, ios-app-fade-out;
   animation-duration: var(--ios-app-close-duration), var(--ios-app-close-fade-duration);
@@ -118,6 +160,18 @@ html[data-motion='close']::view-transition-old(phone-app) {
   animation-delay: 0s, calc(var(--ios-app-close-duration) - var(--ios-app-close-fade-duration));
   overflow: clip;
   z-index: 2;
+}
+html[data-motion='close']::view-transition-new(phone-app-grid) {
+  animation: ios-icons-in var(--ios-app-close-duration) var(--ease-ios-default) both;
+}
+html[data-motion='close']::view-transition-old(phone-app-grid) { animation: none; opacity: 0; }
+html[data-motion='close']::view-transition-new(phone-dock-apps) {
+  animation: ios-dock-in var(--ios-app-close-duration) var(--ease-ios-default) both;
+}
+html[data-motion='close']::view-transition-old(phone-dock-apps) { animation: none; opacity: 0; }
+html[data-swipe-motion][data-motion='close']::view-transition-new(phone-app-grid),
+html[data-swipe-motion][data-motion='close']::view-transition-new(phone-dock-apps) {
+  animation: ios-reveal .28s var(--ease-ios-default) both;
 }
 /* Persistent overlays stay still when another region changes. Only unmatched
    snapshots represent an actual entrance or exit. */

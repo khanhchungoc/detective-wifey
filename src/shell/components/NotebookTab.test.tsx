@@ -61,6 +61,8 @@ describe('notebook tab pointer ownership', () => {
     expect(overlay.style.transform).toBe('translate3d(195px, 0, 0)');
     tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
     expect(onOpen).toHaveBeenCalledOnce();
+    expect(button.dataset).toMatchObject({ edge: 'left', floating: 'false' });
+    expect((button.style as { transform?: string }).transform).toMatch(/^translate3d\(0px, /);
   });
   it('suppresses cancelled gestures and permits a fresh tap afterward', () => {
     const tab = setup(); tab.down(); tab.release(375, 420, true);
@@ -90,6 +92,27 @@ describe('notebook tab pointer ownership', () => {
 
     expect(onClose).toHaveBeenCalledOnce();
     expect(onOpen).not.toHaveBeenCalled();
+  });
+  it('commits closing and docks back on the right edge when pulled right while open', () => {
+    const onOpen = vi.fn();
+    const onClose = vi.fn();
+    const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
+    const overlay = { style: { visibility: 'visible', opacity: '1', transform: 'none' } };
+    const host = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }), offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0, querySelector: () => overlay };
+    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 0, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
+    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
+      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
+      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
+    });
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
+    vi.stubGlobal('cancelAnimationFrame', () => undefined);
+    tab.props.onPointerDown?.(event(14, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
+    tab.props.onPointerMove?.(event(210, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
+    expect(overlay.style.transform).toBe('translate3d(196px, 0, 0)');
+    tab.props.onPointerUp?.(event(210, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
+    expect(onClose).toHaveBeenCalledOnce();
+    expect(button.dataset).toMatchObject({ edge: 'right', floating: 'false' });
+    expect((button.style as { transform?: string }).transform).toMatch(/^translate3d\(362px, /);
   });
   it('hides and disables pointer events when hidden is true', () => {
     const tab = NotebookTab({ open: false, hidden: true, onOpen: vi.fn() }) as ReactElement<ComponentProps<'button'>>;

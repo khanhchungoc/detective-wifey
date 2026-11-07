@@ -53,16 +53,25 @@ export function appTransition(kind: 'open' | 'close', appId: string, update: () 
 function prepareAppTransition(appId: string): void {
   if (typeof document !== 'undefined') {
     const viewport = document.querySelector('[data-app-transition-bounds]')?.getBoundingClientRect();
+    const grid = document.querySelector<HTMLElement>('.phone-app-grid')?.getBoundingClientRect();
+    const dock = document.querySelector<HTMLElement>('.phone-dock-grid')?.getBoundingClientRect();
     const buttons = Array.from(document.querySelectorAll<HTMLElement>('[data-launch-app]'));
     const icon = buttons.find(element => element.dataset.launchApp === appId)
       ?.querySelector('.phone-app-icon')?.getBoundingClientRect();
     const style = document.documentElement.style;
     const measured = viewport && icon && viewport.width > 0 && viewport.height > 0;
+    const gridBounds = grid && grid.width > 0 && grid.height > 0 ? grid : viewport;
+    const originX = measured && gridBounds ? ((icon.x + icon.width / 2 - gridBounds.x) / gridBounds.width) * 100 : 50;
+    const originY = measured && gridBounds ? ((icon.y + icon.height / 2 - gridBounds.y) / gridBounds.height) * 100 : 50;
+    const dockOriginX = measured && dock && dock.width > 0 ? ((icon.x + icon.width / 2 - dock.x) / dock.width) * 100 : 50;
     // Finish geometry reads before invalidating styles.
     style.setProperty('--app-dx', measured ? `${icon.x + icon.width / 2 - viewport.x - viewport.width / 2}px` : '0px');
     style.setProperty('--app-dy', measured ? `${icon.y + icon.height / 2 - viewport.y - viewport.height / 2}px` : '0px');
     style.setProperty('--app-scale-x', measured ? `${icon.width / viewport.width}` : '.96');
     style.setProperty('--app-scale-y', measured ? `${icon.height / viewport.height}` : '.96');
+    style.setProperty('--app-origin-x', `${originX.toFixed(2)}%`);
+    style.setProperty('--app-origin-y', `${originY.toFixed(2)}%`);
+    style.setProperty('--dock-origin-x', `${dockOriginX.toFixed(2)}%`);
   }
 }
 

@@ -1,12 +1,12 @@
 import { useLayoutEffect, useRef } from 'react';
 import { IoBookOutline, IoChevronForwardOutline } from 'react-icons/io5';
-import { NOTEBOOK_CLOSED_TRANSFORM, animateOverlay } from '../../shared/motion/anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, animateOverlay } from '../../shared/motion/anchoredOverlay';
 import {
   clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock,
-  notebookPullOffset, shouldCommitNotebookPull,
+  notebookPullOffset, notebookTabPullX, shouldCommitNotebookPull,
   FLOATING_SAMPLE_MS, FLOATING_SETTLE_MS,
   NOTEBOOK_TAB_WIDTH, NOTEBOOK_TAB_HEIGHT, NOTEBOOK_FLOAT_SIZE,
-  type FloatingBounds, type FloatingPoint, type FloatingSample,
+  type DockEdge, type FloatingBounds, type FloatingPoint, type FloatingSample,
 } from './floatingControlPosition';
 
 const transform = (point: FloatingPoint) => `translate3d(${point.x}px, ${point.y}px, 0)`;
@@ -27,6 +27,8 @@ export function NotebookTab({
   const bounds = useRef<FloatingBounds>({ left: 0, right: 0, top: 0, bottom: 0 });
   const settling = useRef<Animation | null>(null);
   const frame = useRef<number | null>(null);
+  const openRef = useRef(open);
+  openRef.current = open;
   const gesture = useRef<{
     id: number; startX: number; startY: number; origin: FloatingPoint; point: FloatingPoint;
     scaleX: number; scaleY: number; moved: boolean; mode: 'vertical' | 'pull' | null;
@@ -51,8 +53,9 @@ export function NotebookTab({
       const top = Math.max(59, statusHeight, parseFloat(style.paddingTop) || 0) + 8;
       bounds.current = { left, right: Math.max(left, parent.clientWidth - NOTEBOOK_TAB_WIDTH - (parseFloat(style.paddingRight) || 0)), top,
         bottom: Math.max(top, parent.clientHeight - NOTEBOOK_TAB_HEIGHT - Math.max(34, parseFloat(style.paddingBottom) || 0) - 8) };
-      element.style.transform = transform(floatingDockPosition('right', position.current.fraction, bounds.current));
-      element.dataset.edge = 'right';
+      const edge: DockEdge = openRef.current ? 'left' : 'right';
+      element.style.transform = transform(floatingDockPosition(edge, position.current.fraction, bounds.current));
+      element.dataset.edge = edge;
       element.dataset.floating = 'false';
     };
     place();
@@ -64,6 +67,23 @@ export function NotebookTab({
       if (frame.current !== null) cancelAnimationFrame(frame.current);
     };
   }, []);
+
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element || gesture.current) return;
+    const edge: DockEdge = open ? 'left' : 'right';
+    const to = transform(floatingDockPosition(edge, position.current.fraction, bounds.current));
+    const from = getComputedStyle(element).transform;
+    settling.current?.cancel();
+    element.dataset.edge = edge;
+    element.dataset.floating = 'false';
+    element.style.transform = to;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced && element.animate && from && from !== 'none' && from !== to) {
+      settling.current = element.animate([{ transform: from }, { transform: to }],
+        { duration: FLOATING_SETTLE_MS, easing: NOTEBOOK_SLIDE_EASING });
+    }
+  }, [open]);
 
   const finish = (event: React.PointerEvent<HTMLButtonElement>) => {
     const active = gesture.current;
@@ -82,17 +102,29 @@ export function NotebookTab({
     const button = event.currentTarget;
     const from = getComputedStyle(button).transform;
     settling.current?.cancel();
-    button.dataset.edge = 'right';
     button.dataset.floating = 'false';
 
     if (active.mode === 'pull') {
-      const dockPoint = floatingDockPosition('right', position.current.fraction, bounds.current);
-      const to = transform(dockPoint);
-      button.style.transform = to;
-      if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
-        { duration: FLOATING_SETTLE_MS, easing: 'cubic-bezier(.32,.72,0,1)' });
       const offsetX = notebookPullOffset(active.surfaceWidth, dx, open);
       const shouldOpen = !cancelled && shouldCommitNotebookPull(offsetX, active.surfaceWidth, velocity.x, open);
+      const targetEdge: DockEdge = shouldOpen ? 'left' : 'right';
+      const dockPoint = floatingDockPosition(targetEdge, position.current.fraction, bounds.current);
+      const to = transform(dockPoint);
+      button.dataset.edge = targetEdge;
+      button.style.transform = to;
+      if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
+        { duration: FLOATING_SETTLE_MS, easing: NOTEBOOK_SLIDE_EASING });
+
+      const container = active.overlay?.parentElement;
+      if (container) {
+        container.style.removeProperty('--notebook-shade-duration');
+        if (shouldOpen) {
+          container.style.setProperty('--notebook-shade-opacity', '1');
+        } else {
+          container.style.setProperty('--notebook-shade-opacity', '0');
+        }
+      }
+
       if (shouldOpen && !open) {
         onOpen();
       } else if (!shouldOpen && open) {
@@ -101,25 +133,36 @@ export function NotebookTab({
         const overlay = active.overlay;
         animateOverlay(overlay, false, NOTEBOOK_CLOSED_TRANSFORM, () => {
           overlay.style.visibility = 'hidden';
+          if (container) {
+            container.style.visibility = 'hidden';
+            container.style.removeProperty('--notebook-shade-opacity');
+          }
+        }, undefined, reduced);
+      } else if (shouldOpen && open && active.overlay) {
+        animateOverlay(active.overlay, true, NOTEBOOK_CLOSED_TRANSFORM, () => {
+          if (container) container.style.removeProperty('--notebook-shade-opacity');
         }, undefined, reduced);
       }
       return;
     }
 
-    const point = cancelled ? active.point : clampFloatingPoint({ x: bounds.current.right, y: active.origin.y + dy }, bounds.current);
+    const edge: DockEdge = open ? 'left' : 'right';
+    const edgeX = edge === 'left' ? bounds.current.left : bounds.current.right;
+    const point = cancelled ? active.point : clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
     const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced);
     position.current = { fraction: dock.fraction };
-    const to = transform(dock.point);
+    const to = transform(floatingDockPosition(edge, dock.fraction, bounds.current));
+    button.dataset.edge = edge;
     button.style.transform = to;
     if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
-      { duration: FLOATING_SETTLE_MS, easing: 'cubic-bezier(.32,.72,0,1)' });
+      { duration: FLOATING_SETTLE_MS, easing: NOTEBOOK_SLIDE_EASING });
   };
 
-  return <button ref={ref} data-notebook-tab data-edge="right" data-floating="false" type="button"
+  return <button ref={ref} data-notebook-tab data-edge={open ? 'left' : 'right'} data-floating="false" type="button"
     aria-label={open ? 'Đóng sổ tay của vợ' : 'Mở sổ tay của vợ'}
     aria-haspopup="dialog" aria-expanded={open} tabIndex={hidden ? -1 : 0} aria-hidden={hidden}
-    title={open ? 'Sổ tay của vợ · Chạm để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
-    className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:right-0 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
+    title={open ? 'Sổ tay của vợ · Chạm hoặc kéo sang phải để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
+    className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:-right-4 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
     style={{ width: NOTEBOOK_TAB_WIDTH, height: NOTEBOOK_TAB_HEIGHT, touchAction: 'none', opacity: hidden ? 0 : 1, pointerEvents: hidden ? 'none' : 'auto' }}
     onPointerDown={event => {
       if (event.button !== 0 || !event.isPrimary) return;
@@ -160,14 +203,18 @@ export function NotebookTab({
           active.overlay.getAnimations?.().forEach(anim => anim.cancel());
           active.overlay.style.visibility = 'visible';
           active.overlay.style.opacity = '1';
+          if (active.overlay.parentElement) {
+            active.overlay.parentElement.style.visibility = 'visible';
+          }
         }
       }
       if (active.mode === 'pull') {
         active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);
-        const tabX = open ? bounds.current.right : clampFloatingPoint({ x: active.origin.x + dx, y: active.origin.y }, bounds.current).x;
+        const tabX = notebookTabPullX(active.pullOffsetX, bounds.current);
         active.point = { x: tabX, y: active.origin.y };
       } else {
-        active.point = clampFloatingPoint({ x: bounds.current.right, y: active.origin.y + dy }, bounds.current);
+        const edgeX = open ? bounds.current.left : bounds.current.right;
+        active.point = clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
       }
       if (frame.current === null) frame.current = requestAnimationFrame(() => {
         frame.current = null;
@@ -175,6 +222,13 @@ export function NotebookTab({
         if (ref.current) ref.current.style.transform = transform(active.point);
         if (active.mode === 'pull' && active.overlay) {
           active.overlay.style.transform = `translate3d(${Math.round(active.pullOffsetX)}px, 0, 0)`;
+          const progress = Math.max(0, Math.min(1, 1 - active.pullOffsetX / active.surfaceWidth));
+          const container = active.overlay.parentElement;
+          if (container) {
+            container.style.visibility = 'visible';
+            container.style.setProperty('--notebook-shade-opacity', progress.toFixed(3));
+            container.style.setProperty('--notebook-shade-duration', '0ms');
+          }
         }
       });
     }} onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish}
@@ -182,7 +236,8 @@ export function NotebookTab({
       event.stopPropagation();
       if (suppressClick.current && event.detail !== 0) { suppressClick.current = false; return; }
       settling.current?.cancel();
-      event.currentTarget.style.transform = transform(floatingDockPosition('right', position.current.fraction, bounds.current));
+      const nextEdge: DockEdge = open ? 'right' : 'left';
+      event.currentTarget.dataset.edge = nextEdge;
       event.currentTarget.dataset.floating = 'false';
       if (open) {
         onClose?.();
@@ -191,7 +246,9 @@ export function NotebookTab({
       }
     }}>
       <span data-tab-surface aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 flex h-[var(--tab-dock-height)] w-[var(--tab-dock-width)] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-l-2xl border-y border-l border-white/35 bg-slate-900/85 shadow-lg"
+        className={`pointer-events-none absolute left-1/2 top-1/2 flex h-[var(--tab-dock-height)] w-[var(--tab-dock-width)] -translate-x-1/2 -translate-y-1/2 items-center justify-center border-y border-white/35 bg-slate-900/85 shadow-lg ${
+          open ? 'rounded-r-2xl border-r' : 'rounded-l-2xl border-l'
+        }`}
         style={{ '--tab-dock-width': `${NOTEBOOK_TAB_WIDTH}px`, '--tab-dock-height': `${NOTEBOOK_TAB_HEIGHT}px`, '--tab-float-size': `${NOTEBOOK_FLOAT_SIZE}px`,
         } as React.CSSProperties}>
         {open ? (

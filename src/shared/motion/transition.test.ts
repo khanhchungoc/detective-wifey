@@ -31,6 +31,8 @@ describe('motion navigation safety', () => {
     expect(properties.get('--app-dx')).toBe('-145px');
     expect(properties.get('--app-dy')).toBe('-212px');
     expect(Number(properties.get('--app-scale-y'))).toBeCloseTo(60 / 844);
+    expect(properties.get('--app-origin-x')).toBe('12.82%');
+    expect(properties.get('--app-origin-y')).toBe('24.88%');
     commit();
     finish();
     await Promise.resolve();

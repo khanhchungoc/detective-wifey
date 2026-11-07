@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { NOTEBOOK_CLOSED_TRANSFORM, animateOverlay } from '../motion/anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, animateOverlay } from '../motion/anchoredOverlay';
 import { useDialogFocus } from './useDialogFocus';
 
 /** Keeps content pre-laid out off-screen so pulling or opening the notebook never triggers layout reflow. */
@@ -8,40 +8,88 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
 }) {
   const [present, setPresent] = useState(open);
   if (open && !present) setPresent(true);
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<Animation | undefined>(undefined);
   const initialized = useRef(false);
-  const onKeyDown = useDialogFocus(open, ref, onClose);
+  const onKeyDown = useDialogFocus(open, containerRef, onClose);
+
   useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    const drawer = drawerRef.current;
+    const container = containerRef.current;
+    if (!drawer) return;
     if (!open && !initialized.current) {
-      element.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
+      drawer.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
       return;
     }
-    element.style.visibility = 'visible';
+    if (container) container.style.visibility = 'visible';
+    drawer.style.visibility = 'visible';
     const anchor = document.querySelector<HTMLElement>(anchorSelector);
     if (!initialized.current) {
-      if (!element.style.transform || element.style.transform === 'none') {
-        element.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
+      if (!drawer.style.transform || drawer.style.transform === 'none') {
+        drawer.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
       }
       initialized.current = true;
     }
-    animation.current = animateOverlay(element, open, NOTEBOOK_CLOSED_TRANSFORM, () => {
+    animation.current = animateOverlay(drawer, open, NOTEBOOK_CLOSED_TRANSFORM, () => {
       if (!open) {
-        element.style.visibility = 'hidden';
+        drawer.style.visibility = 'hidden';
+        if (container) container.style.visibility = 'hidden';
         setPresent(false);
         initialized.current = false;
         anchor?.focus({ preventScroll: true });
       }
     }, animation.current, window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, [open, anchorSelector]);
+
   useEffect(() => () => animation.current?.cancel(), []);
-  return <div ref={ref} data-notebook-overlay inert={!open} role="dialog" aria-modal={open}
-    aria-hidden={!open} aria-label={label} className="absolute inset-0 z-50 overflow-hidden"
-    style={{
-      visibility: open || present ? 'visible' : 'hidden',
-      pointerEvents: open ? 'auto' : 'none',
-    }}
-    onKeyDown={onKeyDown}>{children}</div>;
+
+  return (
+    <div
+      ref={containerRef}
+      data-notebook-container
+      data-open={open}
+      inert={!open}
+      role="dialog"
+      aria-modal={open}
+      aria-hidden={!open}
+      aria-label={label}
+      className="absolute inset-0 z-50 overflow-hidden pointer-events-none"
+      style={{
+        visibility: open || present ? 'visible' : 'hidden',
+        '--notebook-shade-opacity': open ? '1' : '0',
+      } as React.CSSProperties}
+      onKeyDown={onKeyDown}
+    >
+      {/* Full-screen lower layer backdrop scrim (darkens entire phone screen underneath, tap anywhere outside notebook to close) */}
+      <button
+        type="button"
+        data-notebook-backdrop
+        data-notebook-shade="scrim"
+        aria-label="Đóng sổ tay của vợ"
+        tabIndex={open ? 0 : -1}
+        onClick={onClose}
+        className="absolute inset-0 z-10 bg-slate-950/55 backdrop-blur-[2px] cursor-pointer"
+        style={{
+          opacity: 'var(--notebook-shade-opacity, 0)',
+          transition: `opacity var(--notebook-shade-duration, ${open ? '280ms' : '240ms'}) ${NOTEBOOK_SLIDE_EASING}`,
+          pointerEvents: open ? 'auto' : 'none',
+        }}
+      />
+
+      {/* Sliding notebook drawer on the upper layer */}
+      <div
+        ref={drawerRef}
+        data-notebook-overlay
+        className="absolute left-0 right-0 z-20 overflow-hidden shadow-[-16px_0_36px_rgba(0,0,0,0.5)]"
+        style={{
+          top: 'calc(var(--phone-system-top, 59px) + 6px)',
+          bottom: 'max(28px, var(--phone-system-bottom, 34px))',
+          pointerEvents: open ? 'auto' : 'none',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
 }

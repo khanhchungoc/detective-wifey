@@ -2,9 +2,9 @@ export interface OverlayRect { left: number; top: number; width: number; height:
 
 export const NOTEBOOK_CLOSED_TRANSFORM = 'translate3d(100%, 0, 0)';
 export const NOTEBOOK_OPEN_TRANSFORM = 'translate3d(0px, 0px, 0px)';
-const NOTEBOOK_SLIDE_EASING = 'cubic-bezier(0.32, 0.72, 0, 1)';
-const NOTEBOOK_OPEN_DURATION_MS = 280;
-const NOTEBOOK_CLOSE_DURATION_MS = 240;
+export const NOTEBOOK_SLIDE_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
+export const NOTEBOOK_OPEN_DURATION_MS = 280;
+export const NOTEBOOK_CLOSE_DURATION_MS = 240;
 
 /** Off-screen right drawer transform so the notebook slides cleanly with zero scale/radius mask thrash. */
 export function anchoredTransform(_surface?: OverlayRect, _anchor?: OverlayRect): string {

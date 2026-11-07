@@ -1071,7 +1071,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   ]);
 
   return (
-    <div className="wife-notebook absolute inset-0 z-50 flex flex-col border-l border-stone-900/20 shadow-2xl bg-[var(--notebook-canvas)] text-stone-800">
+    <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden rounded-l-2xl border-y border-l-[6px] border-stone-900/35 shadow-[-12px_0_32px_rgba(0,0,0,0.45)] bg-[var(--notebook-canvas)] text-stone-800">
       {/* Floating radar map */}
       <header className="absolute top-0 left-0 right-0 z-40 flex justify-end p-3 pointer-events-none">
         <div className="pointer-events-auto">
@@ -1084,94 +1084,94 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         </div>
       </header>
 
-      {/* Main Corkboard Viewport */}
-      <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0" {...containerProps}>
-        <CorkboardCanvas
-          getSourceApp={getSourceApp}
-          viewport={viewport}
-          isPinching={isPinching}
-          placedNodes={placedNodes}
-          edges={edges}
-          activePairing={activePairing}
-          unmaskedSuspectIds={unmaskedSuspectIds}
-          activeContradictions={activeContradictions}
-          selectedEdgeId={selectedEdgeId}
-          selectedNodeId={selectedCardId}
-          onSelectNode={handleSelectNode}
-          onSelectCard={handleSelectCard}
-          onMoveNode={handleMoveNode}
-          onSelectEdge={handleSelectEdge}
-          onSeverEdge={handleSeverEdge}
-          onRemoveNode={handleRemoveNode}
-          onDeleteCard={handleDeleteCard}
-          onDeleteMessage={handleDeleteMessage}
-          onNavigateToSource={handleNavigateToSource}
-          onCancelPairing={handleCancelPairing}
-        />
+        {/* Main Corkboard Viewport */}
+        <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0" {...containerProps}>
+          <CorkboardCanvas
+            getSourceApp={getSourceApp}
+            viewport={viewport}
+            isPinching={isPinching}
+            placedNodes={placedNodes}
+            edges={edges}
+            activePairing={activePairing}
+            unmaskedSuspectIds={unmaskedSuspectIds}
+            activeContradictions={activeContradictions}
+            selectedEdgeId={selectedEdgeId}
+            selectedNodeId={selectedCardId}
+            onSelectNode={handleSelectNode}
+            onSelectCard={handleSelectCard}
+            onMoveNode={handleMoveNode}
+            onSelectEdge={handleSelectEdge}
+            onSeverEdge={handleSeverEdge}
+            onRemoveNode={handleRemoveNode}
+            onDeleteCard={handleDeleteCard}
+            onDeleteMessage={handleDeleteMessage}
+            onNavigateToSource={handleNavigateToSource}
+            onCancelPairing={handleCancelPairing}
+          />
 
-        {/* Floating Bottom Control Dock */}
-        <div className="corkboard-control-dock absolute bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-2 right-2 z-20 flex items-center justify-between gap-2 p-1">
-          {/* Zoom Controls */}
-          <div className="flex items-center gap-1">
-            <span className="flex h-11 min-w-14 items-center justify-center rounded-xl bg-[var(--notebook-paper)] px-2 text-center font-mono text-sm font-bold text-stone-800">
-              {Math.round(viewport.zoom * 100)}%
-            </span>
+          {/* Floating Bottom Control Dock */}
+          <div className="corkboard-control-dock absolute bottom-3 left-2 right-2 z-20 flex items-center justify-between gap-2 p-1">
+            {/* Zoom Controls */}
+            <div className="flex items-center gap-1">
+              <span className="flex h-11 min-w-14 items-center justify-center rounded-xl bg-[var(--notebook-paper)] px-2 text-center font-mono text-sm font-bold text-stone-800">
+                {Math.round(viewport.zoom * 100)}%
+              </span>
 
-            <button
-              type="button"
-              aria-label="Căn giữa các thẻ và đặt thu phóng 100%"
-              onClick={handleResetView}
-              className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 hover:bg-amber-200 text-stone-800 active:scale-90 cursor-pointer"
-            >
-              <IoRefreshOutline className="text-xl" />
-            </button>
+              <button
+                type="button"
+                aria-label="Căn giữa các thẻ và đặt thu phóng 100%"
+                onClick={handleResetView}
+                className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 hover:bg-amber-200 text-stone-800 active:scale-90 cursor-pointer"
+              >
+                <IoRefreshOutline className="text-xl" />
+              </button>
+            </div>
+
+            {/* Auto-Arrange Action & Confrontation */}
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={handleAutoArrange}
+                className="flex items-center min-h-11 gap-1.5 whitespace-nowrap rounded-xl bg-rose-50 hover:bg-rose-100 px-3 py-2.5 text-sm font-bold text-[#C2185B] active:scale-95 border border-rose-200 cursor-pointer"
+              >
+                <IoGridOutline className="text-xl" /> Xếp gọn
+              </button>
+              <button
+                type="button"
+                onClick={handleOpenConfrontation}
+                className="flex items-center min-h-11 gap-1.5 whitespace-nowrap rounded-xl bg-[#8E24AA] hover:bg-purple-800 px-3 py-2.5 text-sm font-bold text-white shadow active:scale-95 cursor-pointer"
+              >
+                <IoScaleOutline className="text-xl" />
+                <span>Đối chất</span>
+              </button>
+            </div>
           </div>
 
-          {/* Auto-Arrange Action & Confrontation */}
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={handleAutoArrange}
-              className="flex items-center min-h-11 gap-1.5 whitespace-nowrap rounded-xl bg-rose-50 hover:bg-rose-100 px-3 py-2.5 text-sm font-bold text-[#C2185B] active:scale-95 border border-rose-200 cursor-pointer"
+          {/* Undo Notification Banner */}
+          {activeUndo && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="fixed sm:absolute bottom-16 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[380px] z-50 flex items-center justify-between gap-3 rounded-2xl bg-stone-900/95 text-white px-4 py-3 shadow-2xl border border-white/10 backdrop-blur-md animate-fadeIn"
+              onMouseEnter={pauseUndoTimer}
+              onMouseLeave={resumeUndoTimer}
+              onFocus={pauseUndoTimer}
+              onBlur={resumeUndoTimer}
             >
-              <IoGridOutline className="text-xl" /> Xếp gọn
-            </button>
-            <button
-              type="button"
-              onClick={handleOpenConfrontation}
-              className="flex items-center min-h-11 gap-1.5 whitespace-nowrap rounded-xl bg-[#8E24AA] hover:bg-purple-800 px-3 py-2.5 text-sm font-bold text-white shadow active:scale-95 cursor-pointer"
-            >
-              <IoScaleOutline className="text-xl" />
-              <span>Đối chất</span>
-            </button>
-          </div>
+              <span className="text-xs font-medium text-stone-200 truncate">
+                {activeUndo.message}
+              </span>
+              <button
+                type="button"
+                onClick={handleExecuteUndo}
+                className="flex items-center gap-1 shrink-0 px-3 py-1.5 min-h-[44px] rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+              >
+                <IoArrowUndoOutline className="text-sm" />
+                <span>Hoàn tác</span>
+              </button>
+            </div>
+          )}
         </div>
-
-        {/* Undo Notification Banner */}
-        {activeUndo && (
-          <div
-            role="status"
-            aria-live="polite"
-            className="fixed sm:absolute bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[380px] z-50 flex items-center justify-between gap-3 rounded-2xl bg-stone-900/95 text-white px-4 py-3 shadow-2xl border border-white/10 backdrop-blur-md animate-fadeIn"
-            onMouseEnter={pauseUndoTimer}
-            onMouseLeave={resumeUndoTimer}
-            onFocus={pauseUndoTimer}
-            onBlur={resumeUndoTimer}
-          >
-            <span className="text-xs font-medium text-stone-200 truncate">
-              {activeUndo.message}
-            </span>
-            <button
-              type="button"
-              onClick={handleExecuteUndo}
-              className="flex items-center gap-1 shrink-0 px-3 py-1.5 min-h-[44px] rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
-            >
-              <IoArrowUndoOutline className="text-sm" />
-              <span>Hoàn tác</span>
-            </button>
-          </div>
-        )}
-      </div>
 
       {/* Pre-confrontation Confirmation Modal */}
       {isConfirmingConfrontation && confrontationPreflight && (
