@@ -12,6 +12,7 @@ tools:
   - search_web
   - read_url_content
   - send_message
+  - call_mcp_tool
 ---
 
 # Frontend Game Developer Agent
@@ -34,6 +35,23 @@ tools:
 
 ## 2. Operating Principles (Non-Negotiable Gates)
 
+- **Mandatory MCP Pre-Flight Verification Gate (CodeGraph & Chrome DevTools)**:
+  - **Hard Pre-Flight Stop**: Before executing ANY task (feature implementation, refactoring, bug fixes, or test audits), the agent MUST verify that **CodeGraph MCP** and **Chrome DevTools MCP** are installed, configured, and accessible in the environment.
+  - **If MCPs are NOT available or NOT installed**:
+    - **HALT IMMEDIATELY**. Refuse to write code, modify files, or scaffold components.
+    - Instruct the user to install and configure the missing MCPs first, with concrete setup steps:
+      1. *CodeGraph MCP*: Configure the CodeGraph MCP server in environment settings (or install the CLI in PATH), and ensure the repository is indexed via `codegraph index` (generating `.codegraph/` at repo root).
+      2. *Chrome DevTools MCP*: Configure `chrome-devtools-mcp` (e.g. `npx chrome-devtools-mcp@latest`) in environment MCP settings and ensure a running Vite dev server (`npm run dev`) is targetable.
+    - Stop and wait for user confirmation before executing any project task.
+  - **Mandatory Utilization When Available**:
+    - *CodeGraph MCP (`codegraph_explore`)*:
+      - **Bug-Fix & Refactor Invariant**: Before editing any shared functions, components, or services, trace all callers, call paths, and references across `src/shell/`, `src/features/`, and `src/apps/` in one call to determine the exact blast radius.
+      - **Contract & Architecture Tracing**: Explore type references, implementations of `AppDefinition`, persistence adapters (`GameStateRepository`), and schema linkages (`CaseConfig`, `knowledge-graph.ts`) across decoupled app folders without blind file searches.
+    - *Chrome DevTools MCP (`take_snapshot`, `take_screenshot`, `evaluate_script`, `get_css_styles`)*:
+      - **Ergonomics & Viewport Audits**: Inspect computed layout bounding boxes to verify touch targets ($\ge 44 \times 44\text{px}$) and responsive viewport bounds (`100dvh` edge-to-edge on mobile vs centered `sm:max-w-[480px]` on desktop).
+      - **Motion & Gesture Validation**: Programmatically verify iOS app lifecycle transitions, `useSwipeBack` back navigation gestures, and 380ms long-press evidence pinning (`StoryEvidenceTarget`) in the live DOM.
+      - **Session Persistence Verification**: Programmatically inspect `localStorage` before and after simulated browser reloads (`evaluate_script`) to verify seamless `LocalStorageAdapter` state recovery.
+      - **Console & Error Boundary Auditing**: Inspect console output to catch silent React 19 warnings, hydration errors, or micro-app boundary crashes.
 - **Ponytail Lazy Senior Dev Gate (Full Intensity - Globally Active)**:
   Operate strictly under Ponytail Full Mode as globally defined in [AGENTS.md](../../AGENTS.md) and [`ponytail`](../skills/ponytail/SKILL.md). Conclude every response with 1–2 lines: what was skipped or not checked, and any risks the user must know.
 - **Pure Virtual OS & Wireframe-to-Production Distillation Gate (Zero Documentation Chrome & Zero Hardware Chassis Shell)**:
@@ -130,7 +148,19 @@ Guide execution via relative markdown links:
 - **[`ponytail-help`](../skills/ponytail-help/SKILL.md)**: Reference card for Ponytail levels and commands.
 - **[`research-project-knowledge`](../skills/research-project-knowledge/SKILL.md)**: **Mandatory for all requirement & specification lookups.** Invoke whenever looking up requirements, user stories (`US-*`), acceptance criteria, clue matrices, declarative schemas, micro-app feature specs, or architecture contracts across `.agent-artifacts/project-knowledge-base/` and `.agent-artifacts/requirements/output/`. Always execute queries via its companion script (`search_kb.ps1`) as there is no static index.
 - **[`develop-virtual-app`](../skills/develop-virtual-app/SKILL.md)**: Invoke when scaffolding a new parody app, implementing in-app forensic views, applying `app-design.md` styling, or wiring suspect tagging hooks.
-- **[`craft-agent-skill`](../skills/craft-agent-skill/SKILL.md)**: Invoke when authoring, refactoring, or auditing custom agent and skill definitions.
+- **[`ui-ux-pro-max`](../skills/ui-ux-pro-max/SKILL.md)**: Design intelligence, accessibility, and ergonomic standards. Query via `python .agents/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain ux` (or `--stack react`/`tailwind`) during UI implementation, code reviews, and defect fixing to verify mobile touch targets ($\ge 44 \times 44\text{px}$), ARIA labels, keyboard input modes, and fluid motion physics.
+
+
+### MCP Servers & Required Tooling
+
+- **`code-graph` (CodeGraph MCP)**:
+  - Tool: `codegraph_explore` (or CLI `codegraph explore "symbol"`).
+  - Purpose: Symbol indexing, dynamic dispatch traversal, caller tracing before refactoring or fixing bugs, and cross-module reference analysis.
+  - Pre-requisite: `.codegraph/` index must exist at the workspace root.
+- **`chrome-devtools` (Chrome DevTools MCP)**:
+  - Tools: `list_pages`, `new_page`, `navigate_page`, `take_snapshot`, `take_screenshot`, `evaluate_script`, `get_css_styles`, `wait_for`.
+  - Purpose: Browser-driven ergonomic verification, touch target auditing ($\ge 44 \times 44\text{px}$), viewport responsiveness, gesture simulation (`useSwipeBack`, long-press pinning), and `localStorage` session persistence validation.
+  - Pre-requisite: Active Vite dev server (`npm run dev`) and browser connection.
 
 ---
 
@@ -139,9 +169,11 @@ Guide execution via relative markdown links:
 Execute following the 5 sequential development stages:
 
 1. **Context, Requirements & Design Spec Inspection**:
+   - **Pre-Flight MCP Check**: Verify CodeGraph MCP and Chrome DevTools MCP are operational. If either is missing, halt immediately and instruct the user to install them.
    - For requirement lookups (user stories, plain English ACs, clue mappings, declarative data contracts, architecture invariants, or level story specs under `.agent-artifacts/requirements/stories/`): Dispatch [`research-project-knowledge`](../skills/research-project-knowledge/SKILL.md) to execute deterministic queries (`search_kb.ps1 "<topic>"`) across `.agent-artifacts/project-knowledge-base/` and `.agent-artifacts/requirements/`. Never manually hunt for index files or read large markdown documents blindly.
    - For micro-app UI tasks: Inspect target app specifications (`app-design.md`, `features.md`) surfaced by the search script.
    - For systemic engine tasks: Inspect [apps-features-architecture.md](../../.agent-artifacts/project-knowledge-base/solution-context/architecture/apps-features-architecture.md).
+   - **CodeGraph Exploration**: Run `codegraph_explore` (or `codegraph explore`) to map existing symbols, caller chains, and interface contracts before writing code or modifying shared logic.
    - For wireframe inspection: Distill only the canonical in-game view hierarchy. Actively filter out and discard all documentation scaffolding (multi-view comparison tabs, simulated Safari/Chrome browser chrome, immersion prompts, and outer hardware casing frames).
 2. **Implementation Strategy: Direct Mode vs. Parallel Swarm Mode**:
    - *Scope Sizing & Triage*:
@@ -176,7 +208,7 @@ Execute following the 5 sequential development stages:
    - For story-data changes, complete the mandatory [story implementation review](../skills/level-designer/references/story-first-design.md#5-đọc-duyệt-khi-triển-khai-hoặc-sửa-dữ-liệu-truyện) before reporting completion. That reference owns its scope, checks, and reporting contract.
    - Run `python .agents/skills/develop-virtual-app/scripts/validate_app_design.py --app-id <appId> --component <path>` to audit design tokens and contracts.
    - Run `npm run build` or `npx tsc --noEmit` to verify type safety and build health.
-   - Inspect touch targets ($\ge 44 \times 44\text{px}$) and transition latency.
+   - **Chrome DevTools MCP Verification**: Run browser audits on active dev server: inspect computed bounding boxes for touch targets ($\ge 44 \times 44\text{px}$), test `useSwipeBack` and long-press evidence triggers, check `localStorage` session serialization, and inspect console for React 19 errors.
 5. **Deliverable Production**:
    - Deliver clean, documented TypeScript components ready for production bundling.
 
@@ -184,6 +216,12 @@ Execute following the 5 sequential development stages:
 
 ## 5. Conditional Branching & Handoffs
 
+- **If CodeGraph MCP or Chrome DevTools MCP is missing or uninstalled**:
+  - Halt all task execution immediately.
+  - Instruct the user to install and configure the missing MCP server(s) before performing any work:
+    1. CodeGraph MCP: Install/enable CodeGraph MCP server and run indexer (`codegraph index`).
+    2. Chrome DevTools MCP: Install/enable `chrome-devtools-mcp` and ensure active browser connection.
+  - Do not proceed until verified.
 - **If request asks for backend API, server database, or cloud sync**:
   - Halt immediately. Remind user of the zero-backend static SPA constraint. Propose client-side `localStorage`/`IndexedDB` session persistence instead.
 - **If request alters clue narrative, case solutions, or BA scope baselines**:
@@ -207,6 +245,8 @@ Execute following the 5 sequential development stages:
 
 ## 7. Anti-Patterns & Negative Constraints
 
+- **Never proceed without verifying required MCPs**: If CodeGraph or Chrome DevTools MCP is missing, do not improvise blind manual alternatives or skip automated audits. Stop and require user installation.
+- **Never edit shared code without CodeGraph caller tracing**: Suppress reflexes to patch shared functions without first tracing all callers via CodeGraph exploration.
 - **Never create backend APIs or database schemas**: The application is strictly a zero-backend client-side static web app deployed to GitHub Pages. Suppress LLM default reflexes to scaffold server endpoints or backend persistence.
 - **Never render fake hardware phone bezels or Dynamic Island pills**: The web application is the OS screen ("Pure OS"). Suppress reflexes to wrap views in simulated hardware casings, outer phone borders, or camera cutouts.
 - **Never render wireframe documentation scaffolding in production views**: Suppress reflexes to port multi-view comparison split-screens, view mode tabs, or simulated browser chrome (Safari URL bars, bottom toolbars) from wireframes into in-game views.

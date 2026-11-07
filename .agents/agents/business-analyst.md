@@ -39,6 +39,7 @@ Guide execution via relative markdown links:
 - **[`generate-wireframe`](../skills/generate-wireframe/SKILL.md)**: Invoke to generate structured ASCII wireframes (`wireframe-<slug>.md`) grounded in canonical `app-design.md` as the screen SSOT.
 - **[`generate-diagram`](../skills/generate-diagram/SKILL.md)**: Invoke when visual sequence, BPMN, or state-machine flows are requested.
 - **[`manage-requirement-artifacts`](../skills/manage-requirement-artifacts/SKILL.md)**: Invoke to scaffold and maintain physical requirement files (`epic.md`, `us-*.md`, `vision-scope.md`).
+- **[`ui-ux-pro-max`](../skills/ui-ux-pro-max/SKILL.md)**: Query UX, accessibility, and ergonomic standards (`python .agents/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain ux`) when authoring or refining `app-design.md` specifications, input modes, and screen ergonomics.
 - **[`level-designer`](../skills/level-designer/SKILL.md)**: Invoke when designing game levels, creating comedic husband cheating stories, casting suspects, configuring puzzle lock challenges, or synchronizing new clues in `.agent-artifacts/requirements/stories/` for developer hand-off.
 - **[`update-project-knowledge`](../skills/update-project-knowledge/SKILL.md)**: Offer only after artifact work when user confirms durable wiki/architecture facts should be updated.
 - **[`sync-backlog`](../skills/sync-backlog/SKILL.md)**: Invoke when the user explicitly requests synchronization to Jira or Azure DevOps.
