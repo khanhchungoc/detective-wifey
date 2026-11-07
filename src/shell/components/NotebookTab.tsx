@@ -136,10 +136,10 @@ export function NotebookTab({
       if (active.screen) {
         active.screen.style.removeProperty('transition');
         if (shouldOpen) {
-          active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -50px) scale(0.94)';
-          active.screen.style.borderRadius = '28px';
-          active.screen.style.filter = 'brightness(0.85)';
-          active.screen.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.6)';
+          active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
+          active.screen.style.borderRadius = '20px';
+          active.screen.style.filter = 'brightness(0.9)';
+          active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
         } else {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, 0px) scale(1)';
           active.screen.style.borderRadius = '0px';
@@ -168,10 +168,12 @@ export function NotebookTab({
       } else if (shouldOpen && open && active.overlay) {
         animateOverlay(active.overlay, true, NOTEBOOK_CLOSED_TRANSFORM, () => {
           if (container) container.style.removeProperty('--notebook-shade-opacity');
-          active.screen?.style.removeProperty('transform');
-          active.screen?.style.removeProperty('border-radius');
-          active.screen?.style.removeProperty('filter');
-          active.screen?.style.removeProperty('box-shadow');
+          if (active.screen) {
+            active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
+            active.screen.style.borderRadius = '20px';
+            active.screen.style.filter = 'brightness(0.9)';
+            active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
+          }
         }, undefined, reduced);
       }
       return;
@@ -266,10 +268,10 @@ export function NotebookTab({
           }
           if (active.screen) {
             active.screen.style.transition = 'none';
-            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-50 * progress).toFixed(1)}px) scale(${(1 - 0.06 * progress).toFixed(3)})`;
-            active.screen.style.borderRadius = `${(28 * progress).toFixed(1)}px`;
-            active.screen.style.filter = `brightness(${(1 - 0.15 * progress).toFixed(3)})`;
-            active.screen.style.boxShadow = `0 ${Math.round(20 * progress)}px ${Math.round(50 * progress)}px rgba(0, 0, 0, ${(0.6 * progress).toFixed(3)})`;
+            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-18 * progress).toFixed(1)}px) scale(${(1 - 0.03 * progress).toFixed(3)})`;
+            active.screen.style.borderRadius = `${(20 * progress).toFixed(1)}px`;
+            active.screen.style.filter = `brightness(${(1 - 0.1 * progress).toFixed(3)})`;
+            active.screen.style.boxShadow = `0 ${Math.round(14 * progress)}px ${Math.round(34 * progress)}px rgba(0, 0, 0, ${(0.45 * progress).toFixed(3)})`;
           }
         }
       });

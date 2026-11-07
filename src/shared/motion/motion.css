@@ -198,6 +198,18 @@ html[data-swipe-motion][data-motion='close']::view-transition-old(phone-app) {
   animation: ios-pop .28s var(--ease-ios-default) both;
 }
 
+/* 3D Phone Screen Recede Motion when Notebook Opens */
+[data-phone-screen] {
+  transform-origin: center center;
+  will-change: transform, border-radius;
+}
+[data-phone-screen][data-notebook-open='true'] {
+  transform: perspective(1000px) translate3d(0, 0, -18px) scale(0.97);
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  filter: brightness(0.9);
+}
+
 /* CSS entrances cover unsupported browsers and local UI state. Captured nodes
    remain settled for their lifetime, so capture cleanup cannot restart an entrance. */
 .animate-fadeIn { animation: ios-fade-in .2s var(--ease-ios-default) both; }

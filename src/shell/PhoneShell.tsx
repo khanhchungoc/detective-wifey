@@ -214,6 +214,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
     >
       <div
         data-phone-screen
+        data-notebook-open={notebookOpen}
         inert={notebookOpen || controlCenterOpen || sheetOpen}
         aria-hidden={notebookOpen || controlCenterOpen || sheetOpen}
         className="phone-screen-canvas flex-1 flex flex-col relative min-h-0 w-full h-full overflow-hidden"
@@ -225,12 +226,12 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           backgroundRepeat: 'no-repeat',
           ...(isIOS || !showStatusBar ? { paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)', paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
           transform: notebookOpen
-            ? 'perspective(1000px) translate3d(0, 0, -50px) scale(0.94)'
+            ? 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)'
             : 'perspective(1000px) translate3d(0, 0, 0px) scale(1)',
           transformOrigin: 'center center',
-          borderRadius: notebookOpen ? '28px' : '0px',
-          boxShadow: notebookOpen ? '0 20px 50px rgba(0, 0, 0, 0.6)' : 'none',
-          filter: notebookOpen ? 'brightness(0.85)' : 'none',
+          borderRadius: notebookOpen ? '20px' : '0px',
+          boxShadow: notebookOpen ? '0 14px 34px rgba(0, 0, 0, 0.45)' : 'none',
+          filter: notebookOpen ? 'brightness(0.9)' : 'none',
           transition: `transform ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
             `border-radius ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
             `box-shadow ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +

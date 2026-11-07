@@ -156,8 +156,46 @@ describe('notebook tab pointer ownership', () => {
 
     tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
     expect(screen.style.removeProperty).toHaveBeenCalledWith('transition');
-    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -50px) scale(0.94)');
-    expect(screen.style.borderRadius).toBe('28px');
+    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -18px) scale(0.97)');
+    expect(screen.style.borderRadius).toBe('20px');
     expect(onOpen).toHaveBeenCalledOnce();
+  });
+
+  it('retains phone screen 3D zoom out when open notebook is pulled toward close but released before threshold', () => {
+    const onOpen = vi.fn();
+    const onClose = vi.fn();
+    const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
+    const overlay = { style: { visibility: 'visible', opacity: '1', transform: 'none' } };
+    const screen = {
+      style: {
+        transform: 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)',
+        borderRadius: '20px', filter: 'brightness(0.9)', boxShadow: '0 14px 34px rgba(0, 0, 0, 0.45)', transition: 'none',
+        removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
+      },
+    };
+    const host = {
+      getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }),
+      offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0,
+      querySelector: (selector: string) => (selector === '[data-phone-screen]' ? screen : overlay),
+    };
+    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 0, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
+    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
+      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
+      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
+    });
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
+    vi.stubGlobal('cancelAnimationFrame', () => undefined);
+
+    // Pull slightly right (dx = 50px < 390 * 0.3 = 117px threshold)
+    tab.props.onPointerDown?.(event(14, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
+    tab.props.onPointerMove?.(event(64, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
+
+    tab.props.onPointerUp?.(event(64, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
+    expect(onClose).not.toHaveBeenCalled();
+    expect(onOpen).not.toHaveBeenCalled();
+    // Screen retains 3D zoom out and does NOT revert to full screen
+    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -18px) scale(0.97)');
+    expect(screen.style.borderRadius).toBe('20px');
+    expect(screen.style.filter).toBe('brightness(0.9)');
   });
 });
