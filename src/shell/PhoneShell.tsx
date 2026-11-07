@@ -17,7 +17,7 @@ import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
 import { useSwipeBack } from '../shared/gestures/useSwipeBack';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
-import { NOTEBOOK_SLIDE_EASING } from '../shared/motion/anchoredOverlay';
+import { NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS } from '../shared/motion/anchoredOverlay';
 import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
@@ -231,12 +231,10 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           transformOrigin: 'center center',
           borderRadius: notebookOpen ? '20px' : '0px',
           boxShadow: notebookOpen ? '0 14px 34px rgba(0, 0, 0, 0.45)' : 'none',
-          filter: notebookOpen ? 'brightness(0.9)' : 'none',
-          transition: `transform ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `border-radius ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `box-shadow ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}, ` +
-            `filter ${notebookOpen ? '280ms' : '240ms'} ${NOTEBOOK_SLIDE_EASING}`,
-          willChange: 'transform, border-radius',
+          transition: `transform ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
+            `border-radius ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
+            `box-shadow ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`,
+          willChange: 'transform',
         }}
       >
       {/* 1. Phone OS Status Bar */}

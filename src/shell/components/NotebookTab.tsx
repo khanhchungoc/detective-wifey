@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { IoBookOutline, IoChevronForwardOutline } from 'react-icons/io5';
-import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, animateOverlay } from '../../shared/motion/anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS, animateOverlay } from '../../shared/motion/anchoredOverlay';
 import {
   clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock,
   notebookPullOffset, notebookTabPullX, shouldCommitNotebookPull,
@@ -89,7 +89,7 @@ export function NotebookTab({
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduced && element.animate && from && from !== 'none' && from !== to) {
       settling.current = element.animate([{ transform: from }, { transform: to }],
-        { duration: FLOATING_SETTLE_MS, easing: NOTEBOOK_SLIDE_EASING });
+        { duration: open ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS, easing: NOTEBOOK_SLIDE_EASING });
     }
   }, [open]);
 
@@ -121,7 +121,7 @@ export function NotebookTab({
       button.dataset.edge = targetEdge;
       button.style.transform = to;
       if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
-        { duration: FLOATING_SETTLE_MS, easing: NOTEBOOK_SLIDE_EASING });
+        { duration: shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS, easing: NOTEBOOK_SLIDE_EASING });
 
       const container = active.overlay?.parentElement;
       if (container) {
@@ -138,12 +138,10 @@ export function NotebookTab({
         if (shouldOpen) {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
           active.screen.style.borderRadius = '20px';
-          active.screen.style.filter = 'brightness(0.9)';
           active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
         } else {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, 0px) scale(1)';
           active.screen.style.borderRadius = '0px';
-          active.screen.style.filter = 'none';
           active.screen.style.boxShadow = 'none';
         }
       }
@@ -162,7 +160,6 @@ export function NotebookTab({
           }
           active.screen?.style.removeProperty('transform');
           active.screen?.style.removeProperty('border-radius');
-          active.screen?.style.removeProperty('filter');
           active.screen?.style.removeProperty('box-shadow');
         }, undefined, reduced);
       } else if (shouldOpen && open && active.overlay) {
@@ -171,7 +168,6 @@ export function NotebookTab({
           if (active.screen) {
             active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
             active.screen.style.borderRadius = '20px';
-            active.screen.style.filter = 'brightness(0.9)';
             active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
           }
         }, undefined, reduced);
@@ -257,7 +253,7 @@ export function NotebookTab({
         if (ref.current) ref.current.style.transform = transform(active.point);
         if (active.mode === 'pull') {
           if (active.overlay) {
-            active.overlay.style.transform = `translate3d(${Math.round(active.pullOffsetX)}px, 0, 0)`;
+            active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
           }
           const progress = Math.max(0, Math.min(1, 1 - active.pullOffsetX / active.surfaceWidth));
           const container = active.overlay?.parentElement;
@@ -268,10 +264,7 @@ export function NotebookTab({
           }
           if (active.screen) {
             active.screen.style.transition = 'none';
-            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-18 * progress).toFixed(1)}px) scale(${(1 - 0.03 * progress).toFixed(3)})`;
-            active.screen.style.borderRadius = `${(20 * progress).toFixed(1)}px`;
-            active.screen.style.filter = `brightness(${(1 - 0.1 * progress).toFixed(3)})`;
-            active.screen.style.boxShadow = `0 ${Math.round(14 * progress)}px ${Math.round(34 * progress)}px rgba(0, 0, 0, ${(0.45 * progress).toFixed(3)})`;
+            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-18 * progress).toFixed(2)}px) scale(${(1 - 0.03 * progress).toFixed(4)})`;
           }
         }
       });

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_OPEN_TRANSFORM, anchoredTransform, animateOverlay } from './anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_OPEN_TRANSFORM, NOTEBOOK_CLOSE_DURATION_MS, anchoredTransform, animateOverlay } from './anchoredOverlay';
 
 describe('notebook slide overlay motion', () => {
   it('uses an off-screen right hardware-accelerated slide transform when closed', () => {
@@ -26,7 +26,7 @@ describe('notebook slide overlay motion', () => {
       { transform: 'translate3d(140px, 0px, 0px)', offset: 0 },
       { transform: NOTEBOOK_CLOSED_TRANSFORM, offset: 1 },
     ]);
-    expect(animate.mock.calls[0][1]).toMatchObject({ duration: 240, fill: 'both' });
+    expect(animate.mock.calls[0][1]).toMatchObject({ duration: NOTEBOOK_CLOSE_DURATION_MS, fill: 'both' });
     expect(complete).not.toHaveBeenCalled();
     animation.onfinish?.call(animation, {} as AnimationPlaybackEvent);
     expect(element.style.transform).toBe(NOTEBOOK_CLOSED_TRANSFORM);
@@ -66,7 +66,7 @@ describe('notebook slide overlay motion', () => {
       { transform: NOTEBOOK_OPEN_TRANSFORM, offset: 0 },
       { transform: NOTEBOOK_CLOSED_TRANSFORM, offset: 1 },
     ]);
-    expect(animate.mock.calls[0][1]).toMatchObject({ duration: 240, fill: 'both' });
+    expect(animate.mock.calls[0][1]).toMatchObject({ duration: NOTEBOOK_CLOSE_DURATION_MS, fill: 'both' });
     animation.onfinish?.call(animation, {} as AnimationPlaybackEvent);
     expect(element.style.transform).toBe(NOTEBOOK_CLOSED_TRANSFORM);
     expect(complete).toHaveBeenCalledOnce();

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, animateOverlay } from '../motion/anchoredOverlay';
+import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS, animateOverlay } from '../motion/anchoredOverlay';
 import { useDialogFocus } from './useDialogFocus';
 
 /** Keeps content pre-laid out off-screen so pulling or opening the notebook never triggers layout reflow. */
@@ -69,10 +69,10 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         aria-label="Đóng sổ tay của vợ"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className="absolute inset-0 z-10 bg-slate-950/55 backdrop-blur-[2px] cursor-pointer"
+        className="absolute inset-0 z-10 bg-slate-950/65 cursor-pointer"
         style={{
           opacity: 'var(--notebook-shade-opacity, 0)',
-          transition: `opacity var(--notebook-shade-duration, ${open ? '280ms' : '240ms'}) ${NOTEBOOK_SLIDE_EASING}`,
+          transition: `opacity var(--notebook-shade-duration, ${open ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`}) ${NOTEBOOK_SLIDE_EASING}`,
           pointerEvents: open ? 'auto' : 'none',
         }}
       />
