@@ -5,37 +5,27 @@ description: "Free, comedic, mobile-first web detective game where the player in
 tags: [requirement, vision, scope]
 timestamp: "2026-10-13T13:45:00+07:00"
 ---
-
 # Vision & Scope - Jealous Wife Detective Game (*Bắt được Tiểu tam*)
-
-> **Authoring Rule**: Populated strictly from the signed-off elicitation session output and clue inventory baseline. This file establishes the canonical scope, architectural constraints, and commercial boundaries for all downstream capability decomposition, user stories, and change request governance.
-
----
 
 ## 1. Product Vision
 
 ### Business Goal
+
 Deliver a free, comedic, mobile-first web game tailored for Vietnamese Gen Z and Gen Alpha audiences (ages 13+). The game satirizes viral Vietnamese marital confession tropes (*Tâm sự Eva*, *Vén khéo*, *quỹ đen*, 1.000 VNĐ bank transfer chats) through an interactive "Đối chất & Ghim bằng chứng" (Confront & Prove) deduction loop: the player assumes the persona of a jealous wife inspecting her husband's virtual smartphone. Players freely explore level-provisioned apps, pin evidence cards across all interactive items, trigger the "Giác Quan Thứ 6" hint when stuck, and can initiate "Đối chất" (Confrontation) at any time-where premature accusations trigger hilarious husband excuses ("chối bay chối biến"), and attaching verified smoking-gun evidence cards delivers conviction victory and viral roast titles.
 
 ### Success Signals
-| Signal | Target / Measure | Status |
-|---|---|---|
-| Level 1 Completion Rate | >= 75% of users who open the game complete Level 1 | Confirmed |
-| Viral Social Shareability | High engagement in generating and downloading/sharing roast result cards to TikTok, Zalo, and Facebook | Confirmed |
-| Casual Session Length | 5–10 minutes per level, optimized for snackable mobile play with zero text fatigue | Confirmed |
-| Privacy Compliance | 100% client-side execution with zero telemetry, tracking, or cookie compliance friction for minors (13+) | Confirmed |
 
-### Sponsoring Stakeholder(s)
-| Name / Role | Commercial Accountability | Status |
-|---|---|---|
-| Product Lead / Delivery Sponsor | Commercial scope, product direction, and baseline sign-off authority | Confirmed |
-
----
+| Signal                    | Target / Measure                                                                                         | Status    |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- | --------- |
+| Level 1 Completion Rate   | >= 75% of users who open the game complete Level 1                                                       | Confirmed |
+| Viral Social Shareability | High engagement in generating and downloading/sharing roast result cards to TikTok, Zalo, and Facebook   | Confirmed |
+| Casual Session Length     | 5–10 minutes per level, optimized for snackable mobile play with zero text fatigue                      | Confirmed |
+| Privacy Compliance        | 100% client-side execution with zero telemetry, tracking, or cookie compliance friction for minors (13+) | Confirmed |
 
 ## 2. Personas & Target Users
 
-| Persona | Commercial Model | Primary JTBD | Key Pain Points | Status |
-|---|---|---|---|---|
+| Persona                                       | Commercial Model                | Primary JTBD                                                                                                                                                        | Key Pain Points                                                                                                                                | Status    |
+| --------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | Vietnamese Gen Z / Gen Alpha Player (Age 13+) | B2C, Free (Zero Ad-wall in MVP) | Experience the satisfying comedic thrill of snooping and detective deduction; unlock humorous roast endings; share funny "Wife Title" cards to peer social networks | Tired of generic Western puzzle games; frustrated by intrusive pay-to-win ads; craves culturally authentic Vietnamese internet drama and slang | Confirmed |
 
 ---
@@ -43,90 +33,54 @@ Deliver a free, comedic, mobile-first web game tailored for Vietnamese Gen Z and
 ## 3. MVP Scope Boundary
 
 ### In Scope (MVP)
-| Capability / Feature Area | Description | Status |
-|---|---|---|
-| Level-Based Virtual Smartphone Shell | Responsive mobile phone frame with dynamic home screen mounting only the active apps configured for that specific level to eliminate clutter and reading fatigue: Level 1 mounts 3–4 apps (0 locks); Level 2 mounts 5–6 apps (1 lock); Level 3 mounts 8–11 apps (2 locks). | Confirmed |
-| Universal Evidence Pinning ("Ghim Bằng Chứng") | Player can tap to pin any interactive chat bubble, bank memo, order invoice, or photo into the Wife's Detective Notebook. Pin action is universally available across all interactive elements (including ordinary clutter and red herrings) to eliminate spoiler tells. | Confirmed |
-| Active Clue & Objective Counter | The Wife's Detective Notebook maintains an active counter of discovered smoking guns (e.g. *Bằng chứng cốt lõi: 1/3*) guiding the player without linear gating. | Confirmed |
-| Anytime Confrontation & Dynamic Excuse Engine | Player can initiate "Đối chất" at any moment. Premature accusations (0–1 evidence cards) trigger hilarious gaslighting excuses (*"chối bay chối biến"*). Conviction rate and star rating (1–3 stars) scale with the count of valid smoking-gun evidence cards attached. | Confirmed |
-| "Giác Quan Thứ 6" (Sixth Sense) Hint Engine | Notebook trigger highlighting the app containing the next uncollected clue. Free with a 30-second cooldown in every level, including Level 0. When all required clues are collected but the case remains unsolved, give a general notebook reminder without revealing the correct connection. | Confirmed |
-| Optional Level 0 Tutorial | Separate practice case offered on first play, with Skip and Replay. Guide the first use of exploration, long-press capture, pinning, notebook connections, Sixth Sense, and confrontation, then leave the final deduction to the player. Explain mistakes and allow retries without losing the practice case. Completion requires every taught mechanic, one valid hint use, the final deduction, and successful confrontation. Skipping permits Level 1. Explain normal-case penalties before entry to Level 1. Exact narrative and clues require separate level-design approval before implementation. | Confirmed |
-| Snackable Visual Forensics | Short, punchy chat dialogues (capped at 3–5 lines) supplemented by rich visual exhibits: bank transaction memo receipts, map route pins, e-commerce recipient invoices, and tap-to-zoom photo reflections. | Confirmed |
-| Unlock & Puzzle Mechanics | Multi-layered unlock mechanics: 4-digit PINs, security question challenges, and cross-referenced password clues hidden in other apps. (Locks active in L2 & L3). | Confirmed |
-| Suspicion & Lockout Engine | Strike counter tracking failed PIN entries and incorrect answers. Limit escalates by difficulty: L1 = 5 strikes, L2 = 4 strikes, L3 = 3 strikes. Each strike triggers a skippable ~60s lockout animation. Reaching the strike limit triggers a "Bị giật lại máy" (Caught snooping) fail screen with instant retry. | Confirmed |
-| Shareable Result Card | Client-rendered visual summary card (Canvas/HTML capture) displaying verdict, star rating, wife title, and roast punchline formatted for vertical social media sharing (TikTok, Zalo, Facebook). | Confirmed |
-| Progression & Retry Loop | Passing a normal level unlocks the next via a comedic "Tha thứ" (Forgive & proceed) action. Immediate retry supported on wrong verdict or caught-snooping fail state. Level 0 is optional: skipping it permits Level 1 and is distinct from tutorial completion. | Confirmed |
-| Local State Persistence | Browser `localStorage` persistence for level unlock progression, best star ratings, and earned wife titles. Zero server database required. | Confirmed |
 
-### Out of Scope (Explicit Exclusions)
-| Item | Reason for Exclusion | Status |
-|---|---|---|
-| Hint Paywall / Rewarded Ads | "Giác Quan Thứ 6" hint is free/cooldown in MVP; ad/in-app payment gating deferred to Phase 2 | Confirmed |
-| Interactive Mini-Mechanics | Scratch-off photos, audio waveform player, and sticker passcode math deferred to Phase 2 | Confirmed |
-| Backend API & Server Database | Client-side static architecture selected for zero operational cost and high scalability | Confirmed |
-| User Accounts & Cloud Sync | Excluded to maximize frictionless casual play and avoid PII storage for 13+ users | Confirmed |
-| English Localization / Language Toggle | Vietnamese-only idiom, humor, and cultural references for launch MVP | Confirmed |
-| Google Analytics & Third-Party Telemetry | Deferred to post-MVP to eliminate cookie banners and privacy overhead | Confirmed |
-| In-App Purchases / Pay-to-Skip | Avoids payment processing and minor regulatory hurdles in launch demo | Confirmed |
-| Remote CMS / Admin Editing Portal | Content hardcoded at launch via declarative schemas; CMS deferred to future scale | Confirmed |
-| Wife as Suspect / Dual Perspective | Deferred to future expansion packs | Confirmed |
-| Global Leaderboards | Excluded due to zero-backend constraint | Confirmed |
+| Capability / Feature Area                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Status    |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| Level-Based Virtual Smartphone Shell             | Responsive mobile phone frame with dynamic home screen mounting only the active apps configured for that specific level to eliminate clutter and reading fatigue: Level 1 mounts 3–4 apps (0 locks); Level 2 mounts 5–6 apps (1 lock); Level 3 mounts 8–11 apps (2 locks).                                                                                                                                                                                                                                                                                                                            | Confirmed |
+| Universal Evidence Pinning ("Ghim Bằng Chứng") | Player can tap to pin any interactive chat bubble, bank memo, order invoice, or photo into the Wife's Detective Notebook. Pin action is universally available across all interactive elements (including ordinary clutter and red herrings) to eliminate spoiler tells.                                                                                                                                                                                                                                                                                                                                  | Confirmed |
+| Active Clue & Objective Counter                  | The Wife's Detective Notebook maintains an active counter of discovered smoking guns (e.g. *Bằng chứng cốt lõi: 1/3*) guiding the player without linear gating.                                                                                                                                                                                                                                                                                                                                                                                                                                    | Confirmed |
+| Anytime Confrontation & Dynamic Excuse Engine    | Player can initiate "Đối chất" at any moment. Premature accusations (0–1 evidence cards) trigger hilarious gaslighting excuses (*"chối bay chối biến"*). Conviction rate and star rating (1–3 stars) scale with the count of valid smoking-gun evidence cards attached.                                                                                                                                                                                                                                                                                                                        | Confirmed |
+| "Giác Quan Thứ 6" (Sixth Sense) Hint Engine    | Notebook trigger highlighting the app containing the next uncollected clue. Free with a 30-second cooldown in every level, including Level 0. When all required clues are collected but the case remains unsolved, give a general notebook reminder without revealing the correct connection.                                                                                                                                                                                                                                                                                                            | Confirmed |
+| Level 0 Tutorial                                 | Separate practice case offered on first play, with Skip and Replay. Guide the first use of exploration, long-press capture, pinning, notebook connections, Sixth Sense, and confrontation, then leave the final deduction to the player. Explain mistakes and allow retries without losing the practice case. Completion requires every taught mechanic, one valid hint use, the final deduction, and successful confrontation. Skipping permits Level 1. Explain normal-case penalties before entry to Level 1. Exact narrative and clues require separate level-design approval before implementation. | Confirmed |
+| Snackable Visual Forensics                       | Short, punchy chat dialogues (capped at 3–5 lines) supplemented by rich visual exhibits: bank transaction memo receipts, map route pins, e-commerce recipient invoices, and tap-to-zoom photo reflections.                                                                                                                                                                                                                                                                                                                                                                                              | Confirmed |
+| Unlock & Puzzle Mechanics                        | Multi-layered unlock mechanics: 4-digit PINs, security question challenges, and cross-referenced password clues hidden in other apps. (Locks active in L2 & L3).                                                                                                                                                                                                                                                                                                                                                                                                                                         | Confirmed |
+| Suspicion & Lockout Engine                       | Strike counter tracking failed PIN entries and incorrect answers. Limit escalates by difficulty: L1 = 5 strikes, L2 = 4 strikes, L3 = 3 strikes. Each strike triggers a skippable ~60s lockout animation. Reaching the strike limit triggers a "Bị giật lại máy" (Caught snooping) fail screen with instant retry.                                                                                                                                                                                                                                                                                   | Confirmed |
+| Shareable Result Card                            | Client-rendered visual summary card (Canvas/HTML capture) displaying verdict, star rating, wife title, and roast punchline formatted for vertical social media sharing (TikTok, Zalo, Facebook).                                                                                                                                                                                                                                                                                                                                                                                                         | Confirmed |
+| Progression & Retry Loop                         | Passing a normal level unlocks the next via a comedic "Tha thứ" (Forgive & proceed) action. Immediate retry supported on wrong verdict or caught-snooping fail state. Level 0 is optional: skipping it permits Level 1 and is distinct from tutorial completion.                                                                                                                                                                                                                                                                                                                                        | Confirmed |
+| Local State Persistence                          | Browser `localStorage` persistence for level unlock progression, best star ratings, and earned wife titles. Zero server database required.                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Confirmed |
+
+### Out of MVP Scope (Explicit Exclusions)
+
+| Item                                     | Reason for Exclusion                                                                           | Status    |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------- | --------- |
+| Hint Paywall / Rewarded Ads              | "Giác Quan Thứ 6" hint is free/cooldown in MVP; ad/in-app payment gating deferred to Phase 2 | Confirmed |
+| Interactive Mini-Mechanics               | Scratch-off photos, audio waveform player, and sticker passcode math deferred to Phase 2       | Confirmed |
+| Backend API & Server Database            | Client-side static architecture selected for zero operational cost and high scalability        | Confirmed |
+| User Accounts & Cloud Sync               | Excluded to maximize frictionless casual play and avoid PII storage for 13+ users              | Confirmed |
+| English Localization / Language Toggle   | Vietnamese-only idiom, humor, and cultural references for launch MVP                           | Confirmed |
+| Google Analytics & Third-Party Telemetry | Deferred to post-MVP to eliminate cookie banners and privacy overhead                          | Confirmed |
+| In-App Purchases / Pay-to-Skip           | Avoids payment processing and minor regulatory hurdles in launch demo                          | Confirmed |
+| Remote CMS / Admin Editing Portal        | Content hardcoded at launch via declarative schemas; CMS deferred to future scale              | Confirmed |
+| Wife as Suspect / Dual Perspective       | Deferred to future expansion packs                                                             | Confirmed |
+| Global Leaderboards                      | Excluded due to zero-backend constraint                                                        | Confirmed |
 
 ### Phase Boundaries
-| Phase | Scope | Target |
-|---|---|---|
+
+| Phase         | Scope                                                                                                                                                                                      | Target          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------- |
 | Phase 1 / MVP | 1–2 husbands x 3 levels, level-based dynamic app launcher, anytime confrontation + dynamic excuse engine, "Giác Quan Thứ 6" free hint, universal pinning, local storage, shareable card | Launch Baseline |
-| Phase 2+ | Hint paywall / rewarded ads, interactive scratch-offs & audio voice notes, additional husbands & levels, background audio & comedic SFX, CMS content pipeline, analytics | Post-MVP |
+| Phase 2+      | Hint paywall / rewarded ads, interactive scratch-offs & audio voice notes, additional husbands & levels, background audio & comedic SFX, CMS content pipeline, analytics                   | Post-MVP        |
 
 ---
 
 ## 4. Key Constraints & Non-Functional Requirements (Global)
 
-| Category | Constraint / Requirement | Status |
-|---|---|---|
+| Category                   | Constraint / Requirement                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Status    |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | Architecture & Scalability | **Data-Driven Modular Client Engine**: 1) Declarative level configuration schemas (JSON/TypeScript) defining cases, suspects, and clues independently of UI logic; 2) Pluggable Virtual App Registry (`AppDefinition`) allowing new apps to register icons and views without modifying the home screen; 3) Polymorphic Clue Engine supporting varied puzzle types (PINs, security questions, timestamp matches, hidden media) without altering the core game loop. | Confirmed |
-| Security & Privacy | Zero server collection. No tracking pixels, cookies, or personal data collected. Fully compliant with minor privacy best practices (13+). | Confirmed |
-| Compliance & Brand Safety | Parody brand assets (names, colors, icons, layouts) must noticeably deviate from real-world trademarks (Grab, Shopee, Zalo, MoMo, VietQR, Gmail, LinkedIn, Microsoft Teams) to mitigate passing-off risk. Content restricted to safe comedic satire: zero profanity, zero explicit sexual depiction, infidelity implied solely through humorous receipts and chat dialogues. | Confirmed |
-| Performance / SLA | Instantaneous screen-to-screen app switching (< 100ms); initial asset bundle < 5MB; zero network requests during active gameplay after initial page load. | Confirmed |
-| Accessibility & Ergonomics | Mobile-first portrait viewport (375px–430px base width); touch-target sizes >= 44x44px; high contrast text rendering for readability on small mobile screens. | Confirmed |
-| Platforms & Devices | Responsive web application running on evergreen mobile browsers: iOS Safari (iOS 15+) and Android Chrome (Android 10+). Desktop browsers render a centered mobile device frame. | Confirmed |
-| Integrations | None. Zero third-party runtime dependencies or external API integrations in MVP. | Confirmed |
-
----
-
-## 5. Commercial Baseline (SOW / CR Trigger)
-
-| Category | Detail | Status |
-|---|---|---|
-| Contracted MVP Scope | Single-player client-side static web application containing 1–2 husbands across 3 normal levels plus an optional Level 0 practice case, level-based dynamic app launcher (L1: 3-4 apps, L2: 5-6 apps, L3: 8-11 apps), anytime confrontation with dynamic excuse engine, notebook-based "Giác Quan Thứ 6" hint engine with a 30-second cooldown in all levels, universal evidence pinning, declarative content architecture, local storage persistence, and Canvas-based shareable roast cards. Level 0 and the five-story delivery plan were explicitly approved on 2026-10-21; exact tutorial narrative and clues remain subject to separate review. | Confirmed |
-| Change Request (CR) Triggers | The following requirements fall outside the agreed commercial baseline and will trigger a formal Change Request: 1) Introducing cloud backend services, user authentication, or server databases; 2) Integrating third-party payment gateways or monetization ad networks; 3) Implementing a web-based CMS/admin authoring dashboard; 4) Multi-language localization (e.g. English); 5) Multiplayer or synchronized leaderboard systems. | Confirmed |
-| Delivery Phasing | Rapid iterative delivery from approved functional decomposition to user stories and visual mockups. | Confirmed |
-
-Approved scope addition: [Level 0 tutorial and Sixth Sense discovery](elicitation/2026-10-21-level-0-tutorial-sixth-sense.md). This addition does not change the release placement of the existing normal levels.
-
----
-
-## 6. Key Assumptions & Risks
-
-| Type | Item | Impact | Owner / Status |
-|---|---|---|---|
-| Assumption | Browser `localStorage` provides sufficient reliability for casual progression retention without cloud sync | Medium | Engineering, Validated |
-| Assumption | Organic viral sharing of downloadable roast card images will drive player acquisition without paid ad spend | Medium | Marketing / Product, Open |
-| Risk | Parodying prominent Vietnamese apps (Zalo, Grab, Shopee) could draw trademark complaints if UI is too similar | Medium | Design / BA, Mitigated (mandated distinct color palettes and satirical naming) |
-| Risk | Hardcoded meme references may age over a 6–12 month window | Low | Content / BA, Mitigated (declarative schema enables rapid content patching) |
-| Dependency | Clue catalog and puzzle logic mapped to authentic Vietnamese relationship tropes | High | BA / Story Designer, Ready (SSOT cataloged in `clue-ideas-inventory.md`) |
-
----
-
-## 7. Open Questions
-
-| ID | Question | Needed From | Status |
-|---|---|---|---|
-| - | None. All discovery items (Q001–Q007) resolved and signed off. | - | Closed |
-
----
-
-## Referenced Documents
-
-* [.agent-artifacts/requirements/output/elicitation/2026-10-13-jealous-wife-detective-game.md](<C:/Users/KhanhChuNgoc/Documents/Personal Projects/Detective/.agent-artifacts/requirements/output/elicitation/2026-10-13-jealous-wife-detective-game.md>)
-* [.agent-artifacts/requirements/stories/clues/clue-ideas-inventory.md](<C:/Users/KhanhChuNgoc/Documents/Personal Projects/Detective/.agent-artifacts/requirements/stories/clues/clue-ideas-inventory.md>)
+| Security & Privacy         | Zero server collection. No tracking pixels, cookies, or personal data collected. Fully compliant with minor privacy best practices (13+).                                                                                                                                                                                                                                                                                                                                  | Confirmed |
+| Compliance & Brand Safety  | Parody brand assets (names, colors, icons, layouts) must noticeably deviate from real-world trademarks (Grab, Shopee, Zalo, MoMo, VietQR, Gmail, LinkedIn, Microsoft Teams) to mitigate passing-off risk. Content restricted to safe comedic satire: zero profanity, zero explicit sexual depiction, infidelity implied solely through humorous receipts and chat dialogues.                                                                                               | Confirmed |
+| Performance / SLA          | Instantaneous screen-to-screen app switching (< 100ms); initial asset bundle < 5MB; zero network requests during active gameplay after initial page load.                                                                                                                                                                                                                                                                                                                  | Confirmed |
+| Accessibility & Ergonomics | Mobile-first portrait viewport (375px–430px base width); touch-target sizes >= 44x44px; high contrast text rendering for readability on small mobile screens.                                                                                                                                                                                                                                                                                                             | Confirmed |
+| Platforms & Devices        | Responsive web application running on evergreen mobile browsers: iOS Safari (iOS 15+) and Android Chrome (Android 10+). Desktop browsers render a centered mobile device frame.                                                                                                                                                                                                                                                                                            | Confirmed |
+| Integrations               | None. Zero third-party runtime dependencies or external API integrations in MVP.                                                                                                                                                                                                                                                                                                                                                                                           | Confirmed |
