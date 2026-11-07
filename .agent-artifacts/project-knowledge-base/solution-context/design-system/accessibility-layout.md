@@ -59,9 +59,10 @@ To prevent mis-taps on mobile devices and satisfy WCAG 2.5.5 (Target Size - Leve
 
 All color pairings must be verified against WCAG 2.1 Level AA and AAA standards:
 
-* **Body Text & Normal Narrative ($< 18\text{px}$)**: Contrast ratio $\ge \mathbf{4.5:1}$ against background canvas.
+* **Body Text & Normal Narrative ($< 18\text{px}$)**: Contrast ratio $\ge \mathbf{4.5:1}$ against background canvas. On white/light surfaces (`#FFFFFF` / `#F8FAFC`), secondary and metadata text (`11px`–`15px`) must use `#64748B` ($4.76:1$) or `#52525B` ($7.0:1$); low-contrast grays (`#8E8E93`, `#8A9098`, `#9E9E9E`, `#B4B9BF`) are banned for readable text.
 * **Large Text ($\ge 18\text{px}$ bold or $\ge 24\text{px}$ regular)**: Contrast ratio $\ge \mathbf{3.0:1}$.
 * **Active UI Components & Graphical Objects**: Contrast ratio $\ge \mathbf{3.0:1}$ against adjacent colors.
+* **Focus Not Obscured (WCAG 2.2 AA 2.4.11)**: All scrollable app feeds must include bottom content clearance (`padding-bottom: 6rem` / `scroll-padding-bottom: 6rem`) so sticky bottom tab bars (`z-30`) and persistent floating HUDs (`AssistiveTouch`, `Wife's Notebook FAB` at `z-50`) never obscure the last list row or focused element. Visible focus rings (`outline: 2px solid var(--sys-accent); outline-offset: 2px`) are mandatory on keyboard focus.
 * **Wallpaper Legibility Protection**: Any text rendered directly over dynamic wallpapers (e.g. app icon titles, status bar clock) **must enforce** an ambient dark Gaussian drop shadow to preserve contrast across all background tones:
   ```css
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);

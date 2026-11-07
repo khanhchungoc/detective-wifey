@@ -1,4 +1,4 @@
-﻿---
+---
 type: App Design Specification
 app_id: netsurf
 app_name: NetSurf
@@ -35,19 +35,20 @@ timestamp: "2026-10-13T14:35:00+07:00"
 │ Card / Address Bar:   Pure White      #FFFFFF          │
 │ Incognito Canvas:     Midnight Dark   #1C1C1E          │
 │ Accent Link:          Royal Indigo    #3F51B5          │
-│ Search Query Icon:    Medium Slate    #6B7280          │
-│ Text Primary:         Jet Black       #111827          │
-│ Incognito Text:       Ghost White     #F9FAFB          │
+│ Search Query Icon:    Accessible Slate  #52525B (≥4.5:1)│
+│ Text Primary:         Jet Black         #111827        │
+│ Incognito Text:       Ghost White       #F9FAFB        │
+│ Incognito Subtext:    Light Slate       #94A3B8 (≥4.5:1)│
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography**:
-  * Address Bar URL: Regular monospace ($14\text{px}$).
-  * Visited Page Title: Semibold ($15\text{px}$).
-  * Search Query String: Italic ($14\text{px}$).
+* **Typography (Universal `text-ios-*` Tokens)**:
+  * Address Bar URL: `text-ios-footnote` ($13\text{px}$ Regular, `font-mono`).
+  * Visited Page Title: `text-ios-subheadline` ($15\text{px}$ Semibold / $600$).
+  * Search Query String: `text-ios-subheadline` ($15\text{px}$ Regular italic).
 * **Ergonomics & Touch Targets**:
-  * Bottom toolbar actions $\ge 48 \times 48\text{px}$.
-  * History list item touch target height $\ge 52\text{px}$.
+  * Bottom toolbar actions $\ge 48 \times 48\text{px}$ (`.touch-target-min`).
+  * History list item touch target height $\ge 56\text{px}$ with `pb-24` scroll clearance.
 
 ---
 
@@ -56,40 +57,40 @@ timestamp: "2026-10-13T14:35:00+07:00"
 ### 3.1. Browsing History Screen (`NetSurfHistoryView`)
 ```
 ┌────────────────────────────────────────────────────────┐
-│ [< Trang chủ]   [ 🔒 netsurf://history/today ]  [ ↻ ]  │
+│ [< Trang chủ]  [ [Lock] netsurf://history/today ] [↻]  │
 ├────────────────────────────────────────────────────────┤
 │ [ Lịch sử tìm kiếm ]                [ Thẻ đang mở (3) ]│
 ├────────────────────────────────────────────────────────┤
 │ HÔM NAY - 13/10/2026                                   │
 ├────────────────────────────────────────────────────────┤
-│ 🔍 "cách tắt định vị iphone mà vợ không biết"    23:15 │
+│ [Search] "cách tắt định vị iphone mà vợ không biết"23:15│
 │    netsurf.search/q=tat-dinh-vi-iphone                 │
 ├────────────────────────────────────────────────────────┤
-│ 🔍 "xoá lịch sử zalo có khôi phục được không"    22:40 │
+│ [Search] "xoá lịch sử zalo có khôi phục được không"22:40│
 │    netsurf.search/q=xoa-tin-nhan-zalo                  │
 ├────────────────────────────────────────────────────────┤
-│ 🌐 Diễn đàn Trải Nghiệm Sugar Baby & Sugar Daddy 21:05 │
+│ [Globe] Diễn đàn Trải Nghiệm Sugar Baby & Daddy   21:05│
 │    diendan-tamsu.vn/topic-kinh-nghiem-chu-cap-sv       │
 ├────────────────────────────────────────────────────────┤
-│ 📰 VnExpress - Giá vàng SJC hôm nay tăng kỷ lục  14:30 │
+│ [News] VnExpress - Giá vàng SJC hôm nay tăng      14:30│
 │    vnexpress.net/kinh-doanh/gia-vang-sjc               │
 ├────────────────────────────────────────────────────────┤
-│ [ ⬅️ ]     [ ➡️ ]     [ 📑 Lịch sử ]     [ 🕶️ Ẩn danh ]│
+│ [ Back ]    [ Next ]    [ [Book] Lịch sử ] [Incognito] │
 └────────────────────────────────────────────────────────┘
 ```
 
-### 3.2. Incognito Tab Switcher (`NetSurfTabSwitcherView`)
+### 3.2. Incognito Tab Switcher & Web Reader Sub-View (`NetSurfTabSwitcherView` / `NetSurfReaderModal`)
 ```
 ┌────────────────────────────────────────────────────────┐
-│ [ Đóng ✕ ]          THẺ ẨN DANH (INCOGNITO)     [ 🕶️ ] │
+│ [ Đóng ✕ ]          THẺ ẨN DANH (INCOGNITO)  [Glasses] │
 ├────────────────────────────────────────────────────────┤
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ 🕶️ Khách Sạn Tình Yêu Phố Cổ - Đặt Phòng VIP        │ │
-│ │ 🌐 lovehotel-phoco.vn/booking-confirm-12048        │ │
+│ │ [Glasses] Khách Sạn Tình Yêu Phố Cổ - Đặt Phòng VIP│ │
+│ │ [Globe] lovehotel-phoco.vn/booking-confirm-12048   │ │
 │ │                                                    │ │
-│ │ [ Xác nhận đặt phòng: 15/10 - 2 Khách ]            │ │
+│ │ Xác nhận đặt phòng: 15/10 - 2 Khách (Phòng Chủ Đề) │ │
+│ │ Người đặt: Hoàng Minh • SĐT: 0912 *** 889          │ │
 │ └────────────────────────────────────────────────────┘ │
-├────────────────────────────────────────────────────────┤
-│ [ ➕ Thêm Khách Sạn Tình Yêu vào Sổ Tay Bắt Ghen ]     │
 └────────────────────────────────────────────────────────┘
 ```
+* **Zero-Spoiler Forensic Pinning (`380ms`)**: Static pin buttons are prohibited. Every search query row, visited article, and incognito tab card is wrapped in `StoryEvidenceTarget` (`380ms` hold or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal`.

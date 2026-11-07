@@ -20,7 +20,7 @@ timestamp: "2026-10-22T21:10:00+07:00"
 | **App Name** | **Techcornbank** (Satirical real-world parody of *Techcombank Mobile* and *VietQR*) |
 | **Real-World Reference** | Techcombank Mobile (2024–2026 Modern Redesign) |
 | **Slogan / Taglines** | Primary: *"Chuyển tiền siêu tốc - Tin nhắn siêu tình"*<br>Sub-Brand Inspire Motto: *"BE INSPIRED why not!"* |
-| **Design Mandate** | **Strict Visual Parity**: Faithfully replicates the visual polish, geometry, vibrant coral/salmon soundwaves, floating rounded hero cards, segmented quick-action matrix, and date-grouped transaction feeds of Techcombank Mobile's latest production interface. |
+| **Design Mandate** | **Satirical Neobank Parody**: Captures modern Vietnamese neobank ergonomics (warm coral/peach waveform motifs, floating account hero card, 5-column quick-action matrix, and date-grouped transaction feeds) while enforcing satirical parody naming (*Techcornbank*, *Techcornbank OneU*), altered geometric iconography, and comedic transfer memos to satisfy brand safety rules ([vision-scope.md §4](../../../requirements/output/vision-scope.md#4-key-constraints--non-functional-requirements-global)). |
 | **Trademark Defense** | Uses parody naming (*Techcornbank*, *Techcornbank OneU*), modified geometric dual-diamond logo emblem, and comedic fictional memos while maintaining authentic neobank aesthetics. Distinctly differentiates itself from MBBank's navy or MoMo's magenta. |
 | **Visual Persona** | **The High-Status Deceptive Neobank**: Sleek, affluent, decluttered neobank interface with case-defined membership tiers (*Inspire*, *Priority*, *Private*) and motivational marketing banners that hilariously contrast with suspicious 1.000 VNĐ micro-transfer apology chats and concealed savings vaults. |
 
@@ -48,8 +48,8 @@ The visual palette strictly reflects the authentic color tokens captured from pr
 │ Border & Hairline Dividers: Subtle Cool Gray       #E5E7EB / #F3F4F6              │
 │                                                                                   │
 │ Text Primary:               Carbon Charcoal        #111827 / #000000              │
-│ Text Secondary & Snippets:  Muted Slate            #6B7280                        │
-│ Text Date Headers / Minor:  Muted Steel Gray       #8E8E93                        │
+│ Text Secondary & Snippets:  Accessible Slate       #4B5563 / #52525B (≥4.5:1 AA)  │
+│ Text Date Headers / Minor:  Accessible Muted Slate #64748B (≥4.5:1 AA)            │
 │ Active Filter Pill Fill:    Solid Black            #000000                        │
 │ Active Filter Pill Text:    Pure White             #FFFFFF                        │
 │ Inactive Filter Pill Border:Subtle Outline         #E5E7EB                        │
@@ -69,26 +69,26 @@ The visual palette strictly reflects the authentic color tokens captured from pr
 
 ## 3. Typography System
 
-Techcornbank adopts modern geometric neobank typography (`SF Pro Display` / `Inter` / system sans-serif) paired with tabular monospace numerals for financial figures:
+Techcornbank inherits the universal Apple HIG `text-ios-*` dynamic scale ([design.md §3.1.1](../../design-system/design.md#311-universal-shared-typography-scale-vs-scoped-app-font-color-invariant)) paired with `tabular-nums` for financial figures:
 
-| UI Element | Font Size | Weight | Color | Line Height / Style Notes |
+| UI Element | Canonical Token (`text-ios-*`) | Weight | Color | Line Height / Style Notes |
 |---|---|---|---|---|
-| **Recent Activity Title (`Hoạt động gần đây`)** | $24\text{px}$–$26\text{px}$ | Bold ($700$/$800$) | `#000000` | Left-aligned, tracking $-0.5\text{px}$ |
-| **Date Group Header (`Hôm qua`, `Thứ Ba, 20...`)** | $13\text{px}$–$14\text{px}$ | Regular ($400$) | `#8E8E93` | Uppercase initial, generous top margin |
-| **Transaction Counterparty Name** | $15\text{px}$–$16\text{px}$ | Bold ($700$) | `#111827` | All-caps uppercase (e.g. `LE THI KIM CUC`) |
-| **Transaction Memo Subtitle** | $13\text{px}$–$14\text{px}$ | Regular ($400$) | `#6B7280` | Single-line truncated with ellipsis |
-| **Transaction Amount (Inflow)** | $16\text{px}$–$17\text{px}$ | Bold ($700$) | `#00A86B` | Tabular figures, signed `+ 45,000` |
-| **Transaction Amount (Outflow)** | $16\text{px}$–$17\text{px}$ | Bold ($700$) | `#111827` | Tabular figures, signed `- 7,000` |
-| **Filter Pill Labels (`7 ngày trước`, etc.)** | $13\text{px}$–$14\text{px}$ | Semibold ($600$) | Active `#FFFFFF` / Inactive `#000000` | Capsule padding: $8\text{px} \times 16\text{px}$ |
-| **Floating Help Tooltip (`Không tìm thấy giao dịch?`)** | $12\text{px}$–$13\text{px}$ | Semibold ($600$) | `#007AFF` | Centered 2-line layout |
-| **Dashboard Balance Label (`Số dư hiện có`)** | $14\text{px}$–$15\text{px}$ | Medium ($500$) | `#374151` | Subtle muted label |
-| **Dashboard Masked Balance (`********`)** | $24\text{px}$–$28\text{px}$ | Bold ($700$) | `#111827` | Tabular monospace asterisks |
-| **Tier Upsell Title (`Lên hạng Inspire Max`)** | $15\text{px}$–$16\text{px}$ | Bold ($700$) | `#111827` | Card section headline |
-| **Tier Upsell Body Description** | $12\text{px}$–$13\text{px}$ | Regular ($400$) | `#4B5563` | Multi-line explanatory copy |
-| **Black CTA Button (`Xem số dư`)** | $13\text{px}$–$14\text{px}$ | Semibold ($600$) | `#FFFFFF` | Rounded capsule pill button |
-| **Slogan Script (`why not!`)** | $18\text{px}$–$20\text{px}$ | Cursive Script | Coral `#E85D04` | Stylized cursive signature |
-| **Quick Action Grid Labels** | $11\text{px}$–$12\text{px}$ | Medium ($500$) | `#111827` | Centered under $48\text{px}$ round icons |
-| **Bottom Navigation Tab Labels** | $10\text{px}$–$11\text{px}$ | Medium / Bold | Active `#111827` / Inactive `#6B7280` | Under 5 primary bottom icons |
+| **Recent Activity Title (`Hoạt động gần đây`)** | `text-ios-title-1` ($28\text{px}$) / `text-ios-title-2` ($22\text{px}$) | Bold ($700$) | `#000000` | Left-aligned, negative optical tracking |
+| **Date Group Header (`Hôm qua`, `Thứ Ba, 20...`)** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#64748B` | Uppercase initial, $\ge 4.5:1$ contrast |
+| **Transaction Counterparty Name** | `text-ios-callout` ($16\text{px}$) | Semibold ($600$) | `#111827` | All-caps uppercase (e.g. `LE THI KIM CUC`) |
+| **Transaction Memo Subtitle** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#52525B` | Single-line truncated with ellipsis |
+| **Transaction Amount (Inflow)** | `text-ios-headline` ($17\text{px}$) | Semibold ($600$) | `#00A86B` | `tabular-nums`, signed `+ 45,000` |
+| **Transaction Amount (Outflow)** | `text-ios-headline` ($17\text{px}$) | Semibold ($600$) | `#111827` | `tabular-nums`, signed `- 7,000` |
+| **Filter Pill Labels (`7 ngày trước`, etc.)** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | Active `#FFFFFF` / Inactive `#000000` | Capsule inside $\ge 44\text{px}$ `.touch-target-min` |
+| **Floating Help Tooltip (`Không tìm thấy giao dịch?`)** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | `#007AFF` | Centered 2-line layout ($\ge 44\text{px}$ height) |
+| **Dashboard Balance Label (`Số dư hiện có`)** | `text-ios-subheadline` ($15\text{px}$) | Regular ($400$) | `#374151` | Subtle muted label |
+| **Dashboard Masked Balance (`********`)** | `text-ios-title-1` ($28\text{px}$) | Bold ($700$) | `#111827` | `font-mono tabular-nums` asterisks |
+| **Tier Upsell Title (`Lên hạng Inspire Max`)** | `text-ios-callout` ($16\text{px}$) | Semibold ($600$) | `#111827` | Card section headline |
+| **Tier Upsell Body Description** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#4B5563` | Multi-line explanatory copy |
+| **Black CTA Button (`Xem số dư`)** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | `#FFFFFF` | Rounded capsule pill button ($\ge 44\text{px}$ hit area) |
+| **Slogan Accent (`why not!`)** | `text-ios-title-3` ($20\text{px}$) | Semibold ($600$) | Coral `#E85D04` | Italicized accent tagline |
+| **Quick Action Grid Labels** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#111827` | Centered under $48\text{px}$ round icons |
+| **Bottom Navigation Tab Labels** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | Active `#111827` / Inactive `#52525B` | Under 5 primary bottom icons |
 
 ---
 
@@ -121,7 +121,7 @@ Faithfully captures the authentic Techcombank Mobile Home screen (Image 2 refere
 
 ```text
 +-----------------------------------------------------------------+
-| 18:58 📍                                                 5G 81% |
+| 18:58               [ Dynamic Island ]        [Signal][Wifi] 81%|
 +-----------------------------------------------------------------+
 | [ (PB) ]                                      [ 🔍 ]   [ 🔔 (9) ]|
 |  Inspire                                                        |
@@ -199,7 +199,7 @@ Faithfully captures the authentic Techcombank Mobile transaction history screen 
 
 ```text
 +-----------------------------------------------------------------+
-| 18:58 📍                                                 5G 80% |
+| 18:58               [ Dynamic Island ]        [Signal][Wifi] 80%|
 +-----------------------------------------------------------------+
 | [ ← ]                                                           |
 |                                                                 |

@@ -26,36 +26,25 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ### 2.2. Zero-Spoiler Universal Long-Press Pinning
 * **No UI Visual Cues**: Parody apps contain zero spoiler giveaways (no glowing borders, no clue icons, no warning boxes, no static "+ Ghim" buttons).
-* **Long-Press Gesture ($\ge 450\text{ms}$)**: Pressing and holding on any interactive element (names, chat bubbles, order rows, transaction notes, search chips, photos) triggers a subtle haptic pulse (`navigator.vibrate(20)`) and displays the contextual choice action sheet (`LongPressPinActionSheet`).
-* **Contextual Choice Action Sheet**:
-  - Displays a preview snippet of the long-pressed element.
-  - Option 1: `[ 👥 Ghim Đối Tượng Tình Nghi ]` - Adds the person/contact to the Suspects Board.
-  - Option 2: `[ 🔍 Ghim Manh Mối Bằng Chứng ]` - Adds the content/invoice/message to the Evidence Locker.
-  - Option 3: `[ ✕ Huỷ ]` - Closes popup without saving.
-* **Universal Pinning & Decoys**: Any interactive element (true clue or innocent decoy) can be pinned. The system never warns or rejects decoys during investigation to preserve mystery.
+* **Long-Press Gesture ($\ge 380\text{ms}$) & Keyboard Fallback**: Pressing and holding for $380\text{ms}$ (or pressing `Enter`/`Space` on keyboard focus) on any interactive story narrative element (`StoryEvidenceTarget`) triggers a subtle haptic pulse (`navigator.vibrate(20)`) and displays `UniversalEvidenceModal`.
+* **Universal Pinning & Decoys**: Any narrative element (true clue or innocent decoy) can be pinned into the Notebook's unplaced clue drawer. The system never warns or rejects decoys during investigation to preserve mystery.
 
-### 2.3. Investigation Dossier (`[ 📋 Hồ sơ điều tra ]` Tab)
-* **Section 1 - Suspects Board (Danh sách Đối tượng tình nghi)**:
-  - Displays logged suspect cards with avatar, display name, source app badge, custom notes, and linked evidence items.
-  - **Manual Unpin / Delete**: `[ 🗑️ Xoá ]` button to remove false suspects.
-  - **Evidence Linkage Slot**: `[ + Gắn bằng chứng từ kho ]` button opening a picker modal to link pinned evidence items directly to this suspect.
-* **Section 2 - Evidence Locker (Kho Manh mối & Bằng chứng)**:
-  - Displays all pinned evidence cards with source app tag, preview text, and timestamp.
-  - **Link Status**: Indicates whether each card is `⚪ Chưa liên kết đối tượng` or `🔗 Đã gán cho [Tên nghi phạm]`.
-  - **Manual Unpin / Delete**: `[ 🗑️ Xoá ]` button to remove unneeded or decoy evidence cards.
+### 2.3. Detective Corkboard Node Canvas (`BangNoiDay`) & "Giác Quan Thứ 6" Hint Engine
+* **2D Tap-to-Connect Corkboard (`US-015`)**:
+  - Players place pinned cards from the bottom drawer (`Khay Manh Mối Thu Thập`) onto the 2D corkboard and tap Node A then Node B to connect red-string edges (unmasking disguised identities and exposing alibi contradictions).
+  - Each card includes a `[Loc]` (`IoNavigateOutline`) deep-link button to jump back to the source app and highlight the original record while minimizing the notebook into a top `[Quay lại Sổ tay]` pill.
+  - Displays the active smoking-gun objective counter (*Bằng chứng cốt lõi: X/3*).
+* **"Giác Quan Thứ 6" (Sixth Sense) Hint Engine (`US-022`)**:
+  - Header button (`IoSparklesOutline`) inside the Wife's Notebook, free with a **30-second real-time cooldown** across all levels (including Level 0), persisted across notebook toggles and page reloads.
+  - When an uncollected required clue remains, displays `[AppIcon] Xem [Tên ứng dụng]. [Về màn hình chính]` and highlights the target app icon on the SpringBoard (max 2 pulses then static indicator; static indicator under `prefers-reduced-motion`). Clearing/pinning the target clue clears the highlight.
+  - When all required clues are already collected but the graph remains unsolved, displays a general reminder (`Xem lại các mối liên hệ.`) without revealing the answer pair, and starts the 30s cooldown.
 
-### 2.4. Final Verdict Decision Hub (`[ ⚖️ Phán quyết & Đối chất ]` Tab)
-* **Step 1 - Verdict Category**: Player selects one of 3 verdicts:
-  1. 🟢 **Chồng Ngoan / Vô Tội** (*Innocent / Wrongfully Accused*)
-  2. 🔴 **Ngoại Tình / Gian Díu** (*Cheating / Extramarital Affair*)
-  3. 🟣 **Nuôi Sugar Baby / Sugar Mommy** (*Financial Sugar Relationship*)
-* **Step 2 - Culprit Designation**: Dropdown populated directly from the **Suspects Board**.
-* **Step 3 - Submit Action ("BẮT GHEN!")**:
-  * Evaluates against `caseConfig.groundTruth`.
-  * Verifies whether the designated culprit is linked to the required smoking-gun evidence cards.
-  * Computes 1–3 star rating based on completion speed, strikes incurred, and evidence completeness.
-  * Triggers comedic roast narrative (including over-jealous ending for innocent husbands).
-  * Launches the vertical 9:16 shareable roast card generator.
+### 2.4. Anytime Confrontation & Dynamic Excuse Engine (`[ Đối chất ]` - `US-016`, `US-017`, `US-033`)
+* **Automatic Graph Evaluation**: Tapping `[Đối chất]` at any moment automatically evaluates connected clusters and contradiction edges on the corkboard against `caseConfig.groundTruth` without manual dropdowns.
+* **Scaled Outcome Tiers**:
+  1. **0 Core Clues (0 Stars - Premature Accusation)**: Husband delivers confident gaslighting excuses (*"chối bay chối biến"*). Increments suspicion by **+1 strike** in normal levels (or triggers a safe, zero-penalty instructional retry in Level 0) and lets the player continue investigating.
+  2. **1-2 Core Clues (1-2 Stars - Partial Conviction)**: Husband stammers defensive excuses. Player can choose `[Tha thứ & Qua màn]` or `[Điều tra tiếp để đạt 3 sao]`.
+  3. **3 Core Clues (3 Stars - Full Conviction)**: Husband confesses completely. Awards 3 stars, custom Wife Title, comedic roast summary, `[Tạo thẻ Roast khoe MXH]` (vertical `9:16` social card), and `[Tha thứ & Qua màn]`.
 
 ---
 

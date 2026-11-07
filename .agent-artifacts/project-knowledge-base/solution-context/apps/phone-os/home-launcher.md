@@ -25,7 +25,7 @@ The home screen launcher reproduces the iOS SpringBoard interface, organizing ap
 ├────────────────────────────────────────────────────────┤
 │                                                        │
 │  ┌──────────────────────┐   ┌──────────────────────┐   │
-│  │  🕒 23:45            │   │  📅 THỨ BA           │   │
+│  │  [Time] 23:45        │   │  [Cal] THỨ BA        │   │
 │  │  Hôm nay             │   │  13 Tháng 10         │   │
 │  │  "Chồng báo trực đêm"│   │  Pin: 42% (Tiết kiệm)│   │
 │  └──────────────────────┘   └──────────────────────┘   │
@@ -49,7 +49,7 @@ The home screen launcher reproduces the iOS SpringBoard interface, organizing ap
 │ ┌────────────────────────────────────────────────────┐ │
 │ │  (Frosted Glass Dock - Strict Zero-Label Invariant)│ │
 │ │  ┌──────┐       ┌──────┐       ┌──────┐    ┌─────┐ │ │
-│ │  │Phone │       │ Zola │(3)    │VietP.│(1) │Msgs │(4)│
+│ │  │Phone │       │ Zola │(3)    │Techc.│(1) │Msgs │(4)│
 │ │  │[Call]│       │[Chat]│       │[Card]│    │[SMS]│ │ │
 │ │  └──────┘       └──────┘       └──────┘    └─────┘ │ │
 │ └────────────────────────────────────────────────────┘ │
@@ -57,6 +57,8 @@ The home screen launcher reproduces the iOS SpringBoard interface, organizing ap
 │ ══════════════════════ [ - ] ═════════════════════════ │
 └────────────────────────────────────────────────────────┘
 ```
+
+* **Level-Scoped App Enablement**: Up to 12 apps are shown on the SpringBoard grid. Apps included in the active level's scope are enabled (`isEnabled: true`), whereas out-of-scope apps are visibly disabled (`opacity: 0.38`, `filter: grayscale(85%)`, `aria-disabled="true"`). Higher levels progressively enable more apps (Level 0/1: 3-4 enabled; Level 2: 5-6 enabled; Level 3: 8-12 enabled).
 
 ---
 

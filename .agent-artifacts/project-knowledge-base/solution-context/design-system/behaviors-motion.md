@@ -40,7 +40,8 @@ Universal interaction patterns guarantee intuitive, consistent mobile physics ac
 ### 1.2. Modal Bottom Sheets & Drawers
 
 * **Top Grab Handle Pill**: Centered pill ($36\text{px} \times 5\text{px}$, radius $9999\text{px}$, color `rgba(255, 255, 255, 0.35)`).
-* **Drag-Down Dismissal**: Pulling down $\ge 80\text{px}$ smoothly animates the sheet off-screen.
+* **Drag-Down Dismissal & Close Button**: Pulling down $\ge 80\text{px}$ smoothly animates the sheet off-screen. Every modal sheet also provides an explicit $44 \times 44\text{px}$ close/cancel button (`IoCloseOutline`) and `Escape` key handler as a non-pointer alternative.
+* **Focus Trap & Restoration**: Opening any modal sheet, lockpad, or `UniversalEvidenceModal` traps keyboard focus within the dialog (`role="dialog"`, `aria-modal="true"`) and restores focus to the triggering element upon dismissal.
 * **Scrolled Position Guard**: Drag-to-dismiss is active only when the inner scroll container is at top position (`scrollTop === 0`).
 * **Scrim Backdrop**: Semi-transparent dark blur overlay (`background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px);`). Tapping the backdrop dismisses the drawer.
 
@@ -58,8 +59,9 @@ Universal interaction patterns guarantee intuitive, consistent mobile physics ac
   - Transition duration: Ultra-fast $0.1\text{s}$ cubic-bezier.
 * **Hover States (Desktop Only)**:
   - Hover states apply subtle lightness lifts ($+5\%$) and cursor pointers, strictly disabled on touch devices to avoid sticky hover artifacts.
-* **Disabled States**:
-  - `opacity: 0.40; pointer-events: none; filter: grayscale(50%);`.
+* **Disabled States & Out-of-Scope Level Apps**:
+  - Standard disabled controls: `opacity: 0.40; pointer-events: none; filter: grayscale(50%);`.
+  - Out-of-scope launcher apps (apps on the 12-app grid that are not enabled in the current level's scope): `opacity: 0.38; filter: grayscale(85%); aria-disabled="true";`. Tapping a disabled launcher icon does not open the app (optional subtle shake or inert state with screen-reader announcement *"Ứng dụng không nằm trong phạm vi màn này"*).
 
 ### 1.5. Scroll & Overscroll Physics
 

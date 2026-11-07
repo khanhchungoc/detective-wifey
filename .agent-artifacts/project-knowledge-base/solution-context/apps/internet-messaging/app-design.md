@@ -19,7 +19,7 @@ timestamp: "2026-10-14T11:25:00+07:00"
 |---|---|
 | **App Name** | **Zola** (Satirical real-world parody of *Zalo*) |
 | **Real-World Parody** | Zalo Mobile Platform (VNG Corporation) - Vietnam's leading chat and social communication application. |
-| **Design Mandate** | **Strict Fidelity**: The dummy app strictly mirrors Zalo's exact mobile layout, color schemes, typography hierarchy, screen geometry, tab bars, conversation threads, contacts management, and profile settings. |
+| **Design Mandate** | **Satirical Parody Fidelity**: Evokes domestic Vietnamese messaging UX (electric blue header, priority/other inbox tabs, group sender colors, and floating reaction capsules) while introducing satirical naming (*Zola*, *ZolaPay*, *zCloud*) and distinct parody iconography (`IoChatbubbleEllipsesOutline`) to comply with brand safety requirements ([vision-scope.md §4](../../../requirements/output/vision-scope.md#4-key-constraints--non-functional-requirements-global)). |
 | **Integrated Sub-Brand** | **ZolaPay** (In-chat peer-to-peer micro-transfers and lucky money / lì xì cards, parodying *ZaloPay*). |
 | **Slogan / Tagline** | *"Kết nối tình thân - Bí mật khó giấu"* |
 | **Visual Persona** | **The Deceptive Domestic Hub**: Familiar, ubiquitous, and seemingly harmless personal messaging app harboring hidden chats, disguised extramarital contacts, intimate audio memos, and suspicious micro-transfers. |
@@ -49,17 +49,17 @@ The color palette directly adopts the exact native color values from the authori
 │ Message Bubble Shadow:          Ambient Shadow     rgba(0, 0, 0, 0.06) │
 │                                                                        │
 │ Text Primary (Headers & Body):  Deep Charcoal      #0F172A / #000000   │
-│ Text Secondary & Muted Snippet: Cool Slate         #64748B / #718096   │
-│ Text Timestamp & Subtitles:     Muted Gray         #8A9098             │
+│ Text Secondary & Muted Snippet: Cool Slate         #475569 / #52525B   │
+│ Text Timestamp & Subtitles:     Accessible Slate   #64748B (≥4.5:1 AA) │
 │ Top Bar Text & Icons:           Pure White         #FFFFFF             │
 │                                                                        │
-│ Floating Timestamp Pill Bg:     Semi-Trans Slate   #B4B9BF             │
-│ Floating Timestamp Text:        Pure White         #FFFFFF             │
+│ Floating Timestamp Pill Bg:     Dark Frosted Slate rgba(15,23,42,0.68) │
+│ Floating Timestamp Text:        Pure White         #FFFFFF (≥4.5:1 AA) │
 │ Floating Reaction Pill Bg:      Pure White         #FFFFFF             │
 │ Floating Reaction Pill Border:  Subtle Gray        #E2E8F0             │
 │                                                                        │
 │ Unread Badge / Alert Red:       Vivid Red          #FF3B30             │
-│ Muted Notification Badge:       Medium Gray        #9E9E9E             │
+│ Muted Notification Badge:       Accessible Slate   #64748B             │
 │ Active Filter Pill Fill:        Light Gray         #E4E6EB             │
 │ Active Filter Pill Text:        Near Black         #050505             │
 │ Inactive Filter Pill Text/Border:Muted Slate       #6B7280 / #D1D5DB   │
@@ -77,30 +77,30 @@ The color palette directly adopts the exact native color values from the authori
 
 ## 3. Typography System
 
-Zola adopts modern geometric mobile typography (`Inter` / `SF Pro Display` / `Roboto` sans-serif) strictly calibrated to Zalo's native scale:
+Zola inherits the universal Apple HIG `text-ios-*` dynamic scale ([design.md §3.1.1](../../design-system/design.md#311-universal-shared-typography-scale-vs-scoped-app-font-color-invariant)) paired with Zola brand and semantic colors:
 
-| Level / UI Element | Font Size | Weight | Color | Line Height / Notes |
+| Level / UI Element | Canonical Token (`text-ios-*`) | Weight | Color | Line Height / Notes |
 |---|---|---|---|---|
-| **Status Bar Clock & Indicators** | $14\text{px}$ | Semibold ($600$) | `#FFFFFF` | Center or left-aligned `9:28` |
-| **Top App Header Title** | $16\text{px}$ | Bold ($700$) | `#FFFFFF` | Group or contact name |
-| **Top App Header Subtitle** | $12\text{px}$ | Regular ($400$) | `#FFFFFF` (85% op) | *"Bấm để xem thông tin"* |
-| **Header Search Placeholder** | $15\text{px}$ | Regular ($400$) | `#FFFFFF` (80% op) | *"Tìm kiếm"* |
-| **Sub-Header Tabs (Ưu tiên / Khác)** | $14\text{px}$ | Bold ($700$) / Reg ($400$) | `#000000` / `#666666` | Active has $2\text{px}$ bottom underline |
-| **Filter Pills (Tất cả / Bạn bè / OA)** | $13\text{px}$ | Medium ($500$) | `#050505` / `#6B7280` | Capsule padding: $6\text{px} \times 16\text{px}$ |
-| **Contact / Chat Title** | $15\text{px}$ | Semibold ($600$) | `#000000` | Bold for unread conversations |
-| **Chat Snippet / Preview** | $13\text{px}$–$14\text{px}$ | Regular ($400$) | `#6B7280` / `#1A202C` | Sender prefix + truncated message |
-| **List Timestamp / Pin Note** | $11\text{px}$–$12\text{px}$ | Regular ($400$) | `#8A9098` | Right-aligned time/date indicator |
-| **Message Bubble Text** | $14\text{px}$ | Regular ($400$) | `#0F172A` | Line height $1.45$, readable body |
-| **Message Bubble Sender Name** | $12\text{px}$ | Bold ($700$) | Color-coded per actor | Left-aligned inside incoming bubble |
-| **Message Bubble Timestamp** | $11\text{px}$ | Regular ($400$) | `#8A9098` | Bottom corner inside bubble |
-| **Floating Time Capsule** | $11\text{px}$ | Regular ($400$) | `#FFFFFF` | Pill padding: $3\text{px} \times 10\text{px}$ |
-| **Reaction Badge Count** | $11\text{px}$ | Medium ($500$) | `#475569` | Overlapping bottom edge of bubble |
-| **Bottom Navigation Labels** | $11\text{px}$ | Medium ($500$) | Active `#0088FF` / `#595C60` | Under 5 primary bottom icons |
-| **Profile Display Name** | $17\text{px}$ | Bold ($700$) | `#0F172A` | Accompanied by gray chevron `>` |
-| **Profile Status Button** | $12\text{px}$ | Regular ($400$) | `#475569` | Rounded pill with border |
-| **Profile Menu Title** | $15\text{px}$ | Medium ($500$) | `#0F172A` | e.g. *zBusiness*, *zCloud*, *Ví QR* |
-| **Profile Menu Subtitle** | $12\text{px}$–$13\text{px}$ | Regular ($400$) | `#64748B` | Single-line feature explanation |
-| **Contact Section Index ("A")** | $12\text{px}$ | Semibold ($600$) | `#64748B` | Uppercase sticky index label |
+| **Status Bar Clock & Indicators** | `text-ios-subheadline` ($15\text{px}$) | Semibold ($600$) | `#FFFFFF` | Governed by OS `StatusBar` (`tabular-nums`) |
+| **Top App Header Title** | `text-ios-callout` ($16\text{px}$) | Semibold ($600$) | `#FFFFFF` | Group or contact name |
+| **Top App Header Subtitle** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#FFFFFF` (85% op) | *"Bấm để xem thông tin"* |
+| **Header Search Placeholder** | `text-ios-subheadline` ($15\text{px}$) | Regular ($400$) | `#FFFFFF` (85% op) | *"Tìm kiếm"* |
+| **Sub-Header Tabs (Ưu tiên / Khác)** | `text-ios-subheadline` ($15\text{px}$) | Semibold / Regular | `#000000` / `#52525B` | Active has $2\text{px}$ bottom underline |
+| **Filter Pills (Tất cả / Bạn bè / OA)** | `text-ios-footnote` ($13\text{px}$) | Medium ($500$) | `#050505` / `#475569` | Capsule inside $\ge 44\text{px}$ `.touch-target-min` |
+| **Contact / Chat Title** | `text-ios-subheadline` ($15\text{px}$) | Semibold ($600$) | `#000000` | Semibold for unread conversations |
+| **Chat Snippet / Preview** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#475569` / `#0F172A` | Sender prefix + truncated message |
+| **List Timestamp / Pin Note** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#64748B` | Right-aligned time/date (`tabular-nums`) |
+| **Message Bubble Text** | `text-ios-subheadline` ($15\text{px}$) | Regular ($400$) | `#0F172A` | Comfortable mobile chat legibility |
+| **Message Bubble Sender Name** | `text-ios-caption-1` ($12\text{px}$) | Semibold ($600$) | Color-coded per actor | Left-aligned inside incoming bubble |
+| **Message Bubble Timestamp** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#64748B` | Bottom corner inside bubble |
+| **Floating Time Capsule** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#FFFFFF` on `rgba(15,23,42,0.68)` | Pill padding: $3\text{px} \times 10\text{px}$ ($\ge 4.5:1$) |
+| **Reaction Badge Count** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#475569` | Overlapping bottom edge of bubble |
+| **Bottom Navigation Labels** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | Active `#0088FF` / `#52525B` | Under 5 primary bottom icons |
+| **Profile Display Name** | `text-ios-headline` ($17\text{px}$) | Semibold ($600$) | `#0F172A` | Accompanied by gray chevron `>` |
+| **Profile Status Button** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#475569` | Rounded pill with border ($\ge 44\text{px}$ hit area) |
+| **Profile Menu Title** | `text-ios-subheadline` ($15\text{px}$) | Medium ($500$) | `#0F172A` | e.g. *zBusiness*, *zCloud*, *Ví QR* |
+| **Profile Menu Subtitle** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#64748B` | Single-line feature explanation |
+| **Contact Section Index ("A")** | `text-ios-caption-1` ($12\text{px}$) | Semibold ($600$) | `#64748B` | Uppercase sticky index label |
 
 ---
 
@@ -217,8 +217,8 @@ Zola adopts modern geometric mobile typography (`Inter` / `SF Pro Display` / `Ro
    - In-chat notification bar: *"⚠️ Tin nhắn tự xoá sau 24h đã được kích hoạt"*.
 4. **ZolaPay In-Chat Transfer Bubble (`CLUE-ZOLAPAY-01`)**:
    - Peer-to-peer transfer card inside chat thread showing transfers (e.g. `+ 5.200.000 đ` with message *"Tặng bé cưng đi spa cuối tuần 💕"*).
-5. **Universal Clue Pinning**:
-   - Any message bubble, receipt card, or contact row can be tapped to trigger the **Ghim Bằng Chứng** action, linking the evidence directly to **Sổ Tay Bắt Ghen Của Vợ**.
+5. **Universal Clue Pinning (`380ms` Long-Press)**:
+   - Any message bubble, ZolaPay transfer card, or contact row is wrapped in `StoryEvidenceTarget` (`380ms` long-press or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal` with zero static pin buttons.
 
 ---
 

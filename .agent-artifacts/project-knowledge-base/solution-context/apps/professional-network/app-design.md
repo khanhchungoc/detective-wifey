@@ -1,4 +1,4 @@
-﻿---
+---
 type: App Design Specification
 app_id: professional-network
 app_name: InkedLin
@@ -42,45 +42,62 @@ timestamp: "2026-10-13T19:10:00+07:00"
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography**:
-  * Member Name: Bold ($15\text{px}$ / weight $700$).
-  * Job Headline / Sub-title: Regular ($13\text{px}$ / text secondary `#666666`).
-  * Post Content / Bio: Regular ($14\text{px}$ / line-height $1.4$).
-  * Milestone Banner Text: Semibold ($13\text{px}$ / weight $600$).
+* **Typography (Universal `text-ios-*` Tokens)**:
+  * Member Name: `text-ios-subheadline` ($15\text{px}$ Semibold / $600$, `#191919`).
+  * Job Headline / Sub-title: `text-ios-footnote` ($13\text{px}$ Regular, `#52525B`, $\ge 4.5:1$ contrast).
+  * Post Content / Bio: `text-ios-subheadline` ($15\text{px}$ Regular, `#191919`).
+  * Milestone Banner Text: `text-ios-footnote` ($13\text{px}$ Semibold / $600$).
 * **Ergonomics & Touch Targets**:
   * Top navigation / search bar height: $\ge 48\text{px}$.
   * Bottom or sub-tab items (`Bảng tin`, `Mạng lưới`, `Thông báo`, `Tin nhắn`): $\ge 44\text{px}$ touch targets.
-  * Connect / Congratulate CTA buttons: $\ge 36\text{px}$ height with generous padding.
+  * Connect / Congratulate CTA buttons: $36\text{px}$ visual pill inside $\ge 44 \times 44\text{px}$ `.touch-target-min` hit area; feed includes `pb-24` bottom clearance.
 
 ---
 
 ## 3. UI Wireframes & Layout Architecture
 
+### 3.1. Corporate Feed & Network Invitations (`InkedLinFeedView`)
 ```
 ┌────────────────────────────────────────────────────────┐
-│ 23:45             [ Dynamic Island ]    [Signal] 5G [Batt 42%]
+│ 23:45             [ Dynamic Island ]    [Signal] [Batt]│
 ├────────────────────────────────────────────────────────┤
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [in] 🔍 Tìm kiếm đồng nghiệp, công ty...   [💬 Tin]│ │
+│ │ [<] [Search] Tìm đồng nghiệp, công ty... [Chat: 1] │ │
 │ └────────────────────────────────────────────────────┘ │
 │  [Bảng tin]      [Mạng lưới]      [Thông báo]          │
 ├────────────────────────────────────────────────────────┤
 │ ┌────────────────────────────────────────────────────┐ │
 │ │ [Avatar] Hoàng Minh Tuấn • 1st                     │ │
 │ │          Senior Tech Lead @ TechCorp VN            │ │
-│ │          Kỷ niệm 5 năm làm việc tại TechCorp 🎉    │ │
+│ │          Kỷ niệm 5 năm làm việc tại TechCorp       │ │
 │ │          (Bắt đầu từ: 15/09/2021)                  │ │
 │ │                                                    │ │
 │ │ "Biết ơn hành trình 5 năm gắn bó cùng anh em..."   │ │
-│ │ 👍 42 Thích  💬 18 Bình luận                       │ │
+│ │ [Like] 42 Thích  [Chat] 18 Bình luận               │ │
 │ ├────────────────────────────────────────────────────┤ │
 │ │ [Avatar] Thảo HR • Talent Acquisition              │ │
 │ │          Đã xem hồ sơ của bạn 15 lần hôm nay       │ │
 │ │          "Anh ơi khi nào rảnh cà phê trao đổi      │ │
-│ │          cơ hội hợp tác riêng nhé 😉"              │ │
+│ │          cơ hội hợp tác riêng nhé"                 │ │
 │ │          [ Kết nối ]      [ Bỏ qua ]               │ │
 │ └────────────────────────────────────────────────────┘ │
 ├────────────────────────────────────────────────────────┤
 │                 ═══════ [ - ] ═══════                  │
 └────────────────────────────────────────────────────────┘
 ```
+
+### 3.2. Profile & InMail Thread Sub-View (`InkedLinProfileModal` / `InkedLinChatView`)
+```
+┌────────────────────────────────────────────────────────┐
+│ [< Bảng tin]         HỒ SƠ THÀNH VIÊN                  │
+├────────────────────────────────────────────────────────┤
+│ [Avatar] Nguyễn Thị Thu Hương                          │
+│          Marketing Executive @ Technosoft VN           │
+│          "Độc thân vui tính • Thích hoa hồng & rượu vang"│
+├────────────────────────────────────────────────────────┤
+│ TIN NHẮN INMAIL (StoryEvidenceTarget - Hold 380ms):    │
+│ Thu Hương (20:15): "Cảm ơn anh sếp đã tặng váy lụa nhé,│
+│ tối mai hẹn anh ở Hồ Tràm nha!"                        │
+└────────────────────────────────────────────────────────┘
+```
+* **Zero-Spoiler Forensic Pinning (`380ms`)**: Static pin buttons are prohibited. Feed posts, work-anniversary date clues (`15/09`), profile bios, and InMail messages are wrapped in `StoryEvidenceTarget` (`380ms` hold or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal`.

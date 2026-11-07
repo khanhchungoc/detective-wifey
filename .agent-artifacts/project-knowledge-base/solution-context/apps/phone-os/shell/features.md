@@ -21,14 +21,14 @@ The **Virtual Phone OS & Shell** serves as the central operating system containe
 ## 2. In-App Features & Operational Rules
 
 ### 2.1. System Status Bar & Narrative Synchronization
-* **Network & Carrier**: Emulates authentic Vietnamese cellular carriers (*"VinaPhone 5G"* or *"Viettel"*).
+* **Strict Zero-Carrier Invariant**: Carrier text (e.g. `"VinaPhone 5G"`, `"Viettel"`) is never rendered in the status bar to prevent collision with the Dynamic Island (governed by [status-bar.md](../status-bar.md)).
 * **Narrative Synchronized Clock**: Displays the case timeline time *(e.g. 23:45)*, dynamically matching the timestamp of incriminating late-night events.
-* **Battery & State Icons**: Displays battery level *(e.g. 42%)*, Wi-Fi signal, and cellular bars.
+* **Battery & State Icons**: Displays battery level *(e.g. 42%)* inside/beside the iOS capsule, Wi-Fi signal, and 4-bar cellular strength.
 
-### 2.2. App Launcher & Universal 12-App Grid Invariant
-* **Universal 12-App Mounting**: All 12 apps (*Shopoo, Grap, NetSurf, Photos, GeeMail, InkedLin, Tim, Husband's Notes, Zola, Techcornbank, Phone, Messages*) are permanently mounted on the launcher grid across all levels (L1, L2, L3) to eliminate process-of-elimination spoilers.
-* **Notification Badges**: Dynamic red notification count badges on app icons (e.g. Zola: `3`, Messages: `4`, Techcornbank: `1`, GeeMail: `2`, Tim: `1`).
-* **Sub-100ms Switching**: Tapping an icon instantly switches the active view to that app component with zero server latency.
+### 2.2. App Launcher & 12-App Level-Scoped Enablement
+* **12-App Grid with Level-Scoped Enablement**: Up to 12 apps (*Shopoo, Grap, NetSurf, Photos, GeeMail, InkedLin, Tim, Husband's Notes, Zola, Techcornbank, Phone, Messages*) are mounted on the launcher grid across all levels (L0, L1, L2, L3). Only the apps scoped for the active level are enabled (L0/L1: 3-4 enabled; L2: 5-6 enabled; L3: 8-12 enabled); out-of-scope apps render in a visibly disabled state (`isEnabled: false`, dimmed/grayscale, `aria-disabled="true"`).
+* **Notification Badges & Sixth Sense Highlight**: Dynamic red notification count badges on enabled app icons (e.g. Zola: `3`, Messages: `4`, Techcornbank: `1`). When the player activates "Giác Quan Thứ 6" in the Wife's Notebook targeting an uncollected clue, the target app icon displays a highlight pulse (max 2 pulses then static ring; static ring only under `prefers-reduced-motion`).
+* **Sub-100ms Switching**: Tapping an enabled icon switches the active view to that app component with zero server latency.
 * **In-App Home Indicator**: Every app view includes a standardized `< Trang chủ` header button and bottom home bar to return to the launcher.
 
 ### 2.3. Shared Polymorphic Screen Lock Subsystem

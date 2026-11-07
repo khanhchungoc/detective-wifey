@@ -76,7 +76,7 @@ To preserve satirical immersion while enforcing architectural modularity:
 #### 3.1.1. Universal Shared Typography Scale vs. Scoped App Font Color Invariant
 To ensure universal consistency, seamless WCAG 2.1 AA/AAA accessibility scaling, and strict iOS visual fidelity across all applications, typography adheres to this strict separation:
 1. **Shared Universals (Immutable Across All Apps)**:
-   * **Font Family**: Strictly shared across the entire system via the canonical Apple HIG fallback stack (`font-sans`: `-apple-system`, `BlinkMacSystemFont`, `SF Pro Text`, `SF Pro Display`, `Inter`). Individual apps must never declare custom font families.
+   * **Font Family**: Strictly shared across the entire system via the canonical Apple HIG fallback stack (`font-sans`: `-apple-system`, `BlinkMacSystemFont`, `SF Pro Text`, `SF Pro Display`, `Inter`). Individual apps must never declare custom font families, except `font-mono` (`tabular-nums`) for browser URLs, financial account numbers, and ledger tables.
    * **Font Sizes & Line Heights**: Strictly shared via the 13-tier Apple HIG dynamic scale tokens (`text-ios-*`). All sizes are relative `rem` units rooted at `16px = 1.0rem` to support browser dynamic font scaling up to $200\%$ without clipping.
    * **Font Weights & Optical Tracking**: Bundled directly into the semantic `text-ios-*` tokens (e.g. `text-ios-headline` bundles Semibold $600$ with $-0.025\text{em}$ tracking; `text-ios-caption-2` bundles Semibold $600$ with $+0.01\text{em}$ tracking). Apps must not declare ad-hoc font weights.
    * **Arbitrary Pixel Class Ban**: Arbitrary pixel font classes (e.g. `text-[9px]`, `text-[10px]`, `text-[11px]`) and standard unmapped Tailwind sizes (`text-xs`, `text-sm`, `text-base`) are strictly forbidden inside virtual app implementations.
@@ -111,9 +111,9 @@ Each virtual application authoritatively owns its brand identity in its dedicate
 
 To maintain legal compliance under fair use and trademark regulations:
 
-* **Strict Prohibition of Non-Ionicons & SF Symbols (Ionicons Only)**: Apple SF Symbols are strictly prohibited on non-Apple operating systems. To preserve mobile trade dress and prevent library fragmentation, **all iconography across the OS shell and parody apps must exclusively use [Ionicons](https://ionic.io/ionicons)** (MIT License, outline and filled variants). Other icon libraries (Lucide, FontAwesome, React-Icons) and raw Unicode emojis are strictly forbidden.
+* **Strict Prohibition of Non-Ionicons & SF Symbols (Ionicons Only)**: Apple SF Symbols are strictly prohibited on non-Apple operating systems. To preserve mobile trade dress and prevent library fragmentation, **all iconography across the OS shell and parody apps must exclusively use [Ionicons v5](https://ionic.io/ionicons)** (MIT License, outline and filled variants consumed via `react-icons/io5` `Io*` components or standalone Ionicons SVGs). Other icon packs (`react-icons/fa`, `react-icons/md`, `react-icons/lu`, Lucide, FontAwesome) and raw Unicode emojis are strictly forbidden.
 * **Open Typography (Inter)**: Web-hosting proprietary Apple `SF Pro` font files (`.woff2`) is prohibited. Systems use client-side OS fallbacks (`-apple-system`) and open-source **Inter**.
-* **Parody Brand Deviations**: Direct copying of commercial brand marks is prohibited. All apps feature satirical parody names, altered iconography, and humorous taglines.
+* **Parody Brand Deviations**: Direct copying of commercial brand marks is prohibited. All apps feature satirical parody names, altered iconography, and humorous taglines that noticeably deviate from real-world trade dress.
 * **Lawful Mobile Trade Dress**: Mobile layout paradigms (frosted glass, squircles, bottom sheets) are uncopyrightable functional patterns safely implemented via open web technologies.
 
 ---
@@ -123,9 +123,11 @@ To maintain legal compliance under fair use and trademark regulations:
 To ensure an authentic, un-spoiled detective experience across the virtual phone operating system and all parody applications:
 
 1. **Long-Press Scope (Story Narrative Data Only)**:
-   - The universal 380ms long-press gesture (`StoryEvidenceTarget`) triggering the blurred evidence overlay (`UniversalEvidenceModal`) MUST strictly apply **exclusively to story narrative data dynamically loaded from case JSON (`data.json`)** - e.g. chat messages, call logs, SMS texts, bank transaction memos, order receipts, social posts, and cloud documents.
-2. **Prohibition on App Chrome & Structural Buttons**:
+   - The universal `380ms` long-press gesture (`StoryEvidenceTarget`) triggering the blurred evidence overlay (`UniversalEvidenceModal`) MUST strictly apply **exclusively to story narrative data dynamically loaded from case JSON (`data.json`)** - e.g. chat messages, call logs, SMS texts, bank transaction memos, order receipts, social posts, and cloud documents.
+2. **Keyboard & Screen-Reader Accessibility Alternative (WCAG 2.1 AA)**:
+   - Every `StoryEvidenceTarget` is keyboard-focusable (`tabIndex={0}`, `role="button"`) with an accessible label describing the narrative snippet. Pressing `Enter`, `Space`, or the Context Menu key (`Shift+F10`) on a focused `StoryEvidenceTarget` opens `UniversalEvidenceModal` without requiring a timed pointer hold.
+3. **Prohibition on App Chrome & Structural Buttons**:
    - Long-press evidence overlays MUST NEVER be attached to static app structure, navigation headers, contact headers, filter pills, search inputs, bottom tabs, or functional utility buttons.
-3. **Strict Prohibition of Visible Pin Buttons**:
-   - Permanent "Ghim", "Ghim manh mối", or physical Pin buttons are **strictly forbidden** in normal app screens, modals, or detail views. Evidence can ONLY be inspected and pinned to the Wife's Notebook via long-pressing legitimate story data elements.
+4. **Strict Prohibition of Visible Pin Buttons**:
+   - Permanent "Ghim", "Ghim manh mối", or physical Pin buttons are **strictly forbidden** in normal app screens, modals, or detail views. Evidence can ONLY be inspected and pinned to the Wife's Notebook via `StoryEvidenceTarget` on legitimate story data elements.
 

@@ -88,9 +88,9 @@ timestamp: "2026-10-14T12:50:00+07:00"
 
 ---
 
-### 3.2. iOS 26/27 SpringBoard Launcher Grid (12-App Invariant)
+### 3.2. iOS 26/27 SpringBoard Launcher Grid (12-App Grid with Level-Scoped Enablement)
 
-In accordance with anti-spoiler gameplay architecture, all 12 parody apps are permanently installed across Level 1, Level 2, and Level 3. With `Comms` cleanly separated into **Phone** and **Messages**, the SpringBoard organizes 8 grid apps and 4 dock apps:
+The SpringBoard renders up to 12 parody apps (8 grid apps + 4 dock apps) across all levels (`Level 0`, `Level 1`, `Level 2`, `Level 3`). Based on the level's scope, only the active apps for that level are enabled (Level 0/1: 3-4 apps enabled; Level 2: 5-6 apps enabled; Level 3: 8-12 apps enabled), while out-of-scope apps render visibly disabled (`opacity: 0.38`, `filter: grayscale(85%)`, `aria-disabled="true"`, zero unread badge). Higher levels progressively enable more apps:
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -98,7 +98,7 @@ In accordance with anti-spoiler gameplay architecture, all 12 parody apps are pe
 ├────────────────────────────────────────────────────────┤
 │                                                        │
 │  ┌──────────────────────┐   ┌──────────────────────┐   │
-│  │  🕒 23:45            │   │  📅 THỨ BA           │   │
+│  │  [Time] 23:45        │   │  [Cal] THỨ BA        │   │
 │  │  Hôm nay             │   │  13 Tháng 10         │   │
 │  │  "Chồng báo trực đêm"│   │  Pin: 42% (Tiết kiệm)│   │
 │  └──────────────────────┘   └──────────────────────┘   │
@@ -122,7 +122,7 @@ In accordance with anti-spoiler gameplay architecture, all 12 parody apps are pe
 │ ┌────────────────────────────────────────────────────┐ │
 │ │  (Frosted Liquid Dock - Strict Zero-Label Invariant│ │
 │ │  ┌──────┐       ┌──────┐       ┌──────┐    ┌─────┐ │ │
-│ │  │Phone │       │ Zola │(3)    │VietP.│(1) │Msgs │(4)│
+│ │  │Phone │       │ Zola │(3)    │Techc.│(1) │Msgs │(4)│
 │ │  │[Call]│       │[Chat]│       │[Card]│    │[SMS]│ │ │
 │ │  └──────┘       └──────┘       └──────┘    └─────┘ │ │
 │ └────────────────────────────────────────────────────┘ │
@@ -136,8 +136,9 @@ In accordance with anti-spoiler gameplay architecture, all 12 parody apps are pe
 ## 4. Interaction Patterns & System Behaviors
 
 ### 4.1. App Launch & Return Physics
-* **Icon Press & Expansion**: Tapping an icon triggers a $180\text{ms}$ ease-out scale expansion (`transform: scale(0.92)` on press, expanding to $100\%$ viewport).
-* **Home Bar Return**: Tapping `< Trang chủ` or flicking upward on the bottom Home Indicator bar initiates a $160\text{ms}$ smooth shrink return to the launcher.
+* **Icon Press & Expansion**: Tapping an enabled icon triggers a $450\text{ms}$ spring zoom-in (`--ios-app-open-duration`, with $80\text{ms}$ content fade-in per [behaviors-motion.md](../../../design-system/behaviors-motion.md)). Disabled (out-of-scope) icons do not launch.
+* **Sixth Sense App Highlight (`Giác Quan Thứ 6`)**: When the player triggers a Sixth Sense hint from the Wife's Notebook targeting an uncollected clue in an enabled app, returning to the launcher pulses that app icon gently up to 2 times (`IoSparklesOutline` indicator ring) and retains a static highlight ring until the target clue is pinned (or switches to a static ring immediately under `prefers-reduced-motion`).
+* **Home Bar Return**: Tapping `< Trang chủ` or flicking upward on the bottom Home Indicator bar initiates a $380\text{ms}$ smooth shrink return (`--ios-app-close-duration`) to the launcher.
 
 ### 4.2. Dock Zero-Label Invariant
 * App labels are strictly suppressed within the frosted glass dock tray. Icons scale to $58\text{px} \times 58\text{px}$ squircles with $14\text{px}$ border radius.
@@ -146,7 +147,7 @@ In accordance with anti-spoiler gameplay architecture, all 12 parody apps are pe
 Every opened parody app mounts inside the shell below the system status bar, displaying a standardized top utility header:
 ```
 ┌────────────────────────────────────────────────────────┐
-│ [< Trang chủ]               [App Title]         [ 🔍 ] │
+│ [< Trang chủ]               [App Title]      [Search]  │
 ├────────────────────────────────────────────────────────┤
 ```
 

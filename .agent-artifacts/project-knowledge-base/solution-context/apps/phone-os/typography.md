@@ -85,8 +85,8 @@ Icons seated within the bottom frosted glass dock tray **never display text labe
 Text rendered across the OS and parody apps adheres to Apple HIG semantic label color tokens depending on the underlying surface luminance:
 * **Light Surfaces (Toasts, Light App Feeds, White Documents)**:
   * Primary Label (`--ios-label-primary`): Pure Black **`#000000`** (`rgba(0, 0, 0, 1.0)`)
-  * Secondary Label (`--ios-label-secondary`): **`rgba(60, 60, 67, 0.60)`**
-  * Tertiary Label (`--ios-label-tertiary`): **`rgba(60, 60, 67, 0.30)`**
+  * Secondary Label (`--ios-label-secondary`): **`#52525B`** (`rgba(60, 60, 67, 0.72)`, enforces $\ge 4.5:1$ WCAG AA contrast)
+  * Tertiary Label (`--ios-label-tertiary`): **`#64748B`** (`rgba(60, 60, 67, 0.58)`)
   * Quaternary Label (`--ios-label-quaternary`): **`rgba(60, 60, 67, 0.18)`**
 * **Dark Surfaces (SpringBoard Shell, Dark App Headers, Modals)**:
   * Primary Label: Pure White **`#FFFFFF`** (`#F8FAFC`)

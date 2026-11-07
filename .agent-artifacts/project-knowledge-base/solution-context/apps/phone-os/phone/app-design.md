@@ -42,15 +42,15 @@ timestamp: "2026-10-14T13:00:00+07:00"
 │ Contact Avatar Surface: Soft Slate    #E5E5EA          │
 │ Divider Line:         Separator Gray  #C6C6C8          │
 │ Text Primary:         Jet Black       #000000          │
-│ Text Subtitle:        Neutral Gray    #8E8E93          │
+│ Text Subtitle:        Accessible Slate#52525B (≥4.5:1) │
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography & Layout Constraints**:
-  * Contact Name: Semibold ($17\text{px}$ / $600$).
-  * Call Subtitle & Duration: Regular ($13\text{px}$ / $400$).
-  * Tab Bar Item: Medium ($10\text{px}$ / $500$) with $24\text{px}$ vector glyph.
-  * Minimum Touch Target: Call rows $\ge 52\text{px}$ height; info chevrons $\ge 44 \times 44\text{px}$.
+* **Typography & Layout Constraints (Universal `text-ios-*` Tokens)**:
+  * Contact Name: `text-ios-headline` ($17\text{px}$ Semibold / $600$).
+  * Call Subtitle & Duration: `text-ios-footnote` ($13\text{px}$ Regular / $400$, `tabular-nums`, `#52525B`).
+  * Tab Bar Item: `text-ios-caption-2` ($11\text{px}$ Semibold / $600$) with $24\text{px}$ Ionicons vector glyph.
+  * Minimum Touch Target: Call rows $\ge 52\text{px}$ height; info buttons $\ge 44 \times 44\text{px}$ (`.touch-target-min`); scrollable views include `pb-24` clearance for sticky bars/HUDs.
 
 ---
 
@@ -119,14 +119,13 @@ Slide-up modal inspecting profile details, phone numbers, and hidden memo fields
 │ Di động:        0912 888 999                           │
 │ Công việc:      0988 123 456                           │
 ├────────────────────────────────────────────────────────┤
-│ GHI CHÚ BÍ MẬT:                                        │
+│ GHI CHÚ BÍ MẬT (StoryEvidenceTarget - Hold 380ms):     │
 │ "Chung cư Sunshine City - Tòa S2 P1408 (Mã cửa: 1408)" │
-├────────────────────────────────────────────────────────┤
-│ [ ➕ Thêm Bác Sĩ Cương vào Sổ Tay Bắt Ghen ]           │
 ├────────────────────────────────────────────────────────┤
 │ ══════════════════════ [ - ] ═════════════════════════ │
 └────────────────────────────────────────────────────────┘
 ```
+* **Zero-Spoiler Pinning Rule**: Static pin buttons are prohibited. Long-pressing (`380ms` or `Enter`/`Space` on keyboard focus) any call log row or contact memo (`StoryEvidenceTarget`) opens `UniversalEvidenceModal`.
 
 ---
 

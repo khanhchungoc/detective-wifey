@@ -1,4 +1,4 @@
-﻿---
+---
 type: App Design Specification
 app_id: team-collaboration
 app_name: Tim
@@ -44,44 +44,61 @@ timestamp: "2026-10-13T19:10:00+07:00"
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography**:
-  * Channel / Contact Name: Semibold ($15\text{px}$ / weight $600$).
-  * Status Message Quote: Italic / Regular ($13\text{px}$ / text secondary `#616161`).
-  * Message Bubble: Regular ($14\text{px}$ / line-height $1.4$).
-  * Channel Header: Bold ($16\text{px}$ / weight $700$).
+* **Typography (Universal `text-ios-*` Tokens)**:
+  * Channel / Contact Name: `text-ios-subheadline` ($15\text{px}$ Semibold / $600$, `#252424`).
+  * Status Message Quote: `text-ios-footnote` ($13\text{px}$ Regular italic, `#52525B`, $\ge 4.5:1$ contrast).
+  * Message Bubble: `text-ios-subheadline` ($15\text{px}$ Regular, `#252424`).
+  * Channel Header: `text-ios-callout` ($16\text{px}$ Semibold / $600$).
 * **Ergonomics & Touch Targets**:
   * Top navigation header & status chip: $\ge 48\text{px}$ height.
-  * Channel item / Chat row height: $\ge 64\text{px}$ with full-width touch area.
-  * Presence indicator badge: $12 \times 12\text{px}$ circular chip pinned to bottom-right of avatar.
-  * Bottom navigation tabs (`Hoạt động`, `Trò chuyện`, `Nhóm`, `Lịch`): $\ge 44\text{px}$ height.
+  * Channel item / Chat row height: $\ge 64\text{px}$ with full-width touch area and `pb-24` bottom scroll clearance.
+  * Presence indicator badge: $12 \times 12\text{px}$ circular chip with semantic shape/icon (`Available`, `DND`, `Offline`) pinned to bottom-right of avatar (never relying on color alone).
+  * Bottom navigation tabs (`Hoạt động`, `Trò chuyện`, `Nhóm`, `Lịch`): $\ge 44\text{px}$ height (`.touch-target-min`).
 
 ---
 
 ## 3. UI Wireframes & Layout Architecture
 
+### 3.1. Chat & Presence List (`TimChatListView`)
 ```
 ┌────────────────────────────────────────────────────────┐
-│ 23:45             [ Dynamic Island ]    [Signal] 5G [Batt 42%]
+│ 23:45             [ Dynamic Island ]    [Signal] [Batt]│
 ├────────────────────────────────────────────────────────┤
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [Avatar 🔴] Hoàng Minh Tuấn                 [🔍] [✏️]│ │
-│ │  Status: "Đang họp kín dự án đặc biệt (DND) ⛔"    │ │
+│ │ [<] [Avatar: DND] Hoàng Minh Tuấn    [Search][Edit]│ │
+│ │  Status: "Đang họp kín dự án đặc biệt (DND)"       │ │
 │ └────────────────────────────────────────────────────┘ │
 │  [Trò chuyện]       [Nhóm]       [Lịch]       [Cuộc gọi]│
 ├────────────────────────────────────────────────────────┤
 │ (Danh sách trò chuyện)                                 │
 │                                                        │
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [IT] IT Support Helpdesk                   14:20   │ │
+│ │ [IT] IT Support Helpdesk                     14:20 │ │
 │ │      "Nhắc nhở: Mã PIN phòng IT mặc định là 4920"  │ │
 │ ├────────────────────────────────────────────────────┤ │
-│ │ [Avatar 🟢] Lan Anh (Marketing)            23:10   │ │
+│ │ [Avatar: Online] Lan Anh (Marketing)         23:10 │ │
 │ │      "Anh xong việc chưa? Qua quán pub cũ nhé..."  │ │
 │ ├────────────────────────────────────────────────────┤ │
-│ │ [Avatar ⚪] Sếp Hoàng (Director)           18:05   │ │
+│ │ [Avatar: Offline] Sếp Hoàng (Director)       18:05 │ │
 │ │      "Báo cáo tuần gửi trước sáng mai nhé Tuấn"    │ │
 │ └────────────────────────────────────────────────────┘ │
 ├────────────────────────────────────────────────────────┤
 │                 ═══════ [ - ] ═══════                  │
 └────────────────────────────────────────────────────────┘
 ```
+
+### 3.2. Direct Message & Calendar Shift Sub-View (`TimThreadView` / `TimCalendarView`)
+```
+┌────────────────────────────────────────────────────────┐
+│ [< Trò chuyện]    Lan Anh (Marketing) • Đang hoạt động │
+├────────────────────────────────────────────────────────┤
+│ HÔM NAY - 13/10/2026                                   │
+│                                                        │
+│ Lan Anh (18:00): "Tối nay team mình nghỉ sớm, anh nhớ  │
+│ báo chị nhà là công ty bắt trực ca đêm nhé!"           │
+│                                                        │
+│ Hoàng Minh Tuấn (18:02): "Ok em, anh bật status DND    │
+│ trên Tim rồi, 20h anh qua đón."                        │
+└────────────────────────────────────────────────────────┘
+```
+* **Zero-Spoiler Forensic Pinning (`380ms`)**: Static pin buttons are prohibited. Status banners, IT PIN reminders, chat messages, and calendar shift blocks are wrapped in `StoryEvidenceTarget` (`380ms` hold or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal`.

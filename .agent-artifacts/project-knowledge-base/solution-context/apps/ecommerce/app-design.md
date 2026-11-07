@@ -63,8 +63,8 @@ The color palette adopts high-contrast e-commerce marketplace tones:
 │ Chat System Pill Background:    Light Warm Gray    #EEEEEE             │
 │                                                                        │
 │ Text Primary (Headings & Body): Dark Charcoal      #212121             │
-│ Text Secondary (Subtitles):     Muted Slate        #757575             │
-│ Text Tertiary (Timestamps):     Soft Muted Gray    #9E9E9E             │
+│ Text Secondary (Subtitles):     Accessible Slate   #52525B (≥4.5:1 AA) │
+│ Text Tertiary (Timestamps):     Accessible Muted   #64748B (≥4.5:1 AA) │
 │ Text Inverted / Header:         Pure White         #FFFFFF             │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -73,27 +73,27 @@ The color palette adopts high-contrast e-commerce marketplace tones:
 
 ## 3. Typography System
 
-Shopoo adopts modern mobile typography (`Roboto` / `SF Pro Text` / `Inter` sans-serif) calibrated to an ergonomic handheld scale:
+Shopoo inherits the universal Apple HIG `text-ios-*` dynamic scale ([design.md §3.1.1](../../design-system/design.md#311-universal-shared-typography-scale-vs-scoped-app-font-color-invariant)) paired with Shopoo coral-orange brand tokens:
 
-| Level / UI Element | Font Size | Weight | Color | Line Height / Notes |
+| Level / UI Element | Canonical Token (`text-ios-*`) | Weight | Color | Line Height / Notes |
 |---|---|---|---|---|
-| **Status Bar Clock & Metrics** | $14\text{px}$ | Semibold ($600$) | `#FFFFFF` | Left `12:19`, right `5G`, battery capsule |
-| **Search Input Text & Placeholder** | $13\text{px}$ | Regular ($400$) | `#757575` | White capsule pill, camera icon on right |
-| **Header Action Counter Badges** | $10\text{px}$ | Bold ($700$) | `#FFFFFF` on `#EE4D2D` | Capsule badge `[Cart: 12]`, `[Chat: 4]` |
-| **Carousel / Deal Headlines** | $13\text{px}$–$14\text{px}$ | Black ($900$) | `#FFFFFF` / `#212121` | High-impact promotional callouts |
-| **Service Grid Label** | $11\text{px}$ | Regular ($400$) | `#212121` | 2 lines max under $40\text{px}$ icon |
-| **Product Card Title** | $12\text{px}$–$13\text{px}$ | Regular ($400$) | `#212121` | 2-line clamp with ellipsis |
-| **Product Price Tag** | $15\text{px}$–$16\text{px}$ | Bold ($700$) | `#EE4D2D` | Preceded or followed by `đ` symbol |
-| **Discount Percentage Pill** | $10\text{px}$ | Bold ($700$) | `#EE4D2D` on `#FFEBEE` | e.g. `-15%`, `-30%` |
-| **Sales Count / Rating** | $11\text{px}$ | Regular ($400$) | `#757575` | e.g. `★ 5.0  Đã bán 120` |
-| **Order Status Badge** | $11\text{px}$ | Bold ($700$) | `#2E7D32` / `#FFA000` | Inset rounded tag inside card |
-| **Profile Username** | $17\text{px}$ | Bold ($700$) | `#FFFFFF` | Beside membership tier badge (`hoang_minh92`) |
-| **Membership Tier Badge** | $11\text{px}$ | Medium ($500$) | `#FFFFFF` on `#455A64` | e.g. *"Kim Cương >"* |
-| **Order Pipeline Status Label** | $11\text{px}$ | Regular ($400$) | `#212121` | Under 4 icons: Chờ xác nhận/lấy/giao/đánh giá |
-| **Chat Message Text** | $14\text{px}$ | Regular ($400$) | `#212121` | Line height $1.4$, comfortable readability |
-| **Chat Product Card Title** | $13\text{px}$ | Semibold ($600$) | `#212121` | Pinned inside message feed |
-| **Chat Warning Notice Text** | $11\text{px}$–$12\text{px}$ | Regular ($400$) | `#616161` | Amber box with bold warning lead |
-| **Bottom Navigation Labels** | $11\text{px}$ | Medium ($500$) | Active `#EE4D2D` / Inactive `#757575` | 3 bottom tabs |
+| **Status Bar Clock & Metrics** | `text-ios-subheadline` ($15\text{px}$) | Semibold ($600$) | `#FFFFFF` | Governed by OS `StatusBar` (zero carrier text) |
+| **Search Input Text & Placeholder** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#52525B` | White capsule pill, camera icon on right |
+| **Header Action Counter Badges** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#FFFFFF` on `#EE4D2D` | Capsule badge `[Cart: 12]`, `[Chat: 4]` |
+| **Carousel / Deal Headlines** | `text-ios-subheadline` ($15\text{px}$) | Semibold ($600$) | `#FFFFFF` / `#212121` | High-impact promotional callouts |
+| **Service Grid Label** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#212121` | 2 lines max under $40\text{px}$ icon |
+| **Product Card Title** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#212121` | 2-line clamp with ellipsis |
+| **Product Price Tag** | `text-ios-callout` ($16\text{px}$) | Semibold ($600$) | `#EE4D2D` | `tabular-nums`, preceded/followed by `đ` |
+| **Discount Percentage Pill** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#B91C1C` on `#FFEBEE` | e.g. `-15%`, `-30%` ($\ge 4.5:1$ contrast) |
+| **Sales Count / Rating** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#52525B` | e.g. `★ 5.0  Đã bán 120` |
+| **Order Status Badge** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#2E7D32` / `#B45309` | Inset rounded tag inside card |
+| **Profile Username** | `text-ios-headline` ($17\text{px}$) | Semibold ($600$) | `#FFFFFF` | Beside membership tier badge (`hoang_minh92`) |
+| **Membership Tier Badge** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | `#FFFFFF` on `#455A64` | e.g. *"Kim Cương >"* |
+| **Order Pipeline Status Label** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#212121` | Under 4 icons: Chờ xác nhận/lấy/giao/đánh giá |
+| **Chat Message Text** | `text-ios-subheadline` ($15\text{px}$) | Regular ($400$) | `#212121` | Comfortable mobile readability |
+| **Chat Product Card Title** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | `#212121` | Pinned inside message feed |
+| **Chat Warning Notice Text** | `text-ios-caption-1` ($12\text{px}$) | Medium ($500$) | `#52525B` | Amber box with bold warning lead |
+| **Bottom Navigation Labels** | `text-ios-caption-2` ($11\text{px}$) | Semibold ($600$) | Active `#EE4D2D` / Inactive `#52525B` | 3 bottom tabs |
 
 ---
 
@@ -197,7 +197,7 @@ Shopoo adopts modern mobile typography (`Roboto` / `SF Pro Text` / `Inter` sans-
     - Date: `19/09`.
   * Row 4: **Lingerie Romance Hanoi**
     - Preview: *"Dạ em đã che tên sản phẩm trên bao bì rồi ạ"*
-    - Date: `18/09` | Forensic clue tag `[Pin]`.
+    - Date: `18/09` (Zero spoiler tags; long-press `380ms` on chat bubble inside thread to pin).
 
 ### 4.6. Screen 5: In-App Chat Conversation Detail (`PosheeChatDetailView`)
 * **Header Bar**:
@@ -237,7 +237,7 @@ Shopoo adopts modern mobile typography (`Roboto` / `SF Pro Text` / `Inter` sans-
   - Recipient Name: *"Thu Trang"*, Masked Phone Number: *"(+84) 912 *** 688"*.
   - Delivery Address: *"Chung cư mini số 12 ngõ 85 Chùa Láng, P. Láng Thượng, Đống Đa, HN"*.
   - Itemized list with SKU variants (*"Size S / Màu Đỏ Rượu"*), quantity, and price.
-  - Interactive **[ 📌 + THÊM THU TRANG VÀO SỔ TAY BẮT GHEN CỦA VỢ ]** suspect tagging CTA.
+  - **Zero-Spoiler Pinning (`380ms`)**: Static pin buttons are prohibited. Recipient address block and itemized SKU rows are wrapped in `StoryEvidenceTarget` (`380ms` hold or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal`.
 
 ### 4.8. Screen 7: Search Keyword Tag Cloud Overlay (`PosheeSearchOverlay`)
 * Triggered upon tapping the header search bar.

@@ -1,4 +1,4 @@
-﻿---
+---
 type: App Design Specification
 app_id: email
 app_name: GeeMail
@@ -43,50 +43,71 @@ timestamp: "2026-10-13T19:10:00+07:00"
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography**:
-  * Sender Name (Unread): Bold ($15\text{px}$ / weight $700$).
-  * Sender Name (Read): Regular ($15\text{px}$ / weight $400$).
-  * Subject Line: Semibold ($14\text{px}$ / weight $600$).
-  * Snippet Preview: Regular ($13\text{px}$ / text secondary `#5F6368`).
-  * Date / Timestamp: Regular ($12\text{px}$).
+* **Typography (Universal `text-ios-*` Tokens)**:
+  * Sender Name (Unread): `text-ios-subheadline` ($15\text{px}$ Semibold / $600$, `#202124`).
+  * Sender Name (Read): `text-ios-subheadline` ($15\text{px}$ Regular / $400$, `#202124`).
+  * Subject Line: `text-ios-subheadline` ($15\text{px}$ Semibold / $600$).
+  * Snippet Preview: `text-ios-footnote` ($13\text{px}$ Regular, `#52525B`, $\ge 4.5:1$ contrast).
+  * Date / Timestamp: `text-ios-caption-1` ($12\text{px}$ Medium, `tabular-nums`, `#52525B`).
 * **Ergonomics & Touch Targets**:
   * Rounded floating search pill height: $\ge 48\text{px}$.
-  * Email list row item height: $\ge 72\text{px}$ with full-width tap target.
-  * Category chips (`Hộp thư đến`, `Quảng cáo`, `Mạng xã hội`, `Thư rác`): $\ge 36\text{px}$ height with horizontal scroll.
+  * Email list row item height: $\ge 72\text{px}$ with full-width tap target and `pb-24` bottom scroll clearance.
+  * Category chips (`Hộp thư chính`, `Quảng cáo`, `Xã hội`, `Thư rác`): $36\text{px}$ visual pill inside $\ge 44\text{px}$ `.touch-target-min` hit area with horizontal scroll.
   * Floating Compose FAB: $56 \times 56\text{px}$ rounded pill button with `#EA4335` background.
 
 ---
 
 ## 3. UI Wireframes & Layout Architecture
 
+### 3.1. Inbox Feed (`GeeMailInboxView`)
 ```
 ┌────────────────────────────────────────────────────────┐
-│ 23:45             [ Dynamic Island ]    [Signal] 5G [Batt 42%]
+│ 23:45             [ Dynamic Island ]    [Signal] [Batt]│
 ├────────────────────────────────────────────────────────┤
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [=]   🔍 Tìm kiếm trong thư...           [Avatar]  │ │
+│ │ [<]   [Search] Tìm kiếm trong thư...      [Avatar] │ │
 │ └────────────────────────────────────────────────────┘ │
 │  [Hộp thư chính]  [Quảng cáo]  [Xã hội]  [Thư rác]     │
 ├────────────────────────────────────────────────────────┤
 │ (Tất cả thư hộp thư đến)                               │
 │                                                        │
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [VP] Techcornbank CSKH                          21:30   │ │
-│ │      Mã xác thực khôi phục mật khẩu ví      [★]    │ │
-│ │      Mã OTP khôi phục PIN bí mật của bạn là...    │ │
+│ │ [TC] Techcornbank CSKH                       21:30 │ │
+│ │      Mã xác thực khôi phục mật khẩu ví      [Star] │ │
+│ │      Mã OTP khôi phục PIN bí mật của bạn là...     │ │
 │ ├────────────────────────────────────────────────────┤ │
 │ │ [VN] Vietnam Airlines E-Ticket             Hôm qua │ │
-│ │      Xác nhận đặt vé khứ hồi Hà Nội - Đà Nẵng     │ │
+│ │      Xác nhận đặt vé khứ hồi Hà Nội - Đà Nẵng      │ │
 │ │      Hành khách: Nguyễn Văn H. & Trần Thu T.       │ │
 │ ├────────────────────────────────────────────────────┤ │
 │ │ [HR] TechCorp HR Notification             10 thg 10│ │
-│ │      Thông báo điều chỉnh phụ cấp công tác quý 4  │ │
+│ │      Thông báo điều chỉnh phụ cấp công tác quý 4   │ │
 │ └────────────────────────────────────────────────────┘ │
 │                                                        │
 │                                            ┌─────────┐ │
-│                                            │ ✏️ Soạn │ │
+│                                            │[Pen]Soạn│ │
 │                                            └─────────┘ │
 ├────────────────────────────────────────────────────────┤
 │                 ═══════ [ - ] ═══════                  │
 └────────────────────────────────────────────────────────┘
 ```
+
+### 3.2. Email Reader Detail View (`GeeMailReaderView`)
+```
+┌────────────────────────────────────────────────────────┐
+│ [< Hộp thư]                               [Trash][More]│
+├────────────────────────────────────────────────────────┤
+│ Xác nhận đặt vé khứ hồi Hà Nội - Đà Nẵng   [Hộp thư]  │
+├────────────────────────────────────────────────────────┤
+│ [VN] Vietnam Airlines E-Ticket                Hôm qua  │
+│      tới: hoang.minh@techcorp.vn                       │
+├────────────────────────────────────────────────────────┤
+│ Kính gửi Quý khách NGUYEN VAN HOANG,                   │
+│ Mã đặt chỗ (PNR): VNA88219                             │
+│ Hành khách (StoryEvidenceTarget - Hold 380ms):         │
+│ 1. NGUYEN VAN HOANG (Ghế 12A)                          │
+│ 2. TRAN THU TRANG (Ghế 12B)                            │
+│ Khởi hành: 15/10/2026 08:30 • Nội Bài (HAN) -> (DAD)   │
+└────────────────────────────────────────────────────────┘
+```
+* **Zero-Spoiler Forensic Pinning (`380ms`)**: Static pin buttons are prohibited. Email body blocks, E-Ticket passenger manifests, and OTP recovery codes are wrapped in `StoryEvidenceTarget` (`380ms` hold or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal`.

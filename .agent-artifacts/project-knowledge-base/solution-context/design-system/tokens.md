@@ -39,8 +39,8 @@ For components rendering over light surfaces (e.g. `.glass-toast-light`, modal a
 | Token Name | Light Surface Value | Dark Surface Value | Semantic Role & Universal Usage |
 |---|---|---|---|
 | `--ios-label-primary` | **`#000000`** (`rgba(0, 0, 0, 1.0)`) | `#FFFFFF` | Primary high-contrast text, titles, user input, and toast headlines |
-| `--ios-label-secondary` | **`rgba(60, 60, 67, 0.60)`** | `rgba(235, 235, 245, 0.60)` | Secondary labels, subtitles, timestamps, and metadata |
-| `--ios-label-tertiary` | **`rgba(60, 60, 67, 0.30)`** | `rgba(235, 235, 245, 0.30)` | Inactive controls, placeholder text, and subtle captions |
+| `--ios-label-secondary` | **`#52525B`** (`rgba(60, 60, 67, 0.72)`) | `#94A3B8` (`rgba(235, 235, 245, 0.68)`) | Secondary labels, subtitles, timestamps, and metadata (enforces $\ge 4.5:1$ WCAG AA contrast) |
+| `--ios-label-tertiary` | **`#64748B`** (`rgba(60, 60, 67, 0.58)`) | `#64748B` (`rgba(235, 235, 245, 0.45)`) | Inactive controls, placeholder text, and subtle captions |
 | `--ios-label-quaternary` | **`rgba(60, 60, 67, 0.18)`** | `rgba(235, 235, 245, 0.18)` | Hairline dividers, disabled labels, and decorative accents |
 
 ### 1.2. Color Ownership & Delegation Rules

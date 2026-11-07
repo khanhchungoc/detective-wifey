@@ -11,7 +11,7 @@ tags: [project, scope, system]
 
 - **Product Name**: *Bắt được Tiểu tam* (Jealous Wife Detective Game).
 - **Domain**: Casual detective deduction web game satirizing viral Vietnamese marital confession tropes.
-- **Core Gameplay Loop**: The player assumes the persona of a jealous wife inspecting her husband's virtual smartphone across level-provisioned parody apps (Level 1: 3–4 apps; Level 2: 5–6 apps; Level 3: 8–11 apps). The player pins evidence cards across all interactive items, tracks smoking guns in an objective counter, triggers the "Giác Quan Thứ 6" app-badging hint when stuck, and can initiate "Đối chất" (Confrontation) at any time. Confronting with weak proof triggers hilarious husband excuses ("chối bay chối biến"); attaching verified smoking-gun evidence cards delivers conviction victory, 1–3 stars, custom Wife Titles, and vertical social share cards (TikTok, Zalo, Facebook).
+- **Core Gameplay Loop**: The player assumes the persona of a jealous wife inspecting her husband's virtual smartphone across a 12-app launcher where level-scoped parody apps are enabled and out-of-scope apps are disabled (Level 0 & Level 1: 3-4 enabled apps; Level 2: 5-6 enabled apps; Level 3: 8-12 enabled apps). The player long-presses (`380ms`) to pin evidence cards across all interactive narrative items, links clues on the Detective Corkboard in the Wife's Notebook, triggers the "Giác Quan Thứ 6" app-badging hint when stuck, and can initiate "Đối chất" (Confrontation) at any time. Confronting with weak proof triggers hilarious husband excuses ("chối bay chối biến"); connecting verified smoking-gun evidence delivers conviction victory, 1-3 stars, custom Wife Titles, and vertical social share cards (TikTok, Zalo, Facebook).
 
 ---
 
@@ -43,9 +43,9 @@ tags: [project, scope, system]
 ## Commercial Scope & SOW Baseline
 
 - **In-Scope (MVP Baseline)**:
-  - Level-based virtual smartphone shell mounting only the active apps per level (Level 1: 3–4 apps; Level 2: 5–6 apps; Level 3: 8–11 apps) from the parody registry (Zola, Techcornbank, Shopoo, Grap, NetSurf, Photos, Comms, Notes, GeeMail, InkedLin, Tim).
-  - Launch content: 1–2 husbands across 3 progressive levels (Level 1: 3–4 clue apps, 0 locks; Level 2: 5–6 clue apps, 1 lock; Level 3: 7–8 clue apps, 2 locks).
-  - Universal evidence pinning ("Ghim Bằng Chứng") across all interactive items to prevent giveaway tells.
+  - Level-based virtual smartphone shell displaying up to 12 apps on the home screen (Zola, Techcornbank, Shopoo, Grap, NetSurf, Photos, Phone, Messages, Notes, GeeMail, InkedLin, Tim), where only the level-scoped apps are enabled (Level 0/1: 3-4 enabled; Level 2: 5-6 enabled; Level 3: 8-12 enabled) and remaining apps are disabled.
+  - Launch content: Optional Level 0 practice case plus 1-2 husbands across 3 progressive levels (Level 1: 3-4 enabled apps, 0 locks; Level 2: 5-6 enabled apps, 1 lock; Level 3: 8-12 enabled apps, 2 locks).
+  - Universal `380ms` long-press evidence pinning ("Ghim Bằng Chứng") across all interactive narrative items with zero static pin buttons to prevent giveaway tells.
   - Active smoking-gun objective counter in the Wife's Detective Notebook.
   - Anytime confrontation ("Đối chất") & dynamic excuse engine (*"chối bay chối biến"* gaslighting dialogue on premature accusation).
   - "Giác Quan Thứ 6" (Sixth Sense) app-badging hint engine (free/cooldown in MVP; paywall deferred to Phase 2).

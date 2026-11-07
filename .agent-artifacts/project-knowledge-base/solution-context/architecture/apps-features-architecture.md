@@ -21,9 +21,9 @@ The application is architected as an **Event-Driven, Client-Side Modular Single-
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   VIRTUAL SMARTPHONE SHELL CONTAINER                   │
-│   [Status Bar: VinaPhone 5G | 23:45 | 42%]      [Wife's Notebook FAB]  │
+│   [Status Bar: 23:45 | Dynamic Island | Signal | Wifi | Batt 42%]      │
 ├────────────────────────────────────────────────────────────────────────┤
-│                       11-APP HOME SCREEN GRID                          │
+│            12-APP HOME SCREEN GRID (LEVEL-SCOPED ENABLEMENT)           │
 │  [Upper Grid Row 1]                                                    │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐                │
 │  │  Shopoo  │  │   Grap   │  │ NetSurf  │  │  Photos  │                │
@@ -34,27 +34,27 @@ The application is architected as an **Event-Driven, Client-Side Modular Single-
 │  │ GeeMail  │  │ InkedLin │  │   Tim    │  │Husband's │                │
 │  │ (E-mail) │  │(LinkedIn)│  │ (Teams)  │  │  Notes   │                │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘                │
-│  [Frosted Dock Tray]                                                   │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                              │
-│  │   Zola   │  │ Techcornbank  │  │  Comms   │                              │
-│  │ (Chat)   │  │ (Bank)   │  │ (Phone)  │                              │
-│  └──────────┘  └──────────┘  └──────────┘                              │
+│  [Frosted Dock Tray - Zero-Label Invariant]                            │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐                │
+│  │  Phone   │  │   Zola   │  │Techcornb.│  │ Messages │                │
+│  │ (Dialer) │  │  (Chat)  │  │  (Bank)  │  │  (SMS)   │                │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘                │
 ├────────────────────────────────────────────────────────────────────────┤
 │                     CORE SYSTEMIC ENGINE PLATFORM                      │
 │ ┌──────────────────────┐ ┌──────────────────────┐ ┌──────────────────┐ │
 │ │ Suspicion & Strike   │ │ Polymorphic Lock &   │ │ Wife's Notebook  │ │
-│ │ Engine (3-5 Strikes) │ │ Puzzle Engine (PIN)  │ │ & Decision Hub   │ │
-│ └──────────────────────┘ └──────────────────────┘ └──────────────────┘ │
-│ ┌──────────────────────┐ ┌──────────────────────┐ ┌──────────────────┐ │
-│ │ Declarative Content  │ │ Verdict Evaluation & │ │ Shareable Roast  │ │
-│ │ Schema Repository    │ │ Wife Title Engine    │ │ Card Canvas Gen  │ │
+│ │ Engine (3-5 Strikes) │ │ Puzzle Engine (PIN)  │ │ & Sixth Sense    │ │
+│ └──────────────────────┘ ┌──────────────────────┐ └──────────────────┘ │
+│ ┌──────────────────────┐ │ Level 0 Coaching &   │ ┌──────────────────┐ │
+│ │ Declarative Content  │ │ Verdict Evaluation   │ │ Shareable Roast  │ │
+│ │ Schema Repository    │ │ Excuse Engine        │ │ Card Canvas Gen  │ │
 │ └──────────────────────┘ └──────────────────────┘ └──────────────────┘ │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Architectural Principles
 1. **Decoupled Shell & App Modules**: The virtual OS shell is completely agnostic of in-app business logic. Apps register via a pluggable `AppDefinition` contract.
-2. **Universal 11-App Grid Invariant**: All 11 registered app icons are permanently mounted on the home screen across all levels (L1, L2, L3) to eliminate process-of-elimination spoilers. Inactive apps display benign filler content.
+2. **12-App Grid with Level-Scoped Enablement**: Up to 12 registered app icons are displayed on the home screen across all levels (`Level 0`, `Level 1`, `Level 2`, `Level 3`). Only the apps configured in the level's scope are enabled (`isEnabled: true`: L0/L1 = 3-4 apps, L2 = 5-6 apps, L3 = 8-12 apps); out-of-scope apps render in a visibly disabled state (`isEnabled: false`, dimmed/grayscale, non-openable) to prevent reading fatigue while scaling complexity across levels.
 3. **Data-Driven Declarative Content**: Zero narrative text or clue mappings are hardcoded in UI components. All cases, suspects, chats, receipts, and ground truths are statically bundled declarative schemas.
 4. **100% Client-Side Privacy-First Runtime**: Zero server-side APIs, zero analytics telemetry, and zero cookie persistence. Conforms to minor privacy compliance (13+).
 5. **Ultra-Low Latency (< 100ms)**: In-memory state-driven view transitions ensure native mobile responsiveness.
@@ -74,7 +74,8 @@ export interface AppDefinition {
     | 'grap' 
     | 'netsurf' 
     | 'photos' 
-    | 'comms' 
+    | 'phone'
+    | 'messages'
     | 'husband_notes'
     | 'email'
     | 'linkedin'
@@ -82,11 +83,12 @@ export interface AppDefinition {
   displayName: string;
   iconAsset: string;
   notificationBadgeCount?: number;
+  isEnabled: boolean; // Level-scoped enablement: disabled apps render dimmed on SpringBoard
   isLocked: boolean;
   lockChallengeId?: string;
+  hasSixthSenseHighlight?: boolean; // Set when Sixth Sense targets this app
   component: React.ComponentType<{ 
     caseData: any; 
-    onTagSuspect: (name: string, sourceApp: string) => void;
     onReturnHome: () => void;
   }>;
 }

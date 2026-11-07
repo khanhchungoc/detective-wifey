@@ -10,7 +10,7 @@ timestamp: "2026-10-13T16:40:00+07:00"
 
 # Virtual Phone OS - Master Design & UI/UX Specification
 
-> **Architectural Scope**: This design specification defines the physical phone shell, bezel frame, status bar chrome, shared lockpad, and native OS apps (`comms`, `photos`, launcher shell) for the emulated smartphone. It inherits from and conforms to the overarching [Universal Design System SSOT](../../design-system/design.md).
+> **Architectural Scope**: This design specification defines the physical phone shell, bezel frame, status bar chrome, shared lockpad, Level 0 tutorial coaching bar, and native OS apps (`phone`, `messages`, `photos`, launcher shell) for the emulated smartphone. It inherits from and conforms to the overarching [Universal Design System SSOT](../../design-system/design.md).
 >
 > **Parody App Styling Rule**: As specified in the Universal Design System, third-party parody apps (`Zola`, `Techcornbank`, `Shopoo`, etc.) inherit universal layout, accessibility, and behavioral standards, while strictly retaining their own local CSS styling tokens under their respective `apps/<app_id>/app-design.md`.
 
@@ -81,9 +81,9 @@ To ensure complete legal compliance and avoid intellectual property infringement
 1. **Dark Wallpaper / SpringBoard Canvas**: Home screen clock, date, icon labels, and system status bar default to pure white (`#FFFFFF`) with Gaussian drop shadows to ensure maximum contrast over dark wallpapers (`#0B1329`).
 2. **Light Surfaces & Modals (`.glass-toast-light`, In-App Light Views)**: Standard iOS notification banners (`NotificationBanner`), light message lists, and document views adhere to Apple HIG Light Mode semantic labels:
    * **Primary Label (`--ios-label-primary`)**: Pure Black `#000000` (`rgba(0, 0, 0, 1.0)`).
-   * **Secondary Label (`--ios-label-secondary`)**: `rgba(60, 60, 67, 0.60)` for subtitles, timestamps, and metadata.
-   * **Tertiary Label (`--ios-label-tertiary`)**: `rgba(60, 60, 67, 0.30)` for placeholder text and inactive captions.
-   * **Quaternary Label (`--ios-label-quaternary`)**: `rgba(60, 60, 67, 0.18)` for subtle hairline text and disabled indicators.
+   * **Secondary Label (`--ios-label-secondary`)**: `#52525B` (`rgba(60, 60, 67, 0.72)`) for subtitles, timestamps, and metadata (enforces $\ge 4.5:1$ WCAG AA contrast).
+   * **Tertiary Label (`--ios-label-tertiary`)**: `#64748B` (`rgba(60, 60, 67, 0.58)`) for placeholder text and inactive captions.
+   * **Quaternary Label (`--ios-label-quaternary`)**: `rgba(60, 60, 67, 0.18)` for subtle hairline dividers and disabled indicators.
 
 ### 2.2. Dialed-Down iOS Glass System (Compact Tokens)
 A lightweight, token-efficient implementation of iOS frosted glass that avoids excessive multi-tier materials while preserving authentic mobile OS aesthetics:
@@ -180,9 +180,11 @@ To ensure high-fidelity parity with contemporary iOS while remaining 100% compli
 | **App: Grap** | `car-outline` | Outline / Fill | `car.fill` | Ride-hailing vehicle silhouette |
 | **App: NetSurf** | `compass-outline` | Outline / Fill | `safari.fill` / `compass` | Safari-parody directional compass |
 | **App: Photos** | `images-outline` | Outline / Fill | `photo.fill` | Borderless landscape photo tile |
-| **App: Comms** | `call-outline` | Outline / Fill | `phone.fill` | Native call dialer & SMS icon |
+| **App: Phone** | `call-outline` | Outline / Fill | `phone.fill` | Native call dialer & contact directory icon |
+| **App: Messages** | `chatbubble-outline` | Outline / Fill | `message.fill` | Native SMS & brand text threads icon |
 | **App: Husband Notes** | `document-text-outline` | Outline / Fill | `note.text` | Lined document note sheet |
 | **App: Wife Notebook** | `book-outline` | Outline / Fill | `book.closed.fill` | Dossier investigation notebook |
+| **Sixth Sense Hint** | `sparkles-outline` | Outline / Fill | `sparkles` | Notebook Sixth Sense hint trigger & app highlight |
 | **PIN Lockpad** | `lock-closed-outline` | Outline / Fill | `lock.fill` | Security keypad lock indicator |
 | **Suspicion / Alert** | `warning-outline` | Outline / Fill | `exclamationmark.triangle.fill` | Strike warning and suspicion alert |
 | **Back Navigation** | `chevron-back-outline` | Outline | `chevron.left` | Standard iOS back navigation chevron |
@@ -256,14 +258,61 @@ Slides down over any currently open app screen when a simulated real-time event 
 └────────────────────────────────────────────────────────┘
 ```
 
+### 3.5. Level 0 Tutorial Entry, Guided Coaching Bar & Caught Snooping Fail Screen
+
+#### Level 0 Entry Prompt (`Level0EntryModal` - US-031)
+Offered on first play (and accessible anytime via the Level Selector as *"Màn 0 · Chưa học / Đã bỏ qua / Đã hoàn thành"*):
+```
+┌────────────────────────────────────────────────────────┐
+│                      TẬP ĐIỀU TRA                      │
+│                         Màn 0                          │
+│                                                        │
+│     [Search]  ──►  [Card + Pin]  ──►  [Linked Cards]   │
+│                                                        │
+│                     Xem. Ghim. Nối.                    │
+│               Tập điều tra, không lo thua.             │
+│                                                        │
+│                  [ [Play] Bắt đầu ]                    │
+│                      [ Bỏ qua ]                        │
+└────────────────────────────────────────────────────────┘
+```
+
+#### Level 0 Non-Obstructing Bottom Coaching Bar (`Level0CoachingBanner` - US-032 / US-033)
+Docked at the bottom of the viewport outside the interactive target area (never highlighting or spoiling the exact narrative item):
+```
+┌────────────────────────────────────────────────────────┐
+│ (Giao diện ứng dụng hoặc Sổ tay đang mở bên trên)      │
+├────────────────────────────────────────────────────────┤
+│ [Hand-Hold SVG Illustration on Generic Sample Card]    │
+│                 Nhấn giữ để xem. (380ms)               │
+│ [ [Play] Xem lại minh họa ]                 [ Bỏ qua ] │
+└────────────────────────────────────────────────────────┘
+```
+* **Visual Coaching Rules**: SVG gesture illustration runs at most 2 loops then rests (`prefers-reduced-motion` shows static step sequence). Stops immediately when the player performs the real interaction.
+
+#### Caught Snooping Fail Screen (`CaughtSnoopingModal` - Strike Limit Reached)
+Triggered in normal levels (L1-L3) when suspicion strikes reach `maxStrikes`:
+```
+┌────────────────────────────────────────────────────────┐
+│                   [Warning] BỊ GIẬT LẠI MÁY!           │
+│                                                        │
+│        "Em làm gì mà bấm sai mật khẩu máy anh          │
+│               liên tục thế? Đưa máy đây!"              │
+│                                                        │
+│             Thước đo nghi ngờ đã chạm đỉnh!            │
+│                                                        │
+│              [ [Refresh] Chơi lại màn này ]            │
+│                 [ [Home] Chọn màn khác ]               │
+└────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## 4. Interaction & Micro-Animations
 
-* **App Launch Transition**: Tapping an app icon initiates a $180\text{ms}$ ease-out scale expansion into the app interface.
-* **Home Return Gesture**: Tapping `< Trang chủ` or swiping the bottom home indicator initiates a $150\text{ms}$ smooth fade return to the 8-app launcher.
+* **App Launch & Close Transition**: Governed by [behaviors-motion.md](../../design-system/behaviors-motion.md#21-timing-curves--easing-recipes) ($450\text{ms}$ spring zoom-in with $80\text{ms}$ content opacity fade; $380\text{ms}$ shrink-to-home return). Disabled out-of-scope apps do not launch.
 * **Lockpad Input & Error Shake**:
   * Tapping digits fills indicator dots sequentially.
   * Incorrect PIN triggers a $400\text{ms}$ horizontal shake animation, clears dots, and flashes red `#EF4444`.
-* **Toast Notification Slide**: Dynamic toasts enter with a $250\text{ms}$ spring curve from the top of the viewport and auto-dismiss after $5\text{s}$ unless tapped.
+* **Toast Notification Slide**: Dynamic toasts enter from the Dynamic Island with a $320\text{ms}$ spring curve (`--ease-ios-spring`) and auto-dismiss after $4.5\text{s}$ unless tapped or flicked up.
 

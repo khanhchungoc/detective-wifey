@@ -49,114 +49,118 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 * **Canvas Material**: Muted yellow-beige cardboard with subtle, static grain and short paper fibers. Faint brown pinprick dots sit 30px apart, with slight variation in radius and opacity. Keep the texture behind evidence cards; use light paper surfaces and dark text for drawers, controls, and overlays. Retain fuchsia accents and the existing board interactions.
 
-* **Typography**:
-  * Notebook Header: Playful casual handwritten script ($18\text{px}$).
-  * Suspect Name: Bold sans-serif ($16\text{px}$).
-  * Verdict Decision CTA: Bold uppercase ($16\text{px}$ / weight $800$).
+* **Typography (Universal `text-ios-*` Tokens)**:
+  * Notebook Header: `text-ios-title-3` ($20\text{px}$ Semibold, `#FFFFFF` on Fuchsia header).
+  * Node Card / Suspect Title: `text-ios-callout` ($16\text{px}$ Semibold, `#0F172A`).
+  * Node Snippet & Metadata: `text-ios-footnote` ($13\text{px}$ Regular, `#475569`, contrast $\ge 4.5:1$).
+  * Confrontation CTA & Sixth Sense Trigger: `text-ios-headline` ($17\text{px}$ Semibold).
 * **Ergonomics & Touch Targets**:
-  * Omnipresent floating button $\ge 56 \times 56\text{px}$ with total item counter badge.
-  * Verdict radio selection cards $\ge 64\text{px}$ height with full-card tap targets.
+  * Omnipresent floating button $\ge 56 \times 56\text{px}$ with unplaced clue counter badge.
+  * All header buttons (`[Đóng]`, `[Giác quan thứ 6]`, `[Đối chất]`) and node `[Loc]` deep-link buttons enforce $\ge 44 \times 44\text{px}$ touch targets (`.touch-target-min`).
 
 ---
 
 ## 3. UI Wireframes & Layout Architecture
 
-### 3.1. Contextual Long-Press Pinning Action Sheet (`LongPressPinActionSheet`)
+### 3.1. Contextual Long-Press Pinning Modal (`UniversalEvidenceModal` - US-011)
 
-> **Trigger**: Long-press ($\ge 450\text{ms}$) on any interactive element in any parody app.  
-> **Backdrop**: Translucent dimming overlay with `.glass-elevated` bottom sheet. Zero spoilers on parent screen.
+> **Trigger**: Long-press ($\ge 380\text{ms}$) or keyboard `Enter`/`Space` on any interactive story narrative element (`StoryEvidenceTarget`) in any parody app.  
+> **Backdrop**: Translucent dimming overlay with `.glass-elevated` modal card (`role="dialog"`, `aria-modal="true"` with focus trap). Zero spoilers or static pin buttons on parent screen.
 
 ```
 ┌────────────────────────────────────────────────────────┐
 │                        ══════                          │
 │                   THÊM VÀO SỔ TAY                      │
 ├────────────────────────────────────────────────────────┤
-│ 📋 Đoạn thông tin đã chọn:                              │
+│ Đoạn thông tin đã chọn:                                │
 │ "Thu Trang | Chung cư mini số 12 ngõ 85 Chùa Láng"     │
 ├────────────────────────────────────────────────────────┤
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [ 👥 Ghim làm Đối Tượng Tình Nghi                ] │ │
-│ └────────────────────────────────────────────────────┘ │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ 🔍 Ghim làm Manh Mối / Bằng Chứng              ] │ │
+│ │ [ [Pin] Ghim vào Sổ tay                          ] │ │
 │ └────────────────────────────────────────────────────┘ │
 ├────────────────────────────────────────────────────────┤
-│ [ Huỷ bỏ                                             ] │
+│ [ [Close] Đóng                                       ] │
 └────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### 3.2. Investigation Dossier Tab (`InvestigationDossierTabView`)
+### 3.2. Detective Corkboard Node Canvas & "Giác Quan Thứ 6" Hint Header (`WifeNotebookModal` - US-015, US-022, US-033)
 
-> **Layout**: 2-tab segmented control. Tab 1 houses a dual-section vertical dossier containing the Suspects Board and the Evidence Locker, with interactive evidence-to-suspect linking affordances.
+> **Layout**: Fullscreen overlay (`z-50`) featuring the Fuchsia Rose header bar with `[Giác quan thứ 6]` (`IoSparklesOutline`) and `[Đối chất]` triggers, the 2D interactive red-string corkboard (`BangNoiDay`), the active smoking-gun objective counter (*Bằng chứng cốt lõi: X/3*), and the bottom unplaced clue drawer (`Khay Manh Mối Thu Thập`).
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ [ Đóng ✕ ]            SỔ TAY BẮT GHEN           [ 🎀 ] │
+│ [Close] Đóng            SỔ TAY             [MiniMap]   │
+│ [Sparkles] Giác quan thứ 6 (00:30)     [Đối chất]      │
 ├────────────────────────────────────────────────────────┤
-│ [ 📋 Hồ sơ điều tra (2/3) ]    [ ⚖️ Phán quyết & Đối chất ]│
+│ [AppIcon] Xem [Tên ứng dụng].    [ [Home] Về màn chính]│
 ├────────────────────────────────────────────────────────┤
-│ 👥 DANH SÁCH ĐỐI TƯỢNG TÌNH NGHI (2)                   │
-│                                                        │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ 🐱 ] Bé Mèo (Thu Trang)             [ 🗑️ Xoá ]   │ │
-│ │ • Phát hiện tại: Techcornbank (Chuyển khoản 1k)         │ │
-│ │ • Ghi chú: Nhắn tin xin lỗi lúc 23:45              │ │
-│ │ 🔗 Bằng chứng đã liên kết (1):                     │ │
-│ │    - [ 🛍️ Shopoo ] Váy ngủ lụa Size S [ ✕ Gỡ ]     │ │
-│ │ [ ➕ Gắn thêm bằng chứng từ kho                  ] │ │
-│ └────────────────────────────────────────────────────┘ │
-│                                                        │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ ⚡ ] Anh Tuấn Thợ Điện               [ 🗑️ Xoá ]   │ │
-│ │ • Phát hiện tại: Zola                              │ │
-│ │ • Ghi chú: Hẹn tối mai qua lắp ống nước            │ │
-│ │ 🔗 Bằng chứng đã liên kết (0):                     │ │
-│ │   (Chưa có bằng chứng nào được gán)                │ │
-│ │ [ ➕ Gắn bằng chứng từ kho                       ] │ │
-│ └────────────────────────────────────────────────────┘ │
+│   ┌────────────────────┐        ┌────────────────────┐ │
+│   │ [Mask] VỎ BỌC [Loc]│        │ [Phone] SĐT  [Loc] │ │
+│   │ "Anh Tuấn Thợ Điện"│══(Đỏ)══╡ 0988886677         │ │
+│   │ [Zola] 23:44       │        │ [Phone] [Shopoo]   │ │
+│   └────────────────────┘        └─────────┬──────────┘ │
+│                                           │ (Dây Đỏ)   │
+│                                 ┌─────────▼──────────┐ │
+│                                 │ [Target] THỦ PHẠM  │ │
+│                                 │ Nguyễn Thu Hương   │ │
+│                                 └────────────────────┘ │
 ├────────────────────────────────────────────────────────┤
-│ 🔍 KHO MANH MỐI & BẰNG CHỨNG THU THẬP (3)              │
-│                                                        │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ 🛍️ Shopoo ] Váy ngủ lụa Size S      [ 🗑️ Xoá ]   │ │
-│ │ • Chi tiết: Váy ngủ Size S (Vợ mặc Size L). 680k.   │ │
-│ │ • Trạng thái: 🔗 Đã gán cho [ Bé Mèo ]             │ │
-│ └────────────────────────────────────────────────────┘ │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ 💬 Zola ] Tin nhắn rủ đi ăn đêm     [ 🗑️ Xoá ]   │ │
-│ │ • Chi tiết: "Ăn bún đậu quán cũ nhé anh iu". 22:15.│ │
-│ │ • Trạng thái: ⚪ Chưa liên kết đối tượng             │ │
-│ └────────────────────────────────────────────────────┘ │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ 📸 Photos ] Ảnh chụp vô lăng xe hơi  [ 🗑️ Xoá ]   │ │
-│ │ • Chi tiết: Có bóng người nữ lạ phản chiếu trên kính│ │
-│ │ • Trạng thái: ⚪ Chưa liên kết đối tượng             │ │
-│ └────────────────────────────────────────────────────┘ │
+│ TIẾN ĐỘ ĐIỀU TRA: [||||||||||||||] 2/3 Bằng chứng cốt lõi│
+│ [Zoom: -] [100%] [Zoom: +]  [Auto-Arrange]  [Center]   │
 ├────────────────────────────────────────────────────────┤
-│ 💡 Mẹo: Nhấn tab "Phán quyết" khi đã liên kết đủ chứng cứ!│
+│ [Drawer: ^] KHAY MANH MỐI MỚI (2 thẻ chưa đưa lên bảng)│
+│ ┌────────────────────────────────────────────────────┐ │
+│ │ [Card: SMS 1900] [Đưa lên bảng] [ [Loc] Tới nguồn ]│ │
+│ └────────────────────────────────────────────────────┘ │
 └────────────────────────────────────────────────────────┘
 ```
+
+* **"Giác Quan Thứ 6" (Sixth Sense) Hint States ([wireframe-sixth-sense.md](../../../../requirements/output/epic-02-investigation-suspicion-mechanics/wireframes/wireframe-sixth-sense.md))**:
+  * **Ready**: `[Sparkles] Giác quan thứ 6` (`IoSparklesOutline`). Free on-demand hint.
+  * **Uncollected Clue Exists**: Displays banner `[AppIcon] Xem [Tên ứng dụng]. [Về màn hình chính]`. Tapping `[Về màn hình chính]` returns to SpringBoard and highlights the target app icon (max 2 pulses then static ring) without opening the app or spoiling the exact clue inside.
+  * **All Required Clues Collected (Unsolved Graph)**: Displays general reminder `[Book] Xem lại các mối liên hệ.` without revealing the correct card pair. Counts as a valid hint use and starts cooldown.
+  * **30-Second Real-Time Cooldown**: Displays `[Time] 00:24` (`IoTimeOutline`, `tabular-nums`, persisted across notebook close/reopen and reloads). Under `prefers-reduced-motion`, shows static timer digits without spinning ring or per-second screen-reader chatter.
+* **Source Deep-Link (`[Loc]` / `IoNavigateOutline`)**: Tapping `[Loc]` on any node or drawer card jumps directly to the source app and message/record while minimizing the notebook into a top floating banner (`[Pill: QuayLaiSoTay] Quay lại Sổ tay Điều tra`, `z-70`, `#D81B60`).
 
 ---
 
-### 3.3. Final Verdict Decision Hub Tab (`FinalVerdictDecisionHubView`)
+### 3.3. Anytime Confrontation Hub, Dynamic Excuse Engine & Shareable Roast Card (`ConfrontationModal` - US-016, US-017)
+
+> **Layout**: Fullscreen overlay (`z-80`) evaluating the player's connected `CaseKnowledgeGraph` automatically upon tapping `[Đối chất]` at any time (no manual dropdown or card-slotting required).
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ [ Đóng ✕ ]          PHÁN QUYẾT CUỐI CÙNG        [ ⚖️ ] │
+│                 ĐỐI CHẤT CHỒNG HOÀNG                   │
+│            [ Tiến độ chứng cứ cốt lõi: 3/3 ]           │
 ├────────────────────────────────────────────────────────┤
-│ BƯỚC 1: BẢN CHẤT SỰ THẬT LÀ GÌ?                        │
-│ ( ) 🟢 Chồng Ngoan / Vô Tội (Bị oan)                   │
-│ (•) 🔴 Ngoại Tình / Gian Díu                           │
-│ ( ) 🟣 Nuôi Sugar Baby / Có Sugar Mommy                │
-├────────────────────────────────────────────────────────┤
-│ BƯỚC 2: AI LÀ KẺ THỨ BA?                               │
-│ [ Chọn từ danh sách nghi phạm: Bé Mèo (1 bằng chứng) ▼]│
-├────────────────────────────────────────────────────────┤
+│                    [ Avatar Hoàng ]                    │
+│                 (Cúi đầu, toát mồ hôi)                 │
 │                                                        │
-│        [ 🔥 BẮT GHEN! ĐƯA RA PHÁN QUYẾT 🔥 ]           │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │ Hoàng (thú nhận):                                │  │
+│  │ "Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh   │  │
+│  │ có hẹn riêng tối nay ở quán cơm niêu..."         │  │
+│  └──────────────────────────────────────────────────┘  │
 │                                                        │
+│                  KẾT QUẢ PHÁN QUYẾT                    │
+│                       ★ ★ ★                            │
+│              [Trophy] NỮ THÁM TỬ GHEN TUÔNG            │
+│                                                        │
+│  "Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp │
+│   riêng, còn quẹt thẻ tận quán cơm!"                   │
+│                                                        │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │       [ [Camera] TẠO THẺ ROAST KHOE MXH ]        │  │
+│  └──────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │          [ [Unlock] THA THỨ & QUA MÀN ]          │  │
+│  └──────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────┘
 ```
+
+* **Scaled Confrontation Tiers ([wireframe-us-016-confrontation-hub.md](../../../../requirements/output/epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-us-016-confrontation-hub.md))**:
+  * **M1 - Premature Accusation (0/3 Core Clues -> 0 Stars)**: Husband gaslights (*"chối bay chối biến"*). Normal levels increment Suspicion Meter by **+1 strike** (triggering Caught Snooping fail screen if max strikes reached) and offer `[Tiếp tục điều tra]`. In Level 0 practice mode, explains the missing step/evidence and allows safe retry with zero strike penalty.
+  * **M2 - Partial Conviction (1/3 or 2/3 Core Clues -> 1-2 Stars)**: Husband stammers defensive excuses. Unlocks `[Tha thứ & Qua màn]` alongside `[Điều tra tiếp để đạt 3 sao]`.
+  * **M3 - Full Conviction (3/3 Core Clues -> 3 Stars)**: Full confession, 3 stars, Wife Title badge, comedic roast punchline, `[Tạo thẻ Roast khoe MXH]` (`9:16` vertical Canvas/HTML card generator for TikTok/Zalo/Facebook), and `[Tha thứ & Qua màn]`.

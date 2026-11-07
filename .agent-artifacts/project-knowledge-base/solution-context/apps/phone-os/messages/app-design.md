@@ -44,15 +44,16 @@ timestamp: "2026-10-14T13:00:00+07:00"
 │ Tapback Badge Bg:     Frosted Slate   rgba(0,0,0,0.65) │
 │ Text Primary:         Jet Black       #000000          │
 │ Text Bubble White:    Pure White      #FFFFFF          │
-│ Text Subtitle:        Neutral Gray    #8E8E93          │
+│ Text Subtitle:        Accessible Slate#52525B (≥4.5:1) │
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography & Dynamic Scale**:
-  * Sender Name: Semibold ($17\text{px}$ / $600$).
-  * Message Snippet: Regular ($15\text{px}$ / $400$).
-  * Timestamp: Tabular Regular ($13\text{px}$ / $400$).
-  * Tapback Glyph: $16\text{px}$ emoji/stamp container.
+* **Typography & Dynamic Scale (Universal `text-ios-*` Tokens)**:
+  * Sender Name: `text-ios-headline` ($17\text{px}$ Semibold / $600$).
+  * Message Snippet: `text-ios-subheadline` ($15\text{px}$ Regular / $400$, `#52525B`).
+  * Message Bubble Body: `text-ios-body` ($17\text{px}$ Regular / $400$).
+  * Timestamp: `text-ios-footnote` ($13\text{px}$ Regular / $400$, `tabular-nums`, `#52525B`).
+  * Tapback Glyph: $16\text{px}$ Ionicons vector stamp container.
 
 ---
 
@@ -123,12 +124,10 @@ Thread view featuring brand booking SMS and interactive message reactions:
 │               [ ❤️ Yêu thích ] (Tapback)        20:18 │
 │                                                        │
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ 🕒 [HẸN GIỜ GỬI ĐÃ HỦY - DRAFT]                     │ │
+│ │ [Time] [HẸN GIỜ GỬI ĐÃ HỦY - DRAFT]                │ │
 │ │ "Em chuẩn bị đồ đẹp nhé, mai anh qua đón."        │ │
 │ └────────────────────────────────────────────────────┘ │
 │   (Bản nháp hẹn giờ bị hủy lúc 23:50)                  │
-├────────────────────────────────────────────────────────┤
-│ [ ➕ Thêm Đặt Phòng Hotel vào Sổ Tay Bắt Ghen ]         │
 ├────────────────────────────────────────────────────────┤
 │ [ + ] [ Tin nhắn iMessage                          ] [↑]│
 ├────────────────────────────────────────────────────────┤
@@ -136,10 +135,11 @@ Thread view featuring brand booking SMS and interactive message reactions:
 └────────────────────────────────────────────────────────┘
 ```
 
-* **iOS 26/27 Forensic Features**:
+* **iOS 26/27 Forensic Features & Zero-Spoiler Pinning**:
   * **Brand Hotel SMS**: Unambiguous evidence of room booking for 2 guests with champagne/rose setup (`CLUE-MSG-01`).
   * **Canceled "Send Later" Draft**: Husband drafted an unsent message scheduled for his mistress, acting as forensic timeline proof.
-  * **Tapback Reactions**: Reaction bubbles showing timestamps of romantic acknowledgments.
+  * **Tapback Reactions**: Vector reaction badges showing timestamps of romantic acknowledgments.
+  * **Zero-Spoiler Pinning (`380ms`)**: Static pin buttons are prohibited. Every message bubble and canceled draft is wrapped in `StoryEvidenceTarget` (`380ms` hold or `Enter`/`Space` on keyboard focus) to open `UniversalEvidenceModal`.
 
 ---
 

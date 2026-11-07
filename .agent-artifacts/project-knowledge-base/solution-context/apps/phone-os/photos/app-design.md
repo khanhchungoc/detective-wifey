@@ -41,18 +41,18 @@ timestamp: "2026-10-14T12:55:00+07:00"
 │ Highlight Accent:     Electric Blue   #2979FF          │
 │ Lock Badge:           Amber Yellow    #FFC107          │
 │ Text Primary:         Pure White      #FFFFFF          │
-│ Text Metadata:        Muted Gray      #8E8E93          │
+│ Text Metadata:        Accessible Slate#94A3B8 (≥4.5:1) │
 │ Forensic Magnifier:   Cyan Ring       #00E5FF          │
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Typography & Dynamic Scale**:
-  * Date Section Header: Bold sans-serif ($18\text{px}$ / $700$).
-  * Collections Title: Semibold ($16\text{px}$ / $600$).
-  * Metadata / Geotag / EXIF: Tabular Regular ($13\text{px}$ / $400$).
+* **Typography & Dynamic Scale (Universal `text-ios-*` Tokens)**:
+  * Date Section Header: `text-ios-title-3` ($20\text{px}$ Semibold / $600$).
+  * Collections Title: `text-ios-callout` ($16\text{px}$ Semibold / $600$).
+  * Metadata / Geotag / EXIF: `text-ios-footnote` ($13\text{px}$ Regular / $400$, `tabular-nums`, `#94A3B8`).
 * **Ergonomics & Touch Targets**:
-  * Filter pills ($32\text{px}$ height, $16\text{px}$ pill radius).
-  * Double-tap to zoom or pinch-to-zoom on full-screen images.
+  * Filter pills ($32\text{px}$ visual pill height wrapped in `.touch-target-min` $\ge 44 \times 44\text{px}$ hit area, $16\text{px}$ pill radius).
+  * Double-tap to zoom or pinch-to-zoom on full-screen images (plus `+`/`-` zoom buttons for keyboard/single-pointer accessibility).
   * Info sheet drawer toggle button $\ge 44 \times 44\text{px}$.
 
 ---
@@ -125,20 +125,18 @@ Full-screen media view equipped with iOS 26/27 inspection tools and the **AI Cle
 │       [ Wand ] AI Clean Up & Spatial Reframing         │
 ├────────────────────────────────────────────────────────┤
 │ THÔNG TIN ẢNH (EXIF METADATA DRAWER):                  │
-│ 📍 Địa điểm: Nhà hàng The Deck Saigon - Thảo Điền      │
-│ 📷 Camera: Flagship Pro Max • Tiêu cự 24mm • f/1.78    │
-│ 🕒 Thời gian chụp: 21:30:14 GMT+7                      │
-├────────────────────────────────────────────────────────┤
-│ [ ➕ Thêm Bằng Chứng vào Sổ Tay Bắt Ghen ]              │
+│ [Pin] Địa điểm: Nhà hàng The Deck Saigon - Thảo Điền   │
+│ [Camera] Camera: Flagship Pro Max • Tiêu cự 24mm       │
+│ [Time] Thời gian chụp: 21:30:14 GMT+7                  │
 ├────────────────────────────────────────────────────────┤
 │ ══════════════════════ [ - ] ═════════════════════════ │
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Interactive Touch Targets**:
-  * `[ ℹ️ ]`: Toggles slide-up EXIF metadata drawer showing GPS geotag and exact capture timestamp (conflicts with husband's claimed overtime schedule).
+* **Interactive Touch Targets & Zero-Spoiler Pinning (`380ms`)**:
+  * `[ Info ]`: Toggles slide-up EXIF metadata drawer showing GPS geotag and exact capture timestamp (conflicts with husband's claimed overtime schedule).
   * `[ Wand ] AI Clean Up`: Highlights background reflections and strips obscuring glare to reveal forensic suspect details.
-  * `[ ➕ Thêm Bằng Chứng ]`: Clue pinning CTA integrating with Wife's Investigation Notebook.
+  * **Zero-Spoiler Pinning**: Static pin buttons are prohibited. Long-pressing (`380ms` or `Enter`/`Space` on keyboard focus) the photo canvas or EXIF metadata row (`StoryEvidenceTarget`) opens `UniversalEvidenceModal`.
 
 ---
 
