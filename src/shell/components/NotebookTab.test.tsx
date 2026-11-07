@@ -122,13 +122,14 @@ describe('notebook tab pointer ownership', () => {
     expect(tab.props.tabIndex).toBe(-1);
   });
 
-  it('updates phone screen with 3D backwards perspective zoom out while pulling notebook tab', () => {
+  it('updates phone screen with receding scale while pulling notebook tab', () => {
     const onOpen = vi.fn();
     const tab = NotebookTab({ open: false, onOpen }) as ReactElement<ComponentProps<'button'>>;
     const overlay = { style: { visibility: 'hidden', opacity: '0', transform: 'translate3d(100%, 0, 0)' } };
     const screen = {
+      dataset: {} as Record<string, string>,
       style: {
-        transform: 'perspective(1000px) translate3d(0, 0, 0px) scale(1)',
+        transform: 'translate3d(0, 0, 0) scale(1)',
         borderRadius: '0px', filter: 'none', boxShadow: 'none', transition: 'none',
         removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
       },
@@ -149,24 +150,26 @@ describe('notebook tab pointer ownership', () => {
     tab.props.onPointerDown?.(event(375, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
     tab.props.onPointerMove?.(event(180, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
 
-    expect(screen.style.transform).toContain('perspective(1000px)');
-    expect(screen.style.transform).toContain('scale(');
+    expect(screen.style.transform).toContain('translate3d(0, 0, 0) scale(');
+    expect(screen.dataset.notebookDragging).toBe('true');
 
     tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -24px) scale(0.94)');
+    expect(screen.style.transform).toBe('translate3d(0, 0, 0) scale(0.94)');
     expect(screen.style.borderRadius).toBe('28px');
     expect(screen.style.filter).toBe('none');
+    expect(screen.dataset.notebookDragging).toBeUndefined();
     expect(onOpen).toHaveBeenCalledOnce();
   });
 
-  it('retains phone screen 3D zoom out when open notebook is pulled toward close but released before threshold', () => {
+  it('retains phone screen receding scale when open notebook is pulled toward close but released before threshold', () => {
     const onOpen = vi.fn();
     const onClose = vi.fn();
     const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
     const overlay = { style: { visibility: 'visible', opacity: '1', transform: 'none' } };
     const screen = {
+      dataset: {} as Record<string, string>,
       style: {
-        transform: 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)',
+        transform: 'translate3d(0, 0, 0) scale(0.94)',
         borderRadius: '28px', outline: '1px solid rgba(255, 255, 255, 0.15)',
         boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55)', transition: 'none',
         removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
@@ -192,8 +195,8 @@ describe('notebook tab pointer ownership', () => {
     tab.props.onPointerUp?.(event(64, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
     expect(onClose).not.toHaveBeenCalled();
     expect(onOpen).not.toHaveBeenCalled();
-    // Screen retains 3D zoom out and does NOT revert to full screen
-    expect(screen.style.transform).toBe('perspective(1000px) translate3d(0, 0, -24px) scale(0.94)');
+    // Screen retains receding scale and does NOT revert to full screen
+    expect(screen.style.transform).toBe('translate3d(0, 0, 0) scale(0.94)');
     expect(screen.style.borderRadius).toBe('28px');
   });
 });

@@ -22,13 +22,13 @@ export function animateOverlay(element: HTMLElement, open: boolean, closedTransf
     : (current?.transform && current.transform !== 'none' ? current.transform : '');
   const fromTransform = rawTransform || (open ? closedTransform : NOTEBOOK_OPEN_TRANSFORM);
   const toTransform = open ? NOTEBOOK_OPEN_TRANSFORM : closedTransform;
-  const restTransform = open ? 'none' : closedTransform;
+  const isAtTarget = fromTransform.replace(/0px/g, '0') === toTransform.replace(/0px/g, '0');
 
   previous?.cancel();
   element.style.opacity = '1';
 
-  if (reducedMotion || !element.animate || closedTransform === 'none') {
-    element.style.transform = restTransform;
+  if (reducedMotion || !element.animate || closedTransform === 'none' || isAtTarget) {
+    element.style.transform = toTransform;
     complete();
     return;
   }
@@ -45,7 +45,7 @@ export function animateOverlay(element: HTMLElement, open: boolean, closedTransf
     fill: 'both',
   });
   animation.onfinish = () => {
-    element.style.transform = restTransform;
+    element.style.transform = toTransform;
     animation.cancel?.();
     complete();
   };

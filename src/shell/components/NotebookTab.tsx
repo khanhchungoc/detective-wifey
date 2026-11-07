@@ -33,7 +33,8 @@ export function NotebookTab({
   const gesture = useRef<{
     id: number; startX: number; startY: number; origin: FloatingPoint; point: FloatingPoint;
     scaleX: number; scaleY: number; moved: boolean; mode: 'vertical' | 'pull' | null;
-    surfaceWidth: number; pullOffsetX: number; overlay: HTMLElement | null; screen: HTMLElement | null;
+    surfaceWidth: number; pullOffsetX: number; overlay: HTMLElement | null; backdrop: HTMLElement | null;
+    screen: HTMLElement | null; appSurface: HTMLElement | null;
     samples: FloatingSample[];
   } | null>(null);
   const suppressClick = useRef(false);
@@ -68,6 +69,7 @@ export function NotebookTab({
       settling.current?.cancel();
       if (frame.current !== null) cancelAnimationFrame(frame.current);
       if (gesture.current?.screen) {
+        delete gesture.current.screen.dataset?.notebookDragging;
         gesture.current.screen.style.removeProperty('transition');
         gesture.current.screen.style.removeProperty('transform');
         gesture.current.screen.style.removeProperty('border-radius');
@@ -78,6 +80,7 @@ export function NotebookTab({
   }, []);
 
   const clearScreenOverrides = (screen: HTMLElement | null, appSurface: HTMLElement | null) => {
+    if (screen?.dataset) delete screen.dataset.notebookDragging;
     screen?.style.removeProperty('transition');
     screen?.style.removeProperty('transform');
     screen?.style.removeProperty('border-radius');
@@ -89,8 +92,7 @@ export function NotebookTab({
 
   useLayoutEffect(() => {
     const element = ref.current;
-    if (!element || gesture.current || lastSettledOpen.current === open) return;
-    lastSettledOpen.current = open;
+    if (!element || gesture.current) return;
     const parent = element.offsetParent as HTMLElement | null;
     if (typeof parent?.querySelector === 'function') {
       clearScreenOverrides(
@@ -98,6 +100,8 @@ export function NotebookTab({
         parent.querySelector<HTMLElement>('[data-app-surface]'),
       );
     }
+    if (lastSettledOpen.current === open) return;
+    lastSettledOpen.current = open;
     const edge: DockEdge = open ? 'left' : 'right';
     const to = transform(floatingDockPosition(edge, position.current.fraction, bounds.current));
     const from = getComputedStyle(element).transform;
@@ -146,27 +150,26 @@ export function NotebookTab({
       if (!reduced && button.animate) settling.current = button.animate([{ transform: from }, { transform: to }],
         { duration: shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS, easing: NOTEBOOK_SLIDE_EASING });
 
-      const container = active.overlay?.parentElement;
-      const backdrop = container?.querySelector<HTMLElement>('[data-notebook-backdrop]');
+      const backdrop = active.backdrop;
       const duration = shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS;
       if (backdrop) {
         backdrop.style.transition = `opacity ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         backdrop.style.opacity = shouldOpen ? '1' : '0';
       }
 
-      const appSurface = typeof active.screen?.querySelector === 'function'
-        ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
+      const appSurface = active.appSurface;
       if (active.screen) {
+        if (active.screen.dataset) delete active.screen.dataset.notebookDragging;
         active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
           `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}, ` +
           `box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         if (shouldOpen) {
-          active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -24px) scale(0.94)';
+          active.screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
           active.screen.style.borderRadius = '28px';
           active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
           active.screen.style.boxShadow = '0 18px 42px rgba(0, 0, 0, 0.55)';
         } else {
-          active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, 0px) scale(1)';
+          active.screen.style.transform = 'translate3d(0, 0, 0) scale(1)';
           active.screen.style.borderRadius = '0px';
           active.screen.style.outline = 'none';
           active.screen.style.boxShadow = 'none';
@@ -177,19 +180,27 @@ export function NotebookTab({
         appSurface.style.borderRadius = shouldOpen ? '28px' : '0px';
       }
 
+      const attachScreenCleanup = () => {
+        const screenEl = active.screen;
+        if (!screenEl?.addEventListener) return;
+        const onEnd = (e: Event) => {
+          if (e.target !== screenEl || (e as TransitionEvent).propertyName !== 'transform') return;
+          screenEl.removeEventListener?.('transitionend', onEnd);
+          clearScreenOverrides(screenEl, appSurface);
+        };
+        screenEl.addEventListener('transitionend', onEnd);
+      };
+
       if (shouldOpen && !open) {
-        active.screen?.addEventListener?.('transitionend', () => clearScreenOverrides(active.screen, appSurface), { once: true });
+        attachScreenCleanup();
         onOpen();
       } else if (!shouldOpen && open) {
-        active.screen?.addEventListener?.('transitionend', () => clearScreenOverrides(active.screen, appSurface), { once: true });
+        attachScreenCleanup();
         onClose?.();
       } else if (!shouldOpen && !open && active.overlay) {
         const overlay = active.overlay;
         animateOverlay(overlay, false, NOTEBOOK_CLOSED_TRANSFORM, () => {
-          overlay.style.visibility = 'hidden';
-          if (container) {
-            container.style.visibility = 'hidden';
-          }
+          overlay.style.opacity = '0';
           if (backdrop) {
             backdrop.style.transition = `opacity ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
             backdrop.style.opacity = '0';
@@ -226,7 +237,7 @@ export function NotebookTab({
     aria-haspopup="dialog" aria-expanded={open} tabIndex={hidden ? -1 : 0} aria-hidden={hidden}
     title={open ? 'Sổ tay của vợ · Chạm hoặc kéo sang phải để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
     className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:-right-4 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
-    style={{ width: NOTEBOOK_TAB_WIDTH, height: NOTEBOOK_TAB_HEIGHT, touchAction: 'none', opacity: hidden ? 0 : 1, pointerEvents: hidden ? 'none' : 'auto' }}
+    style={{ width: NOTEBOOK_TAB_WIDTH, height: NOTEBOOK_TAB_HEIGHT, touchAction: 'none', opacity: hidden ? 0 : 1, pointerEvents: hidden ? 'none' : 'auto', willChange: 'transform', backfaceVisibility: 'hidden' }}
     onPointerDown={event => {
       if (event.button !== 0 || !event.isPrimary) return;
       event.stopPropagation();
@@ -241,13 +252,17 @@ export function NotebookTab({
       }
       const point = { x: (rect.left - host.left) / scaleX - parent.clientLeft, y: (rect.top - host.top) / scaleY - parent.clientTop };
       const overlay = typeof parent.querySelector === 'function' ? parent.querySelector<HTMLElement>('[data-notebook-overlay]') : null;
+      const container = overlay?.parentElement;
+      const backdrop = typeof container?.querySelector === 'function' ? container.querySelector<HTMLElement>('[data-notebook-backdrop]') : null;
       const screenCandidate = typeof parent.querySelector === 'function' ? parent.querySelector<HTMLElement>('[data-phone-screen]') : null;
       const screen = screenCandidate && screenCandidate !== overlay ? screenCandidate : null;
+      const appSurface = typeof screen?.querySelector === 'function' ? screen.querySelector<HTMLElement>('[data-app-surface]') : null;
       settling.current?.cancel();
       button.style.transform = transform(point);
       gesture.current = {
         id: event.pointerId, startX: event.clientX, startY: event.clientY, origin: point, point,
-        scaleX, scaleY, moved: false, mode: null, surfaceWidth, pullOffsetX: open ? 0 : surfaceWidth, overlay, screen,
+        scaleX, scaleY, moved: false, mode: null, surfaceWidth, pullOffsetX: open ? 0 : surfaceWidth,
+        overlay, backdrop, screen, appSurface,
         samples: [{ x: event.clientX / scaleX, y: event.clientY / scaleY, time: event.timeStamp }],
       };
       suppressClick.current = false;
@@ -264,14 +279,29 @@ export function NotebookTab({
       if (active.mode === null) {
         const isHorizontalPull = Math.abs(dx) >= Math.abs(dy) && (open ? dx > 0 : dx < 0);
         active.mode = isHorizontalPull ? 'pull' : 'vertical';
-        if (active.mode === 'pull' && active.overlay) {
+        if (active.mode === 'pull') {
           active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);
-          active.overlay.getAnimations?.().forEach(anim => anim.cancel());
-          active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
-          active.overlay.style.visibility = 'visible';
-          active.overlay.style.opacity = '1';
-          if (active.overlay.parentElement) {
-            active.overlay.parentElement.style.visibility = 'visible';
+          if (active.overlay) {
+            active.overlay.getAnimations?.().forEach(anim => anim.cancel());
+            active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
+            active.overlay.style.visibility = 'visible';
+            active.overlay.style.opacity = '1';
+            if (active.overlay.parentElement) {
+              active.overlay.parentElement.style.visibility = 'visible';
+            }
+          }
+          if (active.backdrop) {
+            active.backdrop.style.transition = 'none';
+          }
+          if (active.screen) {
+            if (active.screen.dataset) active.screen.dataset.notebookDragging = 'true';
+            active.screen.style.transition = 'none';
+            active.screen.style.borderRadius = '28px';
+            active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
+          }
+          if (active.appSurface) {
+            active.appSurface.style.transition = 'none';
+            active.appSurface.style.borderRadius = '28px';
           }
         }
       }
@@ -292,27 +322,11 @@ export function NotebookTab({
             active.overlay.style.transform = `translate3d(${Number(active.pullOffsetX.toFixed(2))}px, 0, 0)`;
           }
           const progress = Math.max(0, Math.min(1, 1 - active.pullOffsetX / active.surfaceWidth));
-          const container = active.overlay?.parentElement;
-          if (container) {
-            container.style.visibility = 'visible';
-            const backdrop = container.querySelector<HTMLElement>('[data-notebook-backdrop]');
-            if (backdrop) {
-              backdrop.style.transition = 'none';
-              backdrop.style.opacity = progress.toFixed(3);
-            }
+          if (active.backdrop) {
+            active.backdrop.style.opacity = progress.toFixed(3);
           }
           if (active.screen) {
-            const radius = `${Math.round(28 * progress)}px`;
-            active.screen.style.transition = 'none';
-            active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-24 * progress).toFixed(2)}px) scale(${(1 - 0.06 * progress).toFixed(4)})`;
-            active.screen.style.borderRadius = radius;
-            active.screen.style.outline = progress > 0 ? '1px solid rgba(255, 255, 255, 0.15)' : 'none';
-            const appSurface = typeof active.screen.querySelector === 'function'
-              ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
-            if (appSurface) {
-              appSurface.style.transition = 'none';
-              appSurface.style.borderRadius = radius;
-            }
+            active.screen.style.transform = `translate3d(0, 0, 0) scale(${(1 - 0.06 * progress).toFixed(4)})`;
           }
         }
       });

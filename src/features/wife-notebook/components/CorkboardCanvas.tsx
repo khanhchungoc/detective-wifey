@@ -489,7 +489,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
       {/* Empty State Overlay */}
       {placedNodes.length === 0 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-20">
-          <div className="h-16 w-16 rounded-3xl bg-[var(--notebook-paper)] border border-[var(--notebook-border)] shadow-md flex items-center justify-center text-[#C2185B] text-3xl mb-3 backdrop-blur-md">
+          <div className="h-16 w-16 rounded-3xl bg-[var(--notebook-paper)] border border-[var(--notebook-border)] shadow-md flex items-center justify-center text-[#C2185B] text-3xl mb-3">
             <IoBookOutline />
           </div>
           <h3 className="text-sm font-extrabold text-stone-800 uppercase tracking-wider">
@@ -505,7 +505,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
 
       {/* Pairing Banner Indicator */}
       {activePairing.sourceNodeId && (
-        <div className="absolute top-2 left-4 right-4 z-40 flex items-center justify-between rounded-xl bg-rose-50 border border-rose-300 p-2.5 px-4 text-xs font-semibold text-rose-900 shadow-xl backdrop-blur-md animate-pulse">
+        <div className="absolute top-2 left-4 right-4 z-40 flex items-center justify-between rounded-xl bg-rose-50 border border-rose-300 p-2.5 px-4 text-xs font-semibold text-rose-900 shadow-xl animate-pulse">
           <span>ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
           <button
             type="button"
@@ -531,7 +531,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
 
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-2xl bg-[var(--notebook-paper)] border border-[var(--notebook-border)] p-2 px-3 shadow-2xl backdrop-blur-md">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-2xl bg-[var(--notebook-paper)] border border-[var(--notebook-border)] p-2 px-3 shadow-2xl">
           <span className="text-xs font-medium text-stone-800">Đã chọn sợi dây đỏ</span>
           <button
             type="button"

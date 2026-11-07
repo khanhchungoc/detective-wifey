@@ -28,7 +28,7 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
       key={node.nodeId}
       className="absolute left-0 top-0 h-1 w-1 rounded-full bg-[#C2185B]"
       style={{
-        transform: `translate3d(${node.x * scale}px, ${node.y * scale}px, 0)`,
+        transform: `translate(${node.x * scale}px, ${node.y * scale}px)`,
       }}
     />
   )), [placedNodes, scale]);
@@ -48,7 +48,7 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
       <div
         className="absolute left-0 top-0 border border-[#C2185B] bg-rose-600/15 rounded-sm pointer-events-none"
         style={{
-          transform: `translate3d(${viewX}px, ${viewY}px, 0)`,
+          transform: `translate(${viewX}px, ${viewY}px)`,
           width: `${Math.max(8, viewW)}px`,
           height: `${Math.max(8, viewH)}px`,
         }}
