@@ -133,17 +133,25 @@ export function NotebookTab({
         }
       }
 
+      const appSurface = typeof active.screen?.querySelector === 'function'
+        ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
       if (active.screen) {
-        active.screen.style.removeProperty('transition');
+        const duration = shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS;
+        active.screen.style.transition = `transform ${duration}ms ${NOTEBOOK_SLIDE_EASING}, border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}, box-shadow ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
         if (shouldOpen) {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
-          active.screen.style.borderRadius = '20px';
+          active.screen.style.borderRadius = '28px';
           active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
         } else {
           active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, 0px) scale(1)';
           active.screen.style.borderRadius = '0px';
           active.screen.style.boxShadow = 'none';
         }
+      }
+      if (appSurface) {
+        const duration = shouldOpen ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS;
+        appSurface.style.transition = `border-radius ${duration}ms ${NOTEBOOK_SLIDE_EASING}`;
+        appSurface.style.borderRadius = shouldOpen ? '28px' : '0px';
       }
 
       if (shouldOpen && !open) {
@@ -158,17 +166,25 @@ export function NotebookTab({
             container.style.visibility = 'hidden';
             container.style.removeProperty('--notebook-shade-opacity');
           }
+          active.screen?.style.removeProperty('transition');
           active.screen?.style.removeProperty('transform');
           active.screen?.style.removeProperty('border-radius');
           active.screen?.style.removeProperty('box-shadow');
+          appSurface?.style.removeProperty('transition');
+          appSurface?.style.removeProperty('border-radius');
         }, undefined, reduced);
       } else if (shouldOpen && open && active.overlay) {
         animateOverlay(active.overlay, true, NOTEBOOK_CLOSED_TRANSFORM, () => {
           if (container) container.style.removeProperty('--notebook-shade-opacity');
           if (active.screen) {
+            active.screen.style.removeProperty('transition');
             active.screen.style.transform = 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)';
-            active.screen.style.borderRadius = '20px';
+            active.screen.style.borderRadius = '28px';
             active.screen.style.boxShadow = '0 14px 34px rgba(0, 0, 0, 0.45)';
+          }
+          if (appSurface) {
+            appSurface.style.removeProperty('transition');
+            appSurface.style.borderRadius = '28px';
           }
         }, undefined, reduced);
       }
@@ -265,6 +281,10 @@ export function NotebookTab({
           if (active.screen) {
             active.screen.style.transition = 'none';
             active.screen.style.transform = `perspective(1000px) translate3d(0, 0, ${(-18 * progress).toFixed(2)}px) scale(${(1 - 0.03 * progress).toFixed(4)})`;
+            active.screen.style.borderRadius = '28px';
+            const appSurface = typeof active.screen.querySelector === 'function'
+              ? active.screen.querySelector<HTMLElement>('[data-app-surface]') : null;
+            if (appSurface) appSurface.style.borderRadius = '28px';
           }
         }
       });

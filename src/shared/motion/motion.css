@@ -205,8 +205,12 @@ html[data-swipe-motion][data-motion='close']::view-transition-old(phone-app) {
 }
 [data-phone-screen][data-notebook-open='true'] {
   transform: perspective(1000px) translate3d(0, 0, -18px) scale(0.97);
-  border-radius: 20px;
+  border-radius: 28px;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+}
+[data-phone-screen][data-notebook-open='true'] [data-app-surface] {
+  border-radius: 28px;
 }
 
 /* CSS entrances cover unsupported browsers and local UI state. Captured nodes

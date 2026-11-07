@@ -146,7 +146,7 @@ describe('app surface and stationary system chrome', () => {
     const htmlOpen = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={true} />);
     expect(htmlOpen).toContain('data-phone-screen="true"');
     expect(htmlOpen).toContain('perspective(1000px) translate3d(0, 0, -18px) scale(0.97)');
-    expect(htmlOpen).toContain('border-radius:20px');
+    expect(htmlOpen).toContain('border-radius:28px');
 
     const htmlClosed = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={false} />);
     expect(htmlClosed).toContain('perspective(1000px) translate3d(0, 0, 0px) scale(1)');

@@ -1071,7 +1071,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   ]);
 
   return (
-    <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden rounded-l-2xl border-y border-l-[6px] border-stone-900/35 shadow-[-12px_0_32px_rgba(0,0,0,0.45)] bg-[var(--notebook-canvas)] text-stone-800">
+    <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden rounded-l-2xl bg-[var(--notebook-canvas)] text-stone-800">
       {/* Floating radar map */}
       <header className="absolute top-0 left-0 right-0 z-40 flex justify-end p-3 pointer-events-none">
         <div className="pointer-events-auto">

@@ -81,7 +81,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       <div
         ref={drawerRef}
         data-notebook-overlay
-        className="absolute left-0 right-0 z-20 overflow-hidden shadow-[-16px_0_36px_rgba(0,0,0,0.5)]"
+        className="absolute left-0 right-0 z-20 overflow-hidden rounded-l-2xl shadow-[10px_16px_28px_rgba(0,0,0,0.2),_4px_6px_12px_rgba(0,0,0,0.1)]"
         style={{
           top: 'calc(var(--phone-system-top, 59px) + 6px)',
           bottom: 'max(28px, var(--phone-system-bottom, 34px))',

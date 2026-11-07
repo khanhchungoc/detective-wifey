@@ -229,7 +229,8 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
             ? 'perspective(1000px) translate3d(0, 0, -18px) scale(0.97)'
             : 'perspective(1000px) translate3d(0, 0, 0px) scale(1)',
           transformOrigin: 'center center',
-          borderRadius: notebookOpen ? '20px' : '0px',
+          borderRadius: notebookOpen ? '28px' : '0px',
+          WebkitMaskImage: notebookOpen ? '-webkit-radial-gradient(white, black)' : undefined,
           boxShadow: notebookOpen ? '0 14px 34px rgba(0, 0, 0, 0.45)' : 'none',
           transition: `transform ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
             `border-radius ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}, ` +
@@ -380,6 +381,8 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           style={{
             display: activeAppId === 'home' ? 'none' : undefined,
             backgroundColor: appTheme,
+            borderRadius: notebookOpen ? '28px' : '0px',
+            transition: `border-radius ${notebookOpen ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`,
             ...(isIOS ? { paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
             touchAction: 'pan-y',
           }}

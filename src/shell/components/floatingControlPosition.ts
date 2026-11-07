@@ -50,5 +50,5 @@ export function shouldCommitNotebookPull(offsetX: number, surfaceWidth: number, 
   if (surfaceWidth <= 0) return !open;
   if (velocityX <= -FLOATING_THROW_SPEED) return true;
   if (velocityX >= FLOATING_THROW_SPEED) return false;
-  return open ? offsetX < surfaceWidth * .3 : offsetX <= surfaceWidth * .7;
+  return open ? offsetX < surfaceWidth * .45 : offsetX <= surfaceWidth * .7;
 }
