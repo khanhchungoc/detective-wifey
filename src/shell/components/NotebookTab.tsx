@@ -218,8 +218,8 @@ export function NotebookTab({
 
     const edge: DockEdge = open ? 'left' : 'right';
     const edgeX = edge === 'left' ? bounds.current.left : bounds.current.right;
-    const point = cancelled ? active.point : clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
-    const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced);
+    const point = cancelled || active.mode !== 'vertical' ? active.origin : clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
+    const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced && active.mode === 'vertical');
     position.current = { fraction: dock.fraction };
     const to = transform(floatingDockPosition(edge, dock.fraction, bounds.current));
     button.dataset.edge = edge;
@@ -231,7 +231,7 @@ export function NotebookTab({
   return <button ref={ref} data-notebook-tab data-edge={open ? 'left' : 'right'} data-floating="false" type="button"
     aria-label={open ? 'Đóng sổ tay của vợ' : 'Mở sổ tay của vợ'}
     aria-haspopup="dialog" aria-expanded={open} tabIndex={hidden ? -1 : 0} aria-hidden={hidden}
-    title={open ? 'Sổ tay của vợ · Chạm hoặc kéo sang phải để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
+    title={open ? 'Sổ tay của vợ · Chạm để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
     className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:-right-4 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
     style={{ width: NOTEBOOK_TAB_WIDTH, height: NOTEBOOK_TAB_HEIGHT, touchAction: 'none', opacity: hidden ? 0 : 1, pointerEvents: hidden ? 'none' : 'auto', willChange: 'transform', backfaceVisibility: 'hidden' }}
     onPointerDown={event => {
@@ -274,7 +274,10 @@ export function NotebookTab({
       active.moved ||= isFloatingDrag(dx, dy);
       if (!active.moved) return;
       if (active.mode === null) {
-        const isHorizontalPull = Math.abs(dx) >= Math.abs(dy) && (open ? dx > 0 : dx < 0);
+        if (open && Math.abs(dx) >= Math.abs(dy)) {
+          return;
+        }
+        const isHorizontalPull = !open && Math.abs(dx) >= Math.abs(dy) && dx < 0;
         active.mode = isHorizontalPull ? 'pull' : 'vertical';
         if (active.mode === 'pull') {
           active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);
@@ -292,12 +295,10 @@ export function NotebookTab({
           }
           if (active.screen) {
             if (active.screen.dataset) active.screen.dataset.notebookDragging = 'true';
-            active.screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
-            active.screen.style.borderRadius = '28px';
-            active.screen.style.outline = '1px solid rgba(255, 255, 255, 0.15)';
+            active.screen.style.transition = 'none';
           }
           if (active.appSurface) {
-            active.appSurface.style.borderRadius = '28px';
+            active.appSurface.style.transition = 'none';
           }
         }
       }
@@ -313,7 +314,20 @@ export function NotebookTab({
         if (active.backdrop) {
           active.backdrop.style.opacity = progress.toFixed(3);
         }
-      } else {
+        if (active.screen) {
+          active.screen.style.transition = 'none';
+          const scale = Number((1 - progress * 0.06).toFixed(4));
+          active.screen.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
+          const radius = Number((progress * 28).toFixed(1));
+          active.screen.style.borderRadius = `${radius}px`;
+          active.screen.style.outline = progress > 0 ? `1px solid rgba(255, 255, 255, ${(progress * 0.15).toFixed(3)})` : 'none';
+          active.screen.style.boxShadow = progress > 0 ? `0 ${Number((progress * 18).toFixed(1))}px ${Number((progress * 42).toFixed(1))}px rgba(0, 0, 0, ${(progress * 0.55).toFixed(3)})` : 'none';
+        }
+        if (active.appSurface) {
+          active.appSurface.style.transition = 'none';
+          active.appSurface.style.borderRadius = `${Number((progress * 28).toFixed(1))}px`;
+        }
+      } else if (active.mode === 'vertical') {
         const edgeX = open ? bounds.current.left : bounds.current.right;
         active.point = clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
         if (ref.current) ref.current.style.transform = transform(active.point);
