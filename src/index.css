@@ -222,3 +222,18 @@ body {
   .phone-app-grid { row-gap: 10px; }
   .phone-dock { padding-block: 8px; }
 }
+
+/* App launcher icon touch (data-pressed) & desktop click (:active) feedback */
+[data-launch-app][data-pressed="true"],
+[data-launch-app]:active {
+  transform: scale(0.9);
+}
+[data-launch-app][data-grayed-out="true"][data-pressed="true"],
+[data-launch-app][data-grayed-out="true"]:active {
+  transform: scale(0.95);
+}
+[data-launch-app][data-pressed="true"] .phone-app-icon-overlay,
+[data-launch-app]:active .phone-app-icon-overlay {
+  opacity: 1;
+}
+
