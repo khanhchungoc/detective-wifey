@@ -14,6 +14,12 @@ export interface UseSwipeBackOptions {
   maxRatio?: number;
   /** Max duration of gesture in ms (default: 1500) */
   maxDuration?: number;
+  /** Max distance in px from the surface's left edge where the swipe can start (e.g. 44 for edge swipe) */
+  maxStartDistance?: number;
+  /** Optional callback fired per animation frame with swipe progress (0 to 1) and displacement in px */
+  onSwipeProgress?: (progress: number, displacement: number) => void;
+  /** Optional callback fired when the swipe gesture ends, indicating whether back was committed */
+  onSwipeEnd?: (committed: boolean) => void;
 }
 
 export interface SwipeCheckParams {
@@ -88,11 +94,17 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
   };
   const paint = () => {
     frame = undefined;
-    if (surface) surface.style.transform = `translate3d(${displacement}px, 0, 0) ${restingTransform}`.trim();
+    if (surface) {
+      surface.style.transform = `translate3d(${displacement}px, 0, 0) ${restingTransform}`.trim();
+      if (options.onSwipeProgress && width > 0) {
+        options.onSwipeProgress(displacement / width, displacement);
+      }
+    }
   };
 
   const resetVisual = (animate = true) => {
     if (!surface) return;
+    options.onSwipeEnd?.(false);
     stopFrame();
     const element = surface;
     delete element.dataset.swipeSurface;
@@ -114,6 +126,10 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
     if (options.enabled === false) return;
     const element = event.currentTarget;
     if (typeof HTMLElement !== 'undefined' && element instanceof HTMLElement) {
+      if (options.maxStartDistance !== undefined) {
+        const rect = element.getBoundingClientRect();
+        if (x - rect.left > options.maxStartDistance) return;
+      }
       element.dataset.swipeSurface = '';
       if (event.target instanceof Element) {
         // The deepest gesture owner moves; outer shell fallback remains stationary.
@@ -189,6 +205,7 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
       }
       stopFrame();
       paint();
+      options.onSwipeEnd?.(true);
       const element = surface;
       if (element) delete element.dataset.swipeSurface;
       const rest = restingTransform;

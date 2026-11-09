@@ -100,6 +100,10 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     if ((e.target as HTMLElement).closest('button, .corkboard-node-card, .corkboard-control-dock, .corkboard-drawer')) {
       return;
     }
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - rect.left <= 44) {
+      return;
+    }
 
     e.stopPropagation();
     isDragging.current = true;

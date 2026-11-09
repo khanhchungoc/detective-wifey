@@ -9,6 +9,7 @@ class Surface {
   style = { transform: '' };
   dataset = {};
   get clientWidth() { return 390; }
+  getBoundingClientRect() { return { left: 0, top: 0, right: 390, bottom: 844, width: 390, height: 844 }; }
   animate = vi.fn(() => ({ cancel: vi.fn() }));
   closest(selector: string) { return selector === '[data-swipe-surface]' ? this : null; }
 }
@@ -209,5 +210,38 @@ it('cleans up data-swipe-surface attribute on gesture completion', () => {
 
   engine.onTouchCancel();
   expect('swipeSurface' in surface.dataset).toBe(false);
+  engine.dispose();
+});
+
+it('restricts gesture start to maxStartDistance when specified', () => {
+  const onBack = vi.fn();
+  const onSwipeProgress = vi.fn();
+  const engine = createSwipeBackEngine({ onBack, maxStartDistance: 44, onSwipeProgress });
+  const surface = new Surface();
+
+  // Touch starting at x=100 (> 44) should be ignored
+  engine.onTouchStart({
+    currentTarget: surface as unknown as HTMLElement,
+    target: surface as unknown as HTMLElement,
+    touches: [{ clientX: 100, clientY: 100 }],
+  });
+  engine.onTouchMove({ touches: [{ clientX: 180, clientY: 100 }] });
+  paint();
+  expect(surface.style.transform).toBe('');
+  expect(onSwipeProgress).not.toHaveBeenCalled();
+
+  // Touch starting at x=20 (<= 44) should track
+  engine.onTouchStart({
+    currentTarget: surface as unknown as HTMLElement,
+    target: surface as unknown as HTMLElement,
+    touches: [{ clientX: 20, clientY: 100 }],
+  });
+  engine.onTouchMove({ touches: [{ clientX: 100, clientY: 100 }] });
+  paint();
+  expect(surface.style.transform).toBe('translate3d(80px, 0, 0)');
+  expect(onSwipeProgress).toHaveBeenCalledWith(80 / 390, 80);
+
+  engine.onTouchEnd({ changedTouches: [{ clientX: 100, clientY: 100 }] });
+  expect(onBack).toHaveBeenCalledOnce();
   engine.dispose();
 });

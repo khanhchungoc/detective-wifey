@@ -218,8 +218,8 @@ export function NotebookTab({
 
     const edge: DockEdge = open ? 'left' : 'right';
     const edgeX = edge === 'left' ? bounds.current.left : bounds.current.right;
-    const point = cancelled || active.mode !== 'vertical' ? active.origin : clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
-    const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced && active.mode === 'vertical');
+    const point = cancelled ? active.point : clampFloatingPoint({ x: edgeX, y: active.origin.y + dy }, bounds.current);
+    const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced);
     position.current = { fraction: dock.fraction };
     const to = transform(floatingDockPosition(edge, dock.fraction, bounds.current));
     button.dataset.edge = edge;
@@ -231,7 +231,7 @@ export function NotebookTab({
   return <button ref={ref} data-notebook-tab data-edge={open ? 'left' : 'right'} data-floating="false" type="button"
     aria-label={open ? 'Đóng sổ tay của vợ' : 'Mở sổ tay của vợ'}
     aria-haspopup="dialog" aria-expanded={open} tabIndex={hidden ? -1 : 0} aria-hidden={hidden}
-    title={open ? 'Sổ tay của vợ · Chạm để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
+    title={open ? 'Sổ tay của vợ · Chạm hoặc kéo sang phải để đóng, kéo dọc để di chuyển' : 'Sổ tay của vợ · Chạm hoặc kéo sang trái để mở, kéo dọc để di chuyển'}
     className="group absolute left-0 top-0 z-[80] flex cursor-grab items-center justify-center text-white before:absolute before:inset-y-0 before:-left-4 before:-right-4 active:cursor-grabbing focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-300"
     style={{ width: NOTEBOOK_TAB_WIDTH, height: NOTEBOOK_TAB_HEIGHT, touchAction: 'none', opacity: hidden ? 0 : 1, pointerEvents: hidden ? 'none' : 'auto', willChange: 'transform', backfaceVisibility: 'hidden' }}
     onPointerDown={event => {
@@ -274,10 +274,7 @@ export function NotebookTab({
       active.moved ||= isFloatingDrag(dx, dy);
       if (!active.moved) return;
       if (active.mode === null) {
-        if (open && Math.abs(dx) >= Math.abs(dy)) {
-          return;
-        }
-        const isHorizontalPull = !open && Math.abs(dx) >= Math.abs(dy) && dx < 0;
+        const isHorizontalPull = Math.abs(dx) >= Math.abs(dy) && (open ? dx > 0 : dx < 0);
         active.mode = isHorizontalPull ? 'pull' : 'vertical';
         if (active.mode === 'pull') {
           active.pullOffsetX = notebookPullOffset(active.surfaceWidth, dx, open);

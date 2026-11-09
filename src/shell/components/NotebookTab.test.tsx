@@ -93,7 +93,7 @@ describe('notebook tab pointer ownership', () => {
     expect(onClose).toHaveBeenCalledOnce();
     expect(onOpen).not.toHaveBeenCalled();
   });
-  it('disables swipe from left edge to close when notebook is open', () => {
+  it('commits closing and docks back on the right edge when pulled right while open', () => {
     const onOpen = vi.fn();
     const onClose = vi.fn();
     const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
@@ -108,10 +108,11 @@ describe('notebook tab pointer ownership', () => {
     vi.stubGlobal('cancelAnimationFrame', () => undefined);
     tab.props.onPointerDown?.(event(14, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
     tab.props.onPointerMove?.(event(210, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(overlay.style.transform).toBe('none');
+    expect(overlay.style.transform).toBe('translate3d(196px, 0, 0)');
     tab.props.onPointerUp?.(event(210, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(onClose).not.toHaveBeenCalled();
-    expect(button.dataset).toMatchObject({ edge: 'left', floating: 'false' });
+    expect(onClose).toHaveBeenCalledOnce();
+    expect(button.dataset).toMatchObject({ edge: 'right', floating: 'false' });
+    expect((button.style as { transform?: string }).transform).toMatch(/^translate3d\(362px, /);
   });
   it('hides and disables pointer events when hidden is true', () => {
     const tab = NotebookTab({ open: false, hidden: true, onOpen: vi.fn() }) as ReactElement<ComponentProps<'button'>>;

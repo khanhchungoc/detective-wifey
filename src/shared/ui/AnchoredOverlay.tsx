@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
 import { NOTEBOOK_CLOSED_TRANSFORM, NOTEBOOK_SLIDE_EASING, NOTEBOOK_OPEN_DURATION_MS, NOTEBOOK_CLOSE_DURATION_MS, animateOverlay } from '../motion/anchoredOverlay';
+import { useSwipeBack } from '../gestures/useSwipeBack';
 import { useDialogFocus } from './useDialogFocus';
 
 /** Keeps content pre-laid out and GPU-promoted off-screen so pulling or opening the notebook never triggers layout reflow or tile eviction. */
@@ -11,6 +12,34 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
   const animation = useRef<Animation | undefined>(undefined);
   const initialized = useRef(false);
   const onKeyDown = useDialogFocus(open, containerRef, onClose);
+  const swipeHandlers = useSwipeBack({
+    onBack: onClose,
+    enabled: open,
+    maxStartDistance: 44,
+    onSwipeProgress: (progress) => {
+      const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
+      if (screen) {
+        screen.style.transition = 'none';
+        const remainingProgress = Math.max(0, Math.min(1, 1 - progress));
+        const scale = Number((1 - remainingProgress * 0.06).toFixed(4));
+        screen.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
+        screen.style.borderRadius = `${Number((remainingProgress * 28).toFixed(1))}px`;
+      }
+    },
+    onSwipeEnd: (committed) => {
+      const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
+      if (screen) {
+        screen.style.transition = `transform ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}, border-radius ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
+        if (committed) {
+          screen.style.transform = 'translate3d(0, 0, 0) scale(1)';
+          screen.style.borderRadius = '0px';
+        } else {
+          screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
+          screen.style.borderRadius = '28px';
+        }
+      }
+    },
+  });
 
   useLayoutEffect(() => {
     const drawer = drawerRef.current;
@@ -84,6 +113,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
           backfaceVisibility: 'hidden',
           contain: 'layout paint style',
         }}
+        {...swipeHandlers}
       >
         {children}
       </div>
