@@ -42,6 +42,12 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
   });
 
   useLayoutEffect(() => {
+    const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
+    if (screen) {
+      screen.style.removeProperty('transition');
+      screen.style.removeProperty('transform');
+      screen.style.removeProperty('border-radius');
+    }
     const drawer = drawerRef.current;
     if (!drawer) return;
     if (!open && !initialized.current) {
@@ -100,14 +106,12 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         }}
       />
 
-      {/* Sliding notebook drawer on the upper layer */}
+      {/* Fullscreen Evidence Board Details layer */}
       <div
         ref={drawerRef}
         data-notebook-overlay
-        className="absolute left-0 right-0 z-20 overflow-hidden rounded-l-2xl shadow-[10px_16px_28px_rgba(0,0,0,0.2),_4px_6px_12px_rgba(0,0,0,0.1)]"
+        className="absolute inset-0 z-20 overflow-hidden bg-[#0E0A07]"
         style={{
-          top: 'calc(var(--phone-system-top, 59px) + 6px)',
-          bottom: 'max(28px, var(--phone-system-bottom, 34px))',
           pointerEvents: open ? 'auto' : 'none',
           willChange: 'transform, opacity',
           backfaceVisibility: 'hidden',

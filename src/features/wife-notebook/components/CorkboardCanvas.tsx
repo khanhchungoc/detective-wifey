@@ -26,6 +26,14 @@ export const CARD_WIDTH = 210;
 export const PIN_OFFSET_X = 105;
 export const PIN_OFFSET_Y = 3;
 
+function getCardTiltDeg(nodeId: string): number {
+  let hash = 0;
+  for (let i = 0; i < nodeId.length; i++) {
+    hash = (hash * 31 + nodeId.charCodeAt(i)) | 0;
+  }
+  return ((Math.abs(hash) % 29) - 14) / 10;
+}
+
 interface CorkboardCanvasProps {
   getSourceApp?: (id: string) => Pick<AppDefinition, 'displayName' | 'icon' | 'iconAsset' | 'themeGradient'> | undefined;
   viewport: CorkboardViewport;
@@ -156,6 +164,7 @@ const CorkboardContents = memo(function CorkboardContents({
             (node.visibleAlias && ['phone', 'messages', 'internet-messaging'].includes(node.sourceAppId || ''))
             ? node.visibleAlias || node.label : undefined;
           const isDraggingThis = activeDragId === node.nodeId;
+          const tiltDeg = getCardTiltDeg(node.nodeId);
           const timelineEntries = parseNodeToTimelineEntries(node);
           const hasBody = timelineEntries.length > 0;
 
@@ -227,34 +236,34 @@ const CorkboardContents = memo(function CorkboardContents({
                 cardDragRef.current = null;
                 setActiveDragId(null);
               }}
-              className={`corkboard-node-card absolute rounded-xl border p-2.5 pt-[15px] cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
+              className={`corkboard-node-card corkboard-paper-card absolute rounded-[4px] border p-2.5 pt-[15px] cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 isDraggingThis
-                  ? 'z-30 border-rose-400 bg-[#FFFDF5] shadow-[0_22px_40px_-4px_rgba(0,0,0,0.3),0_12px_22px_-6px_rgba(0,0,0,0.18)] ring-2 ring-rose-400/60'
+                  ? 'z-30 border-[#DC2626] bg-[#FFFDF6] shadow-[0_24px_42px_rgba(0,0,0,0.55),0_10px_18px_rgba(0,0,0,0.35)] ring-2 ring-[#EF4444]/60'
                   : isSelected
-                  ? 'z-30 border-rose-500 bg-[#FFFBEB] ring-4 ring-rose-400/60 shadow-[0_8px_24px_rgba(225,29,72,0.35)]'
+                  ? 'z-30 border-[#DC2626] bg-[#FFFDF6] ring-2 ring-[#EF4444]/85 shadow-[0_14px_30px_rgba(0,0,0,0.5)]'
                   : isUnmasked && isAlias
-                  ? 'z-20 border-rose-400 bg-[#FFF5F5] ring-1 ring-rose-300 shadow-[0_4px_12px_rgba(30,20,10,0.25)]'
+                  ? 'z-20 border-red-400 bg-[#FFF7F5] ring-1 ring-red-300 shadow-[0_6px_14px_rgba(0,0,0,0.42)]'
                   : hasContradiction
-                  ? 'z-20 border-amber-400 bg-[#FFFDF0] ring-1 ring-amber-300 shadow-[0_4px_12px_rgba(30,20,10,0.25)]'
-                  : 'z-20 border-[#E8E0D2] bg-[#FFFDF5] shadow-[0_3px_10px_rgba(35,22,12,0.2)] hover:shadow-[0_6px_16px_rgba(35,22,12,0.3)]'
+                  ? 'z-20 border-amber-500 bg-[#FFFBF0] ring-1 ring-amber-400/80 shadow-[0_6px_14px_rgba(0,0,0,0.42)]'
+                  : 'z-20 border-[#D8CCB4] shadow-[0_6px_14px_rgba(0,0,0,0.42),0_2px_4px_rgba(0,0,0,0.28)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.48)]'
               }`}
               style={{
                 width: `${CARD_WIDTH}px`,
                 left: `${node.x}px`,
                 top: `${node.y}px`,
-                transform: isDraggingThis ? 'scale(1.05)' : undefined,
+                transform: isDraggingThis ? 'scale(1.04)' : `rotate(${tiltDeg}deg)`,
                 touchAction: 'none',
               }}
             >
-              {/* Realistic 3D Pushpin at Top Center */}
+              {/* Realistic Brass Dome Pushpin at Top Center */}
               <div className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center" style={{ top: PIN_OFFSET_Y - 10 }}>
-                <div className={`relative h-5 w-5 rounded-full bg-gradient-to-br from-red-500 via-rose-600 to-red-900 border border-rose-300/60 flex items-center justify-center transition-transform duration-150 ${
-                  isDraggingThis ? 'scale-110 shadow-[0_4px_8px_rgba(0,0,0,0.5)]' : 'shadow-[0_2px_4px_rgba(0,0,0,0.4)]'
+                <div className={`relative h-5 w-5 rounded-full bg-gradient-to-br from-[#F6DC7A] via-[#C89328] to-[#7D530E] border border-[#FCE8A6]/75 flex items-center justify-center transition-transform duration-150 ${
+                  isDraggingThis ? 'scale-110 shadow-[0_6px_10px_rgba(0,0,0,0.65)]' : 'shadow-[0_3px_5px_rgba(0,0,0,0.55)]'
                 }`}>
-                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/75" />
-                  <div className="h-1 w-1 rounded-full bg-red-950/80 shadow-inner" />
+                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
+                  <div className="h-1 w-1 rounded-full bg-[#5C3B08]/75 shadow-inner" />
                 </div>
-                <div className={`w-1 h-0.5 bg-stone-900/35 rounded-full -mt-0.5 transition-opacity duration-150 ${
+                <div className={`w-1.5 h-0.5 bg-black/45 rounded-full -mt-0.5 transition-opacity duration-150 ${
                   isDraggingThis ? 'opacity-30' : 'opacity-100'
                 }`} />
               </div>
@@ -272,7 +281,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   {avatarName && <ContactAvatar name={avatarName} size={24} />}
                   {sourceApp ? (
                     <span
-                      className={`flex shrink-0 items-center justify-center overflow-hidden text-white ${avatarName ? 'absolute -right-1 -top-1 h-3 w-3 rounded ring-1 ring-[#FFFDF5]' : 'h-5 w-5 rounded-md'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                      className={`flex shrink-0 items-center justify-center overflow-hidden text-white ${avatarName ? 'absolute -right-1 -top-1 h-3 w-3 rounded ring-1 ring-[#F6F1E3]' : 'h-5 w-5 rounded-md'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
                       title={sourceApp.displayName}
                       role="img"
                       aria-label={sourceApp.displayName}
@@ -307,7 +316,7 @@ const CorkboardContents = memo(function CorkboardContents({
                         e.stopPropagation();
                         onNavigateToSource(node.sourceAppId, node.conversationId || node.recordRefId);
                       }}
-                      className="relative flex h-6 w-6 items-center justify-center rounded-md bg-stone-100 hover:bg-rose-100 hover:text-rose-600 text-stone-600 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
+                      className="relative flex h-6 w-6 items-center justify-center rounded bg-[#EAE0CC] hover:bg-[#DC2626] hover:text-white text-stone-700 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
                     >
                       <IoNavigateOutline className="text-xs" />
                     </button>
@@ -323,7 +332,7 @@ const CorkboardContents = memo(function CorkboardContents({
                       if (onDeleteCard) onDeleteCard(node.nodeId);
                       else onRemoveNode?.(node.nodeId);
                     }}
-                    className="relative flex h-6 w-6 items-center justify-center rounded-md bg-stone-100 hover:bg-rose-100 hover:text-rose-600 text-stone-600 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
+                    className="relative flex h-6 w-6 items-center justify-center rounded bg-[#EAE0CC] hover:bg-[#DC2626] hover:text-white text-stone-700 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
                   >
                     <IoTrashOutline className="text-xs" />
                   </button>
@@ -386,37 +395,38 @@ const CorkboardContents = memo(function CorkboardContents({
             );
             const { pathD } = calculateYarnStringCurve(x1, y1, x2, y2, isContradiction);
 
-            // Yarn color mapping:
-            // - Selected: vivid active rose #e11d48
-            // - Contradiction: amber gold #d97706
-            // - All verified/canonical strings: uniform rich crimson red #b91c1c
-            // - Speculative unverified strings: muted light red #e07a7a
+            // Yarn color mapping tuned for high contrast against dark walnut cork:
+            // - Selected: bright crimson-rose #FF4D6D
+            // - Contradiction: amber gold #FBBF24
+            // - Verified/canonical strings: classic detective red #DC2626
+            // - Speculative strings: muted warm coral #F87171
             const stringStroke = isSelected
-              ? '#e11d48'
+              ? '#FF4D6D'
               : isContradiction
-              ? '#d97706'
+              ? '#FBBF24'
               : isCanonical
-              ? '#b91c1c'
-              : '#e07a7a';
+              ? '#DC2626'
+              : '#F87171';
 
             const strokeDasharray = isContradiction
               ? '5 3'
               : undefined;
 
-            // Verified strings always share identical 1.75px thickness regardless of layer
             const strokeWidth = isSelected
-              ? '2.5'
+              ? '2.75'
               : isContradiction
-              ? '1.75'
+              ? '2'
               : isCanonical
-              ? '1.75'
-              : '1.25';
+              ? '2'
+              : '1.4';
 
             const strokeOpacity = isSelected
-              ? 0.95
+              ? 1
+              : isContradiction
+              ? 0.92
               : isCanonical
-              ? 0.5
-              : 0.4;
+              ? 0.85
+              : 0.62;
 
             return (
               <g
@@ -441,13 +451,13 @@ const CorkboardContents = memo(function CorkboardContents({
                 {/* Natural vector drop shadow */}
                 <path
                   d={pathD}
-                  stroke="#450a0a"
+                  stroke="#140905"
                   strokeWidth={strokeWidth}
                   strokeDasharray={strokeDasharray}
-                  strokeOpacity={0.16}
+                  strokeOpacity={0.35}
                   fill="none"
                   strokeLinecap="round"
-                  transform="translate(0.5, 0.75)"
+                  transform="translate(0.75, 1.25)"
                 />
                 {/* Slender Detective Yarn */}
                 <path
@@ -489,28 +499,38 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
       {/* Empty State Overlay */}
       {placedNodes.length === 0 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-20">
-          <div className="h-16 w-16 rounded-3xl bg-[var(--notebook-paper)] border border-[var(--notebook-border)] shadow-md flex items-center justify-center text-[#C2185B] text-3xl mb-3">
-            <IoBookOutline />
+          <div className="corkboard-paper-card relative max-w-[260px] rounded-[4px] border border-[#D8CCB4] px-5 pt-6 pb-5 shadow-[0_12px_28px_rgba(0,0,0,0.48)] -rotate-1">
+            <div className="absolute left-1/2 -translate-x-1/2 -top-2.5 flex flex-col items-center">
+              <div className="relative h-5 w-5 rounded-full bg-gradient-to-br from-[#F6DC7A] via-[#C89328] to-[#7D530E] border border-[#FCE8A6]/75 shadow-[0_3px_5px_rgba(0,0,0,0.55)]">
+                <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
+              </div>
+            </div>
+            <div className="mx-auto mb-2.5 flex h-11 w-11 items-center justify-center rounded-full bg-[#EAE0CC] text-[#B91C1C] text-xl">
+              <IoBookOutline />
+            </div>
+            <h3 className="font-mono text-xs font-extrabold text-stone-900 uppercase tracking-wider">
+              CHƯA CÓ MANH MỐI NÀO
+            </h3>
+            <p className="mt-1.5 text-[11px] text-stone-700 leading-relaxed">
+              Khám phá các ứng dụng trên điện thoại.
+              <br />
+              <strong>Nhấn giữ</strong> nội dung đáng ngờ để ghim vào bảng manh mối.
+            </p>
           </div>
-          <h3 className="text-sm font-extrabold text-stone-800 uppercase tracking-wider">
-            CHƯA CÓ MANH MỐI NÀO
-          </h3>
-          <p className="mt-1 text-xs text-stone-700 max-w-xs leading-relaxed">
-            Khám phá các ứng dụng trên điện thoại.
-            <br />
-            <strong>Nhấn giữ</strong> nội dung đáng ngờ để lưu manh mối vào Sổ tay.
-          </p>
         </div>
       )}
 
       {/* Pairing Banner Indicator */}
       {activePairing.sourceNodeId && (
-        <div className="absolute top-2 left-4 right-4 z-40 flex items-center justify-between rounded-xl bg-rose-50 border border-rose-300 p-2.5 px-4 text-xs font-semibold text-rose-900 shadow-xl animate-pulse">
-          <span>ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
+        <div className="absolute top-3 left-3 right-3 z-40 flex items-center justify-between rounded-2xl bg-[#16120F]/95 border border-red-500/45 p-2.5 px-3.5 text-xs font-semibold text-[#F7F1E5] shadow-2xl backdrop-blur-md">
+          <span className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-[#EF4444] animate-pulse shrink-0" />
+            <span>ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
+          </span>
           <button
             type="button"
             onClick={onCancelPairing}
-            className="flex items-center gap-1 rounded-lg bg-rose-700/80 hover:bg-rose-600 px-2.5 py-1 text-[11px] text-white active:scale-95"
+            className="flex items-center gap-1 rounded-xl bg-[#B91C1C] hover:bg-[#DC2626] px-2.5 py-1 text-[11px] text-white active:scale-95 cursor-pointer"
           >
             <IoCloseOutline className="text-base" /> Huỷ
           </button>
@@ -531,19 +551,20 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
 
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-2xl bg-[var(--notebook-paper)] border border-[var(--notebook-border)] p-2 px-3 shadow-2xl">
-          <span className="text-xs font-medium text-stone-800">Đã chọn sợi dây đỏ</span>
+        <div className="corkboard-control-dock absolute bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-full bg-[#16120F]/95 border border-white/15 p-1.5 pl-3.5 shadow-2xl backdrop-blur-md">
+          <span className="text-xs font-medium text-[#F7F1E5] whitespace-nowrap">Đã chọn sợi dây đỏ</span>
           <button
             type="button"
             onClick={() => onSeverEdge(selectedEdgeId)}
-            className="flex items-center gap-1 rounded-xl bg-red-600 hover:bg-red-500 px-3 py-1.5 text-xs font-bold text-white shadow active:scale-95"
+            className="flex items-center gap-1 rounded-full bg-[#DC2626] hover:bg-[#EF4444] px-3 py-1.5 text-xs font-bold text-white shadow active:scale-95 cursor-pointer"
           >
             <IoCutOutline className="text-sm" /> Cắt dây
           </button>
           <button
             type="button"
+            aria-label="Bỏ chọn sợi dây"
             onClick={() => onSelectEdge(null)}
-            className="flex h-7 w-7 items-center justify-center rounded-xl bg-amber-100 hover:bg-amber-200 text-stone-800"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-[#F7F1E5] cursor-pointer"
           >
             <IoCloseOutline className="text-base" />
           </button>

@@ -38,6 +38,8 @@ export interface PhoneShellProps {
   onOpenNotebook: () => void;
   onCloseNotebook?: () => void;
   notebookOpen?: boolean;
+  notebookEvidenceCount?: number;
+  notebookCaseNumber?: number;
   onNotify: (message: string) => void;
   enableNavigationGuard?: boolean;
 }
@@ -48,7 +50,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   grayedOutAppIds,
   systemAlertToast, incomingNotification, children, overlays, renderLevelSelector,
   onLaunchApp: handleLaunchApp, onReturnHome,
-  onOpenNotebook, onCloseNotebook, notebookOpen = false, onNotify,
+  onOpenNotebook, onCloseNotebook, notebookOpen = false, notebookEvidenceCount = 0, notebookCaseNumber = 1, onNotify,
   enableNavigationGuard = true,
 }) => {
   const { showExitConfirm, handleStay, handleLeave } = useNavigationGuard({
@@ -227,7 +229,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
         }}
       >
       {/* 1. Phone OS Status Bar */}
-      {showStatusBar && <StatusBar
+      {showStatusBar && !notebookOpen && <StatusBar
         overlay
         currentDate={currentDate}
         backgroundColor={activeAppDefinition ? activeAppDefinition.themeColor : 'transparent'}
@@ -420,9 +422,17 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
 
       {overlays}
 
+      {showStatusBar && notebookOpen && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-[55]">
+          <StatusBar overlay currentDate={currentDate} backgroundColor="#0E0A07" />
+        </div>
+      )}
+
       <NotebookTab
         open={notebookOpen}
-        hidden={controlCenterOpen || showLevelSheet || showPwaGuide}
+        hidden={notebookOpen || controlCenterOpen || showLevelSheet || showPwaGuide}
+        evidenceCount={notebookEvidenceCount}
+        caseNumber={notebookCaseNumber}
         onOpen={onOpenNotebook}
         onClose={onCloseNotebook}
       />

@@ -512,9 +512,10 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
   });
 
   describe('WifeNotebookModal Dock Confrontation Button', () => {
-    it('AC 1: Renders "Đối chất" action button in top bar and bottom dock', () => {
+    it('AC 1: Renders Peaksy dark header, wooden frame, and centered bottom dock with "Đối chất"', () => {
       const html = renderToStaticMarkup(
         <WifeNotebookModal
+          caseTitle="Cơn ghen lúc nửa đêm"
           caseConfig={mockCaseConfig}
           knowledgeGraph={LEVEL_01_KNOWLEDGE_GRAPH}
           currentStrikes={5}
@@ -523,7 +524,11 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         />,
       );
 
-      // Contains "Đối chất" buttons
+      expect(html).toContain('SỔ TAY ĐIỀU TRA');
+      expect(html).toContain('Cơn ghen lúc nửa đêm');
+      expect(html).toContain('Đóng sổ tay của vợ');
+      expect(html).toContain('notebook-wood-frame');
+      expect(html).toContain('Xếp gọn');
       expect(html).toContain('Đối chất');
     });
   });
@@ -767,11 +772,50 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(html).not.toContain('Anh Tuấn Thợ Điện');
       expect(html).toContain('Lan Anh Kế Toán');
       expect(html).toContain('bg-white');
+      expect(html).toContain('suspect-cork-tray');
+      expect(html).toContain('data-suspect-polaroid="suspect_huong"');
+      expect(html).toContain('data-suspect-polaroid="suspect_lan_anh"');
+      expect(html).toContain('Nghi phạm');
       expect(html).toContain('contact-avatar-persona-sheet');
-      expect(html).toContain('aria-label="Zola"');
-      expect(html).toContain('-right-1 -top-1');
+      expect(html).toContain('rounded-[1px]');
+      expect(html).not.toContain('rounded-full border border-black/5');
+      expect(html).not.toContain('aria-label="Zola"');
+      expect(html).not.toContain('-right-1 -top-1');
       expect(html).not.toContain('h-[90vh]');
       expect(html).toContain('overflow-y-auto');
+    });
+
+    it('Step 1: Renders a single Polaroid suspect card centered with red pushpin and "Nghi phạm" stamp', () => {
+      const suspects = [
+        { id: 'suspect_huong', displayName: 'Anh Tuấn Thợ Điện', avatarName: 'Anh Tuấn Thợ Điện', sourceApp: 'internet-messaging', isCulprit: true },
+      ];
+      const pf = calculateConfrontationPreflight({
+        caseConfig: mockCaseConfig,
+        activeEdges: [],
+        explicitCluesFound: 2,
+        totalClues: 10,
+      });
+
+      const html = renderToStaticMarkup(
+        <ConfrontationConfirmModal
+          isOpen={true}
+          preflight={pf}
+          suspectsOnBoard={suspects}
+          selectedSuspectId={null}
+          husbandName="Hoàng"
+          onSelectSuspect={vi.fn()}
+          onConfirmConfront={vi.fn()}
+          onCancel={vi.fn()}
+        />,
+      );
+
+      expect(html).toContain('Chọn nghi phạm');
+      expect(html).toContain('data-suspect-polaroid="suspect_huong"');
+      expect(html).toContain('Anh Tuấn Thợ Điện');
+      expect(html).toContain('Nghi phạm');
+      expect(html).toContain('w-[196px]');
+      expect(html).toContain('aspect-square');
+      expect(html).toContain('rotate(1.6deg)');
     });
 
     it('Step 2: hides clue counts and retains the short failure penalty', () => {

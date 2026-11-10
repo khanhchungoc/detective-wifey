@@ -61,7 +61,7 @@ The user interface follows Brad Frost's **Atomic Design** methodology, adapted a
 4. **Templates (Blueprints)**: Content-agnostic structural wireframes defining safe areas, sticky headers, and layout slots without binding to narrative data.
 5. **Pages (Hydrated Views)**: Concrete runtime instances where declarative case schemas (messages, banking rows, photos) hydrate templates and connect to detective game state.
 6. **Component Reuse-First Mandate**: Audit existing components (`src/components/`, `src/shell/`) before creating new ones. Parallel primitives, ad-hoc styling, and redundant component copies are strictly prohibited.
-7. **Authentic App Fidelity Principle (Zero-Spoiler UI Invariant)**: Virtual parody apps must strictly preserve real-world mobile UI fidelity without artificial clue indicators, glowing outlines, or hint badges in default states. Gameplay mechanics (long-press affordances, contextual pinning sheets, suspects board, evidence locker) are application features authoritatively specified in [wife-notebook/features.md](../apps/phone-os/wife-notebook/features.md).
+7. **Authentic App Fidelity Principle (Zero-Spoiler UI Invariant)**: Virtual parody apps must strictly preserve real-world mobile UI fidelity without artificial clue indicators, glowing outlines, or hint badges on unpinned or default states. A subtle red bookmark indicator (`--sys-badge-red` with Ionicons `IoBookmark`) is permitted exclusively on story narrative items **already pinned by the player** in the active session to reflect player-collected state. Gameplay mechanics (long-press affordances, contextual pinning menus, suspects board, evidence locker) are application features authoritatively specified in [wife-notebook/features.md](../apps/phone-os/wife-notebook/features.md).
 
 ---
 
@@ -123,11 +123,12 @@ To maintain legal compliance under fair use and trademark regulations:
 To ensure an authentic, un-spoiled detective experience across the virtual phone operating system and all parody applications:
 
 1. **Long-Press Scope (Story Narrative Data Only)**:
-   - The universal `380ms` long-press gesture (`StoryEvidenceTarget`) triggering the blurred evidence overlay (`UniversalEvidenceModal`) MUST strictly apply **exclusively to story narrative data dynamically loaded from case JSON (`data.json`)** - e.g. chat messages, call logs, SMS texts, bank transaction memos, order receipts, social posts, and cloud documents.
+   - The universal `380ms` long-press gesture (`StoryEvidenceTarget`) triggering the blurred evidence context menu (`UniversalEvidenceModal`) MUST strictly apply **exclusively to story narrative data dynamically loaded from case JSON (`data.json`)** - e.g. chat messages, call logs, SMS texts, bank transaction memos, order receipts, social posts, and cloud documents.
 2. **Keyboard & Screen-Reader Accessibility Alternative (WCAG 2.1 AA)**:
    - Every `StoryEvidenceTarget` is keyboard-focusable (`tabIndex={0}`, `role="button"`) with an accessible label describing the narrative snippet. Pressing `Enter`, `Space`, or the Context Menu key (`Shift+F10`) on a focused `StoryEvidenceTarget` opens `UniversalEvidenceModal` without requiring a timed pointer hold.
 3. **Prohibition on App Chrome & Structural Buttons**:
    - Long-press evidence overlays MUST NEVER be attached to static app structure, navigation headers, contact headers, filter pills, search inputs, bottom tabs, or functional utility buttons.
-4. **Strict Prohibition of Visible Pin Buttons**:
-   - Permanent "Ghim", "Ghim manh mối", or physical Pin buttons are **strictly forbidden** in normal app screens, modals, or detail views. Evidence can ONLY be inspected and pinned to the Wife's Notebook via `StoryEvidenceTarget` on legitimate story data elements.
+4. **Strict Prohibition of Visible Pin Buttons & Spoiler Badges**:
+   - Permanent "Ghim", "Ghim manh mối", or physical Pin buttons are **strictly forbidden** in normal app screens, modals, or detail views. Evidence can ONLY be inspected, pinned, or unpinned via `StoryEvidenceTarget` on legitimate story data elements.
+   - Unpinned items must show zero clue indicators; only items **already pinned by the player** in the active session may display the red circular bookmark marker (`IoBookmark` on `--sys-badge-red`) synced with Wife's Notebook state.
 

@@ -21,7 +21,7 @@ The Clue Inspection, Puzzle Unlocks, Hints & Suspicion Engine establishes the in
 
 ## High-Level Requirements
 
-- Universal 380ms hold on story narrative opens `UniversalEvidenceModal` with one pin-to-notebook action. Structural chrome is excluded. This follows the signed-off 2026-10-20 pinning rules rather than the older dual-action sheet.
+- Universal 380ms hold on story narrative opens the dark contextual `UniversalEvidenceModal` with one Vietnamese pin/unpin action (`"Ghim vào Sổ tay"` / `"Bỏ ghim khỏi Sổ tay"`), syncing a red circular bookmark badge (`IoBookmark`) exclusively on player-pinned items across all apps. Structural chrome is excluded. This follows the signed-off 2026-10-20 / 2026-11-10 pinning rules rather than the older dual-action sheet.
 - Decoy/Noise Tolerance: Pinning action available on all items (including benign clutter) with zero visual highlights or UI spoiler tells prior to interaction.
 - Polymorphic App Lock Decorator Component supporting 4-digit numeric PIN pads and text/select security questions for locked apps/folders on Levels 2 and 3.
 - Suspicion Strike Engine tracking failed unlock attempts against level-specific limits (Level 1: 5 strikes, Level 2: 4 strikes, Level 3: 3 strikes) with skippable ~60s lockout timer animation.
@@ -63,7 +63,7 @@ Players experience engaging, high-stakes snooping gameplay with zero giveaway sp
 
 ## Wireframes
 
-* [`wireframe-us-011-universal-evidence-modal.md`](./wireframes/wireframe-us-011-universal-evidence-modal.md) - Universal Evidence Long-Press & Snapshot Pinning Modal (Screen SSOT for US-011)
+* [`wireframe-us-011-universal-evidence-modal.md`](./wireframes/wireframe-us-011-universal-evidence-modal.md) - Universal Evidence Dark Context Menu, Red Pinned Marker & Quick Unpin (*Status: signed-off, revision 2*)
 * [Giác quan thứ 6](wireframes/wireframe-sixth-sense.md) - *Status: signed-off, revision 2*.
 * [Màn 0: tập xem và ghim thông tin](wireframes/wireframe-level-0-evidence-coaching.md) - *Status: signed-off, revision 2*.
 

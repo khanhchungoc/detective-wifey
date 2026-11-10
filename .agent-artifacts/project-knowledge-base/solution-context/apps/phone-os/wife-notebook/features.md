@@ -24,9 +24,11 @@ timestamp: "2026-10-14T13:00:00+07:00"
 ### 2.1. Omnipresent Floating Button (FAB)
 * Prominent spiral-notebook icon with a dynamic badge displaying total items logged (suspects + unlinked evidence count). Tapping opens the slide-up dossier sheet.
 
-### 2.2. Zero-Spoiler Universal Long-Press Pinning
-* **No UI Visual Cues**: Parody apps contain zero spoiler giveaways (no glowing borders, no clue icons, no warning boxes, no static "+ Ghim" buttons).
-* **Long-Press Gesture ($\ge 380\text{ms}$) & Keyboard Fallback**: Pressing and holding for $380\text{ms}$ (or pressing `Enter`/`Space` on keyboard focus) on any interactive story narrative element (`StoryEvidenceTarget`) triggers a subtle haptic pulse (`navigator.vibrate(20)`) and displays `UniversalEvidenceModal`.
+### 2.2. Zero-Spoiler Universal Long-Press Pinning & Pinned Marker Sync
+* **No UI Visual Cues Before Pinning**: Parody apps contain zero spoiler giveaways on unpinned items (no glowing borders, no clue icons, no warning boxes, no static "+ Ghim" buttons).
+* **Long-Press Gesture ($\ge 380\text{ms}$) & Keyboard Fallback**: Pressing and holding for $380\text{ms}$ (or pressing `Enter`/`Space` on keyboard focus) on any interactive story narrative element (`StoryEvidenceTarget`) triggers a subtle haptic pulse (`navigator.vibrate(50)`), highlights the selected item over a blurred scrim, and opens the dark contextual `UniversalEvidenceModal` with a single Vietnamese action row (`"Ghim vào Sổ tay"`).
+* **Player-Pinned Red Bookmark Marker**: Once an item (message, call log, transaction, order, photo, note, etc.) is pinned by the player, `StoryEvidenceTarget` renders a non-interactive red circular bookmark badge (`IoBookmark`) synchronized with `PlaySession.taggedSuspects`. Removing the item in the notebook removes the badge automatically.
+* **Quick Unpin at Source**: Long-pressing an already-pinned item opens the same contextual menu with the action row switched to `"Bỏ ghim khỏi Sổ tay"`, allowing immediate unpinning from the source app and removing the red badge.
 * **Universal Pinning & Decoys**: Any narrative element (true clue or innocent decoy) can be pinned into the Notebook's unplaced clue drawer. The system never warns or rejects decoys during investigation to preserve mystery.
 
 ### 2.3. Detective Corkboard Node Canvas (`BangNoiDay`) & "Giác Quan Thứ 6" Hint Engine

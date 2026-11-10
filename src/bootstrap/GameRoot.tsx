@@ -29,6 +29,10 @@ export function GameRoot({ repository, initialCaseConfig }: {
   const { caseConfig, activeAppId, pendingChallenge } = state;
   const currentMessageRoute = messageRoute?.sessionId === state.appSessionId ? messageRoute : null;
   const notebookOpen = openNotebookCase === caseConfig.caseId;
+  const caseTitle = useMemo(() => {
+    const match = getAvailableLevels(caseConfig.husbandId).find(lvl => lvl.caseId === caseConfig.caseId);
+    return match?.levelTitle.replace(/^MÀN\s+\d+:\s*/i, '').trim() || `Hồ sơ ${caseConfig.husbandName}`;
+  }, [caseConfig.caseId, caseConfig.husbandId, caseConfig.husbandName]);
   const activeApp = activeAppId !== 'home' ? getAppDefinition(activeAppId) ?? null : null;
   const contexts = useMemo(() => Object.fromEntries(Object.values(APP_REGISTRY)
     .map(app => [app.appId, createAppContext(caseConfig, app.appId)])), [caseConfig]);
@@ -74,6 +78,8 @@ export function GameRoot({ repository, initialCaseConfig }: {
     onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
     onCloseNotebook={() => setOpenNotebookCase(null)}
     notebookOpen={notebookOpen}
+    notebookEvidenceCount={state.taggedSuspects.length}
+    notebookCaseNumber={caseConfig.levelNumber}
     onNotify={game.notify}
     renderLevelSelector={onClose => <LevelSelectorSheet levels={game.availableLevels()}
       activeLevelNumber={caseConfig.levelNumber} unlockedMaxLevel={state.playerProgress.unlockedLevel}
@@ -84,6 +90,7 @@ export function GameRoot({ repository, initialCaseConfig }: {
         label="Sổ tay của vợ" onClose={() => setOpenNotebookCase(null)}>
       <WifeNotebookModal
         caseId={caseConfig.caseId}
+        caseTitle={caseTitle}
         caseConfig={caseConfig}
         knowledgeGraph={caseConfig.knowledgeGraph}
         currentStrikes={state.strikes}

@@ -40,7 +40,7 @@ Universal interaction patterns guarantee intuitive, consistent mobile physics ac
 ### 1.2. Modal Bottom Sheets & Drawers
 
 * **Top Grab Handle Pill**: Centered pill ($36\text{px} \times 5\text{px}$, radius $9999\text{px}$, color `rgba(255, 255, 255, 0.35)`).
-* **Drag-Down Dismissal & Close Button**: Pulling down $\ge 80\text{px}$ smoothly animates the sheet off-screen. Every modal sheet also provides an explicit $44 \times 44\text{px}$ close/cancel button (`IoCloseOutline`) and `Escape` key handler as a non-pointer alternative.
+* **Drag-Down Dismissal & Close Button**: Pulling down $\ge 80\text{px}$ smoothly animates the sheet off-screen. Standard modal sheets provide an explicit $44 \times 44\text{px}$ close/cancel button (`IoCloseOutline`) and `Escape` key handler as a non-pointer alternative. *Exception for compact contextual menus* (e.g., `UniversalEvidenceModal` dark context popover): when presenting a single action row anchored to a highlighted item, dismissal relies on tapping the dimmed scrim backdrop or pressing `Escape` (retaining `role="dialog"`, `aria-modal="true"`, and focus restoration) without adding a redundant `[X]` or Cancel row.
 * **Focus Trap & Restoration**: Opening any modal sheet, lockpad, or `UniversalEvidenceModal` traps keyboard focus within the dialog (`role="dialog"`, `aria-modal="true"`) and restores focus to the triggering element upon dismissal.
 * **Scrolled Position Guard**: Drag-to-dismiss is active only when the inner scroll container is at top position (`scrollTop === 0`).
 * **Scrim Backdrop**: Semi-transparent dark blur overlay (`background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px);`). Tapping the backdrop dismisses the drawer.

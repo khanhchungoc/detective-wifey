@@ -26,7 +26,7 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
   const dots = useMemo(() => placedNodes.map(node => (
     <span
       key={node.nodeId}
-      className="absolute left-0 top-0 h-1 w-1 rounded-full bg-[#C2185B]"
+      className="absolute left-0 top-0 h-1 w-1 rounded-full bg-[#EF4444]"
       style={{
         transform: `translate(${node.x * scale}px, ${node.y * scale}px)`,
       }}
@@ -38,7 +38,7 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
       type="button"
       aria-label="Thu nhỏ bản đồ / Định vị"
       onClick={onCenterCluster}
-      className="relative rounded-xl border border-white/60 bg-[var(--notebook-paper)] shadow-inner overflow-hidden flex items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-400 active:scale-95 transition-transform shrink-0"
+      className="relative rounded-xl border border-white/15 bg-[#1B1511]/90 shadow-inner overflow-hidden flex items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300 active:scale-95 transition-transform shrink-0"
       style={{ width: `${RADAR_SIZE}px`, height: `${RADAR_SIZE}px` }}
     >
       {/* Node dots */}
@@ -46,7 +46,7 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
 
       {/* Viewport indicator rectangle */}
       <div
-        className="absolute left-0 top-0 border border-[#C2185B] bg-rose-600/15 rounded-sm pointer-events-none"
+        className="absolute left-0 top-0 border border-[#EF4444] bg-red-500/20 rounded-sm pointer-events-none"
         style={{
           transform: `translate(${viewX}px, ${viewY}px)`,
           width: `${Math.max(8, viewW)}px`,

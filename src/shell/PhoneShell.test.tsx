@@ -151,9 +151,16 @@ describe('app surface and stationary system chrome', () => {
     const overlayTag = htmlOpen.slice(overlayIdx, htmlOpen.indexOf('>', overlayIdx));
     expect(overlayTag).not.toContain('transform:');
 
-    const htmlClosed = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={false} />);
+    const htmlClosed = renderToStaticMarkup(<PhoneShell {...props} notebookOpen={false} notebookEvidenceCount={8} notebookCaseNumber={2} />);
     expect(htmlClosed).toContain('data-notebook-open="false"');
     expect(htmlClosed).not.toContain('filter:brightness');
+    expect(htmlClosed).toContain('data-evidence-badge');
+    expect(htmlClosed).toContain('>8<');
+    expect(htmlClosed).toContain('>02<');
+
+    // When open, the overlay trigger button hides and status bar stays rendered cleanly
+    expect(htmlOpen).toContain('aria-hidden="true"');
+    expect(htmlOpen).toContain('phone-system-status');
   });
 });
 

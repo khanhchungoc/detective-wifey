@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { renderToStaticMarkup } from 'react-dom/server';
 import type { ComponentProps, PointerEvent, ReactElement } from 'react';
 import { NotebookTab } from './NotebookTab';
 
@@ -9,194 +10,77 @@ vi.mock('react', async importOriginal => ({
   useLayoutEffect: () => undefined,
 }));
 
-describe('notebook tab pointer ownership', () => {
+describe('evidence board overlay trigger button', () => {
   beforeEach(() => {
     vi.stubGlobal('window', { matchMedia: () => ({ matches: true }) });
     vi.stubGlobal('getComputedStyle', () => ({ transform: 'none' }));
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  function setup() {
+  function setup(overrides: Partial<ComponentProps<typeof NotebookTab>> = {}) {
     const onOpen = vi.fn();
-    const tab = NotebookTab({ open: false, onOpen }) as ReactElement<ComponentProps<'button'>>;
+    const tab = NotebookTab({ open: false, onOpen, ...overrides }) as ReactElement<ComponentProps<'button'>>;
     const host = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }), offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0 };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 362, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
-    const event = (x: number, y: number, type = 'pointerup') => ({
+    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 254, top: 700 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
+    const event = (x: number, y: number, type = 'pointerup', timeStamp?: number) => ({
       currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
-      timeStamp: type === 'pointerdown' ? 0 : 50, type, detail: 1, stopPropagation: vi.fn(),
+      timeStamp: timeStamp ?? (type === 'pointerdown' ? 0 : 50), type, detail: 1, stopPropagation: vi.fn(),
     });
-    const down = () => tab.props.onPointerDown?.(event(375, 420, 'pointerdown') as unknown as PointerEvent<HTMLButtonElement>);
+    const down = () => tab.props.onPointerDown?.(event(300, 720, 'pointerdown') as unknown as PointerEvent<HTMLButtonElement>);
+    const move = (x: number, y: number, timeStamp = 30) => {
+      tab.props.onPointerMove?.(event(x, y, 'pointermove', timeStamp) as unknown as PointerEvent<HTMLButtonElement>);
+    };
     const release = (x: number, y: number, cancel = false) => {
       const releaseEvent = event(x, y, cancel ? 'pointercancel' : 'pointerup') as unknown as PointerEvent<HTMLButtonElement>;
       if (cancel) tab.props.onPointerCancel?.(releaseEvent); else tab.props.onPointerUp?.(releaseEvent);
       tab.props.onClick?.(releaseEvent);
     };
-    return { onOpen, down, release };
+    return { onOpen, button, down, move, release };
   }
+
   it('opens on a short tap', () => {
-    const tab = setup(); tab.down(); tab.release(376, 421);
+    const tab = setup();
+    tab.down();
+    tab.release(301, 721);
     expect(tab.onOpen).toHaveBeenCalledOnce();
   });
-  it('suppresses the generated click after dragging vertically or pulling partway and releasing', () => {
-    for (const [x, y] of [[340, 420], [375, 500]]) {
-      const tab = setup(); tab.down(); tab.release(x, y);
-      expect(tab.onOpen).not.toHaveBeenCalled();
+
+  it('suppresses click and docks on right edge after dragging vertically', () => {
+    const tab = setup();
+    tab.down();
+    tab.move(300, 620, 40);
+    tab.release(300, 620);
+    expect(tab.onOpen).not.toHaveBeenCalled();
+    expect(tab.button.dataset).toMatchObject({ edge: 'right', floating: 'false' });
+    expect((tab.button.style as { transform?: string }).transform).toMatch(/^translate3d\(254px, /);
+  });
+
+  it('suppresses cancelled gestures and permits a fresh tap afterward', () => {
+    const tab = setup();
+    tab.down();
+    tab.release(300, 720, true);
+    expect(tab.onOpen).not.toHaveBeenCalled();
+    tab.down();
+    tab.release(300, 720);
+    expect(tab.onOpen).toHaveBeenCalledOnce();
+  });
+
+  it('hides and disables pointer events when open or hidden is true', () => {
+    for (const props of [{ open: true, hidden: false }, { open: false, hidden: true }]) {
+      const tab = NotebookTab({ ...props, onOpen: vi.fn() }) as ReactElement<ComponentProps<'button'>>;
+      expect(tab.props.style?.opacity).toBe(0);
+      expect(tab.props.style?.pointerEvents).toBe('none');
+      expect(tab.props['aria-hidden']).toBe(true);
+      expect(tab.props.tabIndex).toBe(-1);
     }
   });
-  it('commits opening when pulled horizontally past the threshold', () => {
-    const onOpen = vi.fn();
-    const tab = NotebookTab({ open: false, onOpen }) as ReactElement<ComponentProps<'button'>>;
-    const overlay = { style: { visibility: 'hidden', opacity: '0', transform: 'translate3d(100%, 0, 0)' } };
-    const host = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }), offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0, querySelector: () => overlay };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 362, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
-    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
-      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
-      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
-    });
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
-    vi.stubGlobal('cancelAnimationFrame', () => undefined);
-    tab.props.onPointerDown?.(event(375, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
-    tab.props.onPointerMove?.(event(180, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(overlay.style.visibility).toBe('visible');
-    expect(overlay.style.transform).toBe('translate3d(195px, 0, 0)');
-    tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(onOpen).toHaveBeenCalledOnce();
-    expect(button.dataset).toMatchObject({ edge: 'left', floating: 'false' });
-    expect((button.style as { transform?: string }).transform).toMatch(/^translate3d\(0px, /);
-  });
-  it('suppresses cancelled gestures and permits a fresh tap afterward', () => {
-    const tab = setup(); tab.down(); tab.release(375, 420, true);
-    expect(tab.onOpen).not.toHaveBeenCalled();
-    tab.down(); tab.release(375, 420);
-    expect(tab.onOpen).toHaveBeenCalledOnce();
-  });
-  it('remains persistent and calls onClose on a short tap when open', () => {
-    const onOpen = vi.fn();
-    const onClose = vi.fn();
-    const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
-    expect(tab.props['aria-label']).toBe('Đóng sổ tay của vợ');
-    expect(tab.props['aria-expanded']).toBe(true);
-    expect(tab.props.style?.opacity).toBe(1);
-    expect(tab.props.style?.pointerEvents).toBe('auto');
 
-    const host = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }), offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0 };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 362, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
-    const event = (x: number, y: number, type = 'pointerup') => ({
-      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
-      timeStamp: type === 'pointerdown' ? 0 : 50, type, detail: 1, stopPropagation: vi.fn(),
-    });
-
-    tab.props.onPointerDown?.(event(375, 420, 'pointerdown') as unknown as PointerEvent<HTMLButtonElement>);
-    tab.props.onPointerUp?.(event(376, 421, 'pointerup') as unknown as PointerEvent<HTMLButtonElement>);
-    tab.props.onClick?.(event(376, 421, 'pointerup') as unknown as PointerEvent<HTMLButtonElement>);
-
-    expect(onClose).toHaveBeenCalledOnce();
-    expect(onOpen).not.toHaveBeenCalled();
-  });
-  it('commits closing and docks back on the right edge when pulled right while open', () => {
-    const onOpen = vi.fn();
-    const onClose = vi.fn();
-    const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
-    const overlay = { style: { visibility: 'visible', opacity: '1', transform: 'none' } };
-    const host = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }), offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0, querySelector: () => overlay };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 0, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
-    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
-      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
-      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
-    });
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
-    vi.stubGlobal('cancelAnimationFrame', () => undefined);
-    tab.props.onPointerDown?.(event(14, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
-    tab.props.onPointerMove?.(event(210, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(overlay.style.transform).toBe('translate3d(196px, 0, 0)');
-    tab.props.onPointerUp?.(event(210, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(onClose).toHaveBeenCalledOnce();
-    expect(button.dataset).toMatchObject({ edge: 'right', floating: 'false' });
-    expect((button.style as { transform?: string }).transform).toMatch(/^translate3d\(362px, /);
-  });
-  it('hides and disables pointer events when hidden is true', () => {
-    const tab = NotebookTab({ open: false, hidden: true, onOpen: vi.fn() }) as ReactElement<ComponentProps<'button'>>;
-    expect(tab.props.style?.opacity).toBe(0);
-    expect(tab.props.style?.pointerEvents).toBe('none');
-    expect(tab.props['aria-hidden']).toBe(true);
-    expect(tab.props.tabIndex).toBe(-1);
-  });
-
-  it('updates phone screen with receding scale while pulling notebook tab', () => {
-    const onOpen = vi.fn();
-    const tab = NotebookTab({ open: false, onOpen }) as ReactElement<ComponentProps<'button'>>;
-    const overlay = { style: { visibility: 'hidden', opacity: '0', transform: 'translate3d(100%, 0, 0)' } };
-    const screen = {
-      dataset: {} as Record<string, string>,
-      style: {
-        transform: 'translate3d(0, 0, 0) scale(1)',
-        borderRadius: '0px', filter: 'none', boxShadow: 'none', transition: 'none',
-        removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
-      },
-    };
-    const host = {
-      getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }),
-      offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0,
-      querySelector: (selector: string) => (selector === '[data-phone-screen]' ? screen : overlay),
-    };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 362, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
-    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
-      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
-      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
-    });
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
-    vi.stubGlobal('cancelAnimationFrame', () => undefined);
-
-    tab.props.onPointerDown?.(event(375, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
-    tab.props.onPointerMove?.(event(180, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
-
-    expect(screen.style.transform).toContain('translate3d(0, 0, 0) scale(');
-    expect(screen.dataset.notebookDragging).toBe('true');
-
-    tab.props.onPointerUp?.(event(180, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(screen.style.transform).toBe('translate3d(0, 0, 0) scale(0.94)');
-    expect(screen.style.borderRadius).toBe('28px');
-    expect(screen.style.filter).toBe('none');
-    expect(screen.dataset.notebookDragging).toBeUndefined();
-    expect(onOpen).toHaveBeenCalledOnce();
-  });
-
-  it('retains phone screen receding scale when open notebook is pulled toward close but released before threshold', () => {
-    const onOpen = vi.fn();
-    const onClose = vi.fn();
-    const tab = NotebookTab({ open: true, onOpen, onClose }) as ReactElement<ComponentProps<'button'>>;
-    const overlay = { style: { visibility: 'visible', opacity: '1', transform: 'none' } };
-    const screen = {
-      dataset: {} as Record<string, string>,
-      style: {
-        transform: 'translate3d(0, 0, 0) scale(0.94)',
-        borderRadius: '28px', outline: '1px solid rgba(255, 255, 255, 0.15)',
-        boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55)', transition: 'none',
-        removeProperty: vi.fn((prop: string) => { delete (screen.style as unknown as Record<string, unknown>)[prop]; }),
-      },
-    };
-    const host = {
-      getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }),
-      offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0,
-      querySelector: (selector: string) => (selector === '[data-phone-screen]' ? screen : overlay),
-    };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 0, top: 400 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
-    const event = (x: number, y: number, type = 'pointerup', timeStamp = 50) => ({
-      currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
-      timeStamp, type, detail: 1, stopPropagation: vi.fn(),
-    });
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { cb(16); return 1; });
-    vi.stubGlobal('cancelAnimationFrame', () => undefined);
-
-    // Pull slightly right (dx = 50px < 390 * 0.45 = 175px threshold)
-    tab.props.onPointerDown?.(event(14, 420, 'pointerdown', 0) as unknown as PointerEvent<HTMLButtonElement>);
-    tab.props.onPointerMove?.(event(64, 420, 'pointermove', 120) as unknown as PointerEvent<HTMLButtonElement>);
-
-    tab.props.onPointerUp?.(event(64, 420, 'pointerup', 250) as unknown as PointerEvent<HTMLButtonElement>);
-    expect(onClose).not.toHaveBeenCalled();
-    expect(onOpen).not.toHaveBeenCalled();
-    // Screen retains receding scale and does NOT revert to full screen
-    expect(screen.style.transform).toBe('translate3d(0, 0, 0) scale(0.94)');
-    expect(screen.style.borderRadius).toBe('28px');
+  it('renders Peaksy overlay badge count and zero-padded case number', () => {
+    const html = renderToStaticMarkup(<NotebookTab open={false} evidenceCount={8} caseNumber={1} onOpen={vi.fn()} />);
+    expect(html).toContain('data-evidence-badge');
+    expect(html).toContain('>8<');
+    expect(html).toContain('VỤ ÁN');
+    expect(html).toContain('>01<');
+    expect(html).toContain('bg-[#EF4444]');
   });
 });

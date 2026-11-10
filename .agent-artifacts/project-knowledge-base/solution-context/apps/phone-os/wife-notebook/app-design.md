@@ -62,24 +62,25 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ## 3. UI Wireframes & Layout Architecture
 
-### 3.1. Contextual Long-Press Pinning Modal (`UniversalEvidenceModal` - US-011)
+### 3.1. Contextual Long-Press Pinning Menu (`UniversalEvidenceModal` - US-011)
 
 > **Trigger**: Long-press ($\ge 380\text{ms}$) or keyboard `Enter`/`Space` on any interactive story narrative element (`StoryEvidenceTarget`) in any parody app.  
-> **Backdrop**: Translucent dimming overlay with `.glass-elevated` modal card (`role="dialog"`, `aria-modal="true"` with focus trap). Zero spoilers or static pin buttons on parent screen.
+> **Backdrop & Placement**: Blurred dimmed scrim (`bg-black/60 backdrop-blur-md`) with the selected narrative target visually highlighted above the scrim (`ring-2 ring-white/75`) and a compact `.glass-elevated` dark context menu (`--sys-surface-elevated` / `rgba(15, 23, 42, 0.90)`, `rounded-[16px]`, `role="dialog"`, `aria-modal="true"` with focus trap) anchored beneath (or above/centered when near edges). Dismisses on backdrop tap or `Escape`.
+> **Pinned Marker State**: After pinning, `StoryEvidenceTarget` displays a non-interactive red circular bookmark badge (`#EF4444` with white Ionicons `IoBookmark`) synced across all apps; re-triggering on a pinned item switches the action row to `"Bỏ ghim khỏi Sổ tay"`.
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│                        ══════                          │
-│                   THÊM VÀO SỔ TAY                      │
-├────────────────────────────────────────────────────────┤
-│ Đoạn thông tin đã chọn:                                │
-│ "Thu Trang | Chung cư mini số 12 ngõ 85 Chùa Láng"     │
-├────────────────────────────────────────────────────────┤
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ [ [Pin] Ghim vào Sổ tay                          ] │ │
-│ └────────────────────────────────────────────────────┘ │
-├────────────────────────────────────────────────────────┤
-│ [ [Close] Đóng                                       ] │
+│ (Blurred dimmed backdrop over underlying app screen)   │
+│                                                        │
+│ ╔════════════════════════════════════════════════════╗ │
+│ ║ "Tối nay 20h48 anh qua kiểm tra đường điện nhé!"   ║ │ <- Highlighted target
+│ ╚════════════════════════════════════════════════════╝ │
+│ ┌────────────────────────────────────────┐             │
+│ │ Tối nay 20h48 anh qua kiểm tra đường...│             │ <- text-ios-subheadline (#FFF)
+│ │ Zola · 15/10 · 20:48                   │             │ <- text-ios-footnote (#94A3B8)
+│ ├────────────────────────────────────────┤             │
+│ │ Ghim vào Sổ tay            [IoBookmark]│             │ <- Single ≥44px action row
+│ └────────────────────────────────────────┘             │    (or "Bỏ ghim khỏi Sổ tay")
 └────────────────────────────────────────────────────────┘
 ```
 

@@ -81,20 +81,24 @@ function hashName(name: string) {
 type ContactAvatarProps = {
   name: string;
   size?: number;
+  shape?: 'circle' | 'square';
+  fluid?: boolean;
   className?: string;
 };
 
-export function ContactAvatar({ name, size = 44, className = '' }: ContactAvatarProps) {
+export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
   const normalizedName = normalize(name);
-  const dimensions: CSSProperties = { width: size, height: size, flexShrink: 0 };
-  const classes = `inline-flex items-center justify-center overflow-hidden rounded-full border border-black/5 ${className}`;
+  const dimensions: CSSProperties = fluid ? { width: '100%', height: '100%' } : { width: size, height: size, flexShrink: 0 };
+  const displayClass = fluid ? 'flex' : 'inline-flex';
+  const radiusClass = shape === 'square' ? 'rounded-[1px]' : 'rounded-full';
+  const classes = `${displayClass} items-center justify-center overflow-hidden ${radiusClass} border border-black/5 ${className}`;
 
   if (normalizedName === normalize('Lớp Mầm Non Tuổi Thơ')) {
     return (
       <span
         aria-hidden="true"
         className={classes}
-        style={{ ...dimensions, backgroundImage: `url(${kindergartenChildAvatar})`, backgroundSize: 'cover' }}
+        style={{ ...dimensions, backgroundImage: `url(${kindergartenChildAvatar})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       />
     );
   }

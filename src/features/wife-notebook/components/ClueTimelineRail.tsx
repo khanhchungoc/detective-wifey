@@ -188,11 +188,11 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
         const isIncoming = entry.direction === 'incoming';
         const arrow = isIncoming ? '↙' : '↗';
         const dotColorClass = isIncoming
-          ? 'bg-rose-500 ring-[1.5px] ring-rose-200'
-          : 'bg-stone-400 ring-[1.5px] ring-stone-200';
+          ? 'bg-[#DC2626] ring-[1.5px] ring-red-200'
+          : 'bg-stone-500 ring-[1.5px] ring-stone-200';
         const arrowColorClass = isIncoming
-          ? 'text-rose-500 font-bold'
-          : 'text-stone-400 font-semibold';
+          ? 'text-[#DC2626] font-bold'
+          : 'text-stone-500 font-semibold';
 
         return (
           <div key={entry.id} className="relative group text-left min-w-0 pr-5">

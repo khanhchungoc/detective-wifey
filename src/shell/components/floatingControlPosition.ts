@@ -7,10 +7,10 @@ export type DockEdge = 'left' | 'right';
 export interface FloatingBounds { left: number; right: number; top: number; bottom: number }
 export interface FloatingPoint { x: number; y: number }
 export interface FloatingSample extends FloatingPoint { time: number }
-export const NOTEBOOK_TAB_WIDTH = 28;
-export const NOTEBOOK_TAB_HEIGHT = 80;
+export const NOTEBOOK_TAB_WIDTH = 124;
+export const NOTEBOOK_TAB_HEIGHT = 54;
 export const NOTEBOOK_FLOAT_SIZE = NOTEBOOK_TAB_HEIGHT;
-const TAB_DETACH_CLEARANCE = (NOTEBOOK_FLOAT_SIZE - NOTEBOOK_TAB_WIDTH) / 2 + 4;
+const TAB_DETACH_CLEARANCE = Math.max(8, (NOTEBOOK_FLOAT_SIZE - NOTEBOOK_TAB_WIDTH) / 2 + 4);
 /** Keep a centered floating square inside the shell; dragging along an edge stays tab-shaped. */
 export const isFloatingDetached = (point: FloatingPoint, bounds: FloatingBounds) =>
   point.x - bounds.left > TAB_DETACH_CLEARANCE && bounds.right - point.x > TAB_DETACH_CLEARANCE;
