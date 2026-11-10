@@ -6,6 +6,7 @@ const DEFAULT_GAME_ID = 'jealous_wife';
 const STORAGE_KEYS = {
   session: (gameId: string) => `detective:v${SCHEMA_VERSION}:${gameId}:session`,
   progress: `detective:v${SCHEMA_VERSION}:${DEFAULT_GAME_ID}:progress`,
+  corkboard: (caseId: string) => `detective:v${SCHEMA_VERSION}:${caseId || 'case_hoang_01'}:corkboard_state`,
 };
 
 /**
@@ -40,9 +41,14 @@ export class LocalStorageAdapter implements GameStateRepository {
     }
   }
 
-  async clearActiveSession(gameId: string = DEFAULT_GAME_ID): Promise<void> {
+  async clearActiveSession(gameId: string = DEFAULT_GAME_ID, caseId?: string): Promise<void> {
     try {
+      const existing = caseId ? null : await this.getActiveSession(gameId);
+      const resolvedCaseId = caseId || existing?.caseId;
       localStorage.removeItem(STORAGE_KEYS.session(gameId));
+      if (resolvedCaseId) {
+        localStorage.removeItem(STORAGE_KEYS.corkboard(resolvedCaseId));
+      }
     } catch (e) {
       console.warn('[LocalStorageAdapter] Failed to clear session:', e);
     }

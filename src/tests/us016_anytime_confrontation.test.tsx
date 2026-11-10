@@ -11,6 +11,7 @@ import {
   WifeNotebookModal,
   LEVEL_01_KNOWLEDGE_GRAPH,
 } from '../features/wife-notebook';
+import { deriveNodesFromTaggedEvidence, restoreCorkboardState } from '../features/wife-notebook/WifeNotebookModal';
 import { PlaySession } from '../features/play-session';
 import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { CaseGraphEdge } from '../shared/contracts/knowledge-graph';
@@ -913,6 +914,149 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(result.husbandDialogue).toContain('Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu');
       expect(result.wifeTitle).toBe('Nữ thám tử ghen tuông');
       expect(result.narrativeRoast).toBe(mockCaseConfig.groundTruth.narrativeRoast);
+    });
+
+    it('does not auto-report 100% or 3 stars when only equivalent identity edges (edge_order_name + edge_name_suspect) are connected without alibi contradiction', () => {
+      const edgeOrderName: CaseGraphEdge = {
+        edgeId: 'edge_order_name',
+        sourceNodeId: 'node_record_ecommerce_order',
+        targetNodeId: 'node_bridge_name',
+        relationship: 'bridges_identity',
+        isSmokingGun: true,
+        isCanonical: true,
+      };
+      const edgeNameSuspect: CaseGraphEdge = {
+        edgeId: 'edge_name_suspect',
+        sourceNodeId: 'node_bridge_name',
+        targetNodeId: 'node_suspect_huong',
+        relationship: 'bridges_identity',
+        isSmokingGun: true,
+        isCanonical: true,
+      };
+
+      const preflight = calculateConfrontationPreflight({
+        caseConfig: mockCaseConfig,
+        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        activeEdges: [edgeOrderName, edgeNameSuspect],
+        accusedSuspectId: 'suspect_huong',
+      });
+
+      expect(preflight.successRate).toBe(30);
+      expect(preflight.potentialStars).toBe(1);
+      expect(preflight.isLowSuccessRate).toBe(true);
+
+      const evalResult = evaluateConfrontation({
+        caseConfig: mockCaseConfig,
+        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        activeEdges: [edgeOrderName, edgeNameSuspect],
+        unmaskedSuspectIds: ['node_suspect_huong'],
+        currentStrikes: 5,
+        accusedSuspectId: 'suspect_huong',
+        rngRoll: 10,
+      });
+
+      expect(evalResult.stars).toBe(1);
+      expect(evalResult.successRate).toBe(30);
+    });
+
+    it('does not auto-report 100% from non-smoking-gun clues alone', () => {
+      const ordinaryNodes = [
+        { nodeId: 'node_alias_tuan', type: 'alias' as const, label: 'Anh Tuấn Thợ Điện', sourceAppId: 'internet-messaging' as AppId, suspectId: 'suspect_huong', messages: [{ recordId: 'm0', text: 'Msg' }], x: 0, y: 0 },
+        ...Array.from({ length: 10 }, (_, idx) => ({
+          nodeId: `ordinary_${idx}`,
+          type: 'record_clue' as const,
+          label: `Manh mối ${idx}`,
+          subtitle: `Chi tiết ${idx}`,
+          x: 0,
+          y: idx * 100,
+        })),
+      ];
+      const ordinaryEdges: CaseGraphEdge[] = Array.from({ length: 10 }, (_, idx) => ({
+        edgeId: `ordinary_edge_${idx}`,
+        sourceNodeId: idx === 0 ? 'node_alias_tuan' : `ordinary_${idx - 1}`,
+        targetNodeId: `ordinary_${idx}`,
+        relationship: 'bridges_identity' as const,
+        isCanonical: true,
+        isSmokingGun: false,
+      }));
+
+      const preflight = calculateConfrontationPreflight({
+        caseConfig: mockCaseConfig,
+        knowledgeGraph: {
+          nodes: ordinaryNodes,
+          edges: ordinaryEdges,
+          requiredSmokingGunEdgeIds: ['edge_order_name', 'edge_alibi_contradiction'],
+        },
+        placedNodes: ordinaryNodes,
+        activeEdges: ordinaryEdges,
+        accusedSuspectId: 'suspect_huong',
+      });
+
+      expect(preflight.successRate).toBe(90);
+      expect(preflight.potentialStars).toBe(1);
+    });
+
+    it('prunes orphan edges from stale saved corkboard state when only Vợ and Anh Tuấn Thợ Điện are pinned', () => {
+      const tagged = [
+        {
+          suspectId: 'tag_wife',
+          displayName: 'Vợ',
+          sourceApp: 'internet-messaging' as AppId,
+          timestamp: 100,
+          conversationId: 'thread_wife',
+          messages: [{ recordId: 'thread_wife_m8', text: 'Chưa em, cả nhóm vẫn ở phòng họp.', eventTime: '15/10 20:46' }],
+        },
+        {
+          suspectId: 'tag_tuan',
+          displayName: 'Anh Tuấn Thợ Điện',
+          sourceApp: 'internet-messaging' as AppId,
+          timestamp: 101,
+          conversationId: 'thread_tuan',
+          messages: [{ recordId: 'thread_tuan_m8', text: 'Vâng anh, em đặt bàn bên Phố Cổ rồi nhé, 19h30.', eventTime: '15/10 16:42' }],
+        },
+      ];
+      const allNodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
+      const staleSavedBoard = {
+        placedNodes: [
+          { nodeId: 'node_record_wife_alibi', type: 'record_clue' as const, label: 'Vợ', x: 100, y: 100 },
+          { nodeId: 'node_alias_tuan', type: 'alias' as const, label: 'Anh Tuấn Thợ Điện', x: 400, y: 100 },
+          { nodeId: 'node_record_ecommerce_order', type: 'record_clue' as const, label: 'Váy Satin', x: 100, y: 300 },
+          { nodeId: 'node_bridge_name', type: 'bridge_id' as const, label: 'Nguyen Thi Thu Huong', x: 400, y: 300 },
+          { nodeId: 'node_record_bank_receipt', type: 'record_clue' as const, label: 'Cơm Niêu', x: 700, y: 300 },
+          { nodeId: 'node_bridge_phone', type: 'bridge_id' as const, label: '0988886677', x: 700, y: 100 },
+        ],
+        edges: [
+          { edgeId: 'edge_order_name', sourceNodeId: 'node_record_ecommerce_order', targetNodeId: 'node_bridge_name', relationship: 'bridges_identity' as const, isCanonical: true, isSmokingGun: true },
+          { edgeId: 'edge_alibi_contradiction', sourceNodeId: 'node_record_wife_alibi', targetNodeId: 'node_record_bank_receipt', relationship: 'contradicts_alibi' as const, isCanonical: true, isSmokingGun: true },
+          { edgeId: 'edge_alias_phone', sourceNodeId: 'node_alias_tuan', targetNodeId: 'node_bridge_phone', relationship: 'bridges_identity' as const, isCanonical: true, isSmokingGun: false },
+        ],
+      };
+
+      const restored = restoreCorkboardState(staleSavedBoard, allNodes);
+      expect(restored.placedNodes).toHaveLength(2);
+      expect(restored.edges).toEqual([]);
+
+      const speculativeEdge: CaseGraphEdge = {
+        edgeId: 'custom_edge_wife_tuan',
+        sourceNodeId: 'node_record_wife_alibi',
+        targetNodeId: 'node_alias_tuan',
+        relationship: 'bridges_identity',
+        isCanonical: false,
+        isSmokingGun: false,
+      };
+      const preflight = calculateConfrontationPreflight({
+        caseConfig: mockCaseConfig,
+        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+        placedNodes: restored.placedNodes,
+        taggedSuspects: tagged,
+        activeEdges: [...restored.edges, speculativeEdge],
+        accusedSuspectId: 'suspect_huong',
+      });
+
+      expect(preflight.successRate).toBe(0);
+      expect(preflight.potentialStars).toBe(0);
+      expect(preflight.isLowSuccessRate).toBe(true);
+      expect(preflight.verifiedCluesList).toEqual([]);
     });
   });
 });

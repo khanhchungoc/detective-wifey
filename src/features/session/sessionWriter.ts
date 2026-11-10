@@ -13,9 +13,9 @@ export class SessionWriter {
       ? this.repository.saveActiveSession(snapshot) : Promise.resolve());
   }
 
-  clear(): Promise<void> {
+  clear(caseId?: string): Promise<void> {
     this.generation++;
-    return this.enqueue(() => this.repository.clearActiveSession(this.gameId));
+    return this.enqueue(() => this.repository.clearActiveSession(this.gameId, caseId));
   }
 
   private enqueue(operation: () => Promise<void>): Promise<void> {

@@ -89,4 +89,29 @@ describe('confrontation evidence review', () => {
       expect(html).toContain('bg-white');
     } finally { random.mockRestore(); }
   });
+
+  it('ignores dangling canonical edges to unplaced nodes and does not leak culprit aliases to wrong suspects', () => {
+    const partialNodes: PlacedNode[] = [
+      { nodeId: 'node_alias_tuan', type: 'alias', label: 'Anh Tuấn Thợ Điện', sourceAppId: 'internet-messaging',
+        messages: [{ recordId: 'm1', text: 'Tin nhắn bình thường' }], x: 0, y: 0 },
+      { nodeId: 'chat_reply', type: 'record_clue', label: 'Chat', sourceAppId: 'internet-messaging',
+        messages: [{ recordId: 'm2', text: 'Nội dung khác' }], x: 100, y: 0 },
+      { nodeId: 'other', type: 'suspect', label: 'Lan Anh Kế Toán', suspectId: 'suspect_lan_anh', x: 200, y: 0 },
+    ];
+    const danglingEdge = edge('node_alias_tuan', 'missing_phone_node', true);
+    const culpritPf = calculateConfrontationPreflight({
+      placedNodes: partialNodes,
+      activeEdges: [danglingEdge],
+      accusedSuspectId: 'suspect_huong',
+    });
+    expect(culpritPf.verifiedCluesList).toEqual([]);
+
+    const wrongSuspectPf = calculateConfrontationPreflight({
+      placedNodes: partialNodes,
+      activeEdges: [edge('node_alias_tuan', 'chat_reply', true)],
+      accusedSuspectId: 'suspect_lan_anh',
+    });
+    expect(wrongSuspectPf.isWrongSuspect).toBe(true);
+    expect(wrongSuspectPf.verifiedCluesList).toEqual([]);
+  });
 });

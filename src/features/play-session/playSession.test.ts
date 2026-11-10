@@ -168,4 +168,30 @@ describe('save compatibility and ordering', () => {
     expect(JSON.parse(storage.get('detective:v1:jealous_wife:session')!)).toMatchObject({ ...legacy, lastSavedAt: expect.any(Number) });
     expect((await repository.getActiveSession('jealous_wife'))?.taggedSuspects[0]).not.toHaveProperty('evidence');
   });
+
+  it('clears saved corkboard state when restarting or switching levels via LocalStorageAdapter', async () => {
+    const storage = new Map<string, string>();
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+      removeItem: (key: string) => storage.delete(key),
+    });
+    const repository = new LocalStorageAdapter();
+    const { game } = setup(undefined, { repository });
+    game.tag('Anh Tuấn Thợ Điện', 'internet-messaging');
+    await new Promise(resolve => setTimeout(resolve, 0));
+    storage.set('detective:v1:case_01:corkboard_state', JSON.stringify({
+      placedNodes: [{ nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', x: 0, y: 0 }],
+      edges: [{ edgeId: 'edge_order_name', sourceNodeId: 'a', targetNodeId: 'b', isCanonical: true, isSmokingGun: true }],
+    }));
+
+    await game.restart();
+    expect(storage.has('detective:v1:case_01:corkboard_state')).toBe(false);
+
+    storage.set('detective:v1:case_02:corkboard_state', JSON.stringify({ placedNodes: [], edges: [{ edgeId: 'stale' }] }));
+    game.selectLevel(2);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(storage.has('detective:v1:case_02:corkboard_state')).toBe(false);
+    game.stop();
+  });
 });

@@ -48,7 +48,7 @@ export interface PlayerProgress {
 export interface GameStateRepository {
   getActiveSession(gameId: string): Promise<ActiveSessionState | null>;
   saveActiveSession(session: ActiveSessionState): Promise<void>;
-  clearActiveSession(gameId: string): Promise<void>;
+  clearActiveSession(gameId: string, caseId?: string): Promise<void>;
 
   getPlayerProgress(): Promise<PlayerProgress>;
   savePlayerProgress(progress: Partial<PlayerProgress>): Promise<void>;

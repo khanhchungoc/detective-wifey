@@ -228,6 +228,41 @@ const RED_HERRING_ROASTS_L1: Record<string, string> = {
     'Em kiểm tra điện thoại hay kiểm kê cả khu phố đấy? Mai anh còn đi làm!',
 };
 
+const DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS = [
+  'edge_order_name',
+  'edge_alibi_contradiction',
+] as const;
+
+function isMatchingRequiredSmokingGun(edgeId: string, requiredEdgeIds: readonly string[]): boolean {
+  return (
+    requiredEdgeIds.includes(edgeId) ||
+    (edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
+    (edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect'))
+  );
+}
+
+/**
+ * Identity bridge edges `edge_order_name` and `edge_name_suspect` prove the same link;
+ * collapse them to one proof key so connecting both doesn't double-count as two smoking guns.
+ */
+function normalizeSmokingGunKey(edgeId: string): string {
+  return edgeId === 'edge_name_suspect' ? 'edge_order_name' : edgeId;
+}
+
+function collectVerifiedSmokingGunEdgeIds(
+  edges: readonly CaseGraphEdge[],
+  requiredEdgeIds: readonly string[],
+): string[] {
+  const verified: string[] = [];
+  for (const edge of edges) {
+    const matchesRequired = isMatchingRequiredSmokingGun(edge.edgeId, requiredEdgeIds);
+    if (edge.isCanonical !== false && (edge.isSmokingGun || matchesRequired) && !verified.includes(edge.edgeId)) {
+      verified.push(edge.edgeId);
+    }
+  }
+  return verified;
+}
+
 /**
  * Computes preflight details and RNG success probability based on clues found.
  *
@@ -300,10 +335,7 @@ export function calculateConfrontationPreflight({
     }
   }
 
-  const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [
-    'edge_order_name',
-    'edge_alibi_contradiction',
-  ];
+  const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [...DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS];
 
   // 1. Build verified strings list (canonical active edges)
   const canonicalActiveEdges = activeEdges.filter(edge => edge.isCanonical ?? Boolean(
@@ -313,10 +345,7 @@ export function calculateConfrontationPreflight({
 
   for (const edge of canonicalActiveEdges) {
     const isSmokingGun = Boolean(
-      edge.isSmokingGun ||
-      (requiredEdgeIds && requiredEdgeIds.includes(edge.edgeId)) ||
-      (edge.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
-      (edge.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect')),
+      edge.isSmokingGun || isMatchingRequiredSmokingGun(edge.edgeId, requiredEdgeIds),
     );
 
     const sourceNode = placedNodes.find(n => n.nodeId === edge.sourceNodeId) ||
@@ -338,18 +367,19 @@ export function calculateConfrontationPreflight({
   }
 
   // Only placed evidence reachable from this suspect through verified red strings is reviewable.
+  const placedNodeIds = new Set(placedNodes.map(node => node.nodeId));
   const connectedNodeIds = new Set(placedNodes.filter(node =>
     (node.type === 'suspect' || node.type === 'alias' || node.isExplicitConversationPin) && (
       node.suspectId === effectiveSuspectId || node.nodeId === effectiveSuspectId ||
       node.nodeId === `node_${effectiveSuspectId}` ||
-      ((node.type === 'suspect' || node.type === 'alias') && (node.label === accusedSuspectName || node.label.includes('Tuấn')))),
+      ((node.type === 'suspect' || node.type === 'alias') && (node.label === accusedSuspectName || (!isWrongSuspect && node.label.includes('Tuấn'))))),
   ).map(node => node.nodeId));
   const pending = [...connectedNodeIds];
   for (const nodeId of pending) {
     for (const edge of canonicalActiveEdges) {
       const otherId = edge.sourceNodeId === nodeId ? edge.targetNodeId
         : edge.targetNodeId === nodeId ? edge.sourceNodeId : undefined;
-      if (otherId && placedNodes.some(node => node.nodeId === otherId) && !connectedNodeIds.has(otherId)) {
+      if (otherId && placedNodeIds.has(otherId) && !connectedNodeIds.has(otherId)) {
         connectedNodeIds.add(otherId);
         pending.push(otherId);
       }
@@ -360,7 +390,8 @@ export function calculateConfrontationPreflight({
   const seenClueKeys = new Set<string>();
   for (const node of placedNodes) {
     if (!connectedNodeIds.has(node.nodeId) || !canonicalActiveEdges.some(edge =>
-      edge.sourceNodeId === node.nodeId || edge.targetNodeId === node.nodeId,
+      (edge.sourceNodeId === node.nodeId && placedNodeIds.has(edge.targetNodeId)) ||
+      (edge.targetNodeId === node.nodeId && placedNodeIds.has(edge.sourceNodeId)),
     )) continue;
     if (node.type === 'suspect' || (node.type === 'alias' && !node.messages?.length && !node.subtitle)) continue;
     const key = `${node.sourceAppId || ''}:${node.recordRefId || node.nodeId}`;
@@ -403,36 +434,32 @@ export function calculateConfrontationPreflight({
     };
   } else {
     // Correct culprit: Clue count is based strictly on actual clues found
-    const requiredCount = requiredEdgeIds.length;
-    const verifiedSmokingGunEdgeIds: string[] = [];
-    for (const edge of canonicalActiveEdges) {
-      const matchesRequired = requiredEdgeIds.includes(edge.edgeId) ||
-        (edge.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
-        (edge.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect'));
-      if (edge.isCanonical !== false && (edge.isSmokingGun || matchesRequired) && !verifiedSmokingGunEdgeIds.includes(edge.edgeId)) {
-        verifiedSmokingGunEdgeIds.push(edge.edgeId);
-      }
-    }
-    const verifiedCount = verifiedSmokingGunEdgeIds.length;
+    const verifiedSmokingGunEdgeIds = collectVerifiedSmokingGunEdgeIds(canonicalActiveEdges, requiredEdgeIds);
+    const verifiedSmokingGunKeys = new Set(verifiedSmokingGunEdgeIds.map(normalizeSmokingGunKey));
+    const distinctSmokingGunCount = verifiedSmokingGunKeys.size;
+    const requiredKeys = new Set(requiredEdgeIds.map(normalizeSmokingGunKey));
 
-    // US-016 AC 6: 100% of required smoking-gun chain (or >= 3 verified links) yields watertight 3-star victory
-    const isCompleteSmokingGunChain = requiredCount > 0
-      ? verifiedCount >= requiredCount
-      : verifiedCount >= 3;
+    // US-016 AC 6: 100% of required smoking-gun chain (or >= 3 distinct verified links) yields watertight 3-star victory
+    const isCompleteSmokingGunChain = requiredKeys.size > 0
+      ? [...requiredKeys].every(reqKey => verifiedSmokingGunKeys.has(reqKey))
+      : distinctSmokingGunCount >= 3;
 
     const smokingGunClueFloor = isCompleteSmokingGunChain
       ? 10
-      : verifiedCount >= 2
+      : distinctSmokingGunCount >= 2
         ? 9
-        : verifiedCount === 1
+        : distinctSmokingGunCount === 1
           ? 5
           : 0;
 
     if (explicitCluesFound !== undefined) {
       cluesFound = explicitCluesFound;
     } else {
-      // In-game board & pure graph testing: actual clues found relating to culprit, with floor guaranteed by verified smoking guns
-      cluesFound = Math.max(verifiedCluesList.length, smokingGunClueFloor);
+      // Without any verified smoking-gun link, ordinary clues alone cannot auto-reach 100% (2-3 stars).
+      const cappedClueCount = distinctSmokingGunCount === 0
+        ? Math.min(8, verifiedCluesList.length)
+        : verifiedCluesList.length;
+      cluesFound = Math.max(cappedClueCount, smokingGunClueFloor);
     }
 
     cluesFound = Math.max(0, Math.min(totalClues, cluesFound));
@@ -532,23 +559,11 @@ export function evaluateConfrontation({
   const culpritId = groundTruth.culpritSuspectId;
 
   // 1. Identify canonical required smoking-gun edge IDs
-  const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [
-    'edge_order_name',
-    'edge_alibi_contradiction',
-  ];
+  const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [...DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS];
   const requiredCount = requiredEdgeIds.length;
 
   // 2. Identify verified smoking-gun edges in the player's active corkboard
-  const verifiedSmokingGunEdgeIds: string[] = [];
-  for (const edge of activeEdges) {
-    const matchesRequired = requiredEdgeIds.includes(edge.edgeId) ||
-      (edge.edgeId === 'edge_name_suspect' && requiredEdgeIds.includes('edge_order_name')) ||
-      (edge.edgeId === 'edge_order_name' && requiredEdgeIds.includes('edge_name_suspect'));
-    if (edge.isCanonical !== false && (edge.isSmokingGun || matchesRequired) && !verifiedSmokingGunEdgeIds.includes(edge.edgeId)) {
-      verifiedSmokingGunEdgeIds.push(edge.edgeId);
-    }
-  }
-
+  const verifiedSmokingGunEdgeIds = collectVerifiedSmokingGunEdgeIds(activeEdges, requiredEdgeIds);
   const verifiedCount = verifiedSmokingGunEdgeIds.length;
 
   // 3. Preflight & RNG Calculation

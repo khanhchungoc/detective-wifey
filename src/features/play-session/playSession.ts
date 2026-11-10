@@ -115,10 +115,11 @@ export class PlaySession {
   };
 
   restart = async () => {
+    const caseId = this.state.caseConfig.caseId;
     this.reset(this.state.caseConfig);
     const revision = this.revision;
     const level = this.state.caseConfig.levelNumber;
-    await this.clearSavedSession();
+    await this.clearSavedSession(caseId);
     if (revision === this.revision) this.notify(`Đã chơi lại Màn ${level}!`);
   };
 
@@ -126,7 +127,7 @@ export class PlaySession {
     try {
       const next = this.dependencies.loadCaseByLevel(level, this.state.caseConfig.husbandId);
       this.reset(next);
-      void this.clearSavedSession();
+      void this.clearSavedSession(next.caseId);
       this.notify(`Đã nạp ${next.husbandName} - Màn ${level}!`);
       return true;
     } catch (error: unknown) {
@@ -298,8 +299,8 @@ export class PlaySession {
     void this.writer.save(snapshot).catch(() => this.notify('Không thể lưu phiên điều tra.'));
   }
 
-  private clearSavedSession() {
-    return this.writer.clear().catch(() => this.notify('Không thể xóa phiên điều tra đã lưu.'));
+  private clearSavedSession(caseId?: string) {
+    return this.writer.clear(caseId).catch(() => this.notify('Không thể xóa phiên điều tra đã lưu.'));
   }
 
   private update(patch: Partial<PlaySessionState>) {
