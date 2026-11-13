@@ -61,3 +61,27 @@
     inset 0 6px 16px rgba(0, 0, 0, 0.56),
     inset 0 -4px 12px rgba(0, 0, 0, 0.36);
 }
+
+/* Manila Case Dossier sheet for pre-confrontation confirmation (US-016) */
+.dossier-folder-sheet {
+  background-color: #f2ece0;
+  background-image:
+    linear-gradient(180deg, rgba(255, 250, 240, 0.55) 0%, rgba(234, 224, 204, 0.45) 100%),
+    url('./assets/cardboard-grain.svg');
+  background-size: 100% 100%, 140px 140px;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.72),
+    0 6px 18px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.dossier-paper-card {
+  background-color: #faf6ed;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 21px,
+    rgba(145, 118, 86, 0.1) 21px,
+    rgba(145, 118, 86, 0.1) 22px
+  );
+}

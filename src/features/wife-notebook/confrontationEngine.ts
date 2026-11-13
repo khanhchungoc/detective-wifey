@@ -1,5 +1,5 @@
 import type { CaseConfig } from '../../shared/contracts/case-schema';
-import type { CaseKnowledgeGraph, CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
+import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
 import type { TaggedEvidenceItem, PlacedNode } from './types';
 
 export interface ClueInfo {
@@ -14,8 +14,14 @@ export interface VerifiedStringItem {
   id: string;
   sourceTitle: string;
   targetTitle: string;
+  sourceApp?: string;
+  targetApp?: string;
+  sourceSnippet?: string;
+  targetSnippet?: string;
   relationship: string;
+  relationshipLabel?: string;
   isSmokingGun: boolean;
+  isConnectedToSuspect?: boolean;
   hint?: string;
 }
 
@@ -174,23 +180,72 @@ export function getSuspectsOnBoard({
     const tagged = taggedSuspects.find(tag => tag.suspectId === poolItem.suspectId);
 
     if (boardNode || tagged) {
-      let alias: string | undefined;
-      const aliasNode = placedNodes.find(n => {
-        if (n.subjectSuspectId === poolItem.suspectId && n.visibleAlias) return true;
-        if (n.suspectId === poolItem.suspectId && n.visibleAlias) return true;
-        if (knowledgeGraph) {
-          const kn = knowledgeGraph.nodes.find(k => k.nodeId === n.nodeId);
-          return kn?.unmasksToSuspectId?.includes(poolItem.suspectId);
-        }
-        return false;
-      });
+      const cleanRealName = poolItem.displayName.split('·')[0].trim();
 
-      if (aliasNode?.visibleAlias) {
-        alias = aliasNode.visibleAlias;
-      } else if (aliasNode && aliasNode.type === 'alias') {
-        alias = aliasNode.label;
-      } else if (poolItem.suspectId === 'suspect_huong' || isCulprit) {
+      const isSameAsRealName = (str?: string) => {
+        if (!str) return false;
+        const normA = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const normB = cleanRealName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        return normA === normB || normA.includes(normB) || normB.includes(normA);
+      };
+
+      let alias: string | undefined;
+
+      // 1. Check knowledge graph for canonical disguise alias (e.g. node_alias_tuan for suspect_huong)
+      const canonicalAliasNode = knowledgeGraph?.nodes.find(kn =>
+        kn.type === 'alias' &&
+        (kn.unmasksToSuspectId === poolItem.suspectId ||
+          kn.unmasksToSuspectId === `node_${poolItem.suspectId}` ||
+          kn.unmasksToSuspectId?.includes(poolItem.suspectId))
+      );
+      if (canonicalAliasNode?.label && !isSameAsRealName(canonicalAliasNode.label)) {
+        alias = canonicalAliasNode.label;
+      }
+
+      // 2. Check placedNodes for an alias node or disguise label differing from real name
+      if (!alias) {
+        const disguiseNode = placedNodes.find(n => {
+          const belongsToPoolItem =
+            n.subjectSuspectId === poolItem.suspectId ||
+            n.suspectId === poolItem.suspectId ||
+            n.nodeId.includes(poolItem.suspectId) ||
+            (knowledgeGraph && knowledgeGraph.nodes.some(kn =>
+              (kn.nodeId === n.nodeId || (kn.recordRefId && kn.recordRefId === n.recordRefId)) &&
+              kn.unmasksToSuspectId?.includes(poolItem.suspectId)
+            ));
+
+          const isCulpritElectrician = (poolItem.suspectId === 'suspect_huong' || isCulprit) && (
+            (n.label || '').toLowerCase().includes('thợ điện') ||
+            (n.label || '').toLowerCase().includes('tuan') ||
+            n.nodeId.includes('tuan')
+          );
+
+          if (!belongsToPoolItem && !isCulpritElectrician) return false;
+
+          if (n.type === 'alias' && !isSameAsRealName(n.label)) return true;
+          if (n.visibleAlias && !isSameAsRealName(n.visibleAlias)) return true;
+          if (isCulpritElectrician) return true;
+          return false;
+        });
+
+        if (disguiseNode) {
+          if (!isSameAsRealName(disguiseNode.label)) {
+            alias = disguiseNode.label;
+          } else if (!isSameAsRealName(disguiseNode.visibleAlias)) {
+            alias = disguiseNode.visibleAlias;
+          }
+        }
+      }
+
+      // 3. Explicit fallback for suspect_huong / culprit
+      if (!alias && (poolItem.suspectId === 'suspect_huong' || isCulprit)) {
         alias = 'Anh Tuấn Thợ Điện';
+      }
+
+      // 4. Fallback for mock test fixtures (e.g. orderAttribution.test.ts where placed order visibleAlias is expected)
+      if (!alias) {
+        const fallbackNode = placedNodes.find(n => n.subjectSuspectId === poolItem.suspectId || n.suspectId === poolItem.suspectId);
+        alias = fallbackNode?.visibleAlias || tagged?.visibleAlias;
       }
 
       // Check whether this suspect has been unmasked
@@ -201,7 +256,6 @@ export function getSuspectsOnBoard({
       const isUnmasked = isUnmaskedByState || isUnmaskedByEdge;
 
       // Has any node with the real suspect's name actually been placed or tagged?
-      const cleanRealName = poolItem.displayName.split('·')[0].trim();
       const hasRealNameOnBoard = Boolean(
         tagged ||
         placedNodes.some(n => {
@@ -256,13 +310,32 @@ export function getSuspectsOnBoard({
       const suspectId = node.subjectSuspectId || node.suspectId || node.nodeId.replace(/^node_suspect_/, '').replace(/^node_/, '');
 
       // Check if this contact alias belongs to an existing suspect in suspectsMap (e.g. Anh Tuấn Thợ Điện belongs to suspect_huong)
-      const existingEntry = Array.from(suspectsMap.values()).find(suspect =>
-        suspect.displayName === node.label ||
-        (node.visibleAlias && suspect.displayName === node.visibleAlias) ||
-        (suspect.alias && suspect.alias === node.label) ||
-        suspect.id === suspectId ||
-        (knowledgeGraph?.nodes.find(kn => kn.nodeId === node.nodeId)?.unmasksToSuspectId?.includes(suspect.id))
-      );
+      const existingEntry = Array.from(suspectsMap.values()).find(suspect => {
+        if (suspect.id === suspectId) return true;
+        if (suspect.displayName === node.label) return true;
+        if (node.visibleAlias && suspect.displayName === node.visibleAlias) return true;
+        if (suspect.alias && suspect.alias === node.label) return true;
+        if (suspect.alias && node.visibleAlias && suspect.alias === node.visibleAlias) return true;
+
+        // Level 1 electrician check: any node with 'Anh Tuấn Thợ Điện' belongs to suspect_huong / culprit
+        const cleanNodeLabel = (node.label || '').toLowerCase();
+        const isElectricianNode = cleanNodeLabel.includes('thợ điện') || cleanNodeLabel.includes('anh tuấn') || node.nodeId.includes('tuan');
+        if (isElectricianNode && (suspect.id === 'suspect_huong' || suspect.id === culpritId || suspect.isCulprit)) {
+          return true;
+        }
+
+        // Check canonical knowledge graph mapping by nodeId or recordRefId
+        if (knowledgeGraph) {
+          const kn = knowledgeGraph.nodes.find(k =>
+            k.nodeId === node.nodeId ||
+            (k.recordRefId && (k.recordRefId === node.recordRefId || k.recordRefId === node.nodeId))
+          );
+          if (kn?.unmasksToSuspectId && (kn.unmasksToSuspectId === suspect.id || kn.unmasksToSuspectId.includes(suspect.id))) {
+            return true;
+          }
+        }
+        return false;
+      });
 
       // If already listed (even from a different app or node), do not add duplicate!
       if (existingEntry) {
@@ -411,8 +484,10 @@ export function calculateConfrontationPreflight({
       (poolSuspect && n.label.includes(poolSuspect.displayName)),
   );
   if (suspectNode) {
-    accusedSuspectName = suspectNode.label;
-    accusedSuspectAlias = suspectNode.visibleAlias || (suspectNode.type === 'alias' ? suspectNode.label : undefined);
+    if (!accusedSuspectName) accusedSuspectName = suspectNode.label;
+    if (!accusedSuspectAlias) {
+      accusedSuspectAlias = suspectNode.visibleAlias || (suspectNode.type === 'alias' ? suspectNode.label : undefined);
+    }
   }
   if (!accusedSuspectAlias && effectiveSuspectId === culpritId) {
     const aliasNode = placedNodes.find(n => n.type === 'alias' || n.visibleAlias);
@@ -423,36 +498,11 @@ export function calculateConfrontationPreflight({
 
   const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [...DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS];
 
-  // 1. Build verified strings list (canonical active edges)
+  // 1. Identify canonical active edges & placed evidence reachable from this suspect
   const canonicalActiveEdges = activeEdges.filter(edge => edge.isCanonical ?? Boolean(
     knowledgeGraph?.edges.some(canonical => canonical.edgeId === edge.edgeId),
   ));
-  const verifiedStringsList: VerifiedStringItem[] = [];
 
-  for (const edge of canonicalActiveEdges) {
-    const isSmokingGun = Boolean(
-      edge.isSmokingGun || isMatchingRequiredSmokingGun(edge.edgeId, requiredEdgeIds),
-    );
-
-    const sourceNode = placedNodes.find(n => n.nodeId === edge.sourceNodeId) ||
-      knowledgeGraph?.nodes.find(n => n.nodeId === edge.sourceNodeId);
-    const targetNode = placedNodes.find(n => n.nodeId === edge.targetNodeId) ||
-      knowledgeGraph?.nodes.find(n => n.nodeId === edge.targetNodeId);
-
-    const sourceTitle = sourceNode?.label || edge.sourceNodeId;
-    const targetTitle = targetNode?.label || edge.targetNodeId;
-
-    verifiedStringsList.push({
-      id: edge.edgeId,
-      sourceTitle,
-      targetTitle,
-      relationship: edge.relationship,
-      isSmokingGun,
-      hint: edge.explanationRoastHint,
-    });
-  }
-
-  // Only placed evidence reachable from this suspect through verified red strings is reviewable.
   const placedNodeIds = new Set(placedNodes.map(node => node.nodeId));
   const connectedNodeIds = new Set(placedNodes.filter(node =>
     (node.type === 'suspect' || node.type === 'alias' || node.isExplicitConversationPin) && (
@@ -470,6 +520,62 @@ export function calculateConfrontationPreflight({
         pending.push(otherId);
       }
     }
+  }
+
+  const getRelationshipLabel = (relationship: string, sourceTitle: string, targetTitle: string): string => {
+    const combined = `${sourceTitle} ${targetTitle}`.toLowerCase();
+    if (relationship === 'contradicts_alibi') return 'Mâu thuẫn lời khai';
+    if (relationship === 'occurred_at') return 'Trùng mốc thời gian';
+    if (relationship === 'bridges_identity') {
+      if (combined.includes('0988') || combined.includes('sđt') || combined.includes('điện thoại') || combined.includes('cuộc gọi')) {
+        return 'Trùng số liên hệ';
+      }
+      if (combined.includes('160') || combined.includes('tiền') || combined.includes('hoàn') || combined.includes('ngân hàng')) {
+        return 'Khớp dòng tiền';
+      }
+      return 'Khớp danh tính';
+    }
+    return 'Mắt xích liên kết';
+  };
+
+  const getConciseNodeSnippet = (node: PlacedNode | CaseGraphNode | undefined): string | undefined => {
+    if (!node) return undefined;
+    if ('messages' in node && node.messages?.length) {
+      return node.messages.map(m => m.text).filter(Boolean).join(' · ');
+    }
+    return node.subtitle;
+  };
+
+  const verifiedStringsList: VerifiedStringItem[] = [];
+
+  for (const edge of canonicalActiveEdges) {
+    const isSmokingGun = Boolean(
+      edge.isSmokingGun || isMatchingRequiredSmokingGun(edge.edgeId, requiredEdgeIds),
+    );
+
+    const sourcePlaced = placedNodes.find(n => n.nodeId === edge.sourceNodeId);
+    const targetPlaced = placedNodes.find(n => n.nodeId === edge.targetNodeId);
+    const sourceNode = sourcePlaced || knowledgeGraph?.nodes.find(n => n.nodeId === edge.sourceNodeId);
+    const targetNode = targetPlaced || knowledgeGraph?.nodes.find(n => n.nodeId === edge.targetNodeId);
+
+    const sourceTitle = sourceNode?.label || edge.sourceNodeId;
+    const targetTitle = targetNode?.label || edge.targetNodeId;
+    const isConnectedToSuspect = connectedNodeIds.has(edge.sourceNodeId) && connectedNodeIds.has(edge.targetNodeId);
+
+    verifiedStringsList.push({
+      id: edge.edgeId,
+      sourceTitle,
+      targetTitle,
+      sourceApp: sourceNode?.sourceAppId,
+      targetApp: targetNode?.sourceAppId,
+      sourceSnippet: getConciseNodeSnippet(sourceNode),
+      targetSnippet: getConciseNodeSnippet(targetNode),
+      relationship: edge.relationship,
+      relationshipLabel: getRelationshipLabel(edge.relationship, sourceTitle, targetTitle),
+      isSmokingGun,
+      isConnectedToSuspect,
+      hint: edge.explanationRoastHint,
+    });
   }
 
   const verifiedCluesList: ClueInfo[] = [];

@@ -127,9 +127,13 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ---
 
-### 3.3. Anytime Confrontation Hub, Dynamic Excuse Engine & Shareable Roast Card (`ConfrontationModal` - US-016, US-017)
+### 3.3. Pre-Confrontation Dossier (`ConfrontationConfirmModal`), Anytime Confrontation Hub & Shareable Roast Card (`ConfrontationModal` - US-016, US-017)
 
-> **Layout**: Fullscreen overlay (`z-80`) evaluating the player's connected `CaseKnowledgeGraph` automatically upon tapping `[Đối chất]` at any time (no manual dropdown or card-slotting required).
+> **Preflight Dossier (`ConfrontationConfirmModal`, `z-75`)**: Before launching confrontation, tapping `[Đối chất]` opens a two-step Manila Case Dossier modal styled consistently with the corkboard (`#F2ECE0` aged paper folder, `FILE #01` tab, red stamps, typewriter/monospace labels):
+>   1. **Step 1 (Suspect Selection)**: Polaroid suspect cards on `.suspect-cork-tray` with 3D red pushpins and `"NGHI PHẠM"` / `"ĐÃ LỘT MẶT NẠ"` stamps.
+>   2. **Step 2 (Confrontation Confirmation)**: Tilted Polaroid face-off (Husband vs Suspect) linked by a red string, 5-segment conviction strength indicator (`Tỉ lệ thành công`), **Deductive Linkage Bridges** (`verifiedStringsList` pairing connected clues via relationship bridge badges instead of raw text lists), and a red embossed dossier stamp CTA (`MÀY DÁM LỪA BÀ!`).
+>
+> **Confrontation Stage (`ConfrontationModal`, `z-80`)**: Fullscreen overlay evaluating the player's connected `CaseKnowledgeGraph` automatically upon confirmation (no manual dropdown or card-slotting required).
 
 ```
 ┌────────────────────────────────────────────────────────┐

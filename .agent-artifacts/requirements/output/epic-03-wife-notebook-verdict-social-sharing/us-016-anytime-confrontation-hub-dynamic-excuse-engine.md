@@ -32,7 +32,11 @@ As a Player (Wife), I want to initiate confrontation ("Đối chất") with the 
      - The card displays the smoking-gun bridge anchor: `📞 Trùng SĐT: 0988886677`.
      - The photo switches to the suspect's real persona portrait.
      - The stamp updates to `"ĐÃ LỘT MẶT NẠ"`.
-   - In Step 2 ("Xác nhận đối chất"), the unmasked true persona portrait and disguise subtitle are carried over to the confrontation matchup view.
+   - In Step 2 ("Xác nhận đối chất"):
+     - The modal uses a **Manila Case Dossier** visual style consistent with the Wife's Detective Notebook corkboard: dark vignette backdrop, aged kraft/manila folder sheet (`#F2ECE0`) with `FILE 01` tab and red case stamp (`#01`), typewriter/monospace metadata headers, and tilted Polaroid portraits of the husband and suspect pinned with red pushpins and linked by a horizontal red string.
+     - The conviction probability bar (`Tỉ lệ thành công`) renders as a 5-segment progress indicator (`role="progressbar"`).
+     - The evidence summary displays **Deductive Linkage Bridges** (`verifiedStringsList`) pairing connected clues (source clue <-> relationship bridge badge <-> target clue) to highlight causal connections (e.g. matching phone number, money trail, alibi contradiction) without redundant raw text clutter, falling back to concise verified clues if no active bridge pairs exist.
+     - The primary confrontation CTA renders as a red embossed dossier stamp button (`MÀY DÁM LỪA BÀ!` / dynamic label) with a secondary `Điều tra thêm` return action.
 4. Confronting with 0 verified smoking-gun links triggers the premature confrontation failure state:
    - The husband delivers dismissive gaslighting dialogue (e.g., Level 1: "Em lại lướt TikTok drama rồi đa nghi đúng không? Anh đi làm cả ngày mệt mỏi, em lại tra khảo anh chuyện vô căn cứ!").
    - The game increments the Suspicion Meter by 1 strike.

@@ -30,6 +30,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |---|---|---|
 | M0-A | Chọn nghi phạm: Chưa lột mặt nạ | Khay Polaroid, vỏ bọc "Anh Tuấn Thợ Điện", ảnh túi đồ nghề, con dấu "NGHI PHẠM" |
 | M0-B | Chọn nghi phạm: ĐÃ LỘT MẶT NẠ | Thẻ Polaroid chuyển hóa: tên thật "Nguyễn Thị Thu Hương", ảnh chân dung nữ, nhãn `🎭 Vỏ bọc: "Anh Tuấn Thợ Điện"`, manh mối `📞 Trùng SĐT 0988886677`, dấu "ĐÃ LỘT MẶT NẠ" |
+| M0-C | Xác nhận đối chất (Manila Case Dossier) | Tập hồ sơ Manila (`FILE #01`), 2 thẻ Polaroid dập ghim nối chỉ đỏ đối đầu, thước đo áp lực kết tội, các cặp **Mắt xích suy luận (Linkage Bridges)** thay cho danh sách phẳng, nút dấu mộc đỏ "MÀY DÁM LỪA BÀ!" |
 | M1 | Đối chất sớm / Chưa đủ chứng cứ (0 sao) | Tiến độ 0/3, chồng chối quanh/thao túng tâm lý, cảnh báo tăng 1 vạch nghi ngờ, nút "Tiếp tục điều tra" |
 | M2 | Kết tội một phần (1–2 sao) | Tiến độ 1/3 hoặc 2/3, chồng lắp bắp chống chế phòng thủ, kết quả 1 sao hoặc 2 sao, nút "Tha thứ & Qua màn" hoặc "Điều tra tiếp" |
 | M3 | Thắng lợi trọn vẹn / Bắt quả tang (3 sao) | Tiến độ 3/3, chồng quỳ gối/cúi đầu nhận tội, đạt 3 sao trọn vẹn, danh hiệu Vợ, văn bản châm biếm, nút chia sẻ và qua màn |
@@ -84,6 +85,47 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |  +------------------------------------------+  |
 +------------------------------------------------+
 ```
+
+#### Trạng thái M0-C: Xác Nhận Đối Chất (Manila Case Dossier & Linkage Bridges)
+
+```text
++------------------------------------------------+
+|  [<]         HỒ SƠ ĐỐI CHẤT               [X]  |
++------------------------------------------------+
+|   +---------+                                  |
+|   | FILE 01 |                                  |
+| +-+---------+--------------------------------+ |
+| |  IN PROGRESS                 [ #01 ]       | |
+| |                                            | |
+| |   +-------------+        +-------------+   | |
+| |   | (Pin đỏ)    |        | (Pin đỏ)    |   | |
+| |   | [Ảnh Hoàng] |══Chỉ đỏ| [Ảnh Bồ/Vỏ] |   | |
+| |   |             |        | [NGHI PHẠM] |   | |
+| |   | Hoàng       |        | Thu Hương   |   | |
+| |   +-------------+        +-------------+   | |
+| |                                            | |
+| |  TỈ LỆ THÀNH CÔNG (ÁP LỰC KẾT TỘI)         | |
+| |  [ ==== ] [ ==== ] [ ==== ] [ ==== ] [ ==== ]|
+| |                                            | |
+| |  CÁC MẮT XÍCH SUY LUẬN:                    | |
+| |  +--------------------------------------+  | |
+| |  | [App] Manh mối A (Điểm chạm)         |  | |
+| |  |       ▲ [ 🔗 Nhãn liên kết ] ▼       |  | |
+| |  | [App] Manh mối B (Điểm chạm)         |  | |
+| |  +--------------------------------------+  | |
+| |                                            | |
+| |  ⚠️ Đối chất thất bại: mất 1 lượt nghi ngờ.| |
+| |                                            | |
+| |  +--------------------------------------+  | |
+| |  | [💬] MÀY DÁM LỪA BÀ!          [ #01 ]|  | |
+| |  +--------------------------------------+  | |
+| |               Điều tra thêm                | |
+| +--------------------------------------------+ |
++------------------------------------------------+
+```
+
+- Giao diện sử dụng phong cách **Manila Case Dossier** đồng bộ với Sổ Tay Bắt Ghen: nền tối sẫm, tập hồ sơ giấy kraft (`#F2ECE0`), tab `FILE 01`, font typewriter/monospace, dấu mộc đỏ, ảnh Polaroid ghim đinh đỏ nối bằng sợi chỉ đỏ.
+- Phần tóm tắt bằng chứng hiển thị theo từng **Cặp mắt xích liên kết (Linkage Bridges)** trích xuất từ `verifiedStringsList` (chỉ giữ tiêu đề/điểm chạm cốt lõi + nhãn kết nối ở giữa), loại bỏ đoạn văn bản dài dòng thừa thông tin.
 
 ---
 

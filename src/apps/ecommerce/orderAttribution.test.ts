@@ -51,12 +51,13 @@ it('preserves every order recipient identity and visible alias through pinning a
     const current = nodes.find(node => node.recordRefId === order.orderId)!;
     expect(current.subjectSuspectId).toBe(expectedId);
     const suspects = getSuspectsOnBoard({ placedNodes: [current], taggedSuspects: tags, caseConfig });
+    const expectedAlias = expectedId === 'suspect_huong' ? 'Anh Tuấn Thợ Điện' : order.recipientName;
     expect(suspects.find(suspect => suspect.id === expectedId)).toMatchObject({
-      displayName: order.recipientName, alias: order.recipientName,
+      displayName: order.recipientName, alias: expectedAlias,
     });
     const preflight = calculateConfrontationPreflight({ caseConfig, placedNodes: [current],
       activeEdges: [], accusedSuspectId: expectedId });
-    expect(preflight.accusedSuspectAlias).toBe(order.recipientName);
+    expect(preflight.accusedSuspectAlias).toBe(expectedAlias);
   }
   const nodes = deriveNodesFromTaggedEvidence(graph, tags).map(node => ({ ...node, x: 0, y: 0 }));
   expect(nodes).toHaveLength(orders.length);

@@ -61,12 +61,12 @@ describe('confrontation evidence review', () => {
     expect(html).toContain('role="progressbar"');
     expect(html).toContain('aria-valuemax="5"');
     expect(html).toContain(`aria-valuenow="${filledSegments}"`);
-    expect(html.match(/h-2\.5 flex-1 rounded-full/g)).toHaveLength(5);
-    expect(html.match(/h-2\.5 flex-1 rounded-full bg-(?:rose|emerald)-600/g)).toHaveLength(filledSegments);
+    expect(html.match(/h-2\.5 flex-1 rounded-\[2px\]/g)).toHaveLength(5);
+    expect(html.match(/border-\[#(?:7F1D1D|14532D)\] bg-\[#(?:991B1B|15803D)\]/g)).toHaveLength(filledSegments);
     expect(html).not.toMatch(/>\s*\d+%\s*</);
   });
 
-  it('renders a larger popup with the husband photo, snippets, no clue count, and one approved CTA', () => {
+  it('renders a Manila dossier popup with Polaroid face-off, linkage bridges, no clue count, and one approved CTA', () => {
     const random = vi.spyOn(Math, 'random').mockReturnValue(0);
     try {
       const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
@@ -75,18 +75,20 @@ describe('confrontation evidence review', () => {
         getSourceApp={() => ({ displayName: 'Zola', iconAsset: '/zola.svg', icon: () => null, themeGradient: '' })}
         onCancel={() => {}} onConfirmConfront={() => {}} />);
       expect(html).toContain('max-w-[560px]');
+      expect(html).toContain('dossier-folder-sheet');
+      expect(html).toContain('dossier-paper-card');
+      expect(html).toContain('FILE 01');
+      expect(html).toContain('#01');
       expect(html).toContain('background-position:60% 31%');
-      expect(html).toContain('Pinned message content');
-      expect(html).toContain('Pinned receipt content');
+      expect(html).toContain('Chat');
+      expect(html).toContain('Receipt');
+      expect(html).toContain('Khớp danh tính');
       expect(html).not.toContain('Bằng chứng (');
       expect(html).not.toContain('manh mối');
       expect(html).toContain(CONFRONTATION_LABELS[0].toLocaleUpperCase('vi') + '!');
-      expect(html).toContain('line-clamp-3');
       expect(html).toContain('src="/zola.svg"');
-      expect(html).toContain('list-disc');
       expect(html).toContain('width:128px;height:128px');
-      expect(html).not.toContain('-right-1 -top-1');
-      expect(html).toContain('bg-white');
+      expect(html).not.toContain('bg-white');
     } finally { random.mockRestore(); }
   });
 
