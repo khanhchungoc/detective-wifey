@@ -818,6 +818,66 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(html).toContain('rotate(1.6deg)');
     });
 
+    it('Step 1 & Step 2: Renders unmasked suspect card with real name, disguise alias link, phone evidence hint, and "Đã lột mặt nạ" stamp', () => {
+      const suspects = [
+        {
+          id: 'suspect_huong',
+          displayName: 'Nguyễn Thị Thu Hương',
+          alias: 'Anh Tuấn Thợ Điện',
+          avatarName: 'Nguyễn Thị Thu Hương',
+          sourceApp: 'ecommerce',
+          isCulprit: true,
+          isUnmasked: true,
+          unmaskedEvidenceHint: 'Trùng SĐT: 0988886677',
+        },
+      ];
+      const pf = calculateConfrontationPreflight({
+        caseConfig: mockCaseConfig,
+        activeEdges: [],
+        explicitCluesFound: 5,
+        totalClues: 10,
+        unmaskedSuspectIds: ['suspect_huong'],
+      });
+
+      // Step 1: Suspect Selection
+      const htmlStep1 = renderToStaticMarkup(
+        <ConfrontationConfirmModal
+          isOpen={true}
+          preflight={pf}
+          suspectsOnBoard={suspects}
+          selectedSuspectId={null}
+          husbandName="Hoàng"
+          onSelectSuspect={vi.fn()}
+          onConfirmConfront={vi.fn()}
+          onCancel={vi.fn()}
+        />,
+      );
+
+      expect(htmlStep1).toContain('Chọn nghi phạm');
+      expect(htmlStep1).toContain('Nguyễn Thị Thu Hương');
+      expect(htmlStep1).toContain('Đã lột mặt nạ');
+      expect(htmlStep1).toContain('🎭 Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
+      expect(htmlStep1).toContain('📞 Trùng SĐT: 0988886677');
+
+      // Step 2: Confirmation Stage
+      const htmlStep2 = renderToStaticMarkup(
+        <ConfrontationConfirmModal
+          isOpen={true}
+          preflight={pf}
+          suspectsOnBoard={suspects}
+          selectedSuspectId="suspect_huong"
+          husbandName="Hoàng"
+          onSelectSuspect={vi.fn()}
+          onConfirmConfront={vi.fn()}
+          onCancel={vi.fn()}
+        />,
+      );
+
+      expect(htmlStep2).toContain('Nguyễn Thị Thu Hương');
+      expect(htmlStep2).toContain('🎭 Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
+      expect(htmlStep2).toContain('📞 Trùng SĐT: 0988886677');
+    });
+
     it('Step 2: hides clue counts and retains the short failure penalty', () => {
       const wrongSuspectPf = calculateConfrontationPreflight({
         caseConfig: mockCaseConfig,

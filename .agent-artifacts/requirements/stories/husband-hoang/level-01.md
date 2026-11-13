@@ -171,6 +171,9 @@ level: 1
 ## 6. Lộ trình Phá án & Bảng Điều tra Nối dây
 
 - **Đường suy luận trực quan**: Người chơi xuất phát từ thông báo khởi phát `toast_01` (tin nhắn Zola từ "Anh Tuấn Thợ Điện" lúc nửa đêm) -> mở Zola phát hiện tin hẹn ăn tối "chỗ cũ Phố Cổ 19h30" -> mở Banking phát hiện quẹt thẻ Cơm Niêu Phố Cổ lúc 20:48 mâu thuẫn trực tiếp với tin nhắn dối vợ lúc 20:46 -> kiểm tra Shopee phát hiện đơn váy lụa size S giao cho "Nguyễn Thị Thu Hương" cùng SĐT thợ điện `0988886677` -> lật tẩy thân phận Hương Marketing.
+- **Cơ chế Lột trần vỏ bọc tại Bộ chọn Nghi phạm (Suspect Unmasking Gate)**:
+  - Khi chưa nối dây SĐT: Thẻ nghi phạm hiển thị tên `"Anh Tuấn Thợ Điện"`, ảnh túi đồ nghề, con dấu `"NGHI PHẠM"`.
+  - Khi đã nối sợi chỉ đỏ giữa Cuộc gọi đêm / SMS thợ điện và Đơn hàng Shopee (khớp SĐT `0988886677`): Thẻ nghi phạm chuyển hóa thành `"Nguyễn Thị Thu Hương"`, hiển thị nhãn `🎭 Vỏ bọc: "Anh Tuấn Thợ Điện"`, manh mối `📞 Trùng SĐT: 0988886677`, avatar chân dung nữ và con dấu `"ĐÃ LỘT MẶT NẠ"`.
 - **Thứ tự gợi ý Giác quan thứ 6**: 1. `internet-messaging` -> 2. `banking` -> 3. `ecommerce`.
 - **Đặc tả bố cục Bảng Điều tra Nối dây**: Tọa độ và cơ chế hoạt động của Canvas 2A tuân thủ [US-015](../../output/epic-03-wife-notebook-verdict-social-sharing/us-015-wife-split-section-investigation-notebook-suspect-evidence-linkage-hub.md#corkboard-canvas-layout--swimlane-architecture).
 

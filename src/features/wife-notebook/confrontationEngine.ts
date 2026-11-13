@@ -36,6 +36,8 @@ export interface SuspectOnBoard {
   avatarName?: string;
   sourceApp?: string;
   isCulprit?: boolean;
+  isUnmasked?: boolean;
+  unmaskedEvidenceHint?: string;
 }
 
 export interface ConfrontationPreflightInfo {
@@ -99,11 +101,15 @@ export function getSuspectsOnBoard({
   taggedSuspects = [],
   caseConfig,
   knowledgeGraph,
+  edges = [],
+  unmaskedSuspectIds = [],
 }: {
   placedNodes?: PlacedNode[];
   taggedSuspects?: TaggedEvidenceItem[];
   caseConfig?: CaseConfig;
   knowledgeGraph?: CaseKnowledgeGraph;
+  edges?: CaseGraphEdge[];
+  unmaskedSuspectIds?: string[];
 }): SuspectOnBoard[] {
   const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? 'suspect_huong';
   const suspectsMap = new Map<string, SuspectOnBoard>();
@@ -114,6 +120,30 @@ export function getSuspectsOnBoard({
     const clean = (label || '').trim().toLowerCase();
     const cleanId = (id || '').trim().toLowerCase();
     return clean === 'vợ' || clean === 'vo' || clean === 'vợ yêu' || cleanId.includes('wife');
+  };
+
+  // Helper to test if identity bridging exists between alias / phone and real suspect / order
+  const hasIdentityBridgingEdge = (suspectId: string) => {
+    return edges.some(edge => {
+      const rel = edge.relationship;
+      const isBridge = rel === 'bridges_identity' ||
+        edge.edgeId === 'edge_order_phone' ||
+        edge.edgeId === 'edge_order_name' ||
+        edge.edgeId === 'edge_name_suspect' ||
+        edge.edgeId.startsWith('shared_phone_');
+      if (!isBridge) return false;
+
+      // In Level 1, edge_order_phone and shared_phone link the phone to the order of Thu Huong
+      if (edge.edgeId === 'edge_order_phone' || edge.edgeId.startsWith('shared_phone_') || edge.edgeId === 'edge_order_name') {
+        return suspectId === culpritId || suspectId === 'suspect_huong';
+      }
+
+      const sourceNode = placedNodes.find(n => n.nodeId === edge.sourceNodeId);
+      const targetNode = placedNodes.find(n => n.nodeId === edge.targetNodeId);
+      const touchesSuspect = (sourceNode && (sourceNode.subjectSuspectId === suspectId || sourceNode.suspectId === suspectId || sourceNode.nodeId.includes(suspectId))) ||
+                             (targetNode && (targetNode.subjectSuspectId === suspectId || targetNode.suspectId === suspectId || targetNode.nodeId.includes(suspectId)));
+      return Boolean(touchesSuspect);
+    });
   };
 
   // 1. From caseConfig suspectPool
@@ -159,15 +189,61 @@ export function getSuspectsOnBoard({
         alias = aliasNode.visibleAlias;
       } else if (aliasNode && aliasNode.type === 'alias') {
         alias = aliasNode.label;
+      } else if (poolItem.suspectId === 'suspect_huong' || isCulprit) {
+        alias = 'Anh Tuấn Thợ Điện';
+      }
+
+      // Check whether this suspect has been unmasked
+      const isUnmaskedByState = unmaskedSuspectIds.some(
+        id => id === poolItem.suspectId || id === `node_${poolItem.suspectId}` || id.includes(poolItem.suspectId)
+      );
+      const isUnmaskedByEdge = hasIdentityBridgingEdge(poolItem.suspectId);
+      const isUnmasked = isUnmaskedByState || isUnmaskedByEdge;
+
+      // Has any node with the real suspect's name actually been placed or tagged?
+      const cleanRealName = poolItem.displayName.split('·')[0].trim();
+      const hasRealNameOnBoard = Boolean(
+        tagged ||
+        placedNodes.some(n => {
+          if (isWifeNode(n.label, n.nodeId)) return false;
+          const cleanLabel = (n.label || '').toLowerCase();
+          return cleanLabel.includes(cleanRealName.toLowerCase()) || n.nodeId === `node_${poolItem.suspectId}`;
+        })
+      );
+
+      let displayName: string;
+      let avatarName: string;
+
+      if (isUnmasked) {
+        displayName = cleanRealName;
+        avatarName = cleanRealName;
+      } else if (!hasRealNameOnBoard && alias) {
+        displayName = alias;
+        avatarName = alias;
+      } else {
+        displayName = boardNode?.label || tagged?.displayName || poolItem.displayName;
+        avatarName = boardNode?.label || tagged?.displayName || poolItem.displayName;
+      }
+
+      let unmaskedEvidenceHint: string | undefined;
+      if (isUnmasked) {
+        const hasPhoneBridge = edges.some(e => e.edgeId === 'edge_order_phone' || e.edgeId.startsWith('shared_phone_') || e.edgeId === 'edge_alias_phone');
+        if (hasPhoneBridge || poolItem.suspectId === 'suspect_huong') {
+          unmaskedEvidenceHint = 'Trùng SĐT: 0988886677';
+        } else {
+          unmaskedEvidenceHint = 'Khớp dữ liệu nhận diện';
+        }
       }
 
       suspectsMap.set(poolItem.suspectId, {
         id: poolItem.suspectId,
-        displayName: boardNode?.label || tagged?.displayName || poolItem.displayName,
+        displayName,
         alias,
         sourceApp: boardNode?.sourceAppId || tagged?.sourceApp || poolItem.initialDiscoveredApp,
-        avatarName: boardNode?.label || tagged?.displayName || poolItem.displayName,
+        avatarName,
         isCulprit,
+        isUnmasked,
+        unmaskedEvidenceHint,
       });
     }
   }
@@ -207,6 +283,7 @@ export function getSuspectsOnBoard({
         sourceApp: node.sourceAppId,
         avatarName: node.label,
         isCulprit,
+        isUnmasked: false,
       });
     }
   }
@@ -282,6 +359,7 @@ export function calculateConfrontationPreflight({
   accusedSuspectId,
   totalClues = 10,
   explicitCluesFound,
+  unmaskedSuspectIds = [],
 }: {
   caseConfig?: CaseConfig;
   knowledgeGraph?: CaseKnowledgeGraph;
@@ -291,6 +369,7 @@ export function calculateConfrontationPreflight({
   accusedSuspectId?: string;
   totalClues?: number;
   explicitCluesFound?: number;
+  unmaskedSuspectIds?: string[];
 }): ConfrontationPreflightInfo {
   const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? 'suspect_huong';
 
@@ -311,9 +390,16 @@ export function calculateConfrontationPreflight({
   );
 
   // Derive suspect display details
-  let accusedSuspectName = getSuspectsOnBoard({ placedNodes, taggedSuspects, caseConfig, knowledgeGraph })
-    .find(suspect => suspect.id === effectiveSuspectId)?.displayName;
-  let accusedSuspectAlias: string | undefined;
+  const derivedSuspect = getSuspectsOnBoard({
+    placedNodes,
+    taggedSuspects,
+    caseConfig,
+    knowledgeGraph,
+    edges: activeEdges,
+    unmaskedSuspectIds,
+  }).find(suspect => suspect.id === effectiveSuspectId);
+  let accusedSuspectName = derivedSuspect?.displayName;
+  let accusedSuspectAlias: string | undefined = derivedSuspect?.alias;
 
   const poolSuspect = caseConfig?.suspectPool?.find(s => s.suspectId === effectiveSuspectId);
   if (poolSuspect && !accusedSuspectName) {

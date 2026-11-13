@@ -24,6 +24,7 @@ const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
   { index: 12, names: ['Đức Nghĩa'] }, // Landscape photo.
   { index: 13, names: ['Bé Mèo Dễ Thương'] }, // Cat profile photo.
   { index: 14, names: ['Bé Trang SV (0904***888)', 'Bé Trang SV'] }, // Off-center cafe selfie.
+  { index: 15, names: ['Nguyễn Thị Thu Hương', 'Thu Hương', 'Nguyễn Thị Thu Hương · Marketing', 'Thu Huong'] }, // Marketing specialist persona.
 ];
 
 const normalize = (name: string) =>

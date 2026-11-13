@@ -84,13 +84,13 @@ const SuspectPolaroidCard: React.FC<SuspectPolaroidCardProps> = ({
                   : 'text-[8.5px] sm:text-[10px] tracking-[0.1em]'
               }`}
             >
-              Nghi phạm
+              {suspect.isUnmasked ? 'Đã lột mặt nạ' : 'Nghi phạm'}
             </span>
           </div>
         </div>
 
         {/* Polaroid bottom caption chin */}
-        <div className={`flex items-center justify-center px-1 ${isSingle ? 'min-h-[48px] py-2.5' : 'min-h-[42px] sm:min-h-[46px] py-2'}`}>
+        <div className={`flex flex-col items-center justify-center px-1 text-center ${isSingle ? 'min-h-[52px] py-2.5' : 'min-h-[44px] sm:min-h-[48px] py-2'}`}>
           <span
             className={`text-center font-bold italic leading-tight tracking-tight text-[#26211D] line-clamp-2 break-words ${
               isSingle ? 'text-sm sm:text-[15px]' : 'text-xs sm:text-[13px]'
@@ -98,6 +98,16 @@ const SuspectPolaroidCard: React.FC<SuspectPolaroidCardProps> = ({
           >
             {suspect.displayName}
           </span>
+          {suspect.isUnmasked && suspect.alias && (
+            <span className="mt-1 block text-[10px] sm:text-[11px] font-semibold text-rose-800 leading-tight">
+              🎭 Vỏ bọc: &quot;{suspect.alias}&quot;
+            </span>
+          )}
+          {suspect.isUnmasked && suspect.unmaskedEvidenceHint && (
+            <span className="mt-0.5 block text-[9.5px] sm:text-[10px] font-medium text-stone-600 leading-tight">
+              📞 {suspect.unmaskedEvidenceHint}
+            </span>
+          )}
         </div>
       </button>
     </div>
@@ -236,7 +246,19 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                 <span className="relative shrink-0">
                   <ContactAvatar name={selectedSuspect?.avatarName || selectedSuspect?.displayName || selectedSuspectDisplayName} size={128} />
                 </span>
-                <figcaption className="text-center text-sm font-bold break-words">{selectedSuspectDisplayName}</figcaption>
+                <figcaption className="text-center text-sm font-bold break-words">
+                  {selectedSuspectDisplayName}
+                  {selectedSuspect?.isUnmasked && selectedSuspect.alias && (
+                    <span className="block mt-1 text-xs font-semibold text-rose-700">
+                      🎭 Vỏ bọc: &quot;{selectedSuspect.alias}&quot;
+                    </span>
+                  )}
+                  {selectedSuspect?.isUnmasked && selectedSuspect.unmaskedEvidenceHint && (
+                    <span className="block mt-0.5 text-[11px] font-medium text-stone-600">
+                      📞 {selectedSuspect.unmaskedEvidenceHint}
+                    </span>
+                  )}
+                </figcaption>
               </figure>
             </div>
             <div className="flex flex-col items-center gap-2 shrink-0">

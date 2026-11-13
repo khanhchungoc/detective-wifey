@@ -25,6 +25,8 @@ level: 1
 | `contact_friend` | Tuấn Đụt | 29 tuổi, Nam | Bạn thân chí cốt cùng tuổi của Hoàng | Ngang hàng; xưng hô `tôi - ông` | "Tuấn Đụt" (Zola `thread_friend`, Phone `contact_5`) | Suồng sã, đam mê bóng đá phủi, nhắc mang áo thi đấu sân cỏ nhân tạo | Sinh hoạt bạn bè |
 | `contact_dev` | Nam Dev | 30 tuổi, Nam | Đồng nghiệp / Tech Lead bạn cùng nhóm Technosoft | Ngang hàng / đồng nghiệp; xưng hô `ông - tôi` / `anh - em` | "Nam Dev" (Zola `thread_dev`, Phone `contact_3`) | Tiếng lóng dev (*"staging"*, *"bug cart"*, *"deploy"*, *"quantity"*), phối hợp công việc | Sinh hoạt công việc |
 
+> **Cơ chế Lột trần Vỏ bọc (Disguise Unmasking UX)**: Trong bộ chọn nghi phạm ([US-016](../../output/epic-03-wife-notebook-verdict-social-sharing/us-016-anytime-confrontation-hub-dynamic-excuse-engine.md)), `suspect_huong` ban đầu hiển thị dưới dạng vỏ bọc `"Anh Tuấn Thợ Điện"`. Khi người chơi tìm và nối sợi chỉ đỏ giữa Cuộc gọi đêm / SMS và Đơn hàng Shopee (cùng SĐT `0988886677`), thẻ Polaroid chuyển sang trạng thái đã lột mặt nạ: tên thật `"Nguyễn Thị Thu Hương"`, kèm nhãn `🎭 Vỏ bọc: "Anh Tuấn Thợ Điện"`, manh mối `📞 Trùng SĐT: 0988886677`, avatar chân dung nữ và dấu `"ĐÃ LỘT MẶT NẠ"`.
+
 ---
 
 ## 2. Kịch bản Tương tác Theo Dòng thời gian (Chronological Interaction Storyboard)

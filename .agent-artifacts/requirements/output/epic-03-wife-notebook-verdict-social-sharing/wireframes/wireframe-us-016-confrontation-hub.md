@@ -28,6 +28,8 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 
 | Mã | Trạng thái / Màn hình | Thành phần chính |
 |---|---|---|
+| M0-A | Chọn nghi phạm: Chưa lột mặt nạ | Khay Polaroid, vỏ bọc "Anh Tuấn Thợ Điện", ảnh túi đồ nghề, con dấu "NGHI PHẠM" |
+| M0-B | Chọn nghi phạm: ĐÃ LỘT MẶT NẠ | Thẻ Polaroid chuyển hóa: tên thật "Nguyễn Thị Thu Hương", ảnh chân dung nữ, nhãn `🎭 Vỏ bọc: "Anh Tuấn Thợ Điện"`, manh mối `📞 Trùng SĐT 0988886677`, dấu "ĐÃ LỘT MẶT NẠ" |
 | M1 | Đối chất sớm / Chưa đủ chứng cứ (0 sao) | Tiến độ 0/3, chồng chối quanh/thao túng tâm lý, cảnh báo tăng 1 vạch nghi ngờ, nút "Tiếp tục điều tra" |
 | M2 | Kết tội một phần (1–2 sao) | Tiến độ 1/3 hoặc 2/3, chồng lắp bắp chống chế phòng thủ, kết quả 1 sao hoặc 2 sao, nút "Tha thứ & Qua màn" hoặc "Điều tra tiếp" |
 | M3 | Thắng lợi trọn vẹn / Bắt quả tang (3 sao) | Tiến độ 3/3, chồng quỳ gối/cúi đầu nhận tội, đạt 3 sao trọn vẹn, danh hiệu Vợ, văn bản châm biếm, nút chia sẻ và qua màn |
@@ -35,6 +37,55 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 ---
 
 ## Bố cục từng màn hình
+
+### M0 - Chọn Nghi Phạm & Lột Trần Vỏ Bọc (Suspect Selection & Dynamic Unmasking)
+
+#### Trạng thái M0-A: Chưa lột mặt nạ (Chưa nối dây trùng SĐT)
+
+```text
++------------------------------------------------+
+|  Chọn nghi phạm                             [X]|
++------------------------------------------------+
+|  +------------------------------------------+  |
+|  |             (Khay gỗ bần cork)           |  |
+|  |                                          |  |
+|  |              [ Ghim đỏ 3D ]              |  |
+|  |           +------------------+           |  |
+|  |           | [ Túi đồ nghề ]  |           |  |
+|  |           |     [NGHI PHẠM]  |           |  |
+|  |           +------------------+           |  |
+|  |            Anh Tuấn Thợ Điện             |  |
+|  |           (Vỏ bọc chưa rõ)               |  |
+|  |           +------------------+           |  |
+|  |                                          |  |
+|  +------------------------------------------+  |
++------------------------------------------------+
+```
+
+#### Trạng thái M0-B: ĐÃ LỘT MẶT NẠ (Đã nối dây trùng SĐT 0988886677 trên bảng điều tra)
+
+```text
++------------------------------------------------+
+|  Chọn nghi phạm                             [X]|
++------------------------------------------------+
+|  +------------------------------------------+  |
+|  |             (Khay gỗ bần cork)           |  |
+|  |                                          |  |
+|  |              [ Ghim đỏ 3D ]              |  |
+|  |           +------------------+           |  |
+|  |           | [ Chân dung Nữ ] |           |  |
+|  |           |  [ĐÃ LỘT MẶT NẠ] |           |  |
+|  |           +------------------+           |  |
+|  |          Nguyễn Thị Thu Hương            |  |
+|  |      🎭 Vỏ bọc: Anh Tuấn Thợ Điện        |  |
+|  |         📞 Trùng SĐT: 0988886677         |  |
+|  |           +------------------+           |  |
+|  |                                          |  |
+|  +------------------------------------------+  |
++------------------------------------------------+
+```
+
+---
 
 ### M1 - Đối chất sớm / Không có chứng cứ cốt lõi (0 sao)
 

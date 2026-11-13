@@ -478,6 +478,17 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     }
   }, [allTaggedNodes, caseId, saveCorkboard]);
 
+  // Graph Evaluation State
+  const unmaskedSuspectIds = useMemo(
+    () => evaluateUnmaskedSuspects(knowledgeGraph, edges),
+    [knowledgeGraph, edges],
+  );
+
+  const activeContradictions = useMemo(
+    () => evaluateContradictions(edges),
+    [edges],
+  );
+
   // All suspects placed or tagged on the corkboard (only needed when confirming confrontation)
   const suspectsOnBoard = useMemo(() => {
     if (!isConfirmingConfrontation) return [];
@@ -486,8 +497,10 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       taggedSuspects,
       caseConfig,
       knowledgeGraph,
+      edges,
+      unmaskedSuspectIds,
     });
-  }, [isConfirmingConfrontation, placedNodes, taggedSuspects, caseConfig, knowledgeGraph]);
+  }, [isConfirmingConfrontation, placedNodes, taggedSuspects, caseConfig, knowledgeGraph, edges, unmaskedSuspectIds]);
 
   const [activePairing, setActivePairing] = useState<PairingState>({ sourceNodeId: null });
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -619,17 +632,6 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     }
     prevIsOpen.current = isOpen;
   }, [isOpen, caseId, placedNodes, edges, viewportRef, saveCorkboard]);
-
-  // Graph Evaluation State
-  const unmaskedSuspectIds = useMemo(
-    () => evaluateUnmaskedSuspects(knowledgeGraph, edges),
-    [knowledgeGraph, edges],
-  );
-
-  const activeContradictions = useMemo(
-    () => evaluateContradictions(edges),
-    [edges],
-  );
 
   // Card Movement Handler (repositioning card on the corkboard & persisting)
   const handleMoveNode = useCallback((nodeId: string, x: number, y: number) => {

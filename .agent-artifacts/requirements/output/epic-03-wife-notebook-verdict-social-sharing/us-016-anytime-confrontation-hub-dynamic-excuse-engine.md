@@ -23,24 +23,34 @@ As a Player (Wife), I want to initiate confrontation ("Đối chất") with the 
 
 1. Tapping the "Đối chất" action button from the Wife's Detective Notebook top bar opens the Anytime Confrontation stage as a full-screen modal overlay (`z-index: 80`).
 2. Opening confrontation automatically evaluates the player's active corkboard Knowledge Graph state (verified edges between clues, bridge identifiers, and unmasked suspects) against `caseConfig.groundTruth` without requiring manual card slotting or drag-and-drop submission.
-3. Confronting with 0 verified smoking-gun links triggers the premature confrontation failure state:
+3. **Suspect Selection & Dynamic Disguise Unmasking (Giai đoạn chọn nghi phạm & Lột trần vỏ bọc)**:
+   - When launching confrontation, Step 1 presents the suspect selection tray (`"Chọn nghi phạm"`) displaying Polaroid cards for candidates present on the active corkboard.
+   - **Initial Disguise State (Trước khi lột mặt nạ)**: If the player has pinned an alias contact (e.g., "Anh Tuấn Thợ Điện") but has not yet connected the bridging identity edge (e.g. matching phone number or legal transaction name), the Polaroid card displays the alias name, the disguise avatar (electrician toolbag), and the default stamp `"NGHI PHẠM"`.
+   - **Unmasked Disguise State (Đã lột mặt nạ)**: When the active corkboard contains verified identity-bridging edges (e.g., connecting the late-night electrician call and the Shopee silk dress order via matching phone number `0988886677`), the candidate card dynamically evolves:
+     - The primary header displays the suspect's true identity (e.g., `"Nguyễn Thị Thu Hương"`).
+     - The card visibly links the two identities with a subtitle: `🎭 Vỏ bọc: "Anh Tuấn Thợ Điện"`.
+     - The card displays the smoking-gun bridge anchor: `📞 Trùng SĐT: 0988886677`.
+     - The photo switches to the suspect's real persona portrait.
+     - The stamp updates to `"ĐÃ LỘT MẶT NẠ"`.
+   - In Step 2 ("Xác nhận đối chất"), the unmasked true persona portrait and disguise subtitle are carried over to the confrontation matchup view.
+4. Confronting with 0 verified smoking-gun links triggers the premature confrontation failure state:
    - The husband delivers dismissive gaslighting dialogue (e.g., Level 1: "Em lại lướt TikTok drama rồi đa nghi đúng không? Anh đi làm cả ngày mệt mỏi, em lại tra khảo anh chuyện vô căn cứ!").
    - The game increments the Suspicion Meter by 1 strike.
    - If the added strike reaches the case's strike limit (5 strikes in Level 1), the "Caught Snooping" fail state ("Bị giật lại máy", US-014) triggers immediately.
    - Otherwise, the screen displays a "Tiếp tục điều tra" button that closes confrontation and returns the player to the active view without penalty to case progression.
-4. Confronting with 1 verified smoking-gun link yields a 1-star win (`★☆☆`):
+5. Confronting with 1 verified smoking-gun link yields a 1-star win (`★☆☆`):
    - The husband delivers a defensive stammering excuse (e.g., Level 1: "Số thợ điện hôm trước anh gọi nhờ sửa dây mạng văn phòng mà...").
    - Unlocks the "Tha thứ & Qua màn" progression action (US-018) while offering a "Điều tra tiếp để đạt 3 sao" button to return to the case.
-5. Confronting with 2 verified smoking-gun links yields a 2-star win (`★★☆`):
+6. Confronting with 2 verified smoking-gun links yields a 2-star win (`★★☆`):
    - The husband delivers a stammering partial explanation (e.g., Level 1: "Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi mà em!").
    - Unlocks the "Tha thứ & Qua màn" progression action while offering a "Điều tra tiếp để đạt 3 sao" button.
-6. Confronting with 3 verified smoking-gun links (or the case's complete smoking-gun chain) yields a watertight 3-star victory (`★★★`):
+7. Confronting with 3 verified smoking-gun links (or the case's complete smoking-gun chain) yields a watertight 3-star victory (`★★★`):
    - The husband breaks down and confesses fully (e.g., Level 1: "Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu... Em đừng giận nữa mà!").
    - Awards the case's custom Wife Title (e.g., "Nữ thám tử ghen tuông").
    - Displays the victory comedic roast narrative.
    - Displays the "Tạo thẻ Roast khoe MXH" button (US-017) and the "Tha thứ & Qua màn" button (US-018).
-7. Accusing an innocent red-herring suspect with verified bridge edges triggers specific over-jealous roast punchlines tailored to that suspect's alibi before returning to investigation.
-8. All confrontation evaluation, excuse branching, and star calculation execute 100% client-side without network calls or external server dependencies.
+8. Accusing an innocent red-herring suspect with verified bridge edges triggers specific over-jealous roast punchlines tailored to that suspect's alibi before returning to investigation.
+9. All confrontation evaluation, excuse branching, and star calculation execute 100% client-side without network calls or external server dependencies.
 
 ### Out of Scope
 
