@@ -7,16 +7,6 @@
   position: relative;
 }
 
-/* Dark walnut frame surrounding top, left, and right edges like Peaksy's corkboard */
-.notebook-wood-frame {
-  padding: 11px 11px 0 11px;
-  background:
-    linear-gradient(180deg, rgba(255, 224, 190, 0.08) 0%, transparent 11px),
-    linear-gradient(90deg, #2a180d 0%, #4d2f1c 5px, #3b2313 9px, #211209 11px, transparent 11px, transparent calc(100% - 11px), #211209 calc(100% - 11px), #3b2313 calc(100% - 9px), #4d2f1c calc(100% - 5px), #2a180d 100%),
-    linear-gradient(180deg, #2b190d 0%, #4e301d 5px, #3b2213 9px, #1e1008 11px, #120b07 11px);
-  box-shadow: inset 0 1px 0 rgba(255, 226, 194, 0.14);
-}
-
 /* Static SVG cork tile + warm overhead spotlight + dark edge vignette */
 .notebook-cardboard {
   background-color: var(--notebook-canvas);
@@ -31,7 +21,7 @@
     inset -10px 0 18px rgba(0, 0, 0, 0.48);
 }
 
-/* Crisp font rendering and subtle ruled paper lines for pinned evidence cards */
+/* Crisp font rendering and subtle dot-grid paper pattern for pinned evidence cards */
 .corkboard-node-card {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -41,13 +31,13 @@
 
 .corkboard-paper-card {
   background-color: var(--notebook-paper);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 17px,
-    rgba(145, 118, 86, 0.13) 17px,
-    rgba(145, 118, 86, 0.13) 18px
+  background-image: radial-gradient(
+    circle,
+    rgba(145, 118, 86, 0.24) 1px,
+    transparent 1px
   );
+  background-size: 16px 16px;
+  background-position: 8px 8px;
 }
 
 /* Warm corkboard tray for Polaroid suspect selection inside confirmation modal */

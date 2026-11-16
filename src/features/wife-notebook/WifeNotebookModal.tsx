@@ -2,7 +2,6 @@ import React, { useState, useMemo, useCallback, useEffect, useLayoutEffect, useR
 import {
   IoChevronBack,
   IoDocumentsOutline,
-  IoExpandOutline,
   IoGitBranchOutline,
   IoGridOutline,
   IoArrowUndoOutline,
@@ -965,20 +964,6 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     setCenter(avgX, avgY);
   }, [placedNodes, setCenter]);
 
-  const handleResetView = useCallback(() => {
-    const cards = new Map(
-      Array.from(boardRef.current?.querySelectorAll<HTMLElement>('[data-node-id]') ?? []).map(card => [
-        card.dataset.nodeId,
-        card,
-      ]),
-    );
-    const center = calculateClueCardsCenter(placedNodes, nodeId => {
-      const el = cards.get(nodeId);
-      return el ? { width: el.offsetWidth, height: el.offsetHeight } : undefined;
-    });
-    setViewport({ ...center, zoom: 1 });
-  }, [placedNodes, setViewport]);
-
   const handleSelectCard = useCallback((id: string | null) => {
     setSelectedCardId(id);
     if (id !== null) setSelectedEdgeId(null);
@@ -1156,23 +1141,23 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden bg-[#0E0A07] text-[#F5EFE6]">
       {/* Dark Noir Top Header Bar */}
       <header
-        className="relative z-40 flex items-center justify-between gap-2 bg-gradient-to-b from-[#0E0A07] via-[#120D09] to-[#19120D] px-3.5 pb-2.5 shrink-0"
-        style={{ paddingTop: 'max(10px, var(--phone-system-top, 59px))' }}
+        className="relative z-40 flex items-center justify-between gap-1.5 bg-gradient-to-b from-[#0E0A07] via-[#120D09] to-[#19120D] px-2.5 pb-1.5 shrink-0"
+        style={{ paddingTop: 'max(6px, var(--phone-system-top, 59px))' }}
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Đóng sổ tay của vợ"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-[#1B1511]/90 text-[#F5EFE6] shadow-lg hover:bg-[#2A211B] active:scale-95 transition-transform cursor-pointer"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#F5EFE6] hover:bg-white/10 active:scale-95 transition-transform cursor-pointer"
         >
-          <IoChevronBack className="h-5 w-5" />
+          <IoChevronBack className="h-4 w-4" />
         </button>
 
         <div className="min-w-0 flex-1 text-center flex flex-col items-center">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#B8A186] leading-tight">
+          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#B8A186] leading-tight">
             SỔ TAY ĐIỀU TRA
           </span>
-          <h2 className="font-mono text-[13px] sm:text-[15px] font-bold uppercase tracking-[0.07em] text-[#F7F1E5] leading-snug truncate max-w-full">
+          <h2 className="font-mono text-[12px] sm:text-[13.5px] font-bold uppercase tracking-[0.06em] text-[#F7F1E5] leading-tight truncate max-w-full">
             {resolvedCaseTitle}
           </h2>
         </div>
@@ -1182,9 +1167,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           onClick={handleCenterCluster}
           aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${edges.length} liên kết`}
           title="Định vị các manh mối trên bảng"
-          className="flex min-h-[44px] shrink-0 items-center cursor-pointer active:scale-95 transition-transform"
+          className="flex h-8 shrink-0 items-center rounded-full px-1.5 hover:bg-white/10 cursor-pointer active:scale-95 transition-transform"
         >
-          <span className="flex h-9 items-center gap-2 rounded-full border border-white/15 bg-[#1B1511]/90 px-3 text-xs font-semibold tabular-nums shadow-lg hover:bg-[#2A211B]">
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold tabular-nums">
             <IoDocumentsOutline className="h-3.5 w-3.5 text-[#D8C3A5]" aria-hidden="true" />
             <span className="text-[#F7F1E5]">{placedNodes.length}</span>
             <span className="text-stone-500" aria-hidden="true">·</span>
@@ -1194,9 +1179,8 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         </button>
       </header>
 
-      {/* Walnut Wood Frame + Corkboard Viewport */}
-      <div className="notebook-wood-frame relative flex-1 flex flex-col min-h-0 overflow-hidden">
-        <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0 rounded-t-[2px]" {...containerProps}>
+      {/* Corkboard Viewport */}
+      <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0" {...containerProps}>
           <CorkboardCanvas
             getSourceApp={getSourceApp}
             viewport={viewport}
@@ -1222,28 +1206,16 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
 
           {/* Floating Centered Dark Control Pill */}
           <div
-            className="corkboard-control-dock absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 rounded-[26px] border border-white/15 bg-[#14100D]/[0.94] p-1.5 shadow-[0_14px_34px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md"
-            style={{ bottom: 'max(16px, var(--phone-system-bottom, 20px))' }}
+            className="corkboard-control-dock absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-[#14100D]/[0.94] p-1 shadow-[0_10px_24px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md"
+            style={{ bottom: 'max(14px, var(--phone-system-bottom, 18px))' }}
           >
             <button
               type="button"
-              aria-label="Căn giữa các thẻ và đặt thu phóng 100%"
-              onClick={handleResetView}
-              className="flex min-h-[48px] min-w-[74px] flex-col items-center justify-center gap-1.5 rounded-[20px] px-3 py-1.5 text-[#E8DFD3] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
-            >
-              <IoExpandOutline className="h-[18px] w-[18px]" />
-              <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.08em] text-[#A89A8A] tabular-nums leading-none">
-                {Math.round(viewport.zoom * 100)}%
-              </span>
-            </button>
-
-            <button
-              type="button"
               onClick={handleAutoArrange}
-              className="flex min-h-[48px] min-w-[76px] flex-col items-center justify-center gap-1.5 rounded-[20px] px-3 py-1.5 text-[#E8DFD3] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-[#E8DFD3] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
             >
-              <IoGridOutline className="h-[18px] w-[18px]" />
-              <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.08em] text-[#A89A8A] leading-none">
+              <IoGridOutline className="h-3.5 w-3.5" />
+              <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.06em] text-[#A89A8A] leading-none">
                 Xếp gọn
               </span>
             </button>
@@ -1251,10 +1223,10 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             <button
               type="button"
               onClick={handleOpenConfrontation}
-              className="flex min-h-[48px] min-w-[82px] flex-col items-center justify-center gap-1.5 rounded-[20px] bg-[#B91C1C] hover:bg-[#DC2626] px-3.5 py-1.5 text-white shadow-[0_4px_14px_rgba(185,28,28,0.45)] active:scale-95 transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 rounded-full bg-[#B91C1C] hover:bg-[#DC2626] px-3.5 py-1.5 text-white shadow-[0_4px_12px_rgba(185,28,28,0.45)] active:scale-95 transition-all cursor-pointer"
             >
-              <IoScaleOutline className="h-[18px] w-[18px]" />
-              <span className="whitespace-nowrap text-[9.5px] font-bold uppercase tracking-[0.08em] text-white leading-none">
+              <IoScaleOutline className="h-3.5 w-3.5" />
+              <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.06em] text-white leading-none">
                 Đối chất
               </span>
             </button>
@@ -1284,7 +1256,6 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
               </button>
             </div>
           )}
-        </div>
       </div>
 
       {/* Pre-confrontation Confirmation Modal */}
