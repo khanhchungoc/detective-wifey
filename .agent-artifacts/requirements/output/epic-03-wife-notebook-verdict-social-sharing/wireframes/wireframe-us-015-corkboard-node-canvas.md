@@ -41,19 +41,19 @@
 │                                                                        │
 │   ┌──────────────────────┐              ┌──────────────────────┐       │
 │   │ [Mask] VO BOC  [Loc] │              │ [Phone] SĐT   [Loc]  │       │
-│   │ "Anh Tuấn Thợ Điện"  │═════(Dây Đỏ)═╡ 0988886677           │       │
+│   │ "Anh Tuấn Thợ Điện"  │══(Vàng)══════╡ 0988886677           │       │
 │   │ [Zola] 23:44 Tra ao  │              │ [Phone] [Shopoo]     │       │
 │   └──────────────────────┘              └──────────┬───────────┘       │
 │                                                    │                   │
-│                                                (Dây Đỏ)                │
+│                                                 (Vàng)                 │
 │                                                    │                   │
 │   ┌──────────────────────┐              ┌──────────▼───────────┐       │
 │   │ [Clock] 20:46  [Loc] │              │ [Cart] DON HANG[Loc] │       │
 │   │ "Chồng: Vẫn đang họp"│              │ Váy be S + Thiệp     │       │
 │   └──────────┬───────────┘              │ "Nguyen Thi Thu Huong"       │
-│              │                          └──────────┬───────────┘       │
-│         (Tia Set Mau Thuan)                        │                   │
-│              │                                 (Dây Đỏ)                │
+│              ┊                          └──────────┬───────────┘       │
+│       (Đỏ Nét Đứt: Mâu Thuẫn)                      │                   │
+│              ┊                                  (Vàng)                 │
 │   ┌──────────▼───────────┐                         │                   │
 │   │ [Bank] 20:48   [Loc] │              ┌──────────▼───────────┐       │
 │   │ Com Nieu Pho Co 640k │              │ [Target] THU PHAM    │       │
@@ -71,7 +71,10 @@
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **`[Loc]` / Clue Location Jump Icon Button (`IoNavigateOutline`)**: Compact icon button positioned on the top-right header of each clue node card (touch target 36px × 36px). Tapping this icon activates deep-link navigation directly to the original clue location (source parody app and specific conversation/screen), completely decoupled from the card body tap gesture (which remains dedicated to tap-to-connect red string pairing).
+- **Yarn String Visual Types (2 Types)**:
+  - **Contradiction (`contradicts_alibi`)**: Red dashed (`#DC2626`, `strokeDasharray: 5 3`) — highest-priority link where evidence conflicts with an alibi.
+  - **Neutral (All other connections)**: Yellow solid (`#FBBF24`, solid) — all other evidence and identity links.
+- **`[Loc]` / Clue Location Jump Icon Button (`IoNavigateOutline`)**: Compact icon button positioned on the top-right header of each clue node card (touch target 36px × 36px). Tapping this icon activates deep-link navigation directly to the original clue location (source parody app and specific conversation/screen), completely decoupled from the card body tap gesture (which remains dedicated to tap-to-connect yarn string pairing).
 
 ---
 
@@ -96,7 +99,7 @@
 │   ┌──────────────────────────────────┐                                 │
 │   │ [Target-Candidate: Glow-Green]   │                                 │
 │   │ [Phone] SĐT: 0988886677     [Loc]│ <── Nhấn vào đây để CHỐT NỐI    │
-│   │ Chạm để hoàn tất nối dây đỏ      │                                 │
+│   │ Chạm để hoàn tất nối dây         │                                 │
 │   └──────────────────────────────────┘                                 │
 │                                                                        │
 ├────────────────────────────────────────────────────────────────────────┤

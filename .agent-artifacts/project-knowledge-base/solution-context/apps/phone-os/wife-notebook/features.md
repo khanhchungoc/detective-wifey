@@ -33,7 +33,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ### 2.3. Detective Corkboard Node Canvas (`BangNoiDay`) & "Giác Quan Thứ 6" Hint Engine
 * **2D Tap-to-Connect Corkboard (`US-015`)**:
-  - Players place pinned cards from the bottom drawer (`Khay Manh Mối Thu Thập`) onto the 2D corkboard and tap Node A then Node B to connect red-string edges (unmasking disguised identities and exposing alibi contradictions).
+  - Players place pinned cards from the bottom drawer (`Khay Manh Mối Thu Thập`) onto the 2D corkboard and tap Node A then Node B to connect yarn string edges (yellow solid `#FBBF24` for neutral links; red dashed `#DC2626` for alibi contradictions).
   - Each card includes a `[Loc]` (`IoNavigateOutline`) deep-link button to jump back to the source app and highlight the original record while minimizing the notebook into a top `[Quay lại Sổ tay]` pill.
   - Displays the active smoking-gun objective counter (*Bằng chứng cốt lõi: X/3*).
 * **"Giác Quan Thứ 6" (Sixth Sense) Hint Engine (`US-022`)**:

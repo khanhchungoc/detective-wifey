@@ -122,8 +122,8 @@ export interface CaseKnowledgeGraph {
 #### 3. Tap-to-Connect Pairing Interaction
 - 3.1. Tapping the card body of an unselected node card on the canvas selects it as Node A, rendering a pulsing high-contrast outline and entering "Đang nối dây" pairing mode. Tapping the header's location jump icon (`IoNavigateOutline`) bypasses pairing mode and immediately triggers clue location deep-linking.
 - 3.2. While in pairing mode, the top banner displays an active prompt with a `[Huỷ thao tác]` button (`IoCloseOutline`) to abort pairing.
-- 3.3. Tapping a second node (Node B) completes the pairing, drawing an SVG red string line between Node A and Node B and triggering a 30ms haptic vibration pulse.
-- 3.4. Tapping an existing red string or long-pressing a connected node displays a context action sheet with a `[Cắt dây]` button (`IoCutOutline`) to sever the connection.
+- 3.3. Tapping a second node (Node B) completes the pairing, drawing an SVG yarn string line between Node A and Node B (yellow solid `#FBBF24` for neutral links, or red dashed `#DC2626` `5 3` when contradicting an alibi) and triggering a 30ms haptic vibration pulse.
+- 3.4. Tapping an existing yarn string or long-pressing a connected node displays a context action sheet with a `[Cắt dây]` button (`IoCutOutline`) to sever the connection.
 - 3.5. Duplicate edges between the same two nodes are prevented.
 
 #### 4. Strict Zero-Spoiler Alias Resolution & Cluster Merging
@@ -133,7 +133,7 @@ export interface CaseKnowledgeGraph {
 - 4.4. Incorrect or decoy connections remain visible on the board as player notes but do not trigger identity resolution or smoke-gun confirmation.
 
 #### 5. Timeline Contradiction & Alibi Linkage
-- 5.1. When two timestamped cards with contradictory claims (e.g., 20:46 Zola *"Đang họp công ty"* and 20:48 Banking *"Cơm Niêu Phố Cổ"*) are connected, the edge renders as a high-voltage yellow/red lightning bolt line (`IoFlashOutline`).
+- 5.1. When two timestamped cards with contradictory claims (e.g., 20:46 Zola *"Đang họp công ty"* and 20:48 Banking *"Cơm Niêu Phố Cổ"*) are connected (`contradicts_alibi`), the edge renders as a red dashed line (`#DC2626`, `strokeDasharray: "5 3"`) to denote the highest-priority conflict link, while all other non-contradiction edges render as neutral yellow solid lines (`#FBBF24`).
 - 5.2. The contradiction card highlights with an exclamation badge indicating *"Mâu thuẫn ngoại phạm đã xác lập"*.
 
 #### 6. Confrontation & Verdict Integration
