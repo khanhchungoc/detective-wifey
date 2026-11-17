@@ -504,7 +504,7 @@ const CorkboardContents = memo(function CorkboardContents({
 
             const strokeWidth = isSelected ? '2.75' : '2';
 
-            const strokeOpacity = isSelected ? 1 : 0.9;
+            const strokeOpacity = isSelected ? 0.85 : 0.55;
 
             return (
               <g
@@ -531,7 +531,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   d={pathD}
                   stroke="#140905"
                   strokeWidth={strokeWidth}
-                  strokeOpacity={0.35}
+                  strokeOpacity={0.18}
                   fill="none"
                   strokeLinecap="round"
                   transform="translate(0.75, 1.25)"

@@ -131,7 +131,8 @@ timestamp: "2026-10-14T13:00:00+07:00"
 * **Yarn String Visual Types (`CorkboardCanvas`)**:
   * **Contradiction (`contradicts_alibi` — Evidence vs. Alibi)**: Red solid (`#DC2626`), representing the highest-level conflict link.
   * **Neutral (All other connections)**: Yellow solid (`#FBBF24`, solid line), representing standard/neutral links.
-  * **Selected State**: Preserves the edge's type color while increasing stroke weight (`2.75`) and opacity (`1.0`).
+  * **Opacity**: Default `0.55` (shadow `0.18`) so text on underlying cards remains legible when strings cross over them.
+  * **Selected State**: Preserves the edge's type color while increasing stroke weight (`2.75`) and opacity (`0.85`).
 * **"Giác Quan Thứ 6" (Sixth Sense) Hint States ([wireframe-sixth-sense.md](../../../../requirements/output/epic-02-investigation-suspicion-mechanics/wireframes/wireframe-sixth-sense.md))**:
   * **Ready**: `[Sparkles] Giác quan thứ 6` (`IoSparklesOutline`). Free on-demand hint.
   * **Uncollected Clue Exists**: Displays banner `[AppIcon] Xem [Tên ứng dụng]. [Về màn hình chính]`. Tapping `[Về màn hình chính]` returns to SpringBoard and highlights the target app icon (max 2 pulses then static ring) without opening the app or spoiling the exact clue inside.
