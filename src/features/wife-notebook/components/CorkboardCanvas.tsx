@@ -384,49 +384,18 @@ const CorkboardContents = memo(function CorkboardContents({
 
             const isContradiction = edge.relationship === 'contradicts_alibi';
             const isSelected = selectedEdgeId === edge.edgeId;
-            const isCanonical = edge.isCanonical ?? (
-              edge.edgeId in {
-                edge_alias_phone: 1,
-                edge_order_phone: 1,
-                edge_order_name: 1,
-                edge_name_suspect: 1,
-                edge_alibi_contradiction: 1,
-              } || !edge.edgeId.startsWith('custom_edge_')
-            );
             const { pathD } = calculateYarnStringCurve(x1, y1, x2, y2, isContradiction);
 
-            // Yarn color mapping tuned for high contrast against dark walnut cork:
-            // - Selected: bright crimson-rose #FF4D6D
-            // - Contradiction: amber gold #FBBF24
-            // - Verified/canonical strings: classic detective red #DC2626
-            // - Speculative strings: muted warm coral #F87171
-            const stringStroke = isSelected
-              ? '#FF4D6D'
-              : isContradiction
-              ? '#FBBF24'
-              : isCanonical
-              ? '#DC2626'
-              : '#F87171';
+            // Simplified 2-type yarn mapping against dark walnut cork:
+            // - Contradiction (conflicts with alibi): classic detective red #DC2626, dashed
+            // - Neutral (all other connections): amber gold #FBBF24, solid
+            const stringStroke = isContradiction ? '#DC2626' : '#FBBF24';
 
-            const strokeDasharray = isContradiction
-              ? '5 3'
-              : undefined;
+            const strokeDasharray = isContradiction ? '5 3' : undefined;
 
-            const strokeWidth = isSelected
-              ? '2.75'
-              : isContradiction
-              ? '2'
-              : isCanonical
-              ? '2'
-              : '1.4';
+            const strokeWidth = isSelected ? '2.75' : '2';
 
-            const strokeOpacity = isSelected
-              ? 1
-              : isContradiction
-              ? 0.92
-              : isCanonical
-              ? 0.85
-              : 0.62;
+            const strokeOpacity = isSelected ? 1 : 0.9;
 
             return (
               <g
@@ -552,7 +521,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (
         <div className="corkboard-control-dock absolute bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-full bg-[#16120F]/95 border border-white/15 p-1.5 pl-3.5 shadow-2xl backdrop-blur-md">
-          <span className="text-xs font-medium text-[#F7F1E5] whitespace-nowrap">Đã chọn sợi dây đỏ</span>
+          <span className="text-xs font-medium text-[#F7F1E5] whitespace-nowrap">Đã chọn sợi dây</span>
           <button
             type="button"
             onClick={() => onSeverEdge(selectedEdgeId)}
