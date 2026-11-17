@@ -498,11 +498,9 @@ const CorkboardContents = memo(function CorkboardContents({
             const { pathD } = calculateYarnStringCurve(x1, y1, x2, y2, isContradiction);
 
             // Simplified 2-type yarn mapping against dark walnut cork:
-            // - Contradiction (conflicts with alibi): classic detective red #DC2626, dashed
+            // - Contradiction (conflicts with alibi): classic detective red #DC2626, solid
             // - Neutral (all other connections): amber gold #FBBF24, solid
             const stringStroke = isContradiction ? '#DC2626' : '#FBBF24';
-
-            const strokeDasharray = isContradiction ? '5 3' : undefined;
 
             const strokeWidth = isSelected ? '2.75' : '2';
 
@@ -533,7 +531,6 @@ const CorkboardContents = memo(function CorkboardContents({
                   d={pathD}
                   stroke="#140905"
                   strokeWidth={strokeWidth}
-                  strokeDasharray={strokeDasharray}
                   strokeOpacity={0.35}
                   fill="none"
                   strokeLinecap="round"
@@ -544,7 +541,6 @@ const CorkboardContents = memo(function CorkboardContents({
                   d={pathD}
                   stroke={stringStroke}
                   strokeWidth={strokeWidth}
-                  strokeDasharray={strokeDasharray}
                   strokeOpacity={strokeOpacity}
                   fill="none"
                   strokeLinecap="round"

@@ -51,9 +51,9 @@
 │   │ [Clock] 20:46  [Loc] │              │ [Cart] DON HANG[Loc] │       │
 │   │ "Chồng: Vẫn đang họp"│              │ Váy be S + Thiệp     │       │
 │   └──────────┬───────────┘              │ "Nguyen Thi Thu Huong"       │
-│              ┊                          └──────────┬───────────┘       │
-│       (Đỏ Nét Đứt: Mâu Thuẫn)                      │                   │
-│              ┊                                  (Vàng)                 │
+│              │                          └──────────┬───────────┘       │
+│         (Đỏ: Mâu Thuẫn)                            │                   │
+│              │                                  (Vàng)                 │
 │   ┌──────────▼───────────┐                         │                   │
 │   │ [Bank] 20:48   [Loc] │              ┌──────────▼───────────┐       │
 │   │ Com Nieu Pho Co 640k │              │ [Target] THU PHAM    │       │
@@ -72,7 +72,7 @@
 ```
 
 - **Yarn String Visual Types (2 Types)**:
-  - **Contradiction (`contradicts_alibi`)**: Red dashed (`#DC2626`, `strokeDasharray: 5 3`) — highest-priority link where evidence conflicts with an alibi.
+  - **Contradiction (`contradicts_alibi`)**: Red solid (`#DC2626`) — highest-priority link where evidence conflicts with an alibi.
   - **Neutral (All other connections)**: Yellow solid (`#FBBF24`, solid) — all other evidence and identity links.
 - **`[Loc]` / Clue Location Jump Icon Button (`IoNavigateOutline`)**: Compact icon button positioned on the top-right header of each clue node card (touch target 36px × 36px). Tapping this icon activates deep-link navigation directly to the original clue location (source parody app and specific conversation/screen), completely decoupled from the card body tap gesture (which remains dedicated to tap-to-connect yarn string pairing).
 

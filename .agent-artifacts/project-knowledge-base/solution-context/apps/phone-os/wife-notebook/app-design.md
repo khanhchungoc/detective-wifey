@@ -129,7 +129,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 ```
 
 * **Yarn String Visual Types (`CorkboardCanvas`)**:
-  * **Contradiction (`contradicts_alibi` — Evidence vs. Alibi)**: Red dashed (`#DC2626`, `strokeDasharray: "5 3"`), representing the highest-level conflict link.
+  * **Contradiction (`contradicts_alibi` — Evidence vs. Alibi)**: Red solid (`#DC2626`), representing the highest-level conflict link.
   * **Neutral (All other connections)**: Yellow solid (`#FBBF24`, solid line), representing standard/neutral links.
   * **Selected State**: Preserves the edge's type color while increasing stroke weight (`2.75`) and opacity (`1.0`).
 * **"Giác Quan Thứ 6" (Sixth Sense) Hint States ([wireframe-sixth-sense.md](../../../../requirements/output/epic-02-investigation-suspicion-mechanics/wireframes/wireframe-sixth-sense.md))**:
