@@ -38,7 +38,7 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
       type="button"
       aria-label="Thu nhỏ bản đồ / Định vị"
       onClick={onCenterCluster}
-      className="relative rounded-xl border border-white/15 bg-[#1B1511]/90 shadow-inner overflow-hidden flex items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300 active:scale-95 transition-transform shrink-0"
+      className="relative rounded-[6px] border border-slate-700/80 bg-[#0B1017]/95 shadow-inner overflow-hidden flex items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FACC15] active:scale-95 transition-transform shrink-0"
       style={{ width: `${RADAR_SIZE}px`, height: `${RADAR_SIZE}px` }}
     >
       {/* Node dots */}

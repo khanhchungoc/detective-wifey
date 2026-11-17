@@ -486,7 +486,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           onSeverEdge={vi.fn()} onNavigateToSource={vi.fn()} onCancelPairing={vi.fn()}
         />,
       );
-      const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={24} />);
+      const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={24} shape="square" />);
       expect(html.includes(avatar)).toBe(hasAvatar);
       expect(html.includes('absolute -right-1 -top-1 h-3 w-3')).toBe(hasAvatar && Boolean(node.sourceAppId));
       expect(html.includes('aria-label="Source app"')).toBe(Boolean(node.sourceAppId));

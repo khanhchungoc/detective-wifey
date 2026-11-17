@@ -62,7 +62,7 @@ describe('confrontation evidence review', () => {
     expect(html).toContain('aria-valuemax="5"');
     expect(html).toContain(`aria-valuenow="${filledSegments}"`);
     expect(html.match(/h-2\.5 flex-1 rounded-\[2px\]/g)).toHaveLength(5);
-    expect(html.match(/border-\[#(?:7F1D1D|14532D)\] bg-\[#(?:991B1B|15803D)\]/g)).toHaveLength(filledSegments);
+    expect(html.match(/border-\[#(?:FB7185|4ADE80)\]\/60 bg-\[#(?:E11D48|22C55E)\]/g)).toHaveLength(filledSegments);
     expect(html).not.toMatch(/>\s*\d+%\s*</);
   });
 

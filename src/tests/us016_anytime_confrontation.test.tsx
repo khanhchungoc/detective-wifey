@@ -856,8 +856,8 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(htmlStep1).toContain('Chọn nghi phạm');
       expect(htmlStep1).toContain('Nguyễn Thị Thu Hương');
       expect(htmlStep1).toContain('Đã lột mặt nạ');
-      expect(htmlStep1).toContain('🎭 Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
-      expect(htmlStep1).toContain('📞 Trùng SĐT: 0988886677');
+      expect(htmlStep1).toContain('Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
+      expect(htmlStep1).toContain('Trùng SĐT: 0988886677');
 
       // Step 2: Confirmation Stage
       const htmlStep2 = renderToStaticMarkup(
@@ -874,8 +874,9 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       );
 
       expect(htmlStep2).toContain('Nguyễn Thị Thu Hương');
-      expect(htmlStep2).toContain('🎭 Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
-      expect(htmlStep2).toContain('📞 Trùng SĐT: 0988886677');
+      expect(htmlStep2).not.toContain('Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
+      expect(htmlStep2).not.toContain('Trùng SĐT: 0988886677');
+      expect(htmlStep2).not.toContain('ĐÃ LỘT MẶT NẠ');
     });
 
     it('Step 2: hides clue counts and retains the short failure penalty', () => {

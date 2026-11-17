@@ -6,7 +6,9 @@ import {
   IoCloseOutline,
   IoChevronBackOutline,
   IoLinkOutline,
-  IoFlash,
+  IoHeart,
+  IoGlassesOutline,
+  IoCallOutline,
 } from 'react-icons/io5';
 import characterSheet from '../../../shared/assets/contact-avatar-persona-sheet.jpg';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
@@ -49,37 +51,37 @@ const SuspectPolaroidCard: React.FC<SuspectPolaroidCardProps> = ({
         type="button"
         data-suspect-polaroid={suspect.id}
         onClick={() => onSelect(suspect.id)}
-        className="group relative block w-full cursor-pointer rounded-[2px] border border-[#D4C9B6] bg-gradient-to-b from-[#F7F3EA] via-[#F2ECE0] to-[#EAE2D3] p-2 pb-0 sm:p-2.5 sm:pb-0 text-left shadow-[0_12px_24px_rgba(0,0,0,0.46),0_3px_8px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.75)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-[1.03] active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#5C3D24]"
+        className="group relative block w-full cursor-pointer rounded-[2px] border border-[#B8C4D0] bg-gradient-to-b from-[#EEF2F6] via-[#E6EBF0] to-[#DCE3EA] p-2 pb-0 sm:p-2.5 sm:pb-0 text-left shadow-[0_12px_24px_rgba(0,0,0,0.62),0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.85)] transition-transform duration-150 hover:-translate-y-0.5 hover:scale-[1.03] hover:border-[#FACC15] active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1017]"
       >
-        {/* Square suspect photo with red pushpin and tilted red stamp */}
-        <div className="relative aspect-square w-full bg-stone-900">
+        {/* Square suspect photo with crimson pushpin and tilted forensic stamp */}
+        <div className="relative aspect-square w-full bg-[#090C10]">
           <div className="h-full w-full overflow-hidden">
             <ContactAvatar name={photoName} shape="square" fluid />
           </div>
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.12),inset_0_0_18px_rgba(0,0,0,0.16)]"
+            className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.14),inset_0_0_18px_rgba(0,0,0,0.2)]"
           />
 
-          {/* Red 3D pushpin at top-left */}
+          {/* Crimson 3D forensic pin at top-left */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-2.5 left-[12%] z-20 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-[#FCA5A5]/45 bg-[radial-gradient(circle_at_35%_30%,#ef4444_0%,#dc2626_48%,#991b1b_85%,#7f1d1d_100%)] shadow-[2px_4px_6px_rgba(0,0,0,0.55)]"
+            className="pointer-events-none absolute -top-2.5 left-[12%] z-20 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-[#FDA4AF]/55 bg-[radial-gradient(circle_at_35%_30%,#fb7185_0%,#e11d48_48%,#9f1239_85%,#881337_100%)] shadow-[2px_4px_6px_rgba(0,0,0,0.65)]"
           >
-            <div className="relative -translate-x-[0.5px] -translate-y-[0.5px] h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-full bg-[radial-gradient(circle_at_35%_30%,#f87171_0%,#dc2626_65%,#991b1b_100%)] shadow-[1px_2px_3px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.45)]">
+            <div className="relative -translate-x-[0.5px] -translate-y-[0.5px] h-3.5 w-3.5 sm:h-4 sm:w-4 rounded-full bg-[radial-gradient(circle_at_35%_30%,#fda4af_0%,#e11d48_65%,#9f1239_100%)] shadow-[1px_2px_3px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.45)]">
               <div className="absolute left-[2px] top-[2px] h-1.5 w-1.5 rounded-full bg-white/65" />
             </div>
           </div>
 
-          {/* Tilted red rectangular stamp */}
+          {/* Tilted crimson forensic rectangular stamp */}
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute -right-0.5 top-1 sm:top-1.5 z-10 rotate-[10deg] rounded-[1px] border-[1.5px] border-[#C6221C]/90 bg-[#FAF5EB]/80 shadow-[0_1px_2px_rgba(0,0,0,0.28)] ${
+            className={`pointer-events-none absolute -right-0.5 top-1 sm:top-1.5 z-10 rotate-[10deg] rounded-[1px] border-[1.5px] border-[#DC2626] bg-[#F8FAFC]/90 shadow-[0_1px_3px_rgba(0,0,0,0.3)] ${
               isSingle ? 'px-2 py-1' : 'px-1.5 py-[3px] sm:px-2 sm:py-1'
             }`}
           >
             <span
-              className={`block font-mono font-extrabold uppercase leading-none text-[#C6221C] ${
+              className={`block font-mono font-extrabold uppercase leading-none text-[#DC2626] ${
                 isSingle
                   ? 'text-[10px] sm:text-[11px] tracking-[0.12em]'
                   : 'text-[8.5px] sm:text-[10px] tracking-[0.1em]'
@@ -93,20 +95,22 @@ const SuspectPolaroidCard: React.FC<SuspectPolaroidCardProps> = ({
         {/* Polaroid bottom caption chin */}
         <div className={`flex flex-col items-center justify-center px-1 text-center ${isSingle ? 'min-h-[52px] py-2.5' : 'min-h-[44px] sm:min-h-[48px] py-2'}`}>
           <span
-            className={`text-center font-bold italic leading-tight tracking-tight text-[#26211D] line-clamp-2 break-words ${
+            className={`text-center font-mono font-bold leading-tight tracking-tight text-slate-900 line-clamp-2 break-words ${
               isSingle ? 'text-sm sm:text-[15px]' : 'text-xs sm:text-[13px]'
             }`}
           >
             {suspect.displayName}
           </span>
           {suspect.isUnmasked && suspect.alias && suspect.alias.trim().toLowerCase() !== suspect.displayName.trim().toLowerCase() && (
-            <span className="mt-1 block text-[10px] sm:text-[11px] font-semibold text-rose-800 leading-tight">
-              🎭 Vỏ bọc: &quot;{suspect.alias}&quot;
+            <span className="mt-1 inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-rose-800 leading-tight">
+              <IoGlassesOutline className="h-3 w-3 shrink-0" aria-hidden="true" />
+              <span>Vỏ bọc: &quot;{suspect.alias}&quot;</span>
             </span>
           )}
           {suspect.isUnmasked && suspect.unmaskedEvidenceHint && (
-            <span className="mt-0.5 block text-[9.5px] sm:text-[10px] font-medium text-stone-600 leading-tight">
-              📞 {suspect.unmaskedEvidenceHint}
+            <span className="mt-0.5 inline-flex items-center gap-1 text-[9.5px] sm:text-[10px] font-medium text-slate-600 leading-tight">
+              <IoCallOutline className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+              <span>{suspect.unmaskedEvidenceHint}</span>
             </span>
           )}
         </div>
@@ -215,44 +219,45 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-confrontation-title"
-      className="absolute inset-0 z-[75] flex items-center justify-center p-2.5 sm:p-4 bg-[#0E0A07]/85 backdrop-blur-md select-none font-sans animate-fadeIn"
+      className="absolute inset-0 z-[75] flex items-center justify-center p-2 sm:p-3 bg-[#06080B]/88 backdrop-blur-md select-none font-sans animate-fadeIn"
+      style={{ paddingTop: 'max(8px, var(--phone-system-top, 59px))' }}
       onClick={onCancel}
       {...swipeHandlers}
     >
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className="relative w-full max-w-[560px] max-h-[calc(100%_-_1.5rem)] flex flex-col pt-5 animate-scaleUp outline-none"
+        className="relative w-full max-w-[560px] max-h-[calc(100%_-_0.5rem)] flex flex-col pt-5 animate-scaleUp outline-none"
         onClick={e => e.stopPropagation()}
         onKeyDown={e => { if (e.key === 'Escape') { e.stopPropagation(); onCancel(); } }}
       >
-        {/* Manila Folder Top File Tab */}
-        <div className="pointer-events-none absolute top-0 left-3 z-10 flex items-center rounded-t-[4px] border border-b-0 border-[#C8B99E] bg-[#F2ECE0] px-3 py-1 shadow-sm">
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[#3B2A1E]">
+        {/* Sealed Casefile Top File Tab */}
+        <div className="pointer-events-none absolute top-0 left-3 z-10 flex items-center rounded-t-[4px] border border-b-0 border-[#2A3544] bg-[#141A22] px-2.5 py-0.5 shadow-sm">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#FACC15]">
             FILE 01
           </span>
         </div>
 
-        {/* Main Manila Case Dossier Container */}
-        <div className="dossier-folder-sheet relative flex min-h-0 flex-1 flex-col gap-3.5 sm:gap-4 overflow-y-auto rounded-[4px] rounded-tl-none border border-[#C8B99E] border-l-[6px] border-l-[#991B1B] p-4 sm:p-5 text-[#26211D]">
-          <header className="flex items-center gap-2 border-b border-[#D4C9B6]/80 pb-2.5 shrink-0">
+        {/* Main Sealed Dark Casefile Container */}
+        <div className="dossier-folder-sheet relative flex min-h-0 flex-1 flex-col gap-2.5 sm:gap-3 overflow-y-auto rounded-[4px] rounded-tl-none border border-[#2A3544] border-l-[6px] border-l-[#E11D48] p-3 sm:p-4 text-[#F1F5F9]">
+          <header className="flex items-center gap-1.5 border-b border-slate-800 pb-2 shrink-0">
             {!isStep1 && hasSuspectList && (
               <button
                 type="button"
                 onClick={handleResetSuspect}
                 aria-label="Chọn nghi phạm khác"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#4A3828] hover:bg-black/5 outline-none focus-visible:ring-2 focus-visible:ring-[#991B1B]"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] text-slate-300 hover:bg-slate-800 outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
               >
-                <IoChevronBackOutline className="h-5 w-5" />
+                <IoChevronBackOutline className="h-4 w-4" />
               </button>
             )}
             <div className="min-w-0 flex-1">
-              <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#991B1B]">
-                {isStep1 ? 'HỒ SƠ NGHI PHẠM' : 'IN PROGRESS • HỒ SƠ ĐỐI CHẤT'}
+              <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#FB7185] truncate">
+                {isStep1 ? 'HỒ SƠ NGHI PHẠM' : 'HỒ SƠ ĐỐI CHẤT'}
               </span>
               <h3
                 id="confirm-confrontation-title"
-                className={isStep1 ? 'text-base sm:text-lg font-bold tracking-tight text-[#26211D]' : 'sr-only'}
+                className={isStep1 ? 'text-sm sm:text-base font-bold tracking-tight text-[#F1F5F9]' : 'sr-only'}
               >
                 {isStep1 ? 'Chọn nghi phạm' : 'Xác nhận đối chất'}
               </h3>
@@ -260,7 +265,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
             {!isStep1 && (
               <span
                 aria-hidden="true"
-                className="rounded-[2px] bg-[#991B1B] px-2 py-0.5 font-mono text-[11px] font-extrabold tracking-widest text-[#FAF5EB] shadow-sm"
+                className="rounded-[2px] bg-[#E11D48] px-1.5 py-0.5 font-mono text-[10px] font-extrabold tracking-widest text-white shadow-sm"
               >
                 #01
               </span>
@@ -269,15 +274,15 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               type="button"
               onClick={onCancel}
               aria-label="Đóng"
-              className="ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#5C4B3B] hover:bg-black/5 outline-none focus-visible:ring-2 focus-visible:ring-[#991B1B]"
+              className="ml-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] text-slate-400 hover:bg-slate-800 hover:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
             >
-              <IoCloseOutline className="h-5 w-5" />
+              <IoCloseOutline className="h-4 w-4" />
             </button>
           </header>
 
           {isStep1 ? (
             hasSuspectList ? (
-              <div className="suspect-cork-tray min-h-0 overflow-y-auto rounded-[4px] border-2 border-[#4A2C17]/90 p-4 sm:p-5">
+              <div className="suspect-cork-tray min-h-0 overflow-y-auto rounded-[4px] border border-[#2A3544] p-4 sm:p-5">
                 <div className="flex flex-wrap items-start justify-center gap-3.5 sm:gap-5">
                   {suspectsOnBoard.map((suspect, index) => (
                     <SuspectPolaroidCard
@@ -292,13 +297,13 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               </div>
             ) : (
               <div className="py-6 text-center space-y-4">
-                <p className="font-mono text-sm text-[#5C4B3B]">
+                <p className="font-mono text-sm text-slate-400">
                   Chưa có nghi phạm. Hãy ghim một người lên bảng điều tra trước.
                 </p>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="min-h-11 px-4 font-mono text-sm font-bold uppercase tracking-wider text-[#991B1B] underline underline-offset-4"
+                  className="py-1.5 px-3 font-mono text-xs font-bold uppercase tracking-wider text-[#FB7185] underline underline-offset-4"
                 >
                   Điều tra thêm
                 </button>
@@ -307,48 +312,48 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
           ) : (
             <>
               {/* Polaroid Face-Off Linked by Red String */}
-              <div className="relative flex items-center justify-center gap-2 sm:gap-4 py-2 shrink-0">
+              <div className="relative flex items-center justify-center gap-2 sm:gap-3 py-1 shrink-0">
                 {/* Horizontal Red String connecting both Polaroids */}
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute left-[24%] right-[24%] top-1/2 -translate-y-1/2 flex items-center justify-center"
                 >
-                  <div className="h-[2px] w-full bg-[#C6221C] shadow-[0_1px_2px_rgba(0,0,0,0.28)]" />
-                  <span className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-[#FCA5A5]/60 bg-[#991B1B] text-[#FAF5EB] shadow-md">
-                    <IoFlash className="h-3.5 w-3.5" />
+                  <div className="h-[2px] w-full bg-[#E11D48] shadow-[0_1px_4px_rgba(225,29,72,0.5)]" />
+                  <span className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-[#FDA4AF]/60 bg-[#E11D48] text-white shadow-md">
+                    <IoHeart className="h-3.5 w-3.5" />
                   </span>
                 </div>
 
                 {/* Husband Polaroid */}
-                <figure className="relative z-10 w-[124px] sm:w-[140px] shrink-0 -rotate-[1.8deg] rounded-[2px] border border-[#D4C9B6] bg-[#FAF6ED] p-1.5 pb-0 shadow-[0_8px_18px_rgba(0,0,0,0.24)]">
+                <figure className="relative z-10 w-[112px] sm:w-[130px] shrink-0 -rotate-[1.8deg] rounded-[2px] border border-[#B8C4D0] bg-[#EEF2F6] p-1 pb-0 shadow-[0_8px_18px_rgba(0,0,0,0.48)]">
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 z-20 h-4 w-4 rounded-full border border-[#FCA5A5]/50 bg-[radial-gradient(circle_at_35%_30%,#ef4444_0%,#dc2626_55%,#991b1b_100%)] shadow-[1px_2px_4px_rgba(0,0,0,0.45)]"
+                    className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 z-20 h-4 w-4 rounded-full border border-[#FDA4AF]/50 bg-[radial-gradient(circle_at_35%_30%,#fb7185_0%,#e11d48_55%,#881337_100%)] shadow-[1px_2px_4px_rgba(0,0,0,0.6)]"
                   />
                   <div
                     role="img"
                     aria-label={husbandName}
-                    className="aspect-square w-full bg-stone-900 shadow-inner"
+                    className="aspect-square w-full bg-[#090C10] shadow-inner"
                     style={{
                       backgroundImage: `url(${characterSheet})`,
                       backgroundSize: '660%',
                       backgroundPosition: '60% 31%',
                     }}
                   />
-                  <figcaption className="flex min-h-[34px] items-center justify-center px-1 py-1 text-center font-mono text-xs font-bold text-[#26211D]">
+                  <figcaption className="flex min-h-[28px] items-center justify-center px-1 py-1 text-center font-mono text-xs font-bold text-slate-900">
                     {husbandName}
                   </figcaption>
                 </figure>
 
-                <div className="w-6 sm:w-10 shrink-0" aria-hidden="true" />
+                <div className="w-4 sm:w-8 shrink-0" aria-hidden="true" />
 
-                {/* Suspect Polaroid */}
-                <figure className="relative z-10 w-[124px] sm:w-[140px] shrink-0 rotate-[1.6deg] rounded-[2px] border border-[#D4C9B6] bg-[#FAF6ED] p-1.5 pb-0 shadow-[0_8px_18px_rgba(0,0,0,0.24)]">
+                {/* Suspect Polaroid (minimal: avatar + name only) */}
+                <figure className="relative z-10 w-[112px] sm:w-[130px] shrink-0 rotate-[1.6deg] rounded-[2px] border border-[#B8C4D0] bg-[#EEF2F6] p-1 pb-0 shadow-[0_8px_18px_rgba(0,0,0,0.48)]">
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 z-20 h-4 w-4 rounded-full border border-[#FCA5A5]/50 bg-[radial-gradient(circle_at_35%_30%,#ef4444_0%,#dc2626_55%,#991b1b_100%)] shadow-[1px_2px_4px_rgba(0,0,0,0.45)]"
+                    className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 z-20 h-4 w-4 rounded-full border border-[#FDA4AF]/50 bg-[radial-gradient(circle_at_35%_30%,#fb7185_0%,#e11d48_55%,#881337_100%)] shadow-[1px_2px_4px_rgba(0,0,0,0.6)]"
                   />
-                  <div className="relative aspect-square w-full overflow-hidden bg-stone-900">
+                  <div className="relative aspect-square w-full overflow-hidden bg-[#090C10]">
                     <div className="flex h-full w-full items-center justify-center">
                       <ContactAvatar
                         name={selectedSuspect?.avatarName || selectedSuspect?.displayName || selectedSuspectDisplayName}
@@ -356,36 +361,20 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                         size={128}
                       />
                     </div>
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute right-1 top-1 rotate-[8deg] rounded-[1px] border border-[#C6221C] bg-[#FAF5EB]/90 px-1 py-0.5 font-mono text-[8px] font-extrabold uppercase tracking-wider text-[#C6221C]"
-                    >
-                      {selectedSuspect?.isUnmasked ? 'ĐÃ LỘT MẶT NẠ' : 'NGHI PHẠM'}
-                    </span>
                   </div>
-                  <figcaption className="flex min-h-[34px] flex-col items-center justify-center px-1 py-1 text-center">
-                    <span className="font-mono text-xs font-bold leading-tight text-[#26211D] line-clamp-2 break-words">
+                  <figcaption className="flex min-h-[28px] items-center justify-center px-1 py-1 text-center">
+                    <span className="font-mono text-xs font-bold leading-tight text-slate-900 line-clamp-2 break-words">
                       {selectedSuspectDisplayName}
                     </span>
-                    {selectedSuspect?.isUnmasked && selectedSuspect.alias && selectedSuspect.alias.trim().toLowerCase() !== selectedSuspectDisplayName.trim().toLowerCase() && (
-                      <span className="mt-0.5 font-mono text-[9px] font-semibold text-[#991B1B] line-clamp-1">
-                        🎭 Vỏ bọc: &quot;{selectedSuspect.alias}&quot;
-                      </span>
-                    )}
-                    {selectedSuspect?.isUnmasked && selectedSuspect.unmaskedEvidenceHint && (
-                      <span className="font-mono text-[9px] text-[#5C4B3B] line-clamp-1">
-                        📞 {selectedSuspect.unmaskedEvidenceHint}
-                      </span>
-                    )}
                   </figcaption>
                 </figure>
               </div>
 
               {/* Conviction Strength Meter */}
-              <div className="flex flex-col items-center gap-1.5 border-y border-dashed border-[#C8B99E] py-2.5 shrink-0">
+              <div className="flex flex-col items-center gap-1 border-y border-dashed border-slate-700 py-1.5 shrink-0">
                 <span
                   id="confrontation-success-label"
-                  className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-[#5C4B3B]"
+                  className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400"
                 >
                   Tỉ lệ thành công
                 </span>
@@ -396,7 +385,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                   aria-valuemax={5}
                   aria-valuenow={filledSegments}
                   aria-valuetext={preflight.convictionChance.label}
-                  className="flex w-52 gap-1.5"
+                  className="flex w-48 gap-1.5"
                 >
                   {[0, 1, 2, 3, 4].map(segment => (
                     <span
@@ -405,42 +394,42 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                       className={`h-2.5 flex-1 rounded-[2px] border ${
                         segment < filledSegments
                           ? isLowSuccessRate
-                            ? 'border-[#7F1D1D] bg-[#991B1B]'
-                            : 'border-[#14532D] bg-[#15803D]'
-                          : 'border-[#C8B99E] bg-[#E5DAC5]'
+                            ? 'border-[#FB7185]/60 bg-[#E11D48]'
+                            : 'border-[#4ADE80]/60 bg-[#22C55E]'
+                          : 'border-slate-700 bg-[#0E131B]'
                       }`}
                     />
                   ))}
                 </div>
               </div>
 
-              {/* Evidence Linkage Summary */}
-              <section className="min-h-0 overflow-y-auto space-y-2.5 pr-0.5">
-                <h4 className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-[#5C4B3B]">
+              {/* Evidence Linkage Summary (scrolls naturally with the dossier) */}
+              <section className="shrink-0 space-y-2">
+                <h4 className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
                   Bằng chứng liên kết
                 </h4>
 
                 {linkedBridges.length > 0 ? (
-                  <ul className="space-y-2.5">
+                  <ul className="space-y-2">
                     {linkedBridges.map(bridge => (
                       <li
                         key={bridge.id}
-                        className="dossier-paper-card rounded-[4px] border border-[#D4C9B6] p-2.5 shadow-sm"
+                        className="dossier-paper-card rounded-[3px] border border-[#B8C4D0] p-2 shadow-sm"
                       >
                         <div className="flex items-center gap-2 text-xs">
                           {renderAppBadge(bridge.sourceApp)}
-                          <span className="font-semibold text-[#26211D] leading-snug break-words">
+                          <span className="font-semibold text-slate-900 leading-snug break-words">
                             {bridge.sourceTitle}
                           </span>
                         </div>
 
-                        <div className="my-1.5 flex items-center gap-2 pl-2.5">
-                          <span className="h-3.5 w-[2px] bg-[#C6221C]/75" aria-hidden="true" />
+                        <div className="my-1 flex items-center gap-1.5 pl-2">
+                          <span className="h-3 w-[2px] bg-[#DC2626]/80" aria-hidden="true" />
                           <span
-                            className={`inline-flex items-center gap-1 rounded-[2px] border px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${
+                            className={`inline-flex items-center gap-1 rounded-[2px] border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${
                               bridge.isSmokingGun
-                                ? 'border-[#C6221C]/50 bg-[#FEE2E2]/80 text-[#991B1B]'
-                                : 'border-[#D4C9B6] bg-[#F2ECE0] text-[#5C4B3B]'
+                                ? 'border-rose-300 bg-rose-100 text-rose-800'
+                                : 'border-[#B8C4D0] bg-[#D5DDE5] text-slate-700'
                             }`}
                           >
                             <IoLinkOutline className="h-3 w-3 shrink-0" />
@@ -450,7 +439,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
 
                         <div className="flex items-center gap-2 text-xs">
                           {renderAppBadge(bridge.targetApp)}
-                          <span className="font-semibold text-[#26211D] leading-snug break-words">
+                          <span className="font-semibold text-slate-900 leading-snug break-words">
                             {bridge.targetTitle}
                           </span>
                         </div>
@@ -458,17 +447,17 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                     ))}
                   </ul>
                 ) : verifiedCluesList.length > 0 ? (
-                  <ul className="space-y-2">
+                  <ul className="space-y-1.5">
                     {verifiedCluesList.map(clue => (
                       <li
                         key={clue.id}
-                        className="dossier-paper-card flex items-start gap-2.5 rounded-[4px] border border-[#D4C9B6] p-2.5 text-sm shadow-sm"
+                        className="dossier-paper-card flex items-start gap-2 rounded-[3px] border border-[#B8C4D0] p-2 text-sm shadow-sm"
                       >
                         <span className="mt-0.5">{renderAppBadge(clue.sourceApp)}</span>
                         <div className="min-w-0 flex-1">
-                          <h5 className="font-semibold text-xs text-[#26211D] break-words">{clue.title}</h5>
+                          <h5 className="font-semibold text-xs text-slate-900 break-words">{clue.title}</h5>
                           {clue.snippet && (
-                            <p className="mt-0.5 line-clamp-2 break-words text-xs leading-relaxed text-[#5C4B3B]">
+                            <p className="mt-0.5 line-clamp-2 break-words text-xs leading-relaxed text-slate-600">
                               {clue.snippet}
                             </p>
                           )}
@@ -477,7 +466,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                     ))}
                   </ul>
                 ) : (
-                  <p className="rounded-[4px] border border-dashed border-[#C8B99E] bg-[#FAF6ED]/60 py-3 text-center font-mono text-xs text-[#5C4B3B]">
+                  <p className="rounded-[4px] border border-dashed border-slate-700 bg-[#0E131B]/70 py-2.5 text-center font-mono text-xs text-slate-400">
                     Chưa có mắt xích chứng cứ nào được xác thực.
                   </p>
                 )}
@@ -486,31 +475,31 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               {preflight.successRate < 100 && (
                 <p
                   role="alert"
-                  className="flex items-center justify-center gap-2 rounded-[4px] border border-dashed border-[#991B1B]/50 bg-[#FEE2E2]/60 px-3 py-2 font-mono text-xs font-semibold text-[#991B1B] shrink-0"
+                  className="flex items-center justify-center gap-2 rounded-[4px] border border-dashed border-[#E11D48]/55 bg-[#E11D48]/12 px-2.5 py-1.5 font-mono text-[11px] font-semibold text-[#FDA4AF] shrink-0"
                 >
-                  <IoWarningOutline aria-hidden="true" className="h-4 w-4 shrink-0" />
+                  <IoWarningOutline aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[#FB7185]" />
                   Đối chất thất bại: mất 1 lượt nghi ngờ.
                 </p>
               )}
 
-              <footer className="flex flex-col gap-1.5 pt-1 shrink-0">
+              <footer className="flex flex-col gap-1 pt-0.5 shrink-0">
                 <button
                   type="button"
                   onClick={handleConfirm}
-                  className="flex min-h-14 items-center justify-between gap-3 rounded-[4px] border border-[#7F1D1D] bg-[#A31D1D] px-4 text-sm font-mono font-bold uppercase tracking-wider text-[#FAF5EB] shadow-[0_4px_12px_rgba(153,27,27,0.35)] transition-transform hover:bg-[#881818] active:scale-[0.98]"
+                  className="flex h-10 items-center justify-between gap-2.5 rounded-[4px] border border-[#FB7185]/40 bg-[#E11D48] px-3.5 text-xs font-mono font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] transition-transform hover:bg-[#BE123C] active:scale-[0.98]"
                 >
                   <span className="flex items-center gap-2">
-                    <IoChatbubbleEllipsesOutline className="h-5 w-5 shrink-0" />
+                    <IoChatbubbleEllipsesOutline className="h-4 w-4 shrink-0" />
                     <span>{confrontLabel.toLocaleUpperCase('vi')}!</span>
                   </span>
-                  <span className="rounded-[2px] bg-[#FAF5EB] px-2 py-0.5 font-mono text-xs font-extrabold text-[#991B1B] shadow-sm">
+                  <span className="rounded-[2px] bg-[#090C10] px-1.5 py-0.5 font-mono text-[11px] font-extrabold text-[#FDA4AF] shadow-sm">
                     #01
                   </span>
                 </button>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="min-h-10 font-mono text-xs font-bold uppercase tracking-wider text-[#5C4B3B] hover:text-[#26211D] underline underline-offset-4"
+                  className="py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 underline underline-offset-4"
                 >
                   Điều tra thêm
                 </button>

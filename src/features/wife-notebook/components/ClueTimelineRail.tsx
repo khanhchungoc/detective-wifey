@@ -180,7 +180,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
     <div className={`relative pl-4 space-y-2.5 ${className}`}>
       {/* Vertical Timeline Axis Line */}
       <div
-        className="absolute left-[4.5px] top-2 bottom-2 w-[1px] bg-stone-300 pointer-events-none rounded-full"
+        className="absolute left-[4.5px] top-2 bottom-2 w-[1px] bg-slate-300 pointer-events-none rounded-full"
         aria-hidden="true"
       />
 
@@ -188,11 +188,11 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
         const isIncoming = entry.direction === 'incoming';
         const arrow = isIncoming ? '↙' : '↗';
         const dotColorClass = isIncoming
-          ? 'bg-[#DC2626] ring-[1.5px] ring-red-200'
-          : 'bg-stone-500 ring-[1.5px] ring-stone-200';
+          ? 'bg-[#DC2626] ring-[1.5px] ring-rose-200'
+          : 'bg-slate-500 ring-[1.5px] ring-slate-200';
         const arrowColorClass = isIncoming
           ? 'text-[#DC2626] font-bold'
-          : 'text-stone-500 font-semibold';
+          : 'text-slate-500 font-semibold';
 
         return (
           <div key={entry.id} className="relative group text-left min-w-0 pr-5">
@@ -205,7 +205,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             {/* Tier 1: Timestamp & Direction Arrow */}
             {entry.timestampText && (
               <div className="flex items-center gap-1 leading-none mb-0.5">
-                <span className="text-[9px] font-medium text-stone-500 tracking-tight">
+                <span className="font-mono text-[9px] font-medium text-slate-500 tracking-tight">
                   {entry.timestampText}
                 </span>
                 <span
@@ -219,7 +219,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             )}
 
             {/* Tier 2: Narrative Content Text */}
-            <p className="text-[10.5px] leading-[1.3] text-stone-800 break-words whitespace-pre-line font-normal">
+            <p className="text-[10.5px] leading-[1.3] text-slate-800 break-words whitespace-pre-line font-normal">
               <EvidenceSnippet text={entry.content} fieldIconsEnabled={entry.fieldIconsEnabled} />
             </p>
 
@@ -233,7 +233,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
                   e.stopPropagation();
                   onDeleteItem(entry.id);
                 }}
-                className={`absolute right-0 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded text-stone-400 hover:text-rose-600 hover:bg-rose-100/80 transition-colors active:scale-90 cursor-pointer before:absolute before:-inset-1.5 ${
+                className={`absolute right-0 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded text-slate-400 hover:text-rose-600 hover:bg-rose-100/80 transition-colors active:scale-90 cursor-pointer before:absolute before:-inset-1.5 ${
                   isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto'
                 }`}
               >

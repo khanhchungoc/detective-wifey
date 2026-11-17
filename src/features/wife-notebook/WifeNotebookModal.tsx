@@ -1138,26 +1138,26 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       : caseConfig?.husbandName ? `Hồ sơ ${caseConfig.husbandName}` : 'Hồ sơ điều tra');
 
   return (
-    <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden bg-[#0E0A07] text-[#F5EFE6]">
-      {/* Dark Noir Top Header Bar */}
+    <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden bg-[#090C10] text-[#F1F5F9]">
+      {/* Forensic Darkroom Top Header Bar */}
       <header
-        className="relative z-40 flex items-center justify-between gap-1.5 bg-gradient-to-b from-[#0E0A07] via-[#120D09] to-[#19120D] px-2.5 pb-1.5 shrink-0"
+        className="relative z-40 flex items-center justify-between gap-1.5 border-b border-slate-800/90 bg-gradient-to-b from-[#090C10] via-[#0C1017] to-[#111722] px-2.5 pb-1.5 shrink-0"
         style={{ paddingTop: 'max(6px, var(--phone-system-top, 59px))' }}
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Đóng sổ tay của vợ"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#F5EFE6] hover:bg-white/10 active:scale-95 transition-transform cursor-pointer"
+          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-[6px] text-[#F1F5F9] hover:bg-slate-800/80 active:scale-95 transition-transform cursor-pointer"
         >
           <IoChevronBack className="h-4 w-4" />
         </button>
 
         <div className="min-w-0 flex-1 text-center flex flex-col items-center">
-          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#B8A186] leading-tight">
+          <span className="font-mono text-ios-caption-2 font-semibold uppercase tracking-[0.14em] text-[#94A3B8] leading-tight">
             SỔ TAY ĐIỀU TRA
           </span>
-          <h2 className="font-mono text-[12px] sm:text-[13.5px] font-bold uppercase tracking-[0.06em] text-[#F7F1E5] leading-tight truncate max-w-full">
+          <h2 className="font-mono text-ios-footnote font-bold uppercase tracking-[0.06em] text-[#F1F5F9] leading-tight truncate max-w-full">
             {resolvedCaseTitle}
           </h2>
         </div>
@@ -1167,14 +1167,14 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           onClick={handleCenterCluster}
           aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${edges.length} liên kết`}
           title="Định vị các manh mối trên bảng"
-          className="flex h-8 shrink-0 items-center rounded-full px-1.5 hover:bg-white/10 cursor-pointer active:scale-95 transition-transform"
+          className="flex min-h-[44px] shrink-0 items-center rounded-[6px] border border-slate-800 bg-[#161D26]/90 px-2 hover:bg-slate-800 cursor-pointer active:scale-95 transition-transform"
         >
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold tabular-nums">
-            <IoDocumentsOutline className="h-3.5 w-3.5 text-[#D8C3A5]" aria-hidden="true" />
-            <span className="text-[#F7F1E5]">{placedNodes.length}</span>
-            <span className="text-stone-500" aria-hidden="true">·</span>
-            <IoGitBranchOutline className="h-3.5 w-3.5 text-[#EF4444]" aria-hidden="true" />
-            <span className="text-[#F7F1E5]">{edges.length}</span>
+          <span className="flex items-center gap-1.5 font-mono text-ios-caption-2 font-semibold tabular-nums">
+            <IoDocumentsOutline className="h-3.5 w-3.5 text-[#FACC15]" aria-hidden="true" />
+            <span className="text-[#F1F5F9]">{placedNodes.length}</span>
+            <span className="text-slate-600" aria-hidden="true">·</span>
+            <IoGitBranchOutline className="h-3.5 w-3.5 text-[#E11D48]" aria-hidden="true" />
+            <span className="text-[#F1F5F9]">{edges.length}</span>
           </span>
         </button>
       </header>
@@ -1204,18 +1204,18 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             onCancelPairing={handleCancelPairing}
           />
 
-          {/* Floating Centered Dark Control Pill */}
+          {/* Floating Centered Forensic Tactical Control Dock */}
           <div
-            className="corkboard-control-dock absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-[#14100D]/[0.94] p-1 shadow-[0_10px_24px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md"
+            className="corkboard-control-dock absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-1 shadow-[0_12px_28px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md"
             style={{ bottom: 'max(14px, var(--phone-system-bottom, 18px))' }}
           >
             <button
               type="button"
               onClick={handleAutoArrange}
-              className="flex items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-[#E8DFD3] hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-[4px] px-3.5 py-2 text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer"
             >
-              <IoGridOutline className="h-3.5 w-3.5" />
-              <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.06em] text-[#A89A8A] leading-none">
+              <IoGridOutline className="h-3.5 w-3.5 text-[#94A3B8]" />
+              <span className="whitespace-nowrap font-mono text-ios-caption-2 font-semibold uppercase tracking-[0.06em] leading-none">
                 Xếp gọn
               </span>
             </button>
@@ -1223,10 +1223,10 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             <button
               type="button"
               onClick={handleOpenConfrontation}
-              className="flex items-center justify-center gap-1.5 rounded-full bg-[#B91C1C] hover:bg-[#DC2626] px-3.5 py-1.5 text-white shadow-[0_4px_12px_rgba(185,28,28,0.45)] active:scale-95 transition-all cursor-pointer"
+              className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-4 py-2 text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] active:scale-95 transition-all cursor-pointer"
             >
               <IoScaleOutline className="h-3.5 w-3.5" />
-              <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.06em] text-white leading-none">
+              <span className="whitespace-nowrap font-mono text-ios-caption-2 font-bold uppercase tracking-[0.06em] text-white leading-none">
                 Đối chất
               </span>
             </button>
@@ -1237,19 +1237,19 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             <div
               role="status"
               aria-live="polite"
-              className="fixed sm:absolute bottom-24 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[360px] z-50 flex items-center justify-between gap-3 rounded-2xl bg-[#16120F]/95 text-[#F7F1E5] px-4 py-3 shadow-2xl border border-white/15 backdrop-blur-md animate-fadeIn"
+              className="fixed sm:absolute bottom-24 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[360px] z-50 flex items-center justify-between gap-3 rounded-[6px] bg-[#0D1219]/96 text-[#F1F5F9] px-4 py-2.5 shadow-2xl border border-slate-700/85 backdrop-blur-md animate-fadeIn"
               onMouseEnter={pauseUndoTimer}
               onMouseLeave={resumeUndoTimer}
               onFocus={pauseUndoTimer}
               onBlur={resumeUndoTimer}
             >
-              <span className="text-xs font-medium text-stone-200 truncate">
+              <span className="text-ios-footnote font-medium text-slate-200 truncate">
                 {activeUndo.message}
               </span>
               <button
                 type="button"
                 onClick={handleExecuteUndo}
-                className="flex items-center gap-1 shrink-0 px-3 py-1.5 min-h-[44px] rounded-xl bg-[#DC2626] hover:bg-[#EF4444] active:scale-95 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+                className="flex items-center gap-1 shrink-0 px-3 py-1.5 min-h-[44px] rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] active:scale-95 text-white font-mono font-bold text-ios-caption-1 uppercase shadow-md transition-all cursor-pointer"
               >
                 <IoArrowUndoOutline className="text-sm" />
                 <span>Hoàn tác</span>

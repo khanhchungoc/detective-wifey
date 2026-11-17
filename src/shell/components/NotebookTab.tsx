@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
-import { IoEaselOutline } from 'react-icons/io5';
+import { IoScanOutline } from 'react-icons/io5';
 import { NOTEBOOK_SLIDE_EASING } from '../../shared/motion/anchoredOverlay';
 import {
   clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock,
@@ -186,27 +186,27 @@ export function NotebookTab({
       <span
         data-tab-surface
         aria-hidden="true"
-        className="pointer-events-none flex h-full w-full items-center justify-between gap-2.5 rounded-[24px] border border-white/15 bg-[#141210] px-3.5 shadow-[0_12px_28px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.12)] transition-transform duration-150 group-active:scale-95"
+        className="pointer-events-none flex h-full w-full items-center justify-between gap-2.5 rounded-[6px] border border-slate-700/80 border-l-[3px] border-l-[#E11D48] bg-[#0B1017]/95 px-3 shadow-[0_12px_28px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] transition-transform duration-150 group-active:scale-95"
       >
-        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center">
-          <IoEaselOutline className="h-[22px] w-[22px] text-[#F5EFE6]" />
+        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-[#161D26] border border-slate-700/70">
+          <IoScanOutline className="h-[20px] w-[20px] text-[#F1F5F9]" />
           <span
             data-evidence-badge
-            className={`absolute -right-1 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none tabular-nums ring-2 ring-[#151210] ${
-              evidenceCount > 0 ? 'bg-[#EF4444] text-white' : 'bg-stone-700 text-stone-200'
+            className={`absolute -right-1.5 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-[4px] px-1 text-ios-caption-2 leading-none tabular-nums ring-2 ring-[#0B1017] ${
+              evidenceCount > 0 ? 'bg-[#EF4444] text-white' : 'bg-slate-700 text-slate-200'
             }`}
           >
             {evidenceCount}
           </span>
         </span>
         <span className="flex min-w-0 flex-1 flex-col items-center justify-center">
-          <span className="text-[8.5px] font-semibold uppercase tracking-[0.14em] text-[#A89A8A] leading-none">
+          <span className="font-mono text-ios-caption-2 uppercase tracking-[0.12em] text-[#94A3B8] leading-none">
             VỤ ÁN
           </span>
-          <span className="mt-0.5 font-mono text-[17px] font-bold leading-none tracking-tight text-white tabular-nums">
+          <span className="mt-0.5 font-mono text-ios-headline font-bold leading-none tracking-tight text-[#F1F5F9] tabular-nums">
             {formattedCase}
           </span>
-          <span className="mt-1 h-[2.5px] w-4 rounded-full bg-[#EF4444]" />
+          <span className="mt-1 h-[2px] w-5 rounded-[1px] bg-[#FACC15]" />
         </span>
       </span>
     </button>

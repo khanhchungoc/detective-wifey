@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="720" viewBox="0 0 720 720">
+  <defs>
+    <!-- Authentic dusty chalkboard eraser texture (static rasterized SVG filter) -->
+    <filter id="chalk-dust" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.045" numOctaves="4" seed="7" result="noise"/>
+      <feColorMatrix type="matrix" values="
+        0 0 0 0 0.88
+        0 0 0 0 0.91
+        0 0 0 0 0.96
+        0 0 0 0.11 -0.025" in="noise" result="dust"/>
+    </filter>
+    <filter id="wipe-blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="fine-grain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" seed="13"/>
+      <feColorMatrix type="matrix" values="
+        0 0 0 0 0.9
+        0 0 0 0 0.93
+        0 0 0 0 0.98
+        0 0 0 0.045 0"/>
+    </filter>
+  </defs>
+
+  <!-- Layer 1: Realistic cloudy chalkboard eraser dust & fine slate grain -->
+  <rect width="720" height="720" filter="url(#chalk-dust)"/>
+  <rect width="720" height="720" filter="url(#fine-grain)"/>
+
+  <!-- Layer 2: Organic diagonal & vertical eraser wipe streaks (no hard ellipses) -->
+  <g stroke="#e2e8f0" fill="none" stroke-linecap="round" filter="url(#wipe-blur)">
+    <path d="M-20 140 Q 160 95, 310 175 T 620 120" stroke-width="38" opacity=".045"/>
+    <path d="M80 420 Q 240 360, 410 445 T 730 390" stroke-width="46" opacity=".04"/>
+    <path d="M190 -20 Q 150 220, 220 430 T 170 740" stroke-width="32" opacity=".035"/>
+    <path d="M510 30 Q 470 260, 545 480 T 490 730" stroke-width="40" opacity=".038"/>
+    <path d="M30 620 Q 280 565, 520 645" stroke-width="34" opacity=".04"/>
+  </g>
+
+  <!-- Subtle chalk scratches & board grid ticks -->
+  <g stroke="#cbd5e1" fill="none" stroke-linecap="round" opacity=".065">
+    <path d="M24 190 L690 184 M40 530 L700 524" stroke-width=".6" stroke-dasharray="6 14"/>
+    <path d="M180 20 L176 700 M540 16 L546 704" stroke-width=".55" stroke-dasharray="4 18"/>
+  </g>
+
+  <!-- Connecting frantic chalk arrows & dashed lines -->
+  <g stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".15">
+    <path d="M136 142 Q 210 198, 292 268" stroke-width="1.15" stroke-dasharray="6 4"/>
+    <path d="M284 268 L294 270 L290 260" stroke-width="1.15"/>
+    <path d="M562 152 Q 484 218, 404 272" stroke-width="1.15" stroke-dasharray="5 4"/>
+    <path d="M406 263 L402 273 L412 272" stroke-width="1.15"/>
+    <path d="M332 394 Q 252 468, 174 510" stroke-width="1.1"/>
+    <path d="M180 502 L172 511 L184 512" stroke-width="1.1"/>
+    <path d="M388 390 Q 478 456, 558 518" stroke-width="1.1" stroke-dasharray="5 5"/>
+    <path d="M549 518 L560 520 L556 509" stroke-width="1.1"/>
+    <path d="M112 318 Q 204 334, 286 332" stroke-width="1" stroke-dasharray="3 4"/>
+    <path d="M418 332 Q 512 324, 594 352" stroke-width="1" stroke-dasharray="3 4"/>
+  </g>
+
+  <!-- CENTER: Husband Chalk Sketch + Red Target Circle + "PHAN BOI / PHU BAC" -->
+  <g transform="translate(348, 330)">
+    <ellipse cx="0" cy="0" rx="52" ry="56" transform="rotate(-11)" stroke="#fda4af" stroke-width="1.6" stroke-dasharray="22 4 10 5" fill="none" opacity=".22"/>
+    <ellipse cx="2" cy="-2" rx="56" ry="60" transform="rotate(7)" stroke="#fda4af" stroke-width=".9" stroke-dasharray="8 8" fill="none" opacity=".15"/>
+    <g stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".2">
+      <path d="M-18 -16 C-19 -34, 19 -34, 18 -16 C19 4, 12 17, 0 18 C-12 17, -19 4, -18 -16 Z" stroke-width="1.5"/>
+      <path d="M-19 -18 Q -7 -32, 14 -25 Q 21 -20, 19 -12" stroke-width="1.4"/>
+      <rect x="-14" y="-14" width="11" height="8" rx="1.5" stroke-width="1.2"/>
+      <rect x="3" y="-14" width="11" height="8" rx="1.2" stroke-width="1.2"/>
+      <path d="M-3 -10 H3" stroke-width="1.1"/>
+      <path d="M-6 6 Q 1 10, 7 5" stroke-width="1.2"/>
+      <path d="M-28 40 Q -21 21, -8 19 L0 31 L8 19 Q 21 21, 28 40" stroke-width="1.4"/>
+      <path d="M0 31 V43" stroke-width="1.1"/>
+    </g>
+    <path d="M32 -38 L46 -24 M46 -38 L32 -24" stroke="#fda4af" stroke-width="1.8" stroke-linecap="round" opacity=".24"/>
+  </g>
+
+  <!-- Husband labels at tilted chaotic angles -->
+  <g font-family="monospace" font-weight="bold" letter-spacing="0.9">
+    <text x="258" y="268" fill="#fef08a" font-size="11" transform="rotate(-16 258 268)" opacity=".21">CHỒNG?</text>
+    <text x="236" y="408" fill="#fda4af" font-size="12" transform="rotate(-11 236 408)" opacity=".22">PHẢN BỘI!</text>
+    <path d="M235 412 Q 272 406, 310 400" stroke="#fda4af" stroke-width="1.2" fill="none" opacity=".2"/>
+    <text x="384" y="406" fill="#fda4af" font-size="11.5" transform="rotate(14 384 406)" opacity=".22">PHỤ BẠC</text>
+    <path d="M382 411 Q 416 418, 444 426" stroke="#fda4af" stroke-width="1.1" fill="none" opacity=".2"/>
+    <text x="414" y="284" fill="#e2e8f0" font-size="9.5" transform="rotate(18 414 284)" opacity=".18">NÓI DỐI!</text>
+  </g>
+
+  <!-- TOP-LEFT CLUSTER: Shopping, Receipt, Dress, Money Transfer -->
+  <g transform="translate(108, 108) rotate(-8)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".18">
+    <path d="M-15 -5 L-12 24 H14 L17 -5 Z" stroke-width="1.4"/>
+    <path d="M-7 -5 C-7 -16, 9 -16, 9 -5" stroke-width="1.4"/>
+    <path d="M-6 8 H8 M-6 14 H5" stroke-width="1"/>
+    <path d="M24 -12 H42 V18 L38 14 L34 18 L30 14 L24 18 Z" stroke-width="1.15"/>
+    <path d="M27 -5 H39 M27 2 H36 M27 9 H39" stroke-width=".9"/>
+  </g>
+  <g font-family="monospace" letter-spacing="0.6">
+    <text x="42" y="64" fill="#e2e8f0" font-size="9.5" transform="rotate(-14 42 64)" opacity=".17">MUA VÁY CHO AI?</text>
+    <text x="168" y="82" fill="#fef08a" font-size="8.5" transform="rotate(11 168 82)" opacity=".16">CHUYỂN KHOẢN BÍ MẬT</text>
+    <text x="38" y="168" fill="#e2e8f0" font-size="9" transform="rotate(7 38 168)" opacity=".16">HÓA ĐƠN LẠ...</text>
+    <text x="156" y="198" fill="#fda4af" font-size="8.5" transform="rotate(-19 156 198)" opacity=".17">TIỂU TAM LÀ AI?</text>
+  </g>
+
+  <!-- TOP-CENTER CLUSTER: Broken Heart & Curiosity -->
+  <g transform="translate(342, 96) rotate(9)" stroke="#fda4af" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".17">
+    <path d="M0 14 C-16 2, -22 -12, -10 -18 C-3 -21, 0 -13, 0 -13 C0 -13, 3 -21, 10 -18 C22 -12, 16 2, 0 14 Z" stroke-width="1.3"/>
+    <path d="M0 -13 L-4 -3 L3 3 L-2 12" stroke-width="1.2"/>
+  </g>
+  <g font-family="monospace" letter-spacing="0.6" opacity=".16">
+    <text x="278" y="54" fill="#e2e8f0" font-size="9" transform="rotate(-6 278 54)">LỜI KHAI MÂU THUẪN</text>
+    <text x="288" y="148" fill="#e2e8f0" font-size="8.5" transform="rotate(14 288 148)">BẮT QUẢ TANG!</text>
+  </g>
+
+  <!-- TOP-RIGHT CLUSTER: Messaging, Phone Lock, Late Calls -->
+  <g transform="translate(584, 118) rotate(12)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".18">
+    <path d="M-24 -15 H18 C22 -15, 24 -13, 24 -9 V9 C24 13, 22 15, 18 15 H-7 L-18 24 L-15 15 H-24 C-28 15, -30 13, -30 9 V-9 C-30 -13, -28 -15, -24 -15 Z" stroke-width="1.35"/>
+    <circle cx="-13" cy="0" r="1.6" fill="#e2e8f0"/>
+    <circle cx="-3" cy="0" r="1.6" fill="#e2e8f0"/>
+    <circle cx="7" cy="0" r="1.6" fill="#e2e8f0"/>
+    <path d="M35 -16 V3" stroke="#fda4af" stroke-width="1.8"/>
+    <circle cx="35" cy="9" r="1.4" fill="#fda4af" stroke="none"/>
+  </g>
+  <g font-family="monospace" letter-spacing="0.6">
+    <text x="486" y="64" fill="#e2e8f0" font-size="9.5" transform="rotate(-12 486 64)" opacity=".17">ÚP MÀN HÌNH ĐT?</text>
+    <text x="518" y="176" fill="#fef08a" font-size="8.5" transform="rotate(16 518 176)" opacity=".17">ĐỔI MẬT KHẨU...</text>
+    <text x="448" y="138" fill="#e2e8f0" font-size="8.5" transform="rotate(-24 448 138)" opacity=".15">XÓA LỊCH SỬ CHAT!</text>
+    <text x="562" y="226" fill="#fda4af" font-size="8.5" transform="rotate(-9 562 226)" opacity=".16">SỐ LẠ GỌI KHUYA</text>
+  </g>
+
+  <!-- MIDDLE-LEFT & MIDDLE-RIGHT: Extra chaotic notes -->
+  <g transform="translate(86, 304) rotate(-14)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".16">
+    <!-- Padlock -->
+    <rect x="-12" y="-4" width="24" height="19" rx="2.5" stroke-width="1.3"/>
+    <path d="M-7 -4 V-11 C-7 -17, 7 -17, 7 -11 V-4" stroke-width="1.3"/>
+    <circle cx="0" cy="5" r="2" fill="#e2e8f0"/>
+  </g>
+  <g font-family="monospace" letter-spacing="0.6">
+    <text x="26" y="256" fill="#e2e8f0" font-size="9" transform="rotate(-22 26 256)" opacity=".16">TẠI SAO LÉN LÚT?</text>
+    <text x="44" y="366" fill="#fef08a" font-size="9.5" transform="rotate(13 44 366)" opacity=".17">AI ĐÓ??</text>
+    <text x="138" y="346" fill="#e2e8f0" font-size="8" transform="rotate(-15 138 346)" opacity=".15">GIẤU GIẾM</text>
+    <text x="518" y="328" fill="#e2e8f0" font-size="9" transform="rotate(21 518 328)" opacity=".16">CHECK-IN Ở ĐÂU?</text>
+    <text x="546" y="388" fill="#fda4af" font-size="8.5" transform="rotate(-14 546 388)" opacity=".16">SON MÔI TRÊN ÁO?</text>
+  </g>
+
+  <!-- BOTTOM-LEFT CLUSTER: Magnifying Glass + Dining + Investigation -->
+  <g transform="translate(114, 524) rotate(-10)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".18">
+    <circle cx="-6" cy="-6" r="18" stroke-width="1.6"/>
+    <path d="M-14 -13 Q -7 -18, 0 -13" stroke-width="1.1"/>
+    <path d="M8 8 L24 24" stroke-width="2.6"/>
+  </g>
+  <g transform="translate(242, 566) rotate(8)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".17">
+    <circle cx="0" cy="0" r="15" stroke-width="1.3"/>
+    <circle cx="0" cy="0" r="9" stroke-width=".85" stroke-dasharray="3 2"/>
+    <path d="M-22 -13 V-2 M-19 -13 V-2 M-25 -13 V-2 M-22 -2 V15" stroke-width="1.1"/>
+    <path d="M21 -13 V15 M21 -13 C25 -9, 25 0, 21 2" stroke-width="1.2"/>
+  </g>
+  <g font-family="monospace" letter-spacing="0.6">
+    <text x="38" y="476" fill="#fef08a" font-size="9" transform="rotate(-17 38 476)" opacity=".17">SOI KỸ TỪNG CHỨNG CỨ</text>
+    <text x="48" y="618" fill="#e2e8f0" font-size="9.5" transform="rotate(10 48 618)" opacity=".17">ĐI ĂN TỐI VỚI AI?</text>
+    <text x="192" y="644" fill="#e2e8f0" font-size="8.5" transform="rotate(-12 192 644)" opacity=".16">QUÁN CƠM NIÊU?</text>
+    <text x="158" y="472" fill="#fda4af" font-size="8.5" transform="rotate(19 158 472)" opacity=".16">KHÔNG THỂ CHỐI!</text>
+  </g>
+
+  <!-- BOTTOM-CENTER & BOTTOM-RIGHT: Late Clock + Wine + Perfume + Late Night -->
+  <g transform="translate(566, 542) rotate(-11)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".18">
+    <circle cx="0" cy="0" r="18" stroke-width="1.4"/>
+    <path d="M0 -15 V-12 M15 0 H12 M0 15 V12 M-15 0 H-12" stroke-width="1"/>
+    <path d="M0 0 L-8 -7 M0 0 V11" stroke-width="1.5"/>
+  </g>
+  <g transform="translate(428, 594) rotate(14)" stroke="#e2e8f0" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".16">
+    <!-- Wine glass -->
+    <path d="M-9 -14 H9 L7 -2 C6 4, -6 4, -7 -2 Z" stroke-width="1.2"/>
+    <path d="M0 3 V15 M-6 15 H6" stroke-width="1.2"/>
+  </g>
+  <g font-family="monospace" letter-spacing="0.6">
+    <text x="462" y="476" fill="#fef08a" font-size="9.5" transform="rotate(14 462 476)" opacity=".18">HỌP TỚI 22H30??</text>
+    <text x="498" y="616" fill="#e2e8f0" font-size="9" transform="rotate(-9 498 616)" opacity=".17">MÙI NƯỚC HOA LẠ...</text>
+    <text x="526" y="662" fill="#fda4af" font-size="9.5" transform="rotate(8 526 662)" opacity=".18">SAO VỀ MUỘN?</text>
+    <text x="336" y="672" fill="#e2e8f0" font-size="8.5" transform="rotate(-16 336 672)" opacity=".16">TRỐN ĐI ĐÂU?</text>
+    <text x="338" y="518" fill="#fef08a" font-size="9" transform="rotate(-22 338 518)" opacity=".16">KHỚP GIỜ GIAO DỊCH!</text>
+  </g>
+
+  <!-- Scattered chalk ? ! X marks & dust -->
+  <g fill="#e2e8f0" font-family="monospace" font-weight="bold" opacity=".15">
+    <text x="218" y="136" font-size="14" transform="rotate(-18 218 136)">?</text>
+    <text x="436" y="94" font-size="13" transform="rotate(22 436 94)">?!</text>
+    <text x="652" y="294" font-size="12" transform="rotate(-14 652 294)">??</text>
+    <text x="294" y="592" font-size="13" transform="rotate(15 294 592)">?</text>
+    <text x="646" y="458" font-size="12" transform="rotate(-20 646 458)">!</text>
+  </g>
+
+  <g fill="#f1f5f9">
+    <circle cx="34" cy="28" r=".9" opacity=".15"/>
+    <circle cx="192" cy="38" r=".7" opacity=".12"/>
+    <circle cx="394" cy="24" r="1" opacity=".14"/>
+    <circle cx="668" cy="52" r=".8" opacity=".13"/>
+    <circle cx="48" cy="218" r=".85" opacity=".13"/>
+    <circle cx="674" cy="244" r=".9" opacity=".14"/>
+    <circle cx="28" cy="412" r=".75" opacity=".12"/>
+    <circle cx="684" cy="418" r=".85" opacity=".13"/>
+    <circle cx="136" cy="684" r=".9" opacity=".14"/>
+    <circle cx="412" cy="692" r="1" opacity=".15"/>
+    <circle cx="656" cy="682" r=".8" opacity=".13"/>
+  </g>
+</svg>

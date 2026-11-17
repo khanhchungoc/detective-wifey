@@ -8,6 +8,10 @@
         "--mcp"
       ],
       "alwaysLoad": true
+    },
+    "motion": {
+      "type": "http",
+      "url": "https://mcp.motion.dev"
     }
   }
 }

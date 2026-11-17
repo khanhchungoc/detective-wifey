@@ -1,27 +1,29 @@
 .wife-notebook {
   color-scheme: dark;
-  --notebook-bg: #0e0a07;
-  --notebook-canvas: #7c5835;
-  --notebook-paper: #f6f1e3;
-  --notebook-border: #d5c7ad;
+  --notebook-bg: #080b0f;
+  --notebook-canvas: #0f151d;
+  --notebook-paper: #f5f1e8;
+  --notebook-border: #c9bfae;
   position: relative;
 }
 
-/* Static SVG cork tile + warm overhead spotlight + dark edge vignette */
+/* Cold War chalkboard evidence board: overhead & side lamp highlight + chalk map texture + vignette */
 .notebook-cardboard {
   background-color: var(--notebook-canvas);
   background-image:
-    linear-gradient(to top, rgba(10, 7, 5, 0.88) 0%, rgba(10, 7, 5, 0.28) 14%, transparent 32%),
-    radial-gradient(ellipse 76% 62% at 50% 42%, rgba(196, 150, 96, 0.72) 0%, rgba(138, 98, 56, 0.42) 55%, rgba(44, 27, 14, 0.92) 100%),
-    url('./assets/cardboard-grain.svg');
-  background-size: 100% 100%, 100% 100%, 120px 120px;
+    linear-gradient(to top, rgba(5, 7, 10, 0.94) 0%, rgba(5, 7, 10, 0.42) 18%, transparent 42%),
+    radial-gradient(ellipse 88% 44% at 50% 0%, rgba(226, 236, 248, 0.08) 0%, rgba(148, 163, 184, 0.03) 46%, transparent 78%),
+    radial-gradient(ellipse 52% 40% at 14% 8%, rgba(226, 236, 248, 0.13) 0%, transparent 70%),
+    radial-gradient(ellipse 76% 62% at 50% 44%, rgba(148, 163, 184, 0.11) 0%, rgba(15, 23, 42, 0.42) 58%, rgba(5, 7, 10, 0.94) 100%),
+    url('./assets/chalkboard-map.svg');
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 680px 680px;
   box-shadow:
-    inset 0 12px 24px rgba(0, 0, 0, 0.62),
-    inset 10px 0 18px rgba(0, 0, 0, 0.48),
-    inset -10px 0 18px rgba(0, 0, 0, 0.48);
+    inset 0 18px 34px rgba(226, 236, 248, 0.08),
+    inset 12px 0 22px rgba(0, 0, 0, 0.65),
+    inset -12px 0 22px rgba(0, 0, 0, 0.65);
 }
 
-/* Crisp font rendering and subtle dot-grid paper pattern for pinned evidence cards */
+/* Crisp font rendering and cool-gray physical paper texture for pinned evidence cards */
 .corkboard-node-card {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,47 +33,76 @@
 
 .corkboard-paper-card {
   background-color: var(--notebook-paper);
-  background-image: radial-gradient(
-    circle,
-    rgba(145, 118, 86, 0.24) 1px,
-    transparent 1px
-  );
-  background-size: 16px 16px;
-  background-position: 8px 8px;
+  background-image:
+    /* Subtle paper fiber grain (inline SVG fractal noise) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
+    /* Horizontal & diagonal paper fold creases */
+    linear-gradient(178deg, transparent 47%, rgba(120, 96, 68, 0.07) 49%, rgba(255, 255, 255, 0.42) 50.5%, transparent 54%),
+    linear-gradient(104deg, transparent 36%, rgba(120, 96, 68, 0.05) 37.5%, rgba(255, 255, 255, 0.3) 38.5%, transparent 41%),
+    /* Soft aged tea-stain / hoen ố blotches, kept light for contrast with yellow sticky note */
+    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(176, 144, 104, 0.11) 0%, transparent 70%),
+    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(168, 136, 98, 0.09) 0%, transparent 68%),
+    radial-gradient(ellipse 46% 36% at 72% 72%, rgba(160, 128, 92, 0.06) 0%, transparent 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, transparent 45%);
+  background-size: 180px 180px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  box-shadow:
+    inset 0 0 14px rgba(138, 112, 82, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
-/* Warm corkboard tray for Polaroid suspect selection inside confirmation modal */
+/* Yellow sticky note title tab stuck onto top-left of evidence card */
+.corkboard-sticky-note {
+  background-color: #f6e271;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    linear-gradient(176deg, rgba(190, 150, 20, 0.08) 0%, rgba(255, 252, 220, 0.14) 38%, rgba(210, 170, 30, 0.1) 100%);
+  border: none;
+  box-shadow:
+    2px 4px 6px -2px rgba(0, 0, 0, 0.26),
+    0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Square white-bordered film photo frame for suspect/contact avatar */
+.corkboard-film-frame {
+  background-color: #fbfaf7;
+  border: none;
+  box-shadow:
+    1px 3px 5px -1px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.14);
+}
+
+/* Darkroom Cold War tray for Polaroid suspect selection inside confirmation modal */
 .suspect-cork-tray {
-  background-color: var(--notebook-canvas, #7c5835);
+  background-color: #0b1017;
   background-image:
-    radial-gradient(ellipse 86% 78% at 50% 44%, rgba(196, 150, 96, 0.76) 0%, rgba(138, 98, 56, 0.48) 58%, rgba(44, 27, 14, 0.88) 100%),
-    url('./assets/cardboard-grain.svg');
-  background-size: 100% 100%, 120px 120px;
+    radial-gradient(ellipse 88% 52% at 50% 0%, rgba(226, 236, 248, 0.18) 0%, rgba(148, 163, 184, 0.07) 48%, transparent 80%),
+    radial-gradient(ellipse 86% 78% at 50% 48%, rgba(148, 163, 184, 0.1) 0%, rgba(15, 23, 42, 0.55) 60%, rgba(5, 7, 10, 0.94) 100%),
+    url('./assets/chalkboard-map.svg');
+  background-size: 100% 100%, 100% 100%, 480px 480px;
   box-shadow:
-    inset 0 6px 16px rgba(0, 0, 0, 0.56),
-    inset 0 -4px 12px rgba(0, 0, 0, 0.36);
+    inset 0 6px 16px rgba(0, 0, 0, 0.7),
+    inset 0 -4px 12px rgba(0, 0, 0, 0.48);
 }
 
-/* Manila Case Dossier sheet for pre-confrontation confirmation (US-016) */
+/* Sealed darkroom casefile sheet for pre-confrontation confirmation (US-016) */
 .dossier-folder-sheet {
-  background-color: #f2ece0;
+  background-color: #141a22;
   background-image:
-    linear-gradient(180deg, rgba(255, 250, 240, 0.55) 0%, rgba(234, 224, 204, 0.45) 100%),
-    url('./assets/cardboard-grain.svg');
-  background-size: 100% 100%, 140px 140px;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(8, 11, 15, 0.4) 100%);
   box-shadow:
-    0 24px 56px rgba(0, 0, 0, 0.72),
-    0 6px 18px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 24px 56px rgba(0, 0, 0, 0.84),
+    0 6px 18px rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
+/* Cool-gray physical evidence slips inside the darkroom casefile */
 .dossier-paper-card {
-  background-color: #faf6ed;
+  background-color: #eaeff4;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0px,
     transparent 21px,
-    rgba(145, 118, 86, 0.1) 21px,
-    rgba(145, 118, 86, 0.1) 22px
+    rgba(71, 85, 105, 0.1) 21px,
+    rgba(71, 85, 105, 0.1) 22px
   );
 }
