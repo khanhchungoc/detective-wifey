@@ -576,11 +576,10 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
   const { placedNodes, activePairing, selectedEdgeId, onSelectCard, onSelectEdge, onSeverEdge, onCancelPairing } = contentsProps;
   const zoomRef = useRef(viewport.zoom);
   useLayoutEffect(() => { zoomRef.current = viewport.zoom; }, [viewport.zoom]);
-  const cameraStyle: React.CSSProperties = {
+  const panStyle: React.CSSProperties = {
     left: '50%',
     top: '50%',
-    transformOrigin: '0 0',
-    transform: `translate(${Math.round(-viewport.x * viewport.zoom)}px, ${Math.round(-viewport.y * viewport.zoom)}px) scale(${viewport.zoom})`,
+    transform: `translate(${Math.round(-viewport.x * viewport.zoom)}px, ${Math.round(-viewport.y * viewport.zoom)}px)`,
   };
   return (
     <div
@@ -639,15 +638,17 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
       )}
 
       {/* Zoomable & Pannable Virtual Plane */}
-      <div
-        className="absolute"
-        style={{
-          width: `${CANVAS_SIZE}px`,
-          height: `${CANVAS_SIZE}px`,
-          ...cameraStyle,
-        }}
-      >
-        <CorkboardContents {...contentsProps} zoomRef={zoomRef} />
+      <div className="absolute" style={panStyle}>
+        <div
+          className="relative"
+          style={{
+            width: `${CANVAS_SIZE}px`,
+            height: `${CANVAS_SIZE}px`,
+            zoom: viewport.zoom,
+          }}
+        >
+          <CorkboardContents {...contentsProps} zoomRef={zoomRef} />
+        </div>
       </div>
 
       {/* Selected Edge Action Popover */}
