@@ -35,6 +35,8 @@
 ## 2. Screen 1: Canvas Viewport & Node Canvas Layout
 
 > **Mobile Viewport Invariant**: To prevent gesture collision with OS back navigation (`useSwipeBack`), horizontal/vertical panning is constrained to single-finger drag on empty canvas. Two-finger pinch gestures zoom continuously between 0.5x and 2.0x centered around the touch midpoint, with `touch-action: none` applied to the canvas container. Double-tapping empty canvas toggles between 1.0x and 1.5x zoom.
+>
+> **Crisp Zoom Rendering Invariant**: Panning (`transform: translate(...)`) and zooming (CSS `zoom`) must remain decoupled on separate wrappers—never apply `transform: scale(...)` on the virtual plane containing rotated evidence cards, which causes 1x GPU bitmap upscaling and blurry card text when `zoom > 1`.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐

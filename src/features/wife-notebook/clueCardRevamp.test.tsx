@@ -643,5 +643,29 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         expect(newEdge!.explanationRoastHint).toBeUndefined();
       }
     });
+
+    it('renders crisp CSS zoom on the virtual plane instead of transform: scale() to prevent blurry cards', () => {
+      const html = renderToStaticMarkup(
+        <CorkboardCanvas
+          placedNodes={[placedNode]}
+          edges={[]}
+          viewport={{ x: 500, y: 600, zoom: 1.75 }}
+          activePairing={{ sourceNodeId: null }}
+          unmaskedSuspectIds={[]}
+          activeContradictions={[]}
+          selectedEdgeId={null}
+          onSelectNode={vi.fn()}
+          onMoveNode={vi.fn()}
+          onSelectEdge={vi.fn()}
+          onSeverEdge={vi.fn()}
+          onNavigateToSource={vi.fn()}
+          onCancelPairing={vi.fn()}
+        />,
+      );
+
+      expect(html).toContain('transform:translate(-875px, -1050px)');
+      expect(html).not.toContain('scale(1.75)');
+      expect(html).toContain('zoom:1.75');
+    });
   });
 });
