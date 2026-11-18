@@ -47,6 +47,7 @@ export default {
           'Roboto',
           'sans-serif',
         ],
+        handwriting: ['"Shantell Sans"', 'cursive', 'sans-serif'],
       },
     },
   },

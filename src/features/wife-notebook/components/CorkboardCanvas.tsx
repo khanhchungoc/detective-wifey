@@ -404,7 +404,7 @@ const CorkboardContents = memo(function CorkboardContents({
                         <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
                       )
                     )}
-                    <h4 className="text-[10px] font-bold leading-snug text-slate-900 tracking-tight line-clamp-2">
+                    <h4 className="font-handwriting text-[10px] font-bold leading-snug text-slate-900 tracking-tight line-clamp-2">
                       {isAlias && isUnmasked
                         ? `[BÓC TRẦN] ${node.label}`
                         : node.label}
