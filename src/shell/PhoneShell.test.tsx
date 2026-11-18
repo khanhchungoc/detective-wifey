@@ -156,7 +156,7 @@ describe('app surface and stationary system chrome', () => {
     expect(htmlClosed).not.toContain('filter:brightness');
     expect(htmlClosed).toContain('data-evidence-badge');
     expect(htmlClosed).toContain('>8<');
-    expect(htmlClosed).toContain('>02<');
+    expect(htmlClosed).toContain('Vụ án 02');
 
     // When open, the overlay trigger button hides and status bar stays rendered cleanly
     expect(htmlOpen).toContain('aria-hidden="true"');
