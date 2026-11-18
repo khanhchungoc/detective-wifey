@@ -54,7 +54,7 @@ export function NotebookTab({
       const statusHeight = (parent.querySelector('.phone-system-status')?.getBoundingClientRect().height ?? 0) / scaleY;
       const left = (parseFloat(style.paddingLeft) || 0) + OVERLAY_EDGE_INSET;
       const top = Math.max(59, statusHeight, parseFloat(style.paddingTop) || 0) + 8;
-      const right = Math.max(left, parent.clientWidth - NOTEBOOK_TAB_WIDTH - (parseFloat(style.paddingRight) || 0) - OVERLAY_EDGE_INSET);
+      const right = Math.max(left, parent.clientWidth - NOTEBOOK_TAB_WIDTH - (parseFloat(style.paddingRight) || 0));
       const bottom = Math.max(top, parent.clientHeight - NOTEBOOK_TAB_HEIGHT - Math.max(34, parseFloat(style.paddingBottom) || 0) - OVERLAY_BOTTOM_CLEARANCE);
       bounds.current = { left, right, top, bottom };
       element.style.transform = transform(floatingDockPosition('right', position.current.fraction, bounds.current));
@@ -112,7 +112,7 @@ export function NotebookTab({
       data-edge="right"
       data-floating="false"
       type="button"
-      aria-label={open ? 'Đóng bảng manh mối' : `Mở bảng manh mối (${evidenceCount} manh mối)`}
+      aria-label={open ? 'Đóng bảng manh mối' : `Mở bảng manh mối Vụ án ${formattedCase} (${evidenceCount} manh mối)`}
       aria-haspopup="dialog"
       aria-expanded={open}
       tabIndex={isDisabled ? -1 : 0}
@@ -141,7 +141,7 @@ export function NotebookTab({
         if (bounds.current.right === 0 && surfaceWidth > 0) {
           bounds.current = {
             left: OVERLAY_EDGE_INSET,
-            right: Math.max(OVERLAY_EDGE_INSET, surfaceWidth - NOTEBOOK_TAB_WIDTH - OVERLAY_EDGE_INSET),
+            right: Math.max(OVERLAY_EDGE_INSET, surfaceWidth - NOTEBOOK_TAB_WIDTH),
             top: 67,
             bottom: Math.max(67, surfaceHeight - NOTEBOOK_TAB_HEIGHT - OVERLAY_BOTTOM_CLEARANCE),
           };
@@ -186,27 +186,16 @@ export function NotebookTab({
       <span
         data-tab-surface
         aria-hidden="true"
-        className="pointer-events-none flex h-full w-full items-center justify-between gap-2.5 rounded-[6px] border border-slate-700/80 border-l-[3px] border-l-[#E11D48] bg-[#0B1017]/95 px-3 shadow-[0_12px_28px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] transition-transform duration-150 group-active:scale-95"
+        className="pointer-events-none relative flex h-full w-full items-center justify-center rounded-l-[12px] rounded-r-none border border-r-0 border-white/15 bg-[#0B1017]/95 shadow-[-4px_6px_20px_rgba(0,0,0,0.45)] transition-transform duration-150 group-active:scale-95"
       >
-        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-[#161D26] border border-slate-700/70">
-          <IoScanOutline className="h-[20px] w-[20px] text-[#F1F5F9]" />
-          <span
-            data-evidence-badge
-            className={`absolute -right-1.5 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-[4px] px-1 text-ios-caption-2 leading-none tabular-nums ring-2 ring-[#0B1017] ${
-              evidenceCount > 0 ? 'bg-[#EF4444] text-white' : 'bg-slate-700 text-slate-200'
-            }`}
-          >
-            {evidenceCount}
-          </span>
-        </span>
-        <span className="flex min-w-0 flex-1 flex-col items-center justify-center">
-          <span className="font-mono text-ios-caption-2 uppercase tracking-[0.12em] text-[#94A3B8] leading-none">
-            VỤ ÁN
-          </span>
-          <span className="mt-0.5 font-mono text-ios-headline font-bold leading-none tracking-tight text-[#F1F5F9] tabular-nums">
-            {formattedCase}
-          </span>
-          <span className="mt-1 h-[2px] w-5 rounded-[1px] bg-[#FACC15]" />
+        <IoScanOutline className="h-[22px] w-[22px] text-[#F1F5F9]" />
+        <span
+          data-evidence-badge
+          className={`absolute -left-1.5 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-ios-caption-2 font-semibold leading-none tabular-nums ring-2 ring-[#0B1017] ${
+            evidenceCount > 0 ? 'bg-[#EF4444] text-white' : 'bg-slate-700 text-slate-200'
+          }`}
+        >
+          {evidenceCount}
         </span>
       </span>
     </button>

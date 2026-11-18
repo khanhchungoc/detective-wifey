@@ -8,8 +8,8 @@ import {
 const bounds = { left: 12, right: 254, top: 67, bottom: 716 };
 describe('floating overlay button docking and physics', () => {
   it('uses pill overlay dimensions and detects inward detachment only past clearance', () => {
-    expect(NOTEBOOK_TAB_WIDTH).toBe(124);
-    expect(NOTEBOOK_TAB_HEIGHT).toBe(54);
+    expect(NOTEBOOK_TAB_WIDTH).toBe(46);
+    expect(NOTEBOOK_TAB_HEIGHT).toBe(52);
     expect(NOTEBOOK_FLOAT_SIZE).toBe(NOTEBOOK_TAB_HEIGHT);
     expect(isFloatingDetached({ x: bounds.right, y: 400 }, bounds)).toBe(false);
     expect(isFloatingDetached({ x: bounds.left, y: 500 }, bounds)).toBe(false);

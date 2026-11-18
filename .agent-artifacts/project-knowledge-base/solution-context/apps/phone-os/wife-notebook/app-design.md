@@ -24,7 +24,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 | **Slogan / Tagline** | *"Lưới trời lồng lộng - Tay vợ khó thoát"* |
 | **Real-World Parody** | Detective Case Dossier / Marital Journal |
 | **Visual Persona** | Cold War Darkroom Evidence Board (inspired by *COD: Black Ops Cold War*). Styled like a darkroom slate chalkboard under overhead fluorescent light with dusty eraser wipes, wife-detective chalk doodles, cool-gray physical paper evidence cards pinned with yellow masking tape and steel/crimson pins, and red/yellow yarn connections. |
-| **Architectural Role** | Omnipresent floating forensic case tag on the virtual phone shell container, inheriting Phone OS floating button tokens. Accessible from any screen via the floating tag (`NotebookTab`, `#0B1017` with `#E11D48` left stripe and `IoScanOutline`) or the AssistiveTouch menu (`../app-design.md`). |
+| **Architectural Role** | Omnipresent compact right-edge-docked forensic tab on the virtual phone shell container, inheriting Phone OS floating button tokens. Accessible from any screen via `NotebookTab` (`46×52px` flush to the right edge, `rounded-l-[12px] rounded-r-none`, `#0B1017` single-surface with subtle `border-white/15` hairline, `IoScanOutline`, and top-left circular evidence counter badge; case number exposed via `aria-label`) or the AssistiveTouch menu (`../app-design.md`). |
 
 ---
 
@@ -51,22 +51,22 @@ timestamp: "2026-10-14T13:00:00+07:00"
 └────────────────────────────────────────────────────────┘
 ```
 
-* **Canvas Material**: Deep darkroom chalkboard (`#0F151D`) with an overhead fluorescent lamp highlight bar and side lamp cone, framed by a dark vignette. The surface uses `chalkboard-map.png` (`720x720` pre-rasterized PNG) featuring chalk-eraser dust wipes and tilted wife-detective chalk doodles (husband sketch marked `"PHẢN BỘI!"` / `"PHỤ BẠC"`, shopping bags, dining plates, messaging bubbles, magnifying glass, late-night clock).
-* **Overhead Fluorescent Lamp Motion (`FluorescentLampHighlight` via `motion/react`)**:
-  * **Startup Ignition & Ambient Flicker**: On notebook open, the overhead fluorescent tube runs a brief ignition flicker (`0.85s`) followed by a periodic ambient double-flicker (`0.55s` every `2.2s`).
-  * **Synchronized Subtle Board Wash**: A `z-0` radial light wash (`h-[58%]`) behind the evidence cards dims and brightens in sync with the lamp tube, using a gentler `opacity` floor (`0.68` vs `0.38` on the tube) so card text stays legible and non-distracting.
+* **Canvas Material**: Deep darkroom chalkboard (`#0F151D`) with no independent static light sources—lit solely by the single overhead fluorescent lamp, framed by a natural dark edge/bottom vignette. The surface uses `chalkboard-map.png` (`720x720` pre-rasterized PNG) featuring chalk-eraser dust wipes and tilted wife-detective chalk doodles (husband sketch marked `"PHẢN BỘI!"` / `"PHỤ BẠC"`, shopping bags, dining plates, messaging bubbles, magnifying glass, late-night clock).
+* **Single Overhead Fluorescent Lamp Motion (`FluorescentLampHighlight` via `motion/react`)**:
+  * **Startup Ignition & Ambient Flicker**: On notebook open, the overhead fluorescent tube runs a brief ignition flicker (`0.85s`) followed by a subtle periodic ambient double-dip (`0.42s`, `[1, 0.45, 0.94, 0.62, 1]`) every `8.5s` (`repeatDelay: 8.5`) so the board remains steady ~95% of the time for comfortable reading.
+  * **Unified Full-Board Lighting & Dimming**: A `z-0` full-board radial light wash (`inset-0`) emanating from the overhead tube (`50% 0%`) animates 1:1 with the tube, while an inversely synced `z-[25]` full-board dimming veil (`roomDimmerEl`, inside an `isolate` canvas container so it never dims the bottom dock or `z-40` banners) darkens the entire board, yarn strings, and pinned evidence cards in lockstep whenever the lamp dips.
   * **Performance & Accessibility**: Animates `opacity` only (`will-change-[opacity]`, never `box-shadow`) and falls back to static lighting when `useReducedMotion()` (`prefers-reduced-motion`) is active.
 * **Physical Paper Cards**: Evidence cards on the board (`.corkboard-paper-card`, `#F5F1E8`, `#C9BFAE` border, `#0F172A` text) use a light crumpled, lightly stained aged-paper texture (subtle fold creases, soft tea-stain blotches, and paper fiber noise; no dot grid) so dark ink and yellow sticky notes maintain crisp contrast against the darkroom board. Each card's title is separated onto a borderless matte yellow sticky note tab (`.corkboard-sticky-note`, `#F6E271`, `-1.5deg` tilt, soft paper-lift shadow) overlapping the top-left corner and rendered in the self-hosted **Shantell Sans** handwriting font (`font-handwriting` / `.corkboard-sticky-note h4` via `@fontsource/shantell-sans`); when the card has a contact avatar, it sits inside an attached square white-bordered film photo frame (`.corkboard-film-frame`, `#FBFAF7`, `-3deg` tilt, `ContactAvatar` `shape="square"`) alongside the sticky note with its source app badge. Cards are pinned with yellow masking tape (`#D4B44C`) and steel/crimson marker pins at top center. Inside `UnorganizedDrawer`, unplaced slips retain compact `#E6EBF0` / `#B8C4D0` list styling.
 * **Confrontation Dossier**: Sealed darkroom casefile (`#141A22`) with a crimson left spine (`#E11D48`), cool-gray physical Polaroid frames (`#EEF2F6` / `#E6EBF0`), and cool-gray evidence ledger slips (`.dossier-paper-card`, `#EAEFF4`).
 
 * **Typography (Universal `text-ios-*` Tokens + Handwriting Accent)**:
-  * Notebook Header: `text-ios-footnote` / `font-mono` uppercase (`#F1F5F9` on darkroom header `#090C10` - `#111722`).
+  * Notebook Header: `text-ios-footnote` / `font-sans` uppercase (`#F1F5F9` on darkroom header `#090C10` - `#111722`).
   * Sticky Note Card Title: `font-handwriting` (`'Shantell Sans', cursive, sans-serif` self-hosted via `@fontsource/shantell-sans`, $10\text{px}$ Bold, `#0F172A`, Vietnamese-supported).
   * Suspect Polaroid / Dossier Title: `text-ios-callout` ($16\text{px}$ Semibold, `#0F172A`).
   * Node Snippet & Metadata: `text-ios-footnote` ($13\text{px}$ Regular, `#475569`, contrast $\ge 4.5:1$).
   * Confrontation CTA & Sixth Sense Trigger: `text-ios-headline` ($17\text{px}$ Semibold).
 * **Ergonomics & Touch Targets**:
-  * Omnipresent floating button $\ge 56 \times 56\text{px}$ with unplaced clue counter badge.
+  * Right-edge-docked floating tab (`NotebookTab`, $46 \times 52\text{px}$ flush to right edge, satisfying $\ge 44 \times 44\text{px}$ touch target) with circular unplaced clue counter badge (`-left-1.5 -top-1.5`).
   * All header buttons (`[Đóng]`, `[Giác quan thứ 6]`, `[Đối chất]`) and node `[Loc]` deep-link buttons enforce $\ge 44 \times 44\text{px}$ touch targets (`.touch-target-min`).
 
 ---
@@ -99,7 +99,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ### 3.2. Detective Corkboard Node Canvas & "Giác Quan Thứ 6" Hint Header (`WifeNotebookModal` - US-015, US-022, US-033)
 
-> **Layout**: Fullscreen overlay (`z-50`) featuring the darkroom header bar (`#090C10` - `#111722`) with `[Đóng]` and `[Định vị]` triggers, the 2D interactive red-string chalkboard (`CorkboardCanvas`), centered tactical bottom dock (`[Xếp gọn]`, `[Đối chất]`), and the slide-over unplaced clue drawer (`UnorganizedDrawer`).
+> **Layout**: Fullscreen overlay (`z-50`) featuring a full-bleed darkroom 2D interactive red-string chalkboard (`CorkboardCanvas`), a compact top-right floating stats overlay pill (`[IoDocumentsOutline <nodes> · IoGitBranchOutline <edges>]`, `36px` visual height / `44×44px` touch target, triggering `[Định vị]` cluster centering), a split bottom floating control bar (`36px` visual height / `44×44px` touch target: `[Đóng]` / Back icon on the left; icon-only `[Xếp gọn]` + primary `#E11D48` pill `[Đối chất]` on the right), and the slide-over unplaced clue drawer (`UnorganizedDrawer`).
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -145,7 +145,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ### 3.3. Pre-Confrontation Dossier (`ConfrontationConfirmModal`), Anytime Confrontation Hub & Shareable Roast Card (`ConfrontationModal` - US-016, US-017)
 
-> **Preflight Dossier (`ConfrontationConfirmModal`, `z-75`)**: Before launching confrontation, tapping `[Đối chất]` opens a two-step Darkroom Casefile Dossier modal styled consistently with the Cold War board (`#141A22` darkroom folder, `#E11D48` left spine, `FILE 01` tab, cool-gray `#EEF2F6` Polaroids & `#EAEFF4` evidence slips, red stamps, monospace labels):
+> **Preflight Dossier (`ConfrontationConfirmModal`, `z-75`)**: Before launching confrontation, tapping `[Đối chất]` opens a two-step Darkroom Casefile Dossier modal styled consistently with the Cold War board (`#141A22` darkroom folder, `#E11D48` left spine, `FILE 01` tab, cool-gray `#EEF2F6` Polaroids & `#EAEFF4` evidence slips, red stamps, `font-sans` uppercase labels):
 >   1. **Step 1 (Suspect Selection)**: Polaroid suspect cards on `.suspect-cork-tray` with 3D red pushpins and `"NGHI PHẠM"` / `"ĐÃ LỘT MẶT NẠ"` stamps.
 >   2. **Step 2 (Confrontation Confirmation)**: Tilted Polaroid face-off (Husband vs Suspect) linked by a red string, 5-segment conviction strength indicator (`Tỉ lệ thành công`), **Deductive Linkage Bridges** (`verifiedStringsList` pairing connected clues via relationship bridge badges instead of raw text lists), and a red embossed dossier stamp CTA (`MÀY DÁM LỪA BÀ!`).
 >

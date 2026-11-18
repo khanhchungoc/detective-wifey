@@ -43,7 +43,7 @@ timestamp: "2026-10-13T14:35:00+07:00"
 ```
 
 * **Typography (Universal `text-ios-*` Tokens)**:
-  * Address Bar URL: `text-ios-footnote` ($13\text{px}$ Regular, `font-mono`).
+  * Address Bar URL: `text-ios-footnote` ($13\text{px}$ Regular, `font-sans`).
   * Visited Page Title: `text-ios-subheadline` ($15\text{px}$ Semibold / $600$).
   * Search Query String: `text-ios-subheadline` ($15\text{px}$ Regular italic).
 * **Ergonomics & Touch Targets**:

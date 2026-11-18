@@ -357,7 +357,7 @@ export function deriveNodesFromTaggedEvidence(
 export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   isOpen,
   caseId,
-  caseTitle,
+  caseTitle: _caseTitle,
   caseConfig,
   getSourceApp,
   knowledgeGraph = LEVEL_01_KNOWLEDGE_GRAPH,
@@ -1131,55 +1131,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     unmaskedSuspectIds,
   ]);
 
-  const resolvedCaseTitle = caseTitle
-    || (caseConfig?.levelNumber === 1 ? 'Cơn ghen lúc nửa đêm'
-      : caseConfig?.levelNumber === 2 ? 'Tin nhắn người lạ'
-      : caseConfig?.levelNumber === 3 ? 'Quỹ đen bí ẩn'
-      : caseConfig?.husbandName ? `Hồ sơ ${caseConfig.husbandName}` : 'Hồ sơ điều tra');
-
   return (
     <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden bg-[#090C10] text-[#F1F5F9]">
-      {/* Forensic Darkroom Top Header Bar */}
-      <header
-        className="relative z-40 flex items-center justify-between gap-1.5 border-b border-slate-800/90 bg-gradient-to-b from-[#090C10] via-[#0C1017] to-[#111722] px-2.5 pb-1.5 shrink-0"
-        style={{ paddingTop: 'max(6px, var(--phone-system-top, 59px))' }}
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Đóng sổ tay của vợ"
-          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-[6px] text-[#F1F5F9] hover:bg-slate-800/80 active:scale-95 transition-transform cursor-pointer"
-        >
-          <IoChevronBack className="h-4 w-4" />
-        </button>
-
-        <div className="min-w-0 flex-1 text-center flex flex-col items-center">
-          <span className="font-mono text-ios-caption-2 font-semibold uppercase tracking-[0.14em] text-[#94A3B8] leading-tight">
-            SỔ TAY ĐIỀU TRA
-          </span>
-          <h2 className="font-mono text-ios-footnote font-bold uppercase tracking-[0.06em] text-[#F1F5F9] leading-tight truncate max-w-full">
-            {resolvedCaseTitle}
-          </h2>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleCenterCluster}
-          aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${edges.length} liên kết`}
-          title="Định vị các manh mối trên bảng"
-          className="flex min-h-[44px] shrink-0 items-center rounded-[6px] border border-slate-800 bg-[#161D26]/90 px-2 hover:bg-slate-800 cursor-pointer active:scale-95 transition-transform"
-        >
-          <span className="flex items-center gap-1.5 font-mono text-ios-caption-2 font-semibold tabular-nums">
-            <IoDocumentsOutline className="h-3.5 w-3.5 text-[#FACC15]" aria-hidden="true" />
-            <span className="text-[#F1F5F9]">{placedNodes.length}</span>
-            <span className="text-slate-600" aria-hidden="true">·</span>
-            <IoGitBranchOutline className="h-3.5 w-3.5 text-[#E11D48]" aria-hidden="true" />
-            <span className="text-[#F1F5F9]">{edges.length}</span>
-          </span>
-        </button>
-      </header>
-
-      {/* Corkboard Viewport */}
+      {/* Full-bleed Corkboard Viewport */}
       <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0" {...containerProps}>
           <CorkboardCanvas
             getSourceApp={getSourceApp}
@@ -1204,32 +1158,61 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             onCancelPairing={handleCancelPairing}
           />
 
-          {/* Floating Centered Forensic Tactical Control Dock */}
+          {/* Top-Right Floating Forensic Stats Overlay Pill */}
+          <button
+            type="button"
+            onClick={handleCenterCluster}
+            aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${edges.length} liên kết`}
+            title="Định vị các manh mối trên bảng"
+            style={{ top: 'calc(max(6px, var(--phone-system-top, 59px)) + 6px)' }}
+            className="corkboard-stats-overlay absolute right-3 z-20 flex h-9 items-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/90 px-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md hover:bg-slate-800/95 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+          >
+            <span className="flex items-center gap-1.5 font-sans text-ios-caption-2 font-semibold tabular-nums">
+              <IoDocumentsOutline className="h-3.5 w-3.5 text-[#FACC15]" aria-hidden="true" />
+              <span className="text-[#F1F5F9]">{placedNodes.length}</span>
+              <span className="text-slate-600" aria-hidden="true">·</span>
+              <IoGitBranchOutline className="h-3.5 w-3.5 text-[#E11D48]" aria-hidden="true" />
+              <span className="text-[#F1F5F9]">{edges.length}</span>
+            </span>
+          </button>
+
+          {/* Split Floating Bottom Bar: Back (Left) & Tactical Actions (Right) */}
           <div
-            className="corkboard-control-dock absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-1 shadow-[0_12px_28px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md"
+            className="corkboard-control-dock pointer-events-none absolute inset-x-3 z-20 flex items-center justify-between gap-2"
             style={{ bottom: 'max(14px, var(--phone-system-bottom, 18px))' }}
           >
             <button
               type="button"
-              onClick={handleAutoArrange}
-              className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-[4px] px-3.5 py-2 text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer"
+              onClick={onClose}
+              aria-label="Đóng sổ tay của vợ"
+              title="Quay lại màn hình chính"
+              className="pointer-events-auto relative flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md hover:bg-slate-800 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
             >
-              <IoGridOutline className="h-3.5 w-3.5 text-[#94A3B8]" />
-              <span className="whitespace-nowrap font-mono text-ios-caption-2 font-semibold uppercase tracking-[0.06em] leading-none">
-                Xếp gọn
-              </span>
+              <IoChevronBack className="h-4 w-4" aria-hidden="true" />
             </button>
 
-            <button
-              type="button"
-              onClick={handleOpenConfrontation}
-              className="flex min-h-[44px] items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-4 py-2 text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] active:scale-95 transition-all cursor-pointer"
-            >
-              <IoScaleOutline className="h-3.5 w-3.5" />
-              <span className="whitespace-nowrap font-mono text-ios-caption-2 font-bold uppercase tracking-[0.06em] text-white leading-none">
-                Đối chất
-              </span>
-            </button>
+            <div className="pointer-events-auto flex items-center gap-1 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-0.5 shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md">
+              <button
+                type="button"
+                onClick={handleAutoArrange}
+                aria-label="Xếp gọn"
+                title="Xếp gọn"
+                className="relative flex h-9 w-9 items-center justify-center rounded-[4px] text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+              >
+                <IoGridOutline className="h-3.5 w-3.5 text-[#94A3B8]" aria-hidden="true" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleOpenConfrontation}
+                className="relative flex h-9 items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-3 text-white shadow-[0_4px_12px_rgba(225,29,72,0.38)] active:scale-95 transition-all cursor-pointer after:absolute after:-inset-y-1 after:inset-x-0 after:content-['']"
+              >
+                <IoScaleOutline className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="whitespace-nowrap font-sans text-[11px] font-bold uppercase tracking-[0.05em] text-white leading-none">
+                  Đối chất
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* Undo Notification Banner */}
@@ -1249,7 +1232,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
               <button
                 type="button"
                 onClick={handleExecuteUndo}
-                className="flex items-center gap-1 shrink-0 px-3 py-1.5 min-h-[44px] rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] active:scale-95 text-white font-mono font-bold text-ios-caption-1 uppercase shadow-md transition-all cursor-pointer"
+                className="flex items-center gap-1 shrink-0 px-3 py-1.5 min-h-[44px] rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] active:scale-95 text-white font-sans font-bold text-ios-caption-1 uppercase shadow-md transition-all cursor-pointer"
               >
                 <IoArrowUndoOutline className="text-sm" />
                 <span>Hoàn tác</span>

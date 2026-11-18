@@ -82,7 +82,7 @@ Techcornbank inherits the universal Apple HIG `text-ios-*` dynamic scale ([desig
 | **Filter Pill Labels (`7 ngày trước`, etc.)** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | Active `#FFFFFF` / Inactive `#000000` | Capsule inside $\ge 44\text{px}$ `.touch-target-min` |
 | **Floating Help Tooltip (`Không tìm thấy giao dịch?`)** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | `#007AFF` | Centered 2-line layout ($\ge 44\text{px}$ height) |
 | **Dashboard Balance Label (`Số dư hiện có`)** | `text-ios-subheadline` ($15\text{px}$) | Regular ($400$) | `#374151` | Subtle muted label |
-| **Dashboard Masked Balance (`********`)** | `text-ios-title-1` ($28\text{px}$) | Bold ($700$) | `#111827` | `font-mono tabular-nums` asterisks |
+| **Dashboard Masked Balance (`********`)** | `text-ios-title-1` ($28\text{px}$) | Bold ($700$) | `#111827` | `font-sans tabular-nums` asterisks |
 | **Tier Upsell Title (`Lên hạng Inspire Max`)** | `text-ios-callout` ($16\text{px}$) | Semibold ($600$) | `#111827` | Card section headline |
 | **Tier Upsell Body Description** | `text-ios-footnote` ($13\text{px}$) | Regular ($400$) | `#4B5563` | Multi-line explanatory copy |
 | **Black CTA Button (`Xem số dư`)** | `text-ios-footnote` ($13\text{px}$) | Semibold ($600$) | `#FFFFFF` | Rounded capsule pill button ($\ge 44\text{px}$ hit area) |

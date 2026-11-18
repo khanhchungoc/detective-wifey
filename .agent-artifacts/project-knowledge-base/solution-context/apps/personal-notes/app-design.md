@@ -44,7 +44,7 @@ timestamp: "2026-10-13T14:35:00+07:00"
 * **Typography (Universal `text-ios-*` Tokens)**:
   * Note Header: `text-ios-title-3` ($20\text{px}$ Semibold / $600$, `#202124`).
   * Note Body & Snippets: `text-ios-subheadline` ($15\text{px}$ Regular / $400$, `#374151`).
-  * Ledger / Table Text: `text-ios-footnote` ($13\text{px}$ Regular, `font-mono tabular-nums`).
+  * Ledger / Table Text: `text-ios-footnote` ($13\text{px}$ Regular, `font-sans tabular-nums`).
   * Calendar Event Time & Timestamps: `text-ios-footnote` ($13\text{px}$ Semibold, `tabular-nums`, `#52525B`).
 * **Ergonomics & Touch Targets**:
   * Top switcher tabs (*Ghi chú, Lịch biểu*) $\ge 48\text{px}$ height (`.touch-target-min`).

@@ -72,7 +72,7 @@ export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
                     Bảo mật
                   </span>
                 </div>
-                <p className="text-ios-footnote text-[#374151] leading-relaxed font-mono whitespace-pre-wrap">
+                <p className="text-ios-footnote text-[#374151] leading-relaxed font-sans whitespace-pre-wrap">
                   {note.content}
                 </p>
               </div>

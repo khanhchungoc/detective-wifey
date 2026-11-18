@@ -23,7 +23,7 @@
 │ ══════════════════════════           ──────────────────────────        │
 ```
 
-- **Top Bar Surface**: Fuchsia Rose Header (`#D81B60`) with white text and status indicators.
+- **Top Bar Surface**: Darkroom Slate Header (`#090C10` - `#111722`) with `#F1F5F9` text and forensic status indicators.
 - **[Back] Button**: Closes the Notebook and returns to the active virtual app or OS home screen.
 - **[Radar: MiniMap]**: Compact floating radar indicator (44px × 44px) showing the player's current viewport relative to the overall 2D canvas boundary (1200px × 1200px virtual canvas).
 - **Segmented Tabs**:
@@ -214,7 +214,7 @@
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **`[Pill: QuayLaiSoTay]` Floating Quick-Return Banner**: Docked at the top of the viewport (`z-index: 9999`) immediately beneath the phone OS status bar. Features a high-contrast Fuchsia Rose background (`#D81B60`) with white text and return icon (`IoReturnUpBackOutline`). Tapping the pill immediately restores the Wife's Detective Notebook without losing canvas pan/zoom coordinates or unplaced drawer state.
+- **`[Pill: QuayLaiSoTay]` Floating Quick-Return Banner**: Docked at the top of the viewport (`z-index: 9999`) immediately beneath the phone OS status bar. Features a high-contrast Crimson Alert background (`#E11D48`) with white text and return icon (`IoReturnUpBackOutline`). Tapping the pill immediately restores the Wife's Detective Notebook without losing canvas pan/zoom coordinates or unplaced drawer state.
 - **Source Clue Auto-Scroll & Pulse Highlight**: The virtual app scrolls automatically to center the clue message/record, triggering a 1.5s glowing outline (`ring-2 ring-fuchsia-500 ring-offset-2 animate-pulse`) to orient the player.
 
 ---

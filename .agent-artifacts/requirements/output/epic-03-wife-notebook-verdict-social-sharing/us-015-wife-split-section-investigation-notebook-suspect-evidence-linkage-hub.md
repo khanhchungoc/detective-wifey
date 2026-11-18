@@ -105,7 +105,7 @@ export interface CaseKnowledgeGraph {
 ### Acceptance Criteria (Plain English)
 
 #### 1. Canvas Viewport & Navigation Gestures
-- 1.1. The Wife's Detective Notebook sheet mounts a dedicated "Bảng Điều Tra Nối Dây" corkboard canvas covering the full viewport below the top header.
+- 1.1. The Wife's Detective Notebook sheet mounts a dedicated "Bảng Điều Tra Nối Dây" corkboard canvas covering the full-bleed viewport, paired with a compact top-right floating stats overlay pill (`36px` visual / `44×44px` touch target) and a split bottom control bar (Back icon on the left; icon-only "Xếp gọn" + primary "Đối chất" pill on the right).
 - 1.2. Touching and dragging on the empty corkboard background smoothly pans the canvas viewport across a 1200px × 1200px virtual canvas bounds.
 - 1.3. Canvas dragging within the active board area prevents triggering the parent shell's `useSwipeBack` gesture handler.
 - 1.4. Two-finger pinch gestures continuously scale the corkboard canvas centered around the dynamic touch focal midpoint, supporting a clamped zoom range between 0.5x (broad board overview) and 2.0x (close-up clue inspection) with spring boundary resistance. Double-tapping empty canvas toggles between 1.0x (normal) and 1.5x (zoomed). The bottom dock provides step zoom buttons ([+] +25%, [-] -25%) and a [100%] reset button with current zoom percentage readout.

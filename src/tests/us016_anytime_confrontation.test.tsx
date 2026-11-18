@@ -512,7 +512,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
   });
 
   describe('WifeNotebookModal Dock Confrontation Button', () => {
-    it('AC 1: Renders Peaksy dark header, edge-to-edge corkboard, and centered bottom dock with "Đối chất"', () => {
+    it('AC 1: Renders full-bleed corkboard with floating stats overlay and split bottom dock (Back + Xếp gọn + Đối chất)', () => {
       const html = renderToStaticMarkup(
         <WifeNotebookModal
           caseTitle="Cơn ghen lúc nửa đêm"
@@ -524,8 +524,8 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         />,
       );
 
-      expect(html).toContain('SỔ TAY ĐIỀU TRA');
-      expect(html).toContain('Cơn ghen lúc nửa đêm');
+      expect(html).not.toContain('<header');
+      expect(html).toContain('corkboard-stats-overlay');
       expect(html).toContain('Đóng sổ tay của vợ');
       expect(html).not.toContain('notebook-wood-frame');
       expect(html).toContain('Xếp gọn');

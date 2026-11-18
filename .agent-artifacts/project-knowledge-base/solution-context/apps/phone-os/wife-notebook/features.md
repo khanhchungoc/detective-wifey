@@ -21,8 +21,8 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ## 2. In-App Features & User Interactions
 
-### 2.1. Omnipresent Floating Button (FAB)
-* Prominent spiral-notebook icon with a dynamic badge displaying total items logged (suspects + unlinked evidence count). Tapping opens the slide-up dossier sheet.
+### 2.1. Right-Edge-Docked Investigation Tab (`NotebookTab`)
+* Compact `46×52px` single-surface tab docked flush to the right edge of the phone shell (vertically draggable along the right edge), featuring the `IoScanOutline` board icon and a dynamic circular top-left counter badge displaying pinned evidence count (case number exposed via `aria-label`). Tapping opens the detective corkboard overlay.
 
 ### 2.2. Zero-Spoiler Universal Long-Press Pinning & Pinned Marker Sync
 * **No UI Visual Cues Before Pinning**: Parody apps contain zero spoiler giveaways on unpinned items (no glowing borders, no clue icons, no warning boxes, no static "+ Ghim" buttons).

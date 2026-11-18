@@ -205,7 +205,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             {/* Tier 1: Timestamp & Direction Arrow */}
             {entry.timestampText && (
               <div className="flex items-center gap-1 leading-none mb-0.5">
-                <span className="font-mono text-[9px] font-medium text-slate-500 tracking-tight">
+                <span className="font-sans text-[9px] font-medium text-slate-500 tracking-tight">
                   {entry.timestampText}
                 </span>
                 <span

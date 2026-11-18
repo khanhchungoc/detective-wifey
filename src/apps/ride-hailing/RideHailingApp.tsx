@@ -80,7 +80,7 @@ export const RideHailingApp: React.FC<VirtualAppProps> = ({
               >
                 <div className="flex justify-between items-center text-ios-caption-1">
                   <span className="font-bold text-[#1F2937]">{trip.driver}</span>
-                  <span className="font-mono font-bold text-[#00B14F]">{trip.cost}</span>
+                  <span className="font-sans font-bold text-[#00B14F]">{trip.cost}</span>
                 </div>
                 <div className="space-y-1 text-ios-footnote text-slate-600">
                   <div className="flex items-center gap-2">

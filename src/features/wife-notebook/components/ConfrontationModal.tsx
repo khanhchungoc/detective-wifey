@@ -152,7 +152,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
               {/* Suspicion Meter */}
               <div className="flex items-center justify-between text-xs text-slate-300 pt-1">
                 <span>Thước đo nghi ngờ:</span>
-                <span className="font-mono font-bold text-amber-400">
+                <span className="font-sans font-bold text-amber-400">
                   {usedStrikes}/{maxStrikes}
                 </span>
               </div>

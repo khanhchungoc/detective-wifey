@@ -45,7 +45,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
 
       {/* Mock Address Bar */}
       <div className="px-3 py-2 bg-white border-b border-slate-200">
-        <div className="flex items-center gap-2 px-3 h-9 bg-slate-100 rounded-lg text-ios-footnote text-slate-500 font-mono">
+        <div className="flex items-center gap-2 px-3 h-9 bg-slate-100 rounded-lg text-ios-footnote text-slate-500 font-sans">
           <IoSearchOutline className="w-3.5 h-3.5 text-[#6B7280]" />
           <span className="truncate">{BRAND.brandName.toLowerCase()}://history/today</span>
         </div>
@@ -83,7 +83,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
                   </div>
                   <span className="text-ios-caption-2 text-[#64748B]">Nhấn giữ</span>
                 </div>
-                <p className="text-ios-caption-1 text-[#64748B] font-mono truncate">{item.url}</p>
+                <p className="text-ios-caption-1 text-[#64748B] font-sans truncate">{item.url}</p>
                 <span className="text-ios-caption-2 text-[#64748B] block">{item.time}</span>
               </div>
             </StoryEvidenceTarget>

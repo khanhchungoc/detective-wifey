@@ -374,7 +374,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                                 <div className="text-ios-footnote font-bold text-[#0F172A]">
                                   Căn Hộ Mini 402 - Chùa Láng
                                 </div>
-                                <div className="text-ios-subheadline font-extrabold text-rose-600 font-mono">
+                                <div className="text-ios-subheadline font-extrabold text-rose-600 font-sans">
                                   5.000.000 VNĐ
                                 </div>
                                 <div className="text-ios-caption-2 text-slate-500">

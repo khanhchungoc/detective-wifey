@@ -164,7 +164,7 @@ export const SharedPinLockpad: React.FC<SharedPinLockpadProps> = ({
       <div className="text-center py-1 tall:py-2 text-ios-caption-2 tall:text-ios-caption-1 shrink-0">
         <div className="text-red-300 font-semibold inline-flex items-center gap-1.5">
           <span>Lượt thử còn lại:</span>
-          <span className="font-mono bg-red-500/20 px-2 py-0.5 rounded border border-red-500/30">
+          <span className="font-sans bg-red-500/20 px-2 py-0.5 rounded border border-red-500/30">
             {currentStrikes} / {maxStrikes}
           </span>
         </div>

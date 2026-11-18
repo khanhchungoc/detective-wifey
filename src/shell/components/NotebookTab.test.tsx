@@ -21,7 +21,7 @@ describe('evidence board overlay trigger button', () => {
     const onOpen = vi.fn();
     const tab = NotebookTab({ open: false, onOpen, ...overrides }) as ReactElement<ComponentProps<'button'>>;
     const host = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 390, height: 844 }), offsetWidth: 390, offsetHeight: 844, clientLeft: 0, clientTop: 0 };
-    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 254, top: 700 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
+    const button = { offsetParent: host, getBoundingClientRect: () => ({ left: 344, top: 700 }), querySelector: () => null, setPointerCapture: vi.fn(), style: {}, dataset: {} };
     const event = (x: number, y: number, type = 'pointerup', timeStamp?: number) => ({
       currentTarget: button, clientX: x, clientY: y, pointerId: 1, button: 0, isPrimary: true,
       timeStamp: timeStamp ?? (type === 'pointerdown' ? 0 : 50), type, detail: 1, stopPropagation: vi.fn(),
@@ -52,7 +52,7 @@ describe('evidence board overlay trigger button', () => {
     tab.release(300, 620);
     expect(tab.onOpen).not.toHaveBeenCalled();
     expect(tab.button.dataset).toMatchObject({ edge: 'right', floating: 'false' });
-    expect((tab.button.style as { transform?: string }).transform).toMatch(/^translate3d\(254px, /);
+    expect((tab.button.style as { transform?: string }).transform).toMatch(/^translate3d\(344px, /);
   });
 
   it('suppresses cancelled gestures and permits a fresh tap afterward', () => {
@@ -75,12 +75,12 @@ describe('evidence board overlay trigger button', () => {
     }
   });
 
-  it('renders Peaksy overlay badge count and zero-padded case number', () => {
+  it('renders compact edge-docked icon tab with badge count and accessible case label', () => {
     const html = renderToStaticMarkup(<NotebookTab open={false} evidenceCount={8} caseNumber={1} onOpen={vi.fn()} />);
     expect(html).toContain('data-evidence-badge');
     expect(html).toContain('>8<');
-    expect(html).toContain('VỤ ÁN');
-    expect(html).toContain('>01<');
+    expect(html).toContain('Vụ án 01');
+    expect(html).toContain('rounded-r-none');
     expect(html).toContain('bg-[#EF4444]');
   });
 });

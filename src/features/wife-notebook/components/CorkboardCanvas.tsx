@@ -44,13 +44,17 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
   );
 
   const boardWashEl = (
-    <div className="h-full w-full bg-[radial-gradient(ellipse_92%_58%_at_50%_0%,rgba(226,236,248,0.2)_0%,rgba(148,163,184,0.09)_46%,transparent_82%)]" />
+    <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_0%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
+  );
+
+  const roomDimmerEl = (
+    <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
   );
 
   if (prefersReducedMotion) {
     return (
       <>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[58%]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
           {boardWashEl}
         </div>
         <div
@@ -67,28 +71,43 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
     phase === 'ignition'
       ? { duration: 0.85, times: [0, 0.18, 0.34, 0.55, 0.72, 1], ease: 'linear' as const }
       : {
-          duration: 0.55,
-          times: [0, 0.14, 0.3, 0.46, 0.62, 0.8, 1],
+          duration: 0.42,
+          times: [0, 0.22, 0.48, 0.72, 1],
           ease: 'linear' as const,
           repeat: Infinity,
-          repeatDelay: 2.2,
+          repeatDelay: 8.5,
         };
 
   return (
     <>
-      {/* Subtle board-surface light wash behind cards, synced with lamp flicker */}
+      {/* Single overhead light wash across the entire board, synced 1:1 with lamp flicker */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[58%] will-change-[opacity]"
-        initial={phase === 'ignition' ? { opacity: 0.35 } : false}
+        className="pointer-events-none absolute inset-0 z-0 will-change-[opacity]"
+        initial={phase === 'ignition' ? { opacity: 0.12 } : false}
         animate={
           phase === 'ignition'
-            ? { opacity: [0.35, 0.96, 0.45, 1, 0.72, 1] }
-            : { opacity: [1, 0.68, 0.97, 0.74, 0.96, 0.82, 1] }
+            ? { opacity: [0.12, 0.95, 0.22, 1, 0.55, 1] }
+            : { opacity: [1, 0.45, 0.94, 0.62, 1] }
         }
         transition={sharedTransition}
       >
         {boardWashEl}
+      </motion.div>
+
+      {/* Global board & card dimming veil inversely synced to the single overhead lamp */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[25] will-change-[opacity]"
+        initial={phase === 'ignition' ? { opacity: 0.65 } : false}
+        animate={
+          phase === 'ignition'
+            ? { opacity: [0.65, 0.04, 0.58, 0, 0.34, 0] }
+            : { opacity: [0, 0.42, 0.05, 0.28, 0] }
+        }
+        transition={sharedTransition}
+      >
+        {roomDimmerEl}
       </motion.div>
 
       {/* Overhead fluorescent tube */}
@@ -99,7 +118,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
         animate={
           phase === 'ignition'
             ? { opacity: [0.12, 0.95, 0.22, 1, 0.55, 1] }
-            : { opacity: [1, 0.38, 0.95, 0.48, 0.92, 0.65, 1] }
+            : { opacity: [1, 0.45, 0.94, 0.62, 1] }
         }
         transition={sharedTransition}
         onAnimationComplete={() => {
@@ -463,12 +482,12 @@ const CorkboardContents = memo(function CorkboardContents({
 
               {/* Special Status Stamped Tags */}
               {isAlias && isUnmasked && (
-                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-rose-100 border border-rose-300 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-rose-800">
+                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-rose-100 border border-rose-300 px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-rose-800">
                   <span>Khớp danh tính</span>
                 </div>
               )}
               {hasContradiction && (
-                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-yellow-100 border border-yellow-400 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-yellow-900">
+                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-yellow-100 border border-yellow-400 px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-yellow-900">
                   <IoFlashOutline className="text-[10px] shrink-0 text-amber-700" />
                   <span>Mâu thuẫn</span>
                 </div>
@@ -565,7 +584,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
   };
   return (
     <div
-      className="notebook-cardboard relative w-full h-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
+      className="notebook-cardboard isolate relative w-full h-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
       onClick={() => {
         onSelectCard?.(null);
         onSelectEdge?.(null);
@@ -590,7 +609,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
             <div className="mx-auto mb-2.5 flex h-11 w-11 items-center justify-center rounded-[4px] border border-[#B8C4D0] bg-[#D5DDE5] text-[#DC2626] text-xl">
               <IoBookOutline />
             </div>
-            <h3 className="font-mono text-ios-caption-1 font-extrabold text-slate-900 uppercase tracking-wider">
+            <h3 className="font-sans text-ios-caption-1 font-extrabold text-slate-900 uppercase tracking-wider">
               CHƯA CÓ MANH MỐI NÀO
             </h3>
             <p className="mt-1.5 text-ios-caption-1 text-slate-700 leading-relaxed">
@@ -607,7 +626,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
         <div className="absolute top-3 left-3 right-3 z-40 flex items-center justify-between rounded-[6px] bg-[#0D1219]/95 border border-[#E11D48]/55 p-2.5 px-3.5 text-ios-caption-1 font-semibold text-[#F1F5F9] shadow-2xl backdrop-blur-md">
           <span className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#E11D48] animate-pulse shrink-0" />
-            <span className="font-mono uppercase tracking-wide">ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
+            <span className="font-sans uppercase tracking-wide">ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
           </span>
           <button
             type="button"
@@ -634,11 +653,11 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (
         <div className="corkboard-control-dock absolute bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-[6px] bg-[#0D1219]/96 border border-slate-700/85 p-1.5 pl-3.5 shadow-2xl backdrop-blur-md">
-          <span className="font-mono text-ios-caption-1 font-medium text-[#F1F5F9] whitespace-nowrap">Đã chọn sợi dây</span>
+          <span className="font-sans text-ios-caption-1 font-medium text-[#F1F5F9] whitespace-nowrap">Đã chọn sợi dây</span>
           <button
             type="button"
             onClick={() => onSeverEdge(selectedEdgeId)}
-            className="flex min-h-[36px] items-center gap-1 rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] px-3 py-1.5 font-mono text-ios-caption-2 font-bold uppercase text-white shadow active:scale-95 cursor-pointer"
+            className="flex min-h-[36px] items-center gap-1 rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] px-3 py-1.5 font-sans text-ios-caption-2 font-bold uppercase text-white shadow active:scale-95 cursor-pointer"
           >
             <IoCutOutline className="text-sm" /> Cắt dây
           </button>

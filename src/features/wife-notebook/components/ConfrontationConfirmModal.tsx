@@ -81,7 +81,7 @@ const SuspectPolaroidCard: React.FC<SuspectPolaroidCardProps> = ({
             }`}
           >
             <span
-              className={`block font-mono font-extrabold uppercase leading-none text-[#DC2626] ${
+              className={`block font-sans font-extrabold uppercase leading-none text-[#DC2626] ${
                 isSingle
                   ? 'text-[10px] sm:text-[11px] tracking-[0.12em]'
                   : 'text-[8.5px] sm:text-[10px] tracking-[0.1em]'
@@ -95,7 +95,7 @@ const SuspectPolaroidCard: React.FC<SuspectPolaroidCardProps> = ({
         {/* Polaroid bottom caption chin */}
         <div className={`flex flex-col items-center justify-center px-1 text-center ${isSingle ? 'min-h-[52px] py-2.5' : 'min-h-[44px] sm:min-h-[48px] py-2'}`}>
           <span
-            className={`text-center font-mono font-bold leading-tight tracking-tight text-slate-900 line-clamp-2 break-words ${
+            className={`text-center font-sans font-bold leading-tight tracking-tight text-slate-900 line-clamp-2 break-words ${
               isSingle ? 'text-sm sm:text-[15px]' : 'text-xs sm:text-[13px]'
             }`}
           >
@@ -233,7 +233,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
       >
         {/* Sealed Casefile Top File Tab */}
         <div className="pointer-events-none absolute top-0 left-3 z-10 flex items-center rounded-t-[4px] border border-b-0 border-[#2A3544] bg-[#141A22] px-2.5 py-0.5 shadow-sm">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#FACC15]">
+          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#FACC15]">
             FILE 01
           </span>
         </div>
@@ -252,7 +252,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               </button>
             )}
             <div className="min-w-0 flex-1">
-              <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#FB7185] truncate">
+              <span className="block font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#FB7185] truncate">
                 {isStep1 ? 'HỒ SƠ NGHI PHẠM' : 'HỒ SƠ ĐỐI CHẤT'}
               </span>
               <h3
@@ -265,7 +265,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
             {!isStep1 && (
               <span
                 aria-hidden="true"
-                className="rounded-[2px] bg-[#E11D48] px-1.5 py-0.5 font-mono text-[10px] font-extrabold tracking-widest text-white shadow-sm"
+                className="rounded-[2px] bg-[#E11D48] px-1.5 py-0.5 font-sans text-[10px] font-extrabold tracking-widest text-white shadow-sm"
               >
                 #01
               </span>
@@ -297,13 +297,13 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               </div>
             ) : (
               <div className="py-6 text-center space-y-4">
-                <p className="font-mono text-sm text-slate-400">
+                <p className="font-sans text-sm text-slate-400">
                   Chưa có nghi phạm. Hãy ghim một người lên bảng điều tra trước.
                 </p>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="py-1.5 px-3 font-mono text-xs font-bold uppercase tracking-wider text-[#FB7185] underline underline-offset-4"
+                  className="py-1.5 px-3 font-sans text-xs font-bold uppercase tracking-wider text-[#FB7185] underline underline-offset-4"
                 >
                   Điều tra thêm
                 </button>
@@ -340,7 +340,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                       backgroundPosition: '60% 31%',
                     }}
                   />
-                  <figcaption className="flex min-h-[28px] items-center justify-center px-1 py-1 text-center font-mono text-xs font-bold text-slate-900">
+                  <figcaption className="flex min-h-[28px] items-center justify-center px-1 py-1 text-center font-sans text-xs font-bold text-slate-900">
                     {husbandName}
                   </figcaption>
                 </figure>
@@ -363,7 +363,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                     </div>
                   </div>
                   <figcaption className="flex min-h-[28px] items-center justify-center px-1 py-1 text-center">
-                    <span className="font-mono text-xs font-bold leading-tight text-slate-900 line-clamp-2 break-words">
+                    <span className="font-sans text-xs font-bold leading-tight text-slate-900 line-clamp-2 break-words">
                       {selectedSuspectDisplayName}
                     </span>
                   </figcaption>
@@ -374,7 +374,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               <div className="flex flex-col items-center gap-1 border-y border-dashed border-slate-700 py-1.5 shrink-0">
                 <span
                   id="confrontation-success-label"
-                  className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400"
+                  className="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400"
                 >
                   Tỉ lệ thành công
                 </span>
@@ -405,7 +405,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
 
               {/* Evidence Linkage Summary (scrolls naturally with the dossier) */}
               <section className="shrink-0 space-y-2">
-                <h4 className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
                   Bằng chứng liên kết
                 </h4>
 
@@ -426,7 +426,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                         <div className="my-1 flex items-center gap-1.5 pl-2">
                           <span className="h-3 w-[2px] bg-[#DC2626]/80" aria-hidden="true" />
                           <span
-                            className={`inline-flex items-center gap-1 rounded-[2px] border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${
+                            className={`inline-flex items-center gap-1 rounded-[2px] border px-1.5 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider ${
                               bridge.isSmokingGun
                                 ? 'border-rose-300 bg-rose-100 text-rose-800'
                                 : 'border-[#B8C4D0] bg-[#D5DDE5] text-slate-700'
@@ -466,7 +466,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                     ))}
                   </ul>
                 ) : (
-                  <p className="rounded-[4px] border border-dashed border-slate-700 bg-[#0E131B]/70 py-2.5 text-center font-mono text-xs text-slate-400">
+                  <p className="rounded-[4px] border border-dashed border-slate-700 bg-[#0E131B]/70 py-2.5 text-center font-sans text-xs text-slate-400">
                     Chưa có mắt xích chứng cứ nào được xác thực.
                   </p>
                 )}
@@ -475,7 +475,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               {preflight.successRate < 100 && (
                 <p
                   role="alert"
-                  className="flex items-center justify-center gap-2 rounded-[4px] border border-dashed border-[#E11D48]/55 bg-[#E11D48]/12 px-2.5 py-1.5 font-mono text-[11px] font-semibold text-[#FDA4AF] shrink-0"
+                  className="flex items-center justify-center gap-2 rounded-[4px] border border-dashed border-[#E11D48]/55 bg-[#E11D48]/12 px-2.5 py-1.5 font-sans text-[11px] font-semibold text-[#FDA4AF] shrink-0"
                 >
                   <IoWarningOutline aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[#FB7185]" />
                   Đối chất thất bại: mất 1 lượt nghi ngờ.
@@ -486,20 +486,20 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                 <button
                   type="button"
                   onClick={handleConfirm}
-                  className="flex h-10 items-center justify-between gap-2.5 rounded-[4px] border border-[#FB7185]/40 bg-[#E11D48] px-3.5 text-xs font-mono font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] transition-transform hover:bg-[#BE123C] active:scale-[0.98]"
+                  className="flex h-10 items-center justify-between gap-2.5 rounded-[4px] border border-[#FB7185]/40 bg-[#E11D48] px-3.5 text-xs font-sans font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] transition-transform hover:bg-[#BE123C] active:scale-[0.98]"
                 >
                   <span className="flex items-center gap-2">
                     <IoChatbubbleEllipsesOutline className="h-4 w-4 shrink-0" />
                     <span>{confrontLabel.toLocaleUpperCase('vi')}!</span>
                   </span>
-                  <span className="rounded-[2px] bg-[#090C10] px-1.5 py-0.5 font-mono text-[11px] font-extrabold text-[#FDA4AF] shadow-sm">
+                  <span className="rounded-[2px] bg-[#090C10] px-1.5 py-0.5 font-sans text-[11px] font-extrabold text-[#FDA4AF] shadow-sm">
                     #01
                   </span>
                 </button>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 underline underline-offset-4"
+                  className="py-1 font-sans text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 underline underline-offset-4"
                 >
                   Điều tra thêm
                 </button>

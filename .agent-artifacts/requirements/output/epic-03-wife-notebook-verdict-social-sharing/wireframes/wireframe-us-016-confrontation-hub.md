@@ -29,8 +29,8 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 | Mã | Trạng thái / Màn hình | Thành phần chính |
 |---|---|---|
 | M0-A | Chọn nghi phạm: Chưa lột mặt nạ | Khay Polaroid, vỏ bọc "Anh Tuấn Thợ Điện", ảnh túi đồ nghề, con dấu "NGHI PHẠM" |
-| M0-B | Chọn nghi phạm: ĐÃ LỘT MẶT NẠ | Thẻ Polaroid chuyển hóa: tên thật "Nguyễn Thị Thu Hương", ảnh chân dung nữ, nhãn `🎭 Vỏ bọc: "Anh Tuấn Thợ Điện"`, manh mối `📞 Trùng SĐT 0988886677`, dấu "ĐÃ LỘT MẶT NẠ" |
-| M0-C | Xác nhận đối chất (Manila Case Dossier) | Tập hồ sơ Manila (`FILE #01`), 2 thẻ Polaroid dập ghim nối chỉ đỏ đối đầu, thước đo áp lực kết tội, các cặp **Mắt xích suy luận (Linkage Bridges)** thay cho danh sách phẳng, nút dấu mộc đỏ "MÀY DÁM LỪA BÀ!" |
+| M0-B | Chọn nghi phạm: ĐÃ LỘT MẶT NẠ | Thẻ Polaroid chuyển hóa: tên thật "Nguyễn Thị Thu Hương", ảnh chân dung nữ, nhãn `Vỏ bọc: "Anh Tuấn Thợ Điện"` (`IoGlassesOutline`), manh mối `Trùng SĐT 0988886677` (`IoCallOutline`), dấu "ĐÃ LỘT MẶT NẠ" |
+| M0-C | Xác nhận đối chất (Darkroom Casefile Dossier) | Tập hồ sơ niêm phong tối (`FILE 01`), 2 thẻ Polaroid giấy lạnh dập ghim nối chỉ đỏ đối đầu, thước đo áp lực kết tội, các cặp **Mắt xích suy luận (Linkage Bridges)** thay cho danh sách phẳng, nút dấu mộc đỏ "MÀY DÁM LỪA BÀ!" |
 | M1 | Đối chất sớm / Chưa đủ chứng cứ (0 sao) | Tiến độ 0/3, chồng chối quanh/thao túng tâm lý, cảnh báo tăng 1 vạch nghi ngờ, nút "Tiếp tục điều tra" |
 | M2 | Kết tội một phần (1–2 sao) | Tiến độ 1/3 hoặc 2/3, chồng lắp bắp chống chế phòng thủ, kết quả 1 sao hoặc 2 sao, nút "Tha thứ & Qua màn" hoặc "Điều tra tiếp" |
 | M3 | Thắng lợi trọn vẹn / Bắt quả tang (3 sao) | Tiến độ 3/3, chồng quỳ gối/cúi đầu nhận tội, đạt 3 sao trọn vẹn, danh hiệu Vợ, văn bản châm biếm, nút chia sẻ và qua màn |
@@ -86,7 +86,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 +------------------------------------------------+
 ```
 
-#### Trạng thái M0-C: Xác Nhận Đối Chất (Manila Case Dossier & Linkage Bridges)
+#### Trạng thái M0-C: Xác Nhận Đối Chất (Darkroom Casefile Dossier & Linkage Bridges)
 
 ```text
 +------------------------------------------------+
@@ -124,7 +124,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 +------------------------------------------------+
 ```
 
-- Giao diện sử dụng phong cách **Manila Case Dossier** đồng bộ với Sổ Tay Bắt Ghen: nền tối sẫm, tập hồ sơ giấy kraft (`#F2ECE0`), tab `FILE 01`, font typewriter/monospace, dấu mộc đỏ, ảnh Polaroid ghim đinh đỏ nối bằng sợi chỉ đỏ.
+- Giao diện sử dụng phong cách **Darkroom Casefile Dossier** đồng bộ với bảng điều tra Cold War: nền tối sẫm, tập hồ sơ niêm phong tối (`#141A22`, viền trái `#E11D48`), tab `FILE 01`, font chính của dự án (`font-sans`), dấu mộc đỏ, ảnh Polaroid giấy lạnh (`#EEF2F6`) và phiếu chứng cứ giấy lạnh (`#EAEFF4`) ghim đinh đỏ nối bằng sợi chỉ đỏ.
 - Phần tóm tắt bằng chứng hiển thị theo từng **Cặp mắt xích liên kết (Linkage Bridges)** trích xuất từ `verifiedStringsList` (chỉ giữ tiêu đề/điểm chạm cốt lõi + nhãn kết nối ở giữa), loại bỏ đoạn văn bản dài dòng thừa thông tin.
 
 ---

@@ -60,6 +60,8 @@ tools:
   - *Long-Press Evidence Pinning*: 380ms long-press gesture (`StoryEvidenceTarget`) triggering `UniversalEvidenceModal` applies exclusively to story data loaded from case JSON (`data.json`). Never attach to static headers or navigation chrome.
 - **Zero-Emoji Invariant & Canonical Icon Pack**:
   Raw Unicode emojis are strictly forbidden in UI components, launchers, status bars, and navigation. Use Ionicons (`react-icons/io5`) per `.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/app-design.md`; status indicators render as SVG.
+- **Zero-Monospace / Project Font Invariant**:
+  `font-mono` and `monospace` fonts are strictly forbidden across all UI components (including URLs, financial numbers, timestamps, badges, and dossier headers). Always use the project's primary font (`font-sans`, with `tabular-nums` when tabular number alignment is needed) and `font-handwriting` solely for sticky-note titles per `design-system/design.md`.
 - **Software Engineering Standards (SOLID & OOP)**:
   SRP (presentation vs domain calculation vs persistence), OCP (`AppDefinition` registries), LSP (`GameStateRepository` adapters), ISP (lean prop interfaces), DIP (abstract interfaces). Strict TypeScript (zero `any`, discriminated unions, typed errors).
 - **Subagent Parallelization Invariant**:
