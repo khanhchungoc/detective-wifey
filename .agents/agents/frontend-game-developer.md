@@ -60,8 +60,8 @@ tools:
   - *Long-Press Evidence Pinning*: 380ms long-press gesture (`StoryEvidenceTarget`) triggering `UniversalEvidenceModal` applies exclusively to story data loaded from case JSON (`data.json`). Never attach to static headers or navigation chrome.
 - **Zero-Emoji Invariant & Canonical Icon Pack**:
   Raw Unicode emojis are strictly forbidden in UI components, launchers, status bars, and navigation. Use Ionicons (`react-icons/io5`) per `.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/app-design.md`; status indicators render as SVG.
-- **Zero-Monospace / Project Font Invariant**:
-  `font-mono` and `monospace` fonts are strictly forbidden across all UI components (including URLs, financial numbers, timestamps, badges, and dossier headers). Always use the project's primary font (`font-sans`, with `tabular-nums` when tabular number alignment is needed) and `font-handwriting` solely for sticky-note titles per `design-system/design.md`.
+- **Zero-Monospace / Project Font & Typography Token Invariant**:
+  `font-mono` and `monospace` fonts are strictly forbidden across all UI components (including URLs, financial numbers, timestamps, badges, and dossier headers). Always use the project's primary font (`font-sans`, with `tabular-nums` when tabular number alignment is needed) for OS/app UI, and `font-handwriting` for corkboard/evidence note cards (sticky-note titles, note body, timestamps, and note badges). All typography sizes, weights, and line-heights across both `src/apps/*` and `src/features/*` must use Tailwind design tokens (`text-ios-*`, `text-note-*`, `font-*`) defined in `tailwind.config.js` — never hardcode arbitrary `text-[...px]`/`leading-[...]` values or raw `font-family`/`font-weight` overrides in feature `.css` files.
 - **Software Engineering Standards (SOLID & OOP)**:
   SRP (presentation vs domain calculation vs persistence), OCP (`AppDefinition` registries), LSP (`GameStateRepository` adapters), ISP (lean prop interfaces), DIP (abstract interfaces). Strict TypeScript (zero `any`, discriminated unions, typed errors).
 - **Subagent Parallelization Invariant**:
@@ -147,4 +147,5 @@ tools:
 - **Never create backend APIs or database schemas**: Static client-side SPA on GitHub Pages only.
 - **Never use Unicode emojis in UI components**: UI iconography strictly uses Ionicons (`react-icons/io5`) or responsive vector SVGs.
 - **Never hardcode narrative story data in JSX**: Suspects, clues, and evidence must bind dynamically to declarative case JSON (`CaseConfig`).
+- **Never bypass typography design tokens**: Never use arbitrary `text-[...px]`/`leading-[...]` classes or raw CSS `font-family`/`font-weight` overrides in `src/apps/*` or `src/features/*`; define and reuse semantic tokens in `tailwind.config.js`.
 - **Never allow recursive subagent spawning or single-task subagents**: Subagents operate strictly as leaf execution workers (depth capped at 1; `invoke_subagent` forbidden). Never dispatch an $N = 1$ subagent for sequential tasks.

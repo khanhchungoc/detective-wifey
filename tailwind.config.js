@@ -34,6 +34,11 @@ export default {
         'ios-caption-2': ['0.6875rem', { lineHeight: '0.8125rem', letterSpacing: '0.01em', fontWeight: '600' }],
         'ios-lockpad-digit': ['2.125rem', { lineHeight: '2.375rem', letterSpacing: '0px', fontWeight: '300' }],
         'ios-lockpad-subtext': ['0.625rem', { lineHeight: '0.75rem', letterSpacing: '0.08em', fontWeight: '700' }],
+        'note-title': ['0.625rem', { lineHeight: '1.375', letterSpacing: '-0.025em', fontWeight: '500' }],
+        'note-body': ['0.65625rem', { lineHeight: '1.3', fontWeight: '400' }],
+        'note-meta': ['0.5625rem', { lineHeight: '1', letterSpacing: '-0.025em', fontWeight: '400' }],
+        'note-arrow': ['0.625rem', { lineHeight: '1', fontWeight: '400' }],
+        'note-badge': ['0.5625rem', { lineHeight: '1', letterSpacing: '0.05em', fontWeight: '400' }],
       },
       fontFamily: {
         sans: [

@@ -61,7 +61,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 * **Typography (Universal `text-ios-*` Tokens + Handwriting Accent)**:
   * Notebook Header: `text-ios-footnote` / `font-sans` uppercase (`#F1F5F9` on darkroom header `#090C10` - `#111722`).
-  * Sticky Note Card Title: `font-handwriting` (`'Shantell Sans', cursive, sans-serif` self-hosted via `@fontsource/shantell-sans`, $10\text{px}$ Bold, `#0F172A`, Vietnamese-supported).
+  * Sticky Note Card Title: `font-handwriting` (`'Shantell Sans', cursive, sans-serif` self-hosted via `@fontsource/shantell-sans`, $10\text{px}$ Medium, `#0F172A`, Vietnamese-supported).
   * Suspect Polaroid / Dossier Title: `text-ios-callout` ($16\text{px}$ Semibold, `#0F172A`).
   * Node Snippet & Metadata: `text-ios-footnote` ($13\text{px}$ Regular, `#475569`, contrast $\ge 4.5:1$).
   * Confrontation CTA & Sixth Sense Trigger: `text-ios-headline` ($17\text{px}$ Semibold).

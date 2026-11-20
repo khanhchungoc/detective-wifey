@@ -423,7 +423,7 @@ const CorkboardContents = memo(function CorkboardContents({
                         <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
                       )
                     )}
-                    <h4 className="font-handwriting text-[10px] font-bold leading-snug text-slate-900 tracking-tight line-clamp-2">
+                    <h4 className="font-handwriting text-note-title text-slate-900 line-clamp-2">
                       {isAlias && isUnmasked
                         ? `[BÓC TRẦN] ${node.label}`
                         : node.label}
@@ -482,12 +482,12 @@ const CorkboardContents = memo(function CorkboardContents({
 
               {/* Special Status Stamped Tags */}
               {isAlias && isUnmasked && (
-                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-rose-100 border border-rose-300 px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-rose-800">
+                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-rose-100 border border-rose-300 px-1.5 py-0.5 font-handwriting text-note-badge uppercase text-rose-800">
                   <span>Khớp danh tính</span>
                 </div>
               )}
               {hasContradiction && (
-                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-yellow-100 border border-yellow-400 px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-yellow-900">
+                <div className="mt-1.5 inline-flex items-center gap-1 rounded-[2px] bg-yellow-100 border border-yellow-400 px-1.5 py-0.5 font-handwriting text-note-badge uppercase text-yellow-900">
                   <IoFlashOutline className="text-[10px] shrink-0 text-amber-700" />
                   <span>Mâu thuẫn</span>
                 </div>

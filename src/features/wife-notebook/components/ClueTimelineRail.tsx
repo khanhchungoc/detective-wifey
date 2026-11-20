@@ -177,7 +177,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
   if (!entries || entries.length === 0) return null;
 
   return (
-    <div className={`relative pl-4 space-y-2.5 ${className}`}>
+    <div className={`relative pl-4 space-y-2.5 font-handwriting font-normal ${className}`}>
       {/* Vertical Timeline Axis Line */}
       <div
         className="absolute left-[4.5px] top-2 bottom-2 w-[1px] bg-slate-300 pointer-events-none rounded-full"
@@ -191,8 +191,8 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
           ? 'bg-[#DC2626] ring-[1.5px] ring-rose-200'
           : 'bg-slate-500 ring-[1.5px] ring-slate-200';
         const arrowColorClass = isIncoming
-          ? 'text-[#DC2626] font-bold'
-          : 'text-slate-500 font-semibold';
+          ? 'text-[#DC2626]'
+          : 'text-slate-500';
 
         return (
           <div key={entry.id} className="relative group text-left min-w-0 pr-5">
@@ -205,11 +205,11 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             {/* Tier 1: Timestamp & Direction Arrow */}
             {entry.timestampText && (
               <div className="flex items-center gap-1 leading-none mb-0.5">
-                <span className="font-sans text-[9px] font-medium text-slate-500 tracking-tight">
+                <span className="font-handwriting text-note-meta text-slate-500">
                   {entry.timestampText}
                 </span>
                 <span
-                  className={`text-[10px] select-none ${arrowColorClass}`}
+                  className={`font-handwriting text-note-arrow select-none ${arrowColorClass}`}
                   aria-label={isIncoming ? 'Tin đến' : 'Tin đi'}
                   title={isIncoming ? 'Đến' : 'Đi'}
                 >
@@ -219,7 +219,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             )}
 
             {/* Tier 2: Narrative Content Text */}
-            <p className="text-[10.5px] leading-[1.3] text-slate-800 break-words whitespace-pre-line font-normal">
+            <p className="font-handwriting text-note-body text-slate-800 break-words whitespace-pre-line">
               <EvidenceSnippet text={entry.content} fieldIconsEnabled={entry.fieldIconsEnabled} />
             </p>
 
