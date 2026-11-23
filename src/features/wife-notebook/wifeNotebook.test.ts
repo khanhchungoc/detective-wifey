@@ -16,7 +16,7 @@ import { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
 import { deriveNodesFromTaggedEvidence } from './WifeNotebookModal';
 import type { PlacedNode } from './types';
 import type { CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
-import { getSuspectsOnBoard } from './confrontationEngine';
+import { getKeyConnectionProgress, getSuspectsOnBoard } from './confrontationEngine';
 
 describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
   it('does not verify dinner messages against the office-dress order, including saved links', () => {
@@ -481,6 +481,78 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       // Midpoint between the 2 cards must be exactly clusterCenter (640)
       const mid = (placed[0].x + placed[1].x + CARD_WIDTH) / 2;
       expect(mid).toBe(640);
+    });
+  });
+
+  describe('Key Connection Progress Counter', () => {
+    it('counts only required key smoking-gun connections (0/2 -> 1/2 -> 2/2) and ignores non-key edges', () => {
+      expect(getKeyConnectionProgress([], LEVEL_01_KNOWLEDGE_GRAPH)).toEqual({
+        verifiedCount: 0,
+        requiredCount: 2,
+      });
+
+      const nonKeyEdges: CaseGraphEdge[] = [
+        {
+          edgeId: 'edge_zola_dinner_receipt',
+          sourceNodeId: 'node_record_zola_chat',
+          targetNodeId: 'node_record_bank_receipt',
+          relationship: 'occurred_at',
+          isSmokingGun: false,
+          isCanonical: true,
+        },
+        {
+          edgeId: 'custom_decoy_edge',
+          sourceNodeId: 'a',
+          targetNodeId: 'b',
+          relationship: 'relates_to',
+          isSmokingGun: false,
+          isCanonical: false,
+        },
+      ];
+      expect(getKeyConnectionProgress(nonKeyEdges, LEVEL_01_KNOWLEDGE_GRAPH)).toEqual({
+        verifiedCount: 0,
+        requiredCount: 2,
+      });
+
+      const oneKeyPlusBridgeDuplicate: CaseGraphEdge[] = [
+        ...nonKeyEdges,
+        {
+          edgeId: 'edge_order_name',
+          sourceNodeId: 'node_record_ecommerce_order',
+          targetNodeId: 'node_bridge_name',
+          relationship: 'bridges_identity',
+          isSmokingGun: true,
+          isCanonical: true,
+        },
+        {
+          edgeId: 'edge_name_suspect',
+          sourceNodeId: 'node_bridge_name',
+          targetNodeId: 'node_suspect_huong',
+          relationship: 'bridges_identity',
+          isSmokingGun: true,
+          isCanonical: true,
+        },
+      ];
+      expect(getKeyConnectionProgress(oneKeyPlusBridgeDuplicate, LEVEL_01_KNOWLEDGE_GRAPH)).toEqual({
+        verifiedCount: 1,
+        requiredCount: 2,
+      });
+
+      const bothKeyEdges: CaseGraphEdge[] = [
+        ...oneKeyPlusBridgeDuplicate,
+        {
+          edgeId: 'edge_alibi_contradiction',
+          sourceNodeId: 'node_record_wife_alibi',
+          targetNodeId: 'node_record_bank_receipt',
+          relationship: 'contradicts_alibi',
+          isSmokingGun: true,
+          isCanonical: true,
+        },
+      ];
+      expect(getKeyConnectionProgress(bothKeyEdges, LEVEL_01_KNOWLEDGE_GRAPH)).toEqual({
+        verifiedCount: 2,
+        requiredCount: 2,
+      });
     });
   });
 });

@@ -21,6 +21,7 @@ import {
 import {
   evaluateConfrontation,
   calculateConfrontationPreflight,
+  getKeyConnectionProgress,
   getSuspectsOnBoard,
   type ConfrontationEvaluationResult,
   type ConfrontationPreflightInfo,
@@ -1131,6 +1132,11 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     unmaskedSuspectIds,
   ]);
 
+  const keyConnectionProgress = useMemo(
+    () => getKeyConnectionProgress(edges, knowledgeGraph),
+    [edges, knowledgeGraph],
+  );
+
   return (
     <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden bg-[#090C10] text-[#F1F5F9]">
       {/* Full-bleed Corkboard Viewport */}
@@ -1162,17 +1168,17 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           <button
             type="button"
             onClick={handleCenterCluster}
-            aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${edges.length} liên kết`}
+            aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${keyConnectionProgress.verifiedCount}/${keyConnectionProgress.requiredCount} mắt xích quan trọng`}
             title="Định vị các manh mối trên bảng"
             style={{ top: 'calc(max(6px, var(--phone-system-top, 59px)) + 6px)' }}
             className="corkboard-stats-overlay absolute right-3 z-20 flex h-9 items-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/90 px-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md hover:bg-slate-800/95 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
           >
             <span className="flex items-center gap-1.5 font-sans text-ios-caption-2 font-semibold tabular-nums">
-              <IoDocumentsOutline className="h-3.5 w-3.5 text-[#FACC15]" aria-hidden="true" />
+              <IoDocumentsOutline className="h-3.5 w-3.5 text-[#F1F5F9]" aria-hidden="true" />
               <span className="text-[#F1F5F9]">{placedNodes.length}</span>
               <span className="text-slate-600" aria-hidden="true">·</span>
               <IoGitBranchOutline className="h-3.5 w-3.5 text-[#E11D48]" aria-hidden="true" />
-              <span className="text-[#F1F5F9]">{edges.length}</span>
+              <span className="text-[#F1F5F9]">{keyConnectionProgress.verifiedCount}/{keyConnectionProgress.requiredCount}</span>
             </span>
           </button>
 

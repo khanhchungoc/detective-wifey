@@ -99,7 +99,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 
 ### 3.2. Detective Corkboard Node Canvas & "Giác Quan Thứ 6" Hint Header (`WifeNotebookModal` - US-015, US-022, US-033)
 
-> **Layout**: Fullscreen overlay (`z-50`) featuring a full-bleed darkroom 2D interactive red-string chalkboard (`CorkboardCanvas`), a compact top-right floating stats overlay pill (`[IoDocumentsOutline <nodes> · IoGitBranchOutline <edges>]`, `36px` visual height / `44×44px` touch target, triggering `[Định vị]` cluster centering), a split bottom floating control bar (`36px` visual height / `44×44px` touch target: `[Đóng]` / Back icon on the left; icon-only `[Xếp gọn]` + primary `#E11D48` pill `[Đối chất]` on the right), and the slide-over unplaced clue drawer (`UnorganizedDrawer`).
+> **Layout**: Fullscreen overlay (`z-50`) featuring a full-bleed darkroom 2D interactive red-string chalkboard (`CorkboardCanvas`), a compact top-right floating stats overlay pill (`[IoDocumentsOutline (#F1F5F9) <nodes> · IoGitBranchOutline (#E11D48) <verifiedKey>/<requiredKey>]`, counting only required smoking-gun key connections such as `2/2` in Level 1 and ignoring non-key edges, `36px` visual height / `44×44px` touch target, triggering `[Định vị]` cluster centering), a split bottom floating control bar (`36px` visual height / `44×44px` touch target: `[Đóng]` / Back icon on the left; icon-only `[Xếp gọn]` + primary `#E11D48` pill `[Đối chất]` on the right), and the slide-over unplaced clue drawer (`UnorganizedDrawer`).
 
 ```
 ┌────────────────────────────────────────────────────────┐

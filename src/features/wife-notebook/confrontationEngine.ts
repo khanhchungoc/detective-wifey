@@ -414,6 +414,32 @@ function collectVerifiedSmokingGunEdgeIds(
 }
 
 /**
+ * Computes how many required key (smoking-gun) connections have been verified
+ * out of the total required for the case (e.g. 2/2 for Level 1).
+ */
+export function getKeyConnectionProgress(
+  activeEdges: readonly CaseGraphEdge[],
+  knowledgeGraph?: CaseKnowledgeGraph,
+): { verifiedCount: number; requiredCount: number } {
+  const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds?.length
+    ? knowledgeGraph.requiredSmokingGunEdgeIds
+    : [...DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS];
+  const requiredKeys = new Set(requiredEdgeIds.map(normalizeSmokingGunKey));
+
+  const canonicalActiveEdges = activeEdges.filter(edge =>
+    edge.isCanonical ?? Boolean(knowledgeGraph?.edges.some(canonical => canonical.edgeId === edge.edgeId)),
+  );
+  const verifiedEdgeIds = collectVerifiedSmokingGunEdgeIds(canonicalActiveEdges, requiredEdgeIds);
+  const verifiedKeys = new Set(verifiedEdgeIds.map(normalizeSmokingGunKey));
+  const verifiedCount = [...requiredKeys].filter(key => verifiedKeys.has(key)).length;
+
+  return {
+    verifiedCount,
+    requiredCount: requiredKeys.size,
+  };
+}
+
+/**
  * Computes preflight details and RNG success probability based on clues found.
  *
  * Rules:
