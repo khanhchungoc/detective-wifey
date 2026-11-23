@@ -24,7 +24,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 | **Slogan / Tagline** | *"Lưới trời lồng lộng - Tay vợ khó thoát"* |
 | **Real-World Parody** | Detective Case Dossier / Marital Journal |
 | **Visual Persona** | Cold War Darkroom Evidence Board (inspired by *COD: Black Ops Cold War*). Styled like a darkroom slate chalkboard under overhead fluorescent light with dusty eraser wipes, wife-detective chalk doodles, cool-gray physical paper evidence cards pinned with yellow masking tape and steel/crimson pins, and red/yellow yarn connections. |
-| **Architectural Role** | Omnipresent compact right-edge-docked forensic tab on the virtual phone shell container, inheriting Phone OS floating button tokens. Accessible from any screen via `NotebookTab` (`46×52px` flush to the right edge, `rounded-l-[12px] rounded-r-none`, `#0B1017` single-surface with subtle `border-white/15` hairline, `IoScanOutline`, and top-left circular evidence counter badge; case number exposed via `aria-label`) or the AssistiveTouch menu (`../app-design.md`). |
+| **Architectural Role** | Omnipresent compact right-edge-docked forensic tab on the virtual phone shell container, inheriting Phone OS floating button tokens. Accessible from any screen via `NotebookTab` (`46×52px` flush to the right edge, `rounded-l-[12px] rounded-r-none`, `#0B1017` single-surface with subtle `border-white/15` hairline, `IoJournalOutline`, and top-left circular evidence counter badge; case number exposed via `aria-label`) or the AssistiveTouch menu (`../app-design.md`). |
 
 ---
 

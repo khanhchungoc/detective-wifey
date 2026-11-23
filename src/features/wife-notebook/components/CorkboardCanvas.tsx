@@ -275,6 +275,10 @@ const CorkboardContents = memo(function CorkboardContents({
                 if (e.button !== 0 || isPinching) return;
                 // Don't drag if clicking action buttons
                 if ((e.target as HTMLElement).closest('button')) return;
+                // Yield the left-edge swipe zone to AnchoredOverlay's iOS edge-swipe-back gesture
+                const overlay = (e.currentTarget as HTMLElement).closest('[data-notebook-overlay]');
+                const overlayLeft = overlay ? overlay.getBoundingClientRect().left : 0;
+                if (e.clientX - overlayLeft <= 44) return;
                 e.stopPropagation();
                 setActiveDragId(node.nodeId);
                 setCardStack(previous => [...previous.filter(id => id !== node.nodeId && nodeMap.has(id)), node.nodeId]);

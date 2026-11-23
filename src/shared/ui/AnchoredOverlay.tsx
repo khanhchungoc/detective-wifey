@@ -9,6 +9,8 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLButtonElement>(null);
+  const lastDisplacementRef = useRef(0);
   const animation = useRef<Animation | undefined>(undefined);
   const initialized = useRef(false);
   const onKeyDown = useDialogFocus(open, containerRef, onClose);
@@ -16,7 +18,13 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
     onBack: onClose,
     enabled: open,
     maxStartDistance: 44,
-    onSwipeProgress: (progress) => {
+    onSwipeProgress: (progress, displacement) => {
+      lastDisplacementRef.current = displacement;
+      const backdrop = backdropRef.current;
+      if (backdrop) {
+        backdrop.style.transition = 'none';
+        backdrop.style.opacity = String(Math.max(0, Math.min(1, 1 - progress)));
+      }
       const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
       if (screen) {
         screen.style.transition = 'none';
@@ -27,6 +35,14 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       }
     },
     onSwipeEnd: (committed) => {
+      if (!committed) {
+        lastDisplacementRef.current = 0;
+      }
+      const backdrop = backdropRef.current;
+      if (backdrop) {
+        backdrop.style.transition = `opacity ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
+        backdrop.style.opacity = committed ? '0' : '1';
+      }
       const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
       if (screen) {
         screen.style.transition = `transform ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}, border-radius ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
@@ -42,6 +58,11 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
   });
 
   useLayoutEffect(() => {
+    const backdrop = backdropRef.current;
+    if (backdrop) {
+      backdrop.style.transition = `opacity ${open ? `${NOTEBOOK_OPEN_DURATION_MS}ms` : `${NOTEBOOK_CLOSE_DURATION_MS}ms`} ${NOTEBOOK_SLIDE_EASING}`;
+      backdrop.style.opacity = open ? '1' : '0';
+    }
     const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
     if (screen) {
       screen.style.removeProperty('transition');
@@ -51,6 +72,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
     const drawer = drawerRef.current;
     if (!drawer) return;
     if (!open && !initialized.current) {
+      lastDisplacementRef.current = 0;
       drawer.style.opacity = '0';
       drawer.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
       return;
@@ -63,7 +85,11 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         drawer.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
       }
       initialized.current = true;
+    } else if (!open && lastDisplacementRef.current > 0) {
+      // Preserve the finger's release position so closing continues smoothly instead of snapping back to 0px.
+      drawer.style.transform = `translate3d(${lastDisplacementRef.current}px, 0, 0)`;
     }
+    lastDisplacementRef.current = 0;
     animation.current = animateOverlay(drawer, open, NOTEBOOK_CLOSED_TRANSFORM, () => {
       if (!open) {
         drawer.style.opacity = '0';
@@ -90,6 +116,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
     >
       {/* Full-screen lower layer backdrop scrim (darkens entire phone screen underneath, tap anywhere outside notebook to close) */}
       <button
+        ref={backdropRef}
         type="button"
         data-notebook-backdrop
         data-notebook-shade="scrim"
@@ -110,7 +137,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       <div
         ref={drawerRef}
         data-notebook-overlay
-        className="absolute inset-0 z-20 overflow-hidden bg-[#0E0A07]"
+        className="absolute inset-0 z-20 overflow-hidden bg-[#0E0A07] shadow-[-8px_0_28px_rgba(0,0,0,0.55)]"
         style={{
           pointerEvents: open ? 'auto' : 'none',
           willChange: 'transform, opacity',

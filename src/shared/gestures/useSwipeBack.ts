@@ -289,6 +289,15 @@ export function useSwipeBack(options: UseSwipeBackOptions): SwipeBackHandlers {
       get maxDuration() {
         return optionsRef.current.maxDuration ?? 1500;
       },
+      get maxStartDistance() {
+        return optionsRef.current.maxStartDistance;
+      },
+      get onSwipeProgress() {
+        return optionsRef.current.onSwipeProgress;
+      },
+      get onSwipeEnd() {
+        return optionsRef.current.onSwipeEnd;
+      },
     });
     engineRef.current = { handlers, dispose };
   }

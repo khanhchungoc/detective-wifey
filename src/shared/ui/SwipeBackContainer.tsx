@@ -17,6 +17,9 @@ export const SwipeBackContainer: React.FC<SwipeBackContainerProps> = ({
   threshold = 45,
   maxRatio = 0.8,
   maxDuration = 1500,
+  maxStartDistance,
+  onSwipeProgress,
+  onSwipeEnd,
   children,
   className = '',
   ...props
@@ -27,6 +30,9 @@ export const SwipeBackContainer: React.FC<SwipeBackContainerProps> = ({
     threshold,
     maxRatio,
     maxDuration,
+    maxStartDistance,
+    onSwipeProgress,
+    onSwipeEnd,
   });
 
   return (
