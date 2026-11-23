@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
-import { IoScanOutline } from 'react-icons/io5';
+import { IoJournalOutline } from 'react-icons/io5';
 import { NOTEBOOK_SLIDE_EASING } from '../../shared/motion/anchoredOverlay';
 import {
   clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock,
@@ -188,7 +188,7 @@ export function NotebookTab({
         aria-hidden="true"
         className="pointer-events-none relative flex h-full w-full items-center justify-center rounded-l-[12px] rounded-r-none border border-r-0 border-white/15 bg-[#0B1017]/95 shadow-[-4px_6px_20px_rgba(0,0,0,0.45)] transition-transform duration-150 group-active:scale-95"
       >
-        <IoScanOutline className="h-[22px] w-[22px] text-[#F1F5F9]" />
+        <IoJournalOutline className="h-[22px] w-[22px] text-[#F1F5F9]" />
         <span
           data-evidence-badge
           className={`absolute -left-1.5 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-ios-caption-2 font-semibold leading-none tabular-nums ring-2 ring-[#0B1017] ${
