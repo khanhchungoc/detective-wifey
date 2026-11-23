@@ -504,7 +504,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
           edgeId: 'custom_decoy_edge',
           sourceNodeId: 'a',
           targetNodeId: 'b',
-          relationship: 'relates_to',
+          relationship: 'occurred_at',
           isSmokingGun: false,
           isCanonical: false,
         },

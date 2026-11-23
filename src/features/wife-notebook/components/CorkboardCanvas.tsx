@@ -379,53 +379,18 @@ const CorkboardContents = memo(function CorkboardContents({
                 }`} />
               </div>
 
-              {/* Top Bar: Film-Framed Avatar + Yellow Sticky Note Title overlapping Top-Left, and Action Buttons */}
-              <div className={`relative min-h-[28px] ${hasBody ? 'pb-1' : 'pb-0.5'}`}>
+              {/* Top Bar: Yellow Sticky Note Title on Left, Separated Film-Framed Avatar + App Icon on Right, and Action Buttons */}
+              <div className={`relative min-h-[36px] ${hasBody ? 'pb-1.5' : 'pb-0.5'}`}>
                 <div
-                  className="relative -ml-3.5 -mt-1 flex min-w-0 items-center w-[calc(100%+14px)]"
+                  className="relative -ml-3.5 -mt-1 flex min-w-0 items-center justify-between gap-2 w-[calc(100%+14px)]"
                   style={isSelected ? {
                     WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
                     maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
                   } : undefined}
                 >
-                  {avatarName && (
-                    <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[2.5px] pb-[4px] -rotate-3">
-                      <ContactAvatar name={avatarName} size={24} shape="square" />
-                      {sourceApp && (
-                        <span
-                          className={`absolute -right-1 -top-1 h-3 w-3 flex shrink-0 items-center justify-center overflow-hidden rounded text-white ring-1 ring-[#FBFAF7] ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
-                          title={sourceApp.displayName}
-                          role="img"
-                          aria-label={sourceApp.displayName}
-                        >
-                          {sourceApp.iconAsset ? (
-                            <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
-                          ) : <sourceApp.icon className="h-2 w-2" />}
-                        </span>
-                      )}
-                    </span>
-                  )}
-
-                  <div
-                    className={`corkboard-sticky-note relative flex min-w-0 items-center gap-1.5 py-1 pr-2.5 -rotate-[1.5deg] ${
-                      avatarName ? '-ml-1.5 pl-2.5' : 'pl-2'
-                    }`}
-                  >
-                    {!avatarName && (
-                      sourceApp ? (
-                        <span
-                          className={`flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[3px] text-white ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
-                          title={sourceApp.displayName}
-                          role="img"
-                          aria-label={sourceApp.displayName}
-                        >
-                          {sourceApp.iconAsset ? (
-                            <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
-                          ) : <sourceApp.icon className="text-[11px]" />}
-                        </span>
-                      ) : (
-                        <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
-                      )
+                  <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1.5 py-1 pl-2.5 pr-2.5 -rotate-[1.5deg]">
+                    {!avatarName && !sourceApp && (
+                      <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
                     )}
                     <h4 className="font-handwriting text-note-title text-slate-900 line-clamp-2">
                       {isAlias && isUnmasked
@@ -433,6 +398,28 @@ const CorkboardContents = memo(function CorkboardContents({
                         : node.label}
                     </h4>
                   </div>
+
+                  {(avatarName || sourceApp) && (
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {avatarName && (
+                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
+                          <ContactAvatar name={avatarName} size={32} shape="square" />
+                        </span>
+                      )}
+                      {sourceApp && (
+                        <span
+                          className={`flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-[5px] text-white shadow-xs ring-1 ring-black/10 ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                          title={sourceApp.displayName}
+                          role="img"
+                          aria-label={sourceApp.displayName}
+                        >
+                          {sourceApp.iconAsset ? (
+                            <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
+                          ) : <sourceApp.icon className="h-3.5 w-3.5" />}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Card-level Action Buttons: Exactly two buttons [Đến chat] and [Xóa] */}
