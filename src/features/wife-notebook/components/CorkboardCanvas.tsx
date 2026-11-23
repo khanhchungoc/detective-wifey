@@ -475,6 +475,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   <ClueTimelineRail
                     entries={timelineEntries}
                     isSelected={isSelected}
+                    className="font-handwriting"
                     onDeleteItem={onDeleteMessage ? (msgId) => onDeleteMessage(node.nodeId, msgId) : undefined}
                   />
                 </div>

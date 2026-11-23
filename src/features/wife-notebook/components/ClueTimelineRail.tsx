@@ -177,7 +177,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
   if (!entries || entries.length === 0) return null;
 
   return (
-    <div className={`relative pl-4 space-y-2.5 font-handwriting font-normal ${className}`}>
+    <div className={`relative pl-4 space-y-2.5 ${className}`}>
       {/* Vertical Timeline Axis Line */}
       <div
         className="absolute left-[4.5px] top-2 bottom-2 w-[1px] bg-slate-300 pointer-events-none rounded-full"
@@ -205,11 +205,11 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             {/* Tier 1: Timestamp & Direction Arrow */}
             {entry.timestampText && (
               <div className="flex items-center gap-1 leading-none mb-0.5">
-                <span className="font-handwriting text-note-meta text-slate-500">
+                <span className="text-note-meta text-slate-500">
                   {entry.timestampText}
                 </span>
                 <span
-                  className={`font-handwriting text-note-arrow select-none ${arrowColorClass}`}
+                  className={`text-note-arrow select-none ${arrowColorClass}`}
                   aria-label={isIncoming ? 'Tin đến' : 'Tin đi'}
                   title={isIncoming ? 'Đến' : 'Đi'}
                 >
@@ -219,7 +219,7 @@ export const ClueTimelineRail: React.FC<ClueTimelineRailProps> = ({
             )}
 
             {/* Tier 2: Narrative Content Text */}
-            <p className="font-handwriting text-note-body text-slate-800 break-words whitespace-pre-line">
+            <p className="text-note-body text-slate-800 break-words whitespace-pre-line">
               <EvidenceSnippet text={entry.content} fieldIconsEnabled={entry.fieldIconsEnabled} />
             </p>
 
