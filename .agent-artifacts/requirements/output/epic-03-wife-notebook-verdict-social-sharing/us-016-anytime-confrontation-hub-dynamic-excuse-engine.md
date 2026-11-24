@@ -11,7 +11,7 @@ timestamp: "2026-10-20"
 
 ### Epic: [Epic 03](./epic.md)
 
-As a Player (Wife), I want to initiate confrontation ("Đối chất") with the husband at any time to test my evidence, listen to comedic excuses, and convict him for a 1–3 star victory.
+As a Player (Wife), I want to initiate confrontation ("Đối chất") with the husband at any time to interrogate him beat-by-beat with my pinned evidence, listen to comedic excuses, and convict him for a 1-3 star victory.
 
 ### Canonical Wireframe Reference
 
@@ -37,24 +37,20 @@ As a Player (Wife), I want to initiate confrontation ("Đối chất") with the 
      - The conviction probability bar (`Tỉ lệ thành công`) renders as a 5-segment progress indicator (`role="progressbar"`).
      - The evidence summary displays **Deductive Linkage Bridges** (`verifiedStringsList`) pairing connected clues (source clue <-> relationship bridge badge <-> target clue) to highlight causal connections (e.g. matching phone number, money trail, alibi contradiction) without redundant raw text clutter, falling back to concise verified clues if no active bridge pairs exist.
      - The primary confrontation CTA renders as a red embossed dossier stamp button (`MÀY DÁM LỪA BÀ!` / dynamic label) with a secondary `Điều tra thêm` return action.
-4. Confronting with 0 verified smoking-gun links triggers the premature confrontation failure state:
-   - The husband delivers dismissive gaslighting dialogue (e.g., Level 1: "Em lại lướt TikTok drama rồi đa nghi đúng không? Anh đi làm cả ngày mệt mỏi, em lại tra khảo anh chuyện vô căn cứ!").
-   - The game increments the Suspicion Meter by 1 strike.
-   - If the added strike reaches the case's strike limit (5 strikes in Level 1), the "Caught Snooping" fail state ("Bị giật lại máy", US-014) triggers immediately.
-   - Otherwise, the screen displays a "Tiếp tục điều tra" button that closes confrontation and returns the player to the active view without penalty to case progression.
-5. Confronting with 1 verified smoking-gun link yields a 1-star win (`★☆☆`):
-   - The husband delivers a defensive stammering excuse (e.g., Level 1: "Số thợ điện hôm trước anh gọi nhờ sửa dây mạng văn phòng mà...").
-   - Unlocks the "Tha thứ & Qua màn" progression action (US-018) while offering a "Điều tra tiếp để đạt 3 sao" button to return to the case.
-6. Confronting with 2 verified smoking-gun links yields a 2-star win (`★★☆`):
-   - The husband delivers a stammering partial explanation (e.g., Level 1: "Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi mà em!").
-   - Unlocks the "Tha thứ & Qua màn" progression action while offering a "Điều tra tiếp để đạt 3 sao" button.
-7. Confronting with 3 verified smoking-gun links (or the case's complete smoking-gun chain) yields a watertight 3-star victory (`★★★`):
-   - The husband breaks down and confesses fully (e.g., Level 1: "Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu... Em đừng giận nữa mà!").
-   - Awards the case's custom Wife Title (e.g., "Nữ thám tử ghen tuông").
-   - Displays the victory comedic roast narrative.
-   - Displays the "Tạo thẻ Roast khoe MXH" button (US-017) and the "Tha thứ & Qua màn" button (US-018).
-8. Accusing an innocent red-herring suspect with verified bridge edges triggers specific over-jealous roast punchlines tailored to that suspect's alibi before returning to investigation.
-9. All confrontation evaluation, excuse branching, and star calculation execute 100% client-side without network calls or external server dependencies.
+4. **Beat-by-Beat Scripted Interrogation (`caseConfig.confrontationScript`)**:
+   - When a case defines `confrontationScript`, confirming confrontation opens a 3-tier vertical dark interrogation room (`max-w-[480px] h-[100dvh]`, `#080b0f` / `#0b1017`) with an overhead spotlight illuminating Comic Husband (`HusbandCharacterImage`: `confident`, `smug`, `nervous`, `broken`), a minimalist `- • -` progress rail (`role="progressbar"`), and a COD Cold War cross / D-pad selector (`up`, `right`, `down`, `left` around a central SVG reticle, `>= 44x44px` touch targets + desktop arrow keys).
+   - **Beat 1 (`opening`)**: Presents 2 opening questions (`left` / `right`), each returning its own `confident` denial from the husband and advancing to Beat 2.
+   - **Beats 2..N (`beat`)**: Evaluates the chosen D-pad option against canonical verified edges on the active corkboard (`requiredEdgeIds`) and suspect alignment (`isBeatChoiceSatisfied`):
+     - **False Branch (`failed` / `smug`)**: Selecting a red herring, lacking any required canonical edge, or accusing a wrong suspect switches the husband to `smug` with a mocking rebuttal, locks `canAccuse = false` (hiding all accusation/verdict buttons), displays only `"Quay lại điều tra"`, and deducts **1 strike** upon exiting the room (triggering "Caught Snooping" if strikes reach 0).
+     - **True Branch (`nervous` -> `broken`)**: Advances beat progress, shifts mood through `nervous` on intermediate beats to `broken` on the final key evidence beat, and unlocks Step `End` (`phase: 'ending'`, `canAccuse = true`).
+   - **Step `End` (`ending` -> `resolved`)**: Unlocks verdict lines from `script.ending` (e.g., divorce vs forgive), stamps the outcome matching `groundTruth.verdict` (`cheating`, `sugar_relationship`, `innocent`), awards 3 stars (`★★★`), custom Wife Title, comedic roast narrative, `"Tạo thẻ Roast khoe MXH"` (US-017), and level progression CTA (US-018).
+5. **Fallback Tiered Evaluation (Cases without `confrontationScript`, e.g. Level 2 & Level 3)**:
+   - 0 verified smoking-gun links -> 0 stars (`confident`), +1 strike penalty (or Caught Snooping if strikes exhaust), and `"Tiếp tục điều tra"`.
+   - 1 verified smoking-gun link -> 1-star win (`★☆☆`, `surprised`), unlocking `"Tha thứ & Qua màn"` and `"Điều tra tiếp để đạt 3 sao"`.
+   - 2 verified smoking-gun links -> 2-star win (`★★☆`, `nervous`), unlocking `"Tha thứ & Qua màn"` and `"Điều tra tiếp để đạt 3 sao"`.
+   - Complete smoking-gun chain -> 3-star victory (`★★★`, `broken`), awarding custom Wife Title, victory roast, `"Tạo thẻ Roast khoe MXH"`, and `"Tha thứ & Qua màn"`.
+6. Accusing an innocent red-herring suspect triggers specific over-jealous roast punchlines tailored to that suspect's alibi (`smug` in scripted mode / `0 stars` in fallback mode) before returning to investigation.
+7. All confrontation evaluation, beat state transitions, excuse branching, and star calculation execute 100% client-side without network calls or external server dependencies.
 
 ### Out of Scope
 
@@ -85,5 +81,5 @@ None for confirmed behavior. ASCII signoff and team sizing remain pending; statu
 - [Level 1 Case Implementation](../epic-04-detective-case-stories-level-content/us-027-husband-hoang-level-1-case-implementation.md)
 - [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md)
 - [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md)
-- Implemented runtime contracts: `src/features/wife-notebook/WifeNotebookModal.tsx`, `src/features/wife-notebook/graphEngine.ts`, `src/features/wife-notebook/level01Fixture.ts`
+- Implemented runtime contracts: `src/features/wife-notebook/WifeNotebookModal.tsx`, `src/features/wife-notebook/confrontationEngine.ts`, `src/features/wife-notebook/components/ConfrontationModal.tsx`, `src/features/wife-notebook/components/HusbandCharacterImage.tsx`, `src/features/wife-notebook/confrontationMotion.ts`, `src/features/wife-notebook/graphEngine.ts`, `src/features/wife-notebook/level01Fixture.ts`
 

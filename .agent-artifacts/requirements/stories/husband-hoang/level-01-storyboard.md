@@ -149,7 +149,7 @@ flowchart LR
   %% 1. Suspects -> Aliases
   Suspect_Huong -->|"uses_alias"| Alias_Tuan
   Suspect_Huong -->|"uses_alias"| Alias_TuanSMS
-  Bridge_Name ==>|"🔥 SG1 (bridges_identity): Khớp tên nhận hàng"| Suspect_Huong
+  Bridge_Name <-->|"edge_name_suspect (bridges_identity): Khớp tên pháp lý"| Suspect_Huong
   Suspect_LanAnh --> Alias_LanAnh
   Suspect_Thao --> Alias_Thao
   Suspect_Ngoc --> Alias_Ngoc
@@ -181,7 +181,7 @@ flowchart LR
   Alias_Tuan <-->|"edge_alias_phone (bridges_identity)"| Bridge_Phone
   Alias_TuanSMS <-->|"edge_alias_sms_phone (bridges_identity)"| Bridge_Phone
   Alias_Tuan <-->|"edge_alias_zola_sms (bridges_identity)"| Alias_TuanSMS
-  Record_ShopOrder <-->|"edge_order_phone (bridges_identity)"| Bridge_Phone
+  Record_ShopOrder <==>|"SG edge_order_phone (bridges_identity): Thợ điện trùng SĐT người nhận váy"| Bridge_Phone
   Record_ShopOrder <-->|"edge_order_name (bridges_identity)"| Bridge_Name
   Record_WifeAlibi <==>|"🔥 SG2 (contradicts_alibi): Họp vs Quẹt thẻ 20:48"| Record_BankReceipt
   Record_ZolaChat -.->|"edge_zola_dinner_receipt (occurred_at)"| Record_BankReceipt

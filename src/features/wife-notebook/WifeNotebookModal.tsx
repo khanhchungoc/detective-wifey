@@ -22,9 +22,14 @@ import {
   evaluateConfrontation,
   calculateConfrontationPreflight,
   getKeyConnectionProgress,
+  getVerifiedKeyEdgeIds,
   getSuspectsOnBoard,
+  hasConfrontationScript,
+  createScriptedConfrontation,
+  advanceScriptedConfrontation,
   type ConfrontationEvaluationResult,
   type ConfrontationPreflightInfo,
+  type ScriptedConfrontationState,
 } from './confrontationEngine';
 import { useCorkboardGestures } from './useCorkboardGestures';
 import { CorkboardCanvas } from './components/CorkboardCanvas';
@@ -380,6 +385,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   const [selectedConfrontationSuspectId, setSelectedConfrontationSuspectId] = useState<string | null>(null);
   const [isConfronting, setIsConfronting] = useState(false);
   const [confrontationEvaluation, setConfrontationEvaluation] = useState<ConfrontationEvaluationResult | null>(null);
+  const [scriptedConfrontation, setScriptedConfrontation] = useState<ScriptedConfrontationState | null>(null);
+  const scriptedPenaltyAppliedRef = useRef(false);
+  const scriptedVictoryRecordedRef = useRef(false);
 
   // All tagged evidence derived from PlaySession
   const allTaggedNodes = useMemo(() => {
@@ -1090,18 +1098,38 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       appsData: {},
     };
 
+    const activeStrikes = currentStrikes ?? (maxStrikes || 5);
+
+    if (hasConfrontationScript(resolvedConfig)) {
+      scriptedPenaltyAppliedRef.current = false;
+      scriptedVictoryRecordedRef.current = false;
+      const initialSession = createScriptedConfrontation({
+        caseConfig: resolvedConfig,
+        knowledgeGraph,
+        activeEdges: edges,
+        placedNodes,
+        accusedSuspectId: targetSuspectId,
+        currentStrikes: activeStrikes,
+      });
+      setConfrontationEvaluation(null);
+      setScriptedConfrontation(initialSession);
+      setIsConfronting(true);
+      return;
+    }
+
     const evalResult = evaluateConfrontation({
       caseConfig: resolvedConfig,
       knowledgeGraph,
       activeEdges: edges,
       unmaskedSuspectIds,
-      currentStrikes: currentStrikes ?? (maxStrikes || 5),
+      currentStrikes: activeStrikes,
       accusedSuspectId: targetSuspectId,
       placedNodes,
       taggedSuspects,
       totalClues: 10,
     });
 
+    setScriptedConfrontation(null);
     setConfrontationEvaluation(evalResult);
     setIsConfronting(true);
 
@@ -1132,6 +1160,45 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     unmaskedSuspectIds,
   ]);
 
+  const handleSelectConfrontationChoice = useCallback((choiceId: string) => {
+    if (!caseConfig || !hasConfrontationScript(caseConfig)) return;
+    setScriptedConfrontation(prev => {
+      if (!prev) return prev;
+      const next = advanceScriptedConfrontation(prev, choiceId, {
+        caseConfig,
+        knowledgeGraph,
+        activeEdges: edges,
+        placedNodes,
+      });
+      if (next.phase === 'resolved' && !scriptedVictoryRecordedRef.current) {
+        scriptedVictoryRecordedRef.current = true;
+        onConfrontationVictory?.(3, next.wifeTitle);
+      }
+      return next;
+    });
+  }, [caseConfig, edges, knowledgeGraph, onConfrontationVictory, placedNodes]);
+
+  const handleCloseConfrontation = useCallback(() => {
+    if (scriptedConfrontation?.phase === 'failed' && !scriptedPenaltyAppliedRef.current) {
+      scriptedPenaltyAppliedRef.current = true;
+      onApplyConfrontationStrike?.();
+      if (scriptedConfrontation.isMaxStrikesReached) {
+        setIsConfronting(false);
+        setScriptedConfrontation(null);
+        onCaught?.();
+        onClose();
+        return;
+      }
+    }
+    setIsConfronting(false);
+    setScriptedConfrontation(null);
+  }, [onApplyConfrontationStrike, onCaught, onClose, scriptedConfrontation]);
+
+  const verifiedKeyEdgeIds = useMemo(
+    () => getVerifiedKeyEdgeIds(edges, knowledgeGraph),
+    [edges, knowledgeGraph],
+  );
+
   const keyConnectionProgress = useMemo(
     () => getKeyConnectionProgress(edges, knowledgeGraph),
     [edges, knowledgeGraph],
@@ -1147,6 +1214,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             isPinching={isPinching}
             placedNodes={placedNodes}
             edges={edges}
+            verifiedKeyEdgeIds={verifiedKeyEdgeIds}
             activePairing={activePairing}
             unmaskedSuspectIds={unmaskedSuspectIds}
             activeContradictions={activeContradictions}
@@ -1263,21 +1331,24 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       )}
 
       {/* Anytime Confrontation Hub Overlay (US-016) */}
-      {isConfronting && confrontationEvaluation && (
+      {isConfronting && (scriptedConfrontation || confrontationEvaluation) && (
         <ConfrontationModal
           isOpen={isConfronting}
+          session={scriptedConfrontation}
           evaluation={confrontationEvaluation}
           maxStrikes={maxStrikes || caseConfig?.allowedStrikes || 5}
-          onContinueInvestigation={() => setIsConfronting(false)}
+          onSelectChoice={handleSelectConfrontationChoice}
+          onContinueInvestigation={handleCloseConfrontation}
           onForgiveAndAdvance={() => {
             setIsConfronting(false);
+            setScriptedConfrontation(null);
             onNextLevel?.();
             onClose();
           }}
           onShareRoastCard={() => {
             // US-017 shareable card hook
           }}
-          onClose={() => setIsConfronting(false)}
+          onClose={handleCloseConfrontation}
         />
       )}
     </div>

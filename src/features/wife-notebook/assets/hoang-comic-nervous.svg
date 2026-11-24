@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="shirt-nervous" x1="120" y1="150" x2="120" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#52a8dc"/>
+      <stop offset="55%" stop-color="#256896"/>
+      <stop offset="100%" stop-color="#0f2b42"/>
+    </linearGradient>
+    <linearGradient id="skin-nervous" x1="120" y1="54" x2="120" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#efb995"/>
+      <stop offset="58%" stop-color="#c67d56"/>
+      <stop offset="100%" stop-color="#63321f"/>
+    </linearGradient>
+    <linearGradient id="hair-nervous" x1="90" y1="36" x2="150" y2="98" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#26334a"/>
+      <stop offset="40%" stop-color="#0e1420"/>
+      <stop offset="100%" stop-color="#05070c"/>
+    </linearGradient>
+    <linearGradient id="table-nervous" x1="120" y1="214" x2="120" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="20%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#06090e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Tense Hunched Shoulders -->
+  <path d="M34 226 C38 174 64 150 96 146 L120 156 L144 146 C176 150 202 174 206 226 Z" fill="url(#shirt-nervous)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M36 224 C44 186 64 166 86 158 L76 224 Z" fill="#091a2b" opacity="0.76"/>
+  <path d="M204 224 C196 186 176 166 154 158 L164 224 Z" fill="#091a2b" opacity="0.76"/>
+  <path d="M60 176 L76 194 M66 186 L80 202 M178 176 L162 194" stroke="#05070c" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Tense Neck -->
+  <path d="M101 130 L100 160 L120 172 L140 160 L139 130 Z" fill="url(#skin-nervous)" stroke="#05070c" stroke-width="3"/>
+  <path d="M101 134 Q120 154 139 134 L139 149 Q120 161 101 149 Z" fill="#2a140d" opacity="0.82"/>
+  <line x1="112" y1="146" x2="110" y2="162" stroke="#5c2d1c" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- Pulled-Open Shirt Collar & Sunglasses Pocket -->
+  <path d="M95 146 L78 172 L106 178 L120 168 Z" fill="#6ec2f2" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M145 146 L160 172 L134 178 L120 168 Z" fill="#4595ca" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M142 180 L165 180 L165 203 L153 208 L142 203 Z" fill="#1e5885" stroke="#05070c" stroke-width="2.2" stroke-linejoin="round"/>
+  <rect x="147" y="173" width="14" height="11" rx="2.5" fill="#090d14" stroke="#05070c" stroke-width="2"/>
+
+  <!-- Ears -->
+  <path d="M77 97 C71 97 69 110 74 117 C76 120 80 120 81 117" fill="#b57149" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M163 97 C169 97 171 110 166 117 C164 120 160 120 159 117" fill="#9c5c38" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Head Leaning Forward -->
+  <path d="M80 78 C80 56 98 48 120 48 C142 48 160 56 160 78 L158 114 C157 128 146 138 132 143 C124 146 116 146 108 143 C94 138 83 128 82 114 Z" fill="url(#skin-nervous)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+  <ellipse cx="120" cy="71" rx="24" ry="9" fill="#fed7aa" opacity="0.34"/>
+  <path d="M83 112 C86 128 99 137 120 141 C141 137 154 128 157 112 L156 120 C153 133 141 141 120 145 C99 141 87 133 84 120 Z" fill="#3a1d12" opacity="0.58"/>
+
+  <!-- Slightly Ruffled Hair with Loose Strand Over Forehead -->
+  <path d="M78 98 C73 74 75 52 92 42 C104 34 133 32 150 42 C165 50 167 74 162 98 C159 82 154 69 144 64 C131 67 112 66 97 59 C91 67 83 80 78 98 Z" fill="url(#hair-nervous)" stroke="#05070c" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M108 58 C105 68 100 74 95 79" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M115 59 C114 67 111 72 108 76" stroke="#05070c" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- Worried Furrowed Brows -->
+  <path d="M89 88 Q101 86 112 79" stroke="#05070c" stroke-width="3.8" stroke-linecap="round"/>
+  <path d="M128 79 Q139 86 151 88" stroke="#05070c" stroke-width="3.8" stroke-linecap="round"/>
+  <line x1="117" y1="79" x2="117" y2="85" stroke="#5c2d1c" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="123" y1="79" x2="123" y2="85" stroke="#5c2d1c" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Wide Flustered Darting Eyes -->
+  <ellipse cx="101" cy="96" rx="9.5" ry="6.2" fill="#ffffff" stroke="#05070c" stroke-width="2.4"/>
+  <circle cx="103" cy="96" r="2.4" fill="#090d16"/>
+  <circle cx="103.8" cy="95.2" r="0.9" fill="#ffffff"/>
+  <path d="M93 104 Q101 107 109 104" stroke="#5c2d1c" stroke-width="1.5" stroke-linecap="round"/>
+
+  <ellipse cx="139" cy="96" rx="9.5" ry="6.2" fill="#ffffff" stroke="#05070c" stroke-width="2.4"/>
+  <circle cx="141" cy="96" r="2.4" fill="#090d16"/>
+  <circle cx="141.8" cy="95.2" r="0.9" fill="#ffffff"/>
+  <path d="M131 104 Q139 107 147 104" stroke="#5c2d1c" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M120 93 L117 109 C117 112 123 113 126 110" stroke="#05070c" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Tense Gritted-Teeth Awkward Grimace -->
+  <rect x="103" y="119" width="34" height="11" rx="5.5" fill="#f8fafc" stroke="#05070c" stroke-width="2.6"/>
+  <line x1="104" y1="124.5" x2="136" y2="124.5" stroke="#05070c" stroke-width="1.6"/>
+  <line x1="112" y1="119" x2="112" y2="130" stroke="#475569" stroke-width="1.4"/>
+  <line x1="120" y1="119" x2="120" y2="130" stroke="#475569" stroke-width="1.4"/>
+  <line x1="128" y1="119" x2="128" y2="130" stroke="#475569" stroke-width="1.4"/>
+
+  <!-- Comic Sweat Beads Dripping Down Forehead & Temple -->
+  <path d="M87 70 C87 70 91 77 91 80 C91 82.5 89.2 84 87 84 C84.8 84 83 82.5 83 80 C83 77 87 70 87 70 Z" fill="#7dd3fc" stroke="#05070c" stroke-width="1.6"/>
+  <path d="M152 76 C152 76 156 84 156 87 C156 89.5 154.2 91 152 91 C149.8 91 148 89.5 148 87 C148 84 152 76 152 76 Z" fill="#7dd3fc" stroke="#05070c" stroke-width="1.6"/>
+  <path d="M148 110 C148 110 151 116 151 118.5 C151 120.5 149.6 122 148 122 C146.4 122 145 120.5 145 118.5 C145 116 148 110 148 110 Z" fill="#bae6fd" stroke="#05070c" stroke-width="1.4"/>
+
+  <!-- Nervous Hand Tugging Open Shirt Collar -->
+  <path d="M68 216 L76 174 C78 164 90 160 96 166 C100 170 98 180 91 184 L88 216 Z" fill="url(#skin-nervous)" stroke="#05070c" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M84 168 L93 171 M83 173 L92 176" stroke="#05070c" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Cold Steel Interrogation Table Foreground -->
+  <rect x="10" y="216" width="220" height="24" fill="url(#table-nervous)"/>
+  <line x1="10" y1="216" x2="230" y2="216" stroke="#fb923c" stroke-width="2" opacity="0.55"/>
+</svg>

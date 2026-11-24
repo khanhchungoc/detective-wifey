@@ -41,45 +41,51 @@ timestamp: "2026-10-14T13:00:00+07:00"
   - When an uncollected required clue remains, displays `[AppIcon] Xem [Tên ứng dụng]. [Về màn hình chính]` and highlights the target app icon on the SpringBoard (max 2 pulses then static indicator; static indicator under `prefers-reduced-motion`). Clearing/pinning the target clue clears the highlight.
   - When all required clues are already collected but the graph remains unsolved, displays a general reminder (`Xem lại các mối liên hệ.`) without revealing the answer pair, and starts the 30s cooldown.
 
-### 2.4. Anytime Confrontation & Dynamic Excuse Engine (`[ Đối chất ]` - `US-016`, `US-017`, `US-033`)
-* **Automatic Graph Evaluation**: Tapping `[Đối chất]` at any moment automatically evaluates connected clusters and contradiction edges on the corkboard against `caseConfig.groundTruth` without manual dropdowns.
-* **Scaled Outcome Tiers**:
-  1. **0 Core Clues (0 Stars - Premature Accusation)**: Husband delivers confident gaslighting excuses (*"chối bay chối biến"*). Increments suspicion by **+1 strike** in normal levels (or triggers a safe, zero-penalty instructional retry in Level 0) and lets the player continue investigating.
-  2. **1-2 Core Clues (1-2 Stars - Partial Conviction)**: Husband stammers defensive excuses. Player can choose `[Tha thứ & Qua màn]` or `[Điều tra tiếp để đạt 3 sao]`.
-  3. **3 Core Clues (3 Stars - Full Conviction)**: Husband confesses completely. Awards 3 stars, custom Wife Title, comedic roast summary, `[Tạo thẻ Roast khoe MXH]` (vertical `9:16` social card), and `[Tha thứ & Qua màn]`.
+### 2.4. Beat-by-Beat Interrogation & Dynamic Excuse Engine (`[ Đối chất ]` - `US-016`, `US-017`, `US-033`)
+* **Preflight & Automatic Graph Evaluation**: Tapping `[Đối chất]` opens the two-step Darkroom Dossier (`ConfrontationConfirmModal`) to pick a pinned suspect and review verified linkage bridges, then launches `ConfrontationModal` (`z-80`) without manual card slotting.
+* **Scripted Beat-by-Beat Interrogation (`caseConfig.confrontationScript`)**:
+  1. **Beat 1 (`opening`)**: Presents 2 opening questions (`left` / `right`) on the COD Cold War D-pad. Each choice returns a distinct `confident` denial from the husband and advances to Beat 2.
+  2. **Beats 2..N (`beat`)**: Presents up to 4 directional choices (`up`, `right`, `down`, `left`) around the central SVG reticle (accessible by touch or desktop arrow keys). `isBeatChoiceSatisfied` checks whether the selected option is a valid lead whose `requiredEdgeIds` are all connected as canonical edges on the corkboard (and the accused suspect matches `groundTruth.culpritSuspectId`):
+     - **False Branch (`failed` / `smug`)**: Missing/unverified evidence, red herring choices, or wrong-suspect accusations trigger the husband's `smug` rebuttal, lock `canAccuse = false` (hiding all accusation/verdict actions), show only `[Quay lại điều tra]`, and apply **+1 suspicion strike** upon exiting the interrogation room.
+     - **True Branch (`nervous` -> `broken`)**: Advances progress along the `- • -` rail, shifts mood through `nervous` on intermediate beats to `broken` on the final key evidence beat, and unlocks `ending` (`canAccuse = true`).
+  3. **Step `End` (`ending` -> `resolved`)**: Unlocks final verdict lines from `script.ending` (e.g., divorce vs forgive), stamps the case verdict matching `groundTruth.verdict`, awards 3 stars, Wife Title, comedic roast summary, `[Tạo thẻ Roast khoe MXH]`, and level progression CTA.
+* **Legacy Tiered Fallback (Cases without `confrontationScript`)**:
+  1. **0 Core Clues (0 Stars - Premature Accusation)**: Husband delivers `confident` gaslighting excuses, increments suspicion by **+1 strike**, and lets the player continue investigating.
+  2. **1-2 Core Clues (1-2 Stars - Partial Conviction)**: Husband stammers defensive excuses (`surprised` / `nervous`), offering `[Tha thứ & Qua màn]` or `[Điều tra tiếp để đạt 3 sao]`.
+  3. **Complete Smoking-Gun Chain (3 Stars - Full Conviction)**: Husband confesses (`broken`), awarding 3 stars, custom Wife Title, roast summary, `[Tạo thẻ Roast khoe MXH]`, and `[Tha thứ & Qua màn]`.
 
 ---
 
 ## 3. Declarative State Contract
 
 ```typescript
-export interface PinnedEvidenceItem {
-  evidenceId: string;
-  sourceAppId: string;
-  title: string;
-  snippetPreview: string;
-  fullDetails?: string;
-  timestamp: string;
-  linkedSuspectId?: string; // ID of linked suspect, or undefined if unlinked
-  isSmokingGun: boolean;    // Evaluated only by game engine, never shown to user
-}
+export type ConfrontationMood = 'confident' | 'smug' | 'nervous' | 'broken';
+export type ConfrontationSlot = 'up' | 'right' | 'down' | 'left';
+export type ConfrontationStepPhase = 'opening' | 'beat' | 'failed' | 'ending' | 'resolved';
 
-export interface TaggedSuspectItem {
-  suspectId: string;
-  displayName: string;
-  avatarUrl?: string;
-  sourceAppId: string;
-  notesText?: string;
-  linkedEvidenceIds: string[]; // List of evidence IDs attached to this suspect
-  addedTimestamp: string;
-}
-
-export interface WifeNotebookState {
-  isOpen: boolean;
-  activeTab: 'dossier' | 'verdict';
-  suspects: TaggedSuspectItem[];
-  evidence: PinnedEvidenceItem[];
-  selectedVerdict?: 'innocent' | 'cheating' | 'sugar_relationship';
-  accusedSuspectId?: string;
+export interface ScriptedConfrontationState {
+  phase: ConfrontationStepPhase;
+  husbandName: string;
+  husbandMood: ConfrontationMood;
+  husbandLine: string | null;
+  lastWifeLine: string | null;
+  topic: string | null;
+  beatIndex: number;
+  totalBeats: number;
+  currentStepIndex: number;
+  totalSteps: number;
+  verifiedBeatCount: number;
+  hitSeq: number;
+  choices: Array<{ choiceId: string; slot: ConfrontationSlot; wifeLine: string }>;
+  canAccuse: boolean;
+  selectedEndingChoiceId: string | null;
+  verdict: 'innocent' | 'cheating' | 'sugar_relationship';
+  stars: 0 | 3;
+  wifeTitle?: string;
+  narrativeRoast?: string;
+  currentStrikes: number;
+  newStrikesRemaining: number;
+  isMaxStrikesReached: boolean;
+  isWrongSuspect: boolean;
 }
 ```

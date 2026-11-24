@@ -57,6 +57,51 @@ export interface LevelMetadata {
   unlockRequirementLevel: number;
 }
 
+export type ConfrontationMood = 'confident' | 'smug' | 'nervous' | 'broken';
+export type ConfrontationSlot = 'up' | 'right' | 'down' | 'left';
+
+export interface ConfrontationReply<M extends ConfrontationMood = ConfrontationMood> {
+  husbandLine: string;
+  husbandMood: M;
+}
+
+export interface ConfrontationOpeningChoice extends ConfrontationReply<'confident'> {
+  choiceId: string;
+  slot: 'left' | 'right';
+  wifeLine: string;
+}
+
+interface ConfrontationChoiceBase {
+  choiceId: string;
+  slot: ConfrontationSlot;
+  wifeLine: string;
+  onFalse: ConfrontationReply<'smug'>;
+}
+
+/** Lead: true only when every requiredEdgeIds is connected on the notebook. Red herring: no requiredEdgeIds, always onFalse. */
+export type ConfrontationBeatChoice =
+  | (ConfrontationChoiceBase & { requiredEdgeIds: string[]; onTrue: ConfrontationReply<'nervous' | 'broken'> })
+  | (ConfrontationChoiceBase & { requiredEdgeIds?: never; onTrue?: never });
+
+export interface ConfrontationBeat {
+  beatId: string;
+  topic: string;
+  choices: ConfrontationBeatChoice[];
+}
+
+export interface ConfrontationEndingChoice extends ConfrontationReply {
+  choiceId: string;
+  slot: ConfrontationSlot;
+  wifeLine: string;
+}
+
+/** Beat 1 = opening; beats 2..N follow in order; the last lead's onTrue (broken) unlocks the ending. */
+export interface ConfrontationScript {
+  opening: ConfrontationOpeningChoice[];
+  beats: ConfrontationBeat[];
+  ending: ConfrontationEndingChoice[];
+}
+
 export interface CaseConfig {
   caseId: string;
   husbandId: string;
@@ -72,6 +117,7 @@ export interface CaseConfig {
   appsData: Record<string, unknown>;
   notifications?: NotificationToast[];
   knowledgeGraph?: import('./knowledge-graph').CaseKnowledgeGraph;
+  confrontationScript?: ConfrontationScript;
 }
 
 export type {

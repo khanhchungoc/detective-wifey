@@ -74,8 +74,8 @@
 ```
 
 - **Yarn String Visual Types (2 Types)**:
-  - **Contradiction (`contradicts_alibi`)**: Red solid (`#DC2626`) — highest-priority link where evidence conflicts with an alibi.
-  - **Neutral (All other connections)**: Yellow solid (`#FBBF24`, solid) — all other evidence and identity links.
+  - **Critical / Key Evidence (`contradicts_alibi` or verified smoking-gun / required key edge)**: Red solid (`#DC2626`) — highest-priority links (alibi contradictions and verified smoking-gun connections such as phone/order match).
+  - **Neutral (All other connections)**: Yellow solid (`#FBBF24`, solid) — supporting and speculative evidence links.
 - **`[Loc]` / Clue Location Jump Icon Button (`IoNavigateOutline`)**: Compact icon button positioned on the top-right header of each clue node card (touch target 36px × 36px). Tapping this icon activates deep-link navigation directly to the original clue location (source parody app and specific conversation/screen), completely decoupled from the card body tap gesture (which remains dedicated to tap-to-connect yarn string pairing).
 
 ---

@@ -6,8 +6,8 @@ export { ConfrontationModal } from './components/ConfrontationModal';
 export type { ConfrontationModalProps } from './components/ConfrontationModal';
 export { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 export type { ConfrontationConfirmModalProps } from './components/ConfrontationConfirmModal';
-export { HusbandCharacterImage } from './components/HusbandCharacterImage';
-export type { HusbandMood } from './components/HusbandCharacterImage';
+export { HusbandCharacterImage, HOANG_COMIC_ASSETS } from './components/HusbandCharacterImage';
+export type { HusbandMood, HusbandCharacterImageProps } from './components/HusbandCharacterImage';
 export { useCorkboardGestures } from './useCorkboardGestures';
 export {
   createEdgeBetweenNodes,
@@ -27,7 +27,13 @@ export {
 export {
   evaluateConfrontation,
   calculateConfrontationPreflight,
+  getKeyConnectionProgress,
+  getVerifiedKeyEdgeIds,
   getSuspectsOnBoard,
+  hasConfrontationScript,
+  isBeatChoiceSatisfied,
+  createScriptedConfrontation,
+  advanceScriptedConfrontation,
 } from './confrontationEngine';
 export type {
   ConfrontationEvaluationParams,
@@ -38,6 +44,10 @@ export type {
   ConvictionChance,
   ConvictionChanceLevel,
   SuspectOnBoard,
+  ConfrontationStepPhase,
+  ActiveConfrontationChoice,
+  ScriptedConfrontationParams,
+  ScriptedConfrontationState,
 } from './confrontationEngine';
 export { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
 export type {

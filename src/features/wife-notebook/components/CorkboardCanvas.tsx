@@ -139,6 +139,7 @@ interface CorkboardCanvasProps {
   isPinching?: boolean;
   placedNodes: PlacedNode[];
   edges: CaseGraphEdge[];
+  verifiedKeyEdgeIds?: readonly string[];
   activePairing: PairingState;
   unmaskedSuspectIds: string[];
   activeContradictions: string[];
@@ -169,6 +170,7 @@ const CorkboardContents = memo(function CorkboardContents({
   isPinching = false,
   placedNodes,
   edges,
+  verifiedKeyEdgeIds,
   activePairing,
   unmaskedSuspectIds,
   activeContradictions,
@@ -192,6 +194,11 @@ const CorkboardContents = memo(function CorkboardContents({
     }
     return map;
   }, [placedNodes]);
+
+  const verifiedKeyEdgeIdSet = useMemo(
+    () => (verifiedKeyEdgeIds ? new Set(verifiedKeyEdgeIds) : null),
+    [verifiedKeyEdgeIds],
+  );
 
   // Active dragging node ID for cursor and rotation styling
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
@@ -505,13 +512,17 @@ const CorkboardContents = memo(function CorkboardContents({
             const y2 = target.y + PIN_OFFSET_Y;
 
             const isContradiction = edge.relationship === 'contradicts_alibi';
+            const isVerifiedKeyEdge = verifiedKeyEdgeIdSet
+              ? verifiedKeyEdgeIdSet.has(edge.edgeId)
+              : (edge.isCanonical !== false && edge.isSmokingGun);
+            const isKeyString = isContradiction || isVerifiedKeyEdge;
             const isSelected = selectedEdgeId === edge.edgeId;
-            const { pathD } = calculateYarnStringCurve(x1, y1, x2, y2, isContradiction);
+            const { pathD } = calculateYarnStringCurve(x1, y1, x2, y2, isKeyString);
 
             // Simplified 2-type yarn mapping against dark walnut cork:
-            // - Contradiction (conflicts with alibi): classic detective red #DC2626, solid
-            // - Neutral (all other connections): amber gold #FBBF24, solid
-            const stringStroke = isContradiction ? '#DC2626' : '#FBBF24';
+            // - Key / Smoking-gun or contradiction link: classic detective red #DC2626, solid
+            // - Neutral (supporting & speculative connections): amber gold #FBBF24, solid
+            const stringStroke = isKeyString ? '#DC2626' : '#FBBF24';
 
             const strokeWidth = isSelected ? '2.75' : '2';
 

@@ -12,6 +12,7 @@ import {
   LEVEL_01_KNOWLEDGE_GRAPH,
 } from '../features/wife-notebook';
 import { deriveNodesFromTaggedEvidence, restoreCorkboardState } from '../features/wife-notebook/WifeNotebookModal';
+import { getKeyConnectionProgress } from '../features/wife-notebook/confrontationEngine';
 import { PlaySession } from '../features/play-session';
 import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { CaseGraphEdge } from '../shared/contracts/knowledge-graph';
@@ -57,9 +58,9 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
   };
 
   const smokingGunEdge1: CaseGraphEdge = {
-    edgeId: 'edge_name_suspect',
-    sourceNodeId: 'node_bridge_name',
-    targetNodeId: 'node_suspect_huong',
+    edgeId: 'edge_order_phone',
+    sourceNodeId: 'node_record_ecommerce_order',
+    targetNodeId: 'node_bridge_phone',
     relationship: 'bridges_identity',
     isSmokingGun: true,
   };
@@ -266,7 +267,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const caseWith3RequiredGraph: CaseKnowledgeGraph = {
         ...LEVEL_01_KNOWLEDGE_GRAPH,
         requiredSmokingGunEdgeIds: [
-          'edge_order_name',
+          'edge_order_phone',
           'edge_alibi_contradiction',
           'test_third_smoking_gun',
         ],
@@ -335,7 +336,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         knowledgeGraph: {
           ...LEVEL_01_KNOWLEDGE_GRAPH,
           requiredSmokingGunEdgeIds: [
-            'edge_order_name',
+            'edge_order_phone',
             'edge_alibi_contradiction',
             'test_third_smoking_gun',
           ],
@@ -982,11 +983,11 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(suspects.some(s => s.displayName === 'Vợ')).toBe(false);
     });
 
-    it('verifies 2/2 smoking guns with edge_order_name and edge_alibi_contradiction achieves 3-star victory (US-016 AC 6)', () => {
-      const edgeOrderName: CaseGraphEdge = {
-        edgeId: 'edge_order_name',
+    it('verifies 2/2 smoking guns with edge_order_phone and edge_alibi_contradiction achieves 3-star victory (US-016 AC 6)', () => {
+      const edgeOrderPhone: CaseGraphEdge = {
+        edgeId: 'edge_order_phone',
         sourceNodeId: 'node_record_ecommerce_order',
-        targetNodeId: 'node_bridge_name',
+        targetNodeId: 'node_bridge_phone',
         relationship: 'bridges_identity',
         isSmokingGun: true,
       };
@@ -1001,7 +1002,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
-        activeEdges: [edgeOrderName, edgeAlibi],
+        activeEdges: [edgeOrderPhone, edgeAlibi],
         unmaskedSuspectIds: [],
         currentStrikes: 5,
         accusedSuspectId: 'suspect_huong',
@@ -1021,13 +1022,13 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(result.narrativeRoast).toBe(mockCaseConfig.groundTruth.narrativeRoast);
     });
 
-    it('does not auto-report 100% or 3 stars when only equivalent identity edges (edge_order_name + edge_name_suspect) are connected without alibi contradiction', () => {
+    it('does not count demoted legal-name edges (edge_order_name + edge_name_suspect) as smoking guns', () => {
       const edgeOrderName: CaseGraphEdge = {
         edgeId: 'edge_order_name',
         sourceNodeId: 'node_record_ecommerce_order',
         targetNodeId: 'node_bridge_name',
         relationship: 'bridges_identity',
-        isSmokingGun: true,
+        isSmokingGun: false,
         isCanonical: true,
       };
       const edgeNameSuspect: CaseGraphEdge = {
@@ -1035,9 +1036,11 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         sourceNodeId: 'node_bridge_name',
         targetNodeId: 'node_suspect_huong',
         relationship: 'bridges_identity',
-        isSmokingGun: true,
+        isSmokingGun: false,
         isCanonical: true,
       };
+
+      expect(getKeyConnectionProgress([edgeOrderName, edgeNameSuspect], LEVEL_01_KNOWLEDGE_GRAPH).verifiedCount).toBe(0);
 
       const preflight = calculateConfrontationPreflight({
         caseConfig: mockCaseConfig,
@@ -1046,22 +1049,9 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         accusedSuspectId: 'suspect_huong',
       });
 
-      expect(preflight.successRate).toBe(30);
-      expect(preflight.potentialStars).toBe(1);
+      expect(preflight.successRate).toBe(0);
+      expect(preflight.potentialStars).toBe(0);
       expect(preflight.isLowSuccessRate).toBe(true);
-
-      const evalResult = evaluateConfrontation({
-        caseConfig: mockCaseConfig,
-        knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
-        activeEdges: [edgeOrderName, edgeNameSuspect],
-        unmaskedSuspectIds: ['node_suspect_huong'],
-        currentStrikes: 5,
-        accusedSuspectId: 'suspect_huong',
-        rngRoll: 10,
-      });
-
-      expect(evalResult.stars).toBe(1);
-      expect(evalResult.successRate).toBe(30);
     });
 
     it('does not auto-report 100% from non-smoking-gun clues alone', () => {
@@ -1090,7 +1080,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         knowledgeGraph: {
           nodes: ordinaryNodes,
           edges: ordinaryEdges,
-          requiredSmokingGunEdgeIds: ['edge_order_name', 'edge_alibi_contradiction'],
+          requiredSmokingGunEdgeIds: ['edge_order_phone', 'edge_alibi_contradiction'],
         },
         placedNodes: ordinaryNodes,
         activeEdges: ordinaryEdges,

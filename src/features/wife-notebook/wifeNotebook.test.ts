@@ -16,7 +16,7 @@ import { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
 import { deriveNodesFromTaggedEvidence } from './WifeNotebookModal';
 import type { PlacedNode } from './types';
 import type { CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
-import { getKeyConnectionProgress, getSuspectsOnBoard } from './confrontationEngine';
+import { getKeyConnectionProgress, getSuspectsOnBoard, getVerifiedKeyEdgeIds } from './confrontationEngine';
 
 describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
   it('does not verify dinner messages against the office-dress order, including saved links', () => {
@@ -46,7 +46,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         evidence: { caseId: 'case', recordId: 'order_01', title: 'Nguyễn Thị Thu Hương', snippet: 'Số điện thoại: 0988 886 677' } },
     ]);
     const connect = () => createEdgeBetweenNodes(LEVEL_01_KNOWLEDGE_GRAPH, [], nodes[0].nodeId, nodes[1].nodeId, nodes).newEdge;
-    expect(connect()).toMatchObject({ isCanonical: true, isSmokingGun: false, edgeId: 'edge_order_phone' });
+    expect(connect()).toMatchObject({ isCanonical: true, isSmokingGun: true, edgeId: 'edge_order_phone' });
     nodes[1].messages = [{ recordId: 'order_01', text: 'Số điện thoại: 0988990011' }];
     expect(connect()?.isCanonical).toBe(false);
   });
@@ -203,7 +203,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         sourceNodeId: 'node_record_ecommerce_order',
         targetNodeId: 'node_bridge_phone',
         relationship: 'bridges_identity',
-        isSmokingGun: false,
+        isSmokingGun: true,
       },
       {
         edgeId: 'edge_order_name',
@@ -223,7 +223,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         sourceNodeId: 'node_bridge_name',
         targetNodeId: 'node_suspect_huong',
         relationship: 'bridges_identity',
-        isSmokingGun: true,
+        isSmokingGun: false,
       },
     ];
     const unmasked = evaluateUnmaskedSuspects(LEVEL_01_KNOWLEDGE_GRAPH, completeChainEdges);
@@ -508,6 +508,22 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
           isSmokingGun: false,
           isCanonical: false,
         },
+        {
+          edgeId: 'edge_order_name',
+          sourceNodeId: 'node_record_ecommerce_order',
+          targetNodeId: 'node_bridge_name',
+          relationship: 'bridges_identity',
+          isSmokingGun: false,
+          isCanonical: true,
+        },
+        {
+          edgeId: 'edge_name_suspect',
+          sourceNodeId: 'node_bridge_name',
+          targetNodeId: 'node_suspect_huong',
+          relationship: 'bridges_identity',
+          isSmokingGun: false,
+          isCanonical: true,
+        },
       ];
       expect(getKeyConnectionProgress(nonKeyEdges, LEVEL_01_KNOWLEDGE_GRAPH)).toEqual({
         verifiedCount: 0,
@@ -517,17 +533,9 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       const oneKeyPlusBridgeDuplicate: CaseGraphEdge[] = [
         ...nonKeyEdges,
         {
-          edgeId: 'edge_order_name',
+          edgeId: 'edge_order_phone',
           sourceNodeId: 'node_record_ecommerce_order',
-          targetNodeId: 'node_bridge_name',
-          relationship: 'bridges_identity',
-          isSmokingGun: true,
-          isCanonical: true,
-        },
-        {
-          edgeId: 'edge_name_suspect',
-          sourceNodeId: 'node_bridge_name',
-          targetNodeId: 'node_suspect_huong',
+          targetNodeId: 'node_bridge_phone',
           relationship: 'bridges_identity',
           isSmokingGun: true,
           isCanonical: true,
@@ -553,6 +561,10 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         verifiedCount: 2,
         requiredCount: 2,
       });
+      expect(getVerifiedKeyEdgeIds(bothKeyEdges, LEVEL_01_KNOWLEDGE_GRAPH)).toEqual([
+        'edge_order_phone',
+        'edge_alibi_contradiction',
+      ]);
     });
   });
 });

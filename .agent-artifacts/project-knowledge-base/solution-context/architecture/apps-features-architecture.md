@@ -139,13 +139,12 @@ Individual visual identity, view hierarchies, and clue integrations are document
   * Each failed PIN/answer triggers a skippable $\sim 60\text{s}$ lockout animation timer.
   * Reaching the strike limit triggers the "Bị giật lại máy" (Caught snooping) fail screen with instant case reset routing.
 
-### 3.4. Verdict Evaluation & Scoring Engine
-* **Architectural Role**: Pure functional rules evaluator executed upon submitting the verdict from the Wife's Notebook.
+### 3.4. Verdict Evaluation & Beat-by-Beat Interrogation Engine
+* **Architectural Role**: Pure functional rules evaluator and beat-by-beat interrogation state machine (`src/features/wife-notebook/confrontationEngine.ts`) executed from the Wife's Notebook.
 * **Evaluation Pipeline**:
-  1. Compares `submittedVerdict` and `accusedSuspectId` against `caseConfig.groundTruth`.
-  2. Computes Star Rating ($1\text{ to }3\text{ stars}$) based on speed and strikes incurred.
-  3. Formulates the comedic roast narrative (including "Vợ Sư Tử Hà Đông" over-jealous roast for innocent cases).
-  4. Generates a custom "Wife Title" (*e.g. Thám Tử Sư Tử, Vợ Đa Nghi, Nữ Hoàng Bắt Ghen*).
+  1. When `caseConfig.confrontationScript` is defined, drives a multi-beat interrogation state machine (`createScriptedConfrontation` -> `advanceScriptedConfrontation`): Beat 1 (`opening`) -> Beats 2..N (`beat` choices checked against canonical corkboard edges `requiredEdgeIds` and `accusedSuspectId`) -> False branch (`smug`, `canAccuse = false`, +1 strike on exit) or True chain (`nervous` -> `broken` -> `ending` -> `resolved` 3-star verdict).
+  2. When `confrontationScript` is omitted (legacy/fallback levels), `evaluateConfrontation` evaluates active smoking-gun edges and `accusedSuspectId` against `caseConfig.groundTruth` to yield 0-3 stars.
+  3. Formulates the comedic roast narrative and custom Wife Title aligned with `groundTruth.verdict`.
 
 ### 3.5. Shareable Social Card Canvas Generator
 * **Architectural Role**: Client-side DOM/Canvas capture utility rendering a vertical ($9:16$) graphic card containing verdict, stars, title, and roast punchlines for TikTok, Zalo, and Facebook stories.
@@ -181,7 +180,9 @@ export interface CaseConfig {
     expectedAnswer: string;
     clueSourceApp: string;
   }>;
-  appsData: Record<string, any>;
+  appsData: Record<string, unknown>;
+  knowledgeGraph?: CaseKnowledgeGraph;
+  confrontationScript?: ConfrontationScript;
 }
 ```
 
@@ -279,7 +280,7 @@ To support long play sessions and prevent progress loss across page refreshes or
 | **Bundle Size** | Initial JavaScript/CSS bundle $< 5\text{ MB}$ | Tree-shaken build; SVGs for icons; compressed WebP images and mono MP3s |
 | **Screen Switching** | View switching latency $< 100\text{ms}$ | In-memory component mounting within virtual phone container |
 | **Network SLA** | Zero runtime HTTP network requests post-load | Statically compiled declarative JSON bundles |
-| **Ergonomics** | Portrait mobile viewport ($375\text{px}$–$430\text{px}$) | CSS Flexbox/Grid responsive container with centered desktop frame |
+| **Ergonomics** | Portrait mobile viewport ($375\text{px}$-$430\text{px}$) | CSS Flexbox/Grid responsive container with centered desktop frame |
 | **Touch Targets** | Touch target dimensions $\ge 44 \times 44\text{px}$ | Design system tokens for all buttons, tabs, and list rows |
 
 ---

@@ -73,14 +73,15 @@ level: 1
 - **Bị Giật Lại Máy (Hết 5 lượt nghi ngờ)**:
   > *"Hoàng giật lại máy: 'Em kiểm tra điện thoại hay kiểm kê cả khu phố đấy? Mai anh còn đi làm!'"*
 
-### 3.3. Thang Ngụy biện Khi Đối chất Sớm ("Chối bay chối biến")
+### 3.3. Kịch bản Đối chất Theo Nhịp (`confrontationScript`)
 
-| Số lượng Bằng chứng | Thái độ Người Chồng | Lời Thoại Ngụy biện Điển hình | Kết quả |
-|---|---|---|---|
-| **0 Thẻ (Cáo buộc non)** | Hùng hổ, gạt phăng | *"Em lại lướt TikTok xem mấy cái clip drama bắt ghen xàm xí rồi đa nghi đúng không? Đưa máy đây anh đi ngủ mai còn đi làm!"* | Thất bại (0 Sao) |
-| **1 Thẻ (Mới có 1 manh mối)** | Hơi giật mình, phân bua | *"Ơ kìa em, số thợ điện đấy thật mà, hôm trước anh gọi nhờ sửa cái ổ cắm chập điện ở phòng làm việc thôi chứ có gì đâu!"* | Chiến thắng 1 Sao (Thắng non) |
-| **2 Thẻ (Đã đối chiếu 2 nguồn)** | Toát mồ hôi, bao biện | *"À... cái đơn hàng đó là con bé phòng Marketing nó nhờ anh đặt hộ qua tài khoản mua sắm để áp mã Freeship Extra thôi mà, anh biết gì đâu!"* | Chiến thắng 2 Sao (Khá thuyết phục) |
-| **3+ Thẻ (Đủ tam giác bằng chứng)** | Cúi đầu nhận tội | *"Anh xin lỗi vợ... Bọn anh có hẹn riêng tối nay. Anh không nên nói dối em là còn họp, em cho anh giải thích..."* | Chiến thắng Tuyệt đối 3 Sao |
+| Nhịp / Giai đoạn | Chủ đề (`topic`) | Lựa chọn chính (`slot` / `requiredEdgeIds`) | Phản ứng Nhánh True (`onTrue`) | Phản ứng Nhánh False / Bẫy nghi ngờ (`onFalse` - `smug`) |
+|---|---|---|---|---|
+| **Nhịp 1 (`opening`)** | Mở màn thẩm vấn | `left` (`open_ask`) / `right` (`open_offer`) | Chuyển sang Nhịp 2 với câu chối tội riêng (`confident`) | - |
+| **Nhịp 2 (`beat_tuan_identity`)** | Anh Tuấn Thợ Điện là ai? | `up`: `tuan_shared_phone` (`['edge_order_phone']`) | `nervous`: *"Ơ... chắc shop ghi nhầm số thôi. Số đó của thợ điện thật mà, hôm trước anh gọi nhờ sửa dây mạng văn phòng!"* | Thiếu cạnh hoặc chọn `left` (`tuan_herring_thao`) / `right` (`tuan_herring_lan_anh`) -> `smug`, khóa kết tội, trừ 1 strike khi thoát |
+| **Nhịp 3 (`beat_dress_recipient`)** | Váy lụa và tấm thiệp gửi cho ai? | `up`: `dress_legal_name` (`['edge_order_name']`) | `nervous`: *"À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi, nó chuyển trả anh tiền mà. Anh biết gì đâu!"* | Thiếu cạnh hoặc chọn `left` (`dress_herring_mai`) / `right` (`dress_herring_ngoc`) -> `smug`, khóa kết tội, trừ 1 strike khi thoát |
+| **Nhịp 4 (`beat_meeting_alibi`)** | Tối nay anh thật sự ở đâu? | `up`: `alibi_card_swipe` (`['edge_alibi_contradiction']`) | `broken`: *"Anh xin lỗi vợ... Anh không họp gì cả. Tối nay anh đi ăn với Hương, kỷ niệm một tháng. Anh sai rồi, em cho anh giải thích..."* -> Mở khóa `ending` | Thiếu cạnh hoặc chọn `down` (`alibi_herring_team_dev`) -> `smug`, khóa kết tội, trừ 1 strike khi thoát |
+| **Bước `End` (`ending`)** | Phán quyết của vợ | `left` (`end_divorce`: Ly hôn) / `right` (`end_forgive`: Tha thứ) | `broken`: Hoàng van xin / hứa xóa số -> Đóng dấu `BẮT QUẢ TANG NGOẠI TÌNH`, đạt **3 Sao** + Roast Card | - |
 
 ---
 
@@ -154,14 +155,14 @@ level: 1
 | `edge_alias_phone` | `node_alias_tuan` | `node_bridge_phone` | `bridges_identity` | `false` | `thread_tuan` / `call_tuan_late` | Khớp số điện thoại danh bạ `0988886677` | *"Số đó của thợ điện thật mà, hôm trước anh gọi nhờ sửa dây mạng văn phòng!"* |
 | `edge_alias_sms_phone` | `node_alias_tuan_sms` | `node_bridge_phone` | `bridges_identity` | `false` | `sms_contact_10` / `call_tuan_late` | Khớp số điện thoại trong SMS và cuộc gọi | *"Tin nhắn SMS với số điện thoại danh bạ cùng một người!"* |
 | `edge_alias_zola_sms` | `node_alias_tuan` | `node_alias_tuan_sms` | `bridges_identity` | `false` | `thread_tuan` / `sms_contact_10` | Cùng liên hệ ngụy trang Anh Tuấn trên Zola và SMS | *"Cùng một người liên hệ Anh Tuấn Thợ Điện trên cả Zola và SMS!"* |
-| `edge_order_phone` | `node_record_ecommerce_order` | `node_bridge_phone` | `bridges_identity` | `false` | `order_01` / `call_tuan_late` | Số nhận hàng đơn Shopee trùng SĐT thợ điện | *"Đơn hàng giao tới số điện thoại của thợ điện"* |
-| `edge_order_name` | `node_record_ecommerce_order` | `node_bridge_name` | `bridges_identity` | `true` | `order_01` / `tx_02` | Tên người nhận đơn trùng tên chủ tài khoản nhận hoàn tiền | *"Ơ... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
-| `edge_name_suspect` | `node_bridge_name` | `node_suspect_huong` | `bridges_identity` | `true` | `tx_02` / `suspect_huong` | Tên pháp lý `Nguyen Thi Thu Huong` khớp nhân sự Marketing | *"À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
+| `edge_order_phone` | `node_record_ecommerce_order` | `node_bridge_phone` | `bridges_identity` | `true` | `order_01` / `call_tuan_late` | Số nhận hàng đơn váy nữ trùng SĐT lưu tên "Anh Tuấn Thợ Điện" (lột vỏ bọc) | *"Ơ... chắc shop ghi nhầm số thôi. Số đó của thợ điện thật mà, hôm trước anh gọi nhờ sửa dây mạng văn phòng!"* |
+| `edge_order_name` | `node_record_ecommerce_order` | `node_bridge_name` | `bridges_identity` | `false` | `order_01` / `tx_02` | Tên người nhận đơn trùng tên chủ tài khoản nhận hoàn tiền (bằng chứng phụ: hoàn tiền khớp lời chối "đặt hộ") | *"Ơ... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
+| `edge_name_suspect` | `node_bridge_name` | `node_suspect_huong` | `bridges_identity` | `false` | `tx_02` / `suspect_huong` | Tên pháp lý `Nguyen Thi Thu Huong` khớp nhân sự Marketing | *"À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
 | `edge_alibi_contradiction` | `node_record_wife_alibi` | `node_record_bank_receipt` | `contradicts_alibi` | `true` | `thread_wife` / `tx_01` | Khai với vợ 20:46 họp ở công ty vs quẹt thẻ 20:48 Cơm Niêu Phố Cổ | *"Anh... lúc đó cả nhóm kéo nhau ra quán ăn đêm làm việc tiếp mà..."* |
 | `edge_zola_dinner_receipt` | `node_record_zola_chat` | `node_record_bank_receipt` | `occurred_at` | `false` | `thread_tuan` / `tx_01` | Hẹn ăn bàn 19h30 Phố Cổ khớp giao dịch quán Cơm Niêu Phố Cổ | *"Tin nhắn hẹn ăn tại Cơm Niêu Phố Cổ trùng với giao dịch thanh toán tại quán tối 15/10."* |
 
 - **Danh sách Cạnh Bắt buộc để Thắng 3 Sao (`requiredSmokingGunEdgeIds`)**:
-  `['edge_order_name', 'edge_alibi_contradiction']`
+  `['edge_order_phone', 'edge_alibi_contradiction']`
 
 ### 5.3. Thử thách Mã khóa & Câu đố
 *(Màn 1 không có câu đố mã khóa: `lockChallenges: []`)*

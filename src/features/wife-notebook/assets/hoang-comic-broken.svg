@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="shirt-broken" x1="120" y1="154" x2="120" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4595ca"/>
+      <stop offset="55%" stop-color="#1e537a"/>
+      <stop offset="100%" stop-color="#0b1f33"/>
+    </linearGradient>
+    <linearGradient id="skin-broken" x1="120" y1="66" x2="120" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#eab090"/>
+      <stop offset="55%" stop-color="#c27452"/>
+      <stop offset="100%" stop-color="#59281a"/>
+    </linearGradient>
+    <linearGradient id="hair-broken" x1="90" y1="48" x2="150" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#222e42"/>
+      <stop offset="40%" stop-color="#0c111c"/>
+      <stop offset="100%" stop-color="#05070c"/>
+    </linearGradient>
+    <linearGradient id="table-broken" x1="120" y1="214" x2="120" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="20%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#06090e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Defeated Slumped Shoulders -->
+  <path d="M38 226 C44 182 68 162 96 156 L120 166 L144 156 C172 162 196 182 202 226 Z" fill="url(#shirt-broken)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M40 224 C48 190 66 174 88 166 L78 224 Z" fill="#071524" opacity="0.82"/>
+  <path d="M200 224 C192 190 174 174 152 166 L162 224 Z" fill="#071524" opacity="0.82"/>
+
+  <!-- Crumpled Collar & Askew Sunglasses in Pocket -->
+  <path d="M95 156 L80 180 L108 186 L120 176 Z" fill="#5bb2e6" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M145 156 L160 180 L132 186 L120 176 Z" fill="#388cc2" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M142 184 L164 184 L164 206 L153 210 L142 206 Z" fill="#18476b" stroke="#05070c" stroke-width="2.2" stroke-linejoin="round"/>
+  <rect x="148" y="177" width="13" height="10" rx="2" transform="rotate(8 154 182)" fill="#090d14" stroke="#05070c" stroke-width="2"/>
+
+  <!-- Bowed Neck -->
+  <path d="M102 140 L102 166 L120 176 L138 166 L138 140 Z" fill="#63321f" stroke="#05070c" stroke-width="3"/>
+
+  <!-- Ears Lowered with Bowed Head -->
+  <path d="M78 109 C72 109 70 122 75 129 C77 132 81 132 82 129" fill="#ad6844" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M162 109 C168 109 170 122 165 129 C163 132 159 132 158 129" fill="#945434" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Bowed Defeated Head -->
+  <path d="M81 90 C81 68 98 60 120 60 C142 60 159 68 159 90 L157 126 C156 140 145 150 132 155 C124 158 116 158 108 155 C95 150 84 140 83 126 Z" fill="url(#skin-broken)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- Flushed Crying Cheeks & Nose -->
+  <ellipse cx="95" cy="122" rx="10" ry="6" fill="#fb7185" opacity="0.48"/>
+  <ellipse cx="145" cy="122" rx="10" ry="6" fill="#fb7185" opacity="0.48"/>
+  <ellipse cx="120" cy="121" rx="5.5" ry="4" fill="#f43f5e" opacity="0.45"/>
+
+  <!-- Disheveled Drooped Hair Hanging Down Under Harsh Spotlight -->
+  <path d="M79 110 C73 86 75 62 93 52 C106 44 134 43 150 53 C165 62 167 86 161 110 C157 93 151 80 141 75 C129 79 111 78 97 72 C91 80 84 93 79 110 Z" fill="url(#hair-broken)" stroke="#05070c" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M104 73 C101 85 96 94 91 100" stroke="#05070c" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M121 75 C120 87 117 95 113 101" stroke="#05070c" stroke-width="2.8" stroke-linecap="round"/>
+  <path d="M136 74 C138 85 142 92 146 98" stroke="#05070c" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M104 51 C118 47 135 49 146 56" stroke="#64748b" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+
+  <!-- Deeply Slanted Anguished Eyebrows -->
+  <path d="M89 106 Q101 103 111 95" stroke="#05070c" stroke-width="3.8" stroke-linecap="round"/>
+  <path d="M129 95 Q139 103 151 106" stroke="#05070c" stroke-width="3.8" stroke-linecap="round"/>
+
+  <!-- Tightly Squeezed Shut Sobbing Eyes -->
+  <path d="M92 114 Q102 108 111 114" stroke="#05070c" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M95 116 L109 118" stroke="#05070c" stroke-width="2" stroke-linecap="round"/>
+  <path d="M129 114 Q138 108 148 114" stroke="#05070c" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M131 118 L145 116" stroke="#05070c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Heavy Comic Tear Streams Flowing Down Face -->
+  <path d="M99 115 C97 126 94 138 95 146 C96 150 101 150 102 145 C103 137 103 125 103 115 Z" fill="#7dd3fc" stroke="#05070c" stroke-width="1.5"/>
+  <path d="M141 115 C143 126 146 138 145 146 C144 150 139 150 138 145 C137 137 137 125 137 115 Z" fill="#7dd3fc" stroke="#05070c" stroke-width="1.5"/>
+
+  <!-- Nose -->
+  <path d="M120 107 L118 121 C118 124 123 125 125 122" stroke="#05070c" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- Trembling Sobbing Mouth -->
+  <path d="M107 140 Q120 131 133 140 Q127 146 120 144 Q113 146 107 140 Z" fill="#7f1d1d" stroke="#05070c" stroke-width="2.6" stroke-linejoin="round"/>
+
+  <!-- Desperate Clasped Pleading Hands Over Interrogation Table -->
+  <path d="M94 216 L106 174 C109 165 116 163 120 168 C124 163 131 165 134 174 L146 216 Z" fill="url(#skin-broken)" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="120" y1="168" x2="120" y2="212" stroke="#05070c" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M111 182 L129 182 M109 191 L131 191 M108 200 L132 200" stroke="#59281a" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Cold Steel Interrogation Table Foreground -->
+  <rect x="10" y="216" width="220" height="24" fill="url(#table-broken)"/>
+  <line x1="10" y1="216" x2="230" y2="216" stroke="#f43f5e" stroke-width="2" opacity="0.6"/>
+</svg>

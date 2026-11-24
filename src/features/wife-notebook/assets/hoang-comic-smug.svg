@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="shirt-smug" x1="120" y1="146" x2="120" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5bb2e6"/>
+      <stop offset="52%" stop-color="#286d9c"/>
+      <stop offset="100%" stop-color="#102d47"/>
+    </linearGradient>
+    <linearGradient id="skin-smug" x1="120" y1="50" x2="120" y2="146" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ecc098"/>
+      <stop offset="56%" stop-color="#c47e54"/>
+      <stop offset="100%" stop-color="#61331e"/>
+    </linearGradient>
+    <linearGradient id="hair-smug" x1="88" y1="32" x2="152" y2="94" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2c3b54"/>
+      <stop offset="38%" stop-color="#101624"/>
+      <stop offset="100%" stop-color="#05070c"/>
+    </linearGradient>
+    <linearGradient id="table-smug" x1="120" y1="214" x2="120" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#525f73"/>
+      <stop offset="20%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#06090e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Leaning-Back Cocky Shoulders -->
+  <path d="M32 226 C38 178 65 156 96 150 L120 158 L146 148 C176 152 202 174 208 226 Z" fill="url(#shirt-smug)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M34 224 C42 188 62 170 84 162 L74 224 Z" fill="#091a2b" opacity="0.78"/>
+  <path d="M206 224 C196 186 176 166 156 158 L168 224 Z" fill="#091a2b" opacity="0.78"/>
+  <path d="M64 180 L78 198 M174 176 L160 194" stroke="#05070c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Neck Raised Arrogantly -->
+  <path d="M101 124 L100 158 L120 170 L140 156 L139 124 Z" fill="url(#skin-smug)" stroke="#05070c" stroke-width="3"/>
+  <path d="M101 128 Q121 150 139 127 L139 145 Q120 158 101 145 Z" fill="#2a140d" opacity="0.86"/>
+
+  <!-- Collar & Pocket Sunglasses -->
+  <path d="M95 148 L82 172 L108 177 L120 167 Z" fill="#6ec2f2" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M146 146 L160 170 L132 176 L120 167 Z" fill="#4595ca" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="120.5" cy="182" r="2.3" fill="#f8fafc" stroke="#05070c" stroke-width="1.2"/>
+  <path d="M142 178 L166 178 L166 202 L154 207 L142 202 Z" fill="#1e5885" stroke="#05070c" stroke-width="2.2" stroke-linejoin="round"/>
+  <rect x="147" y="171" width="14" height="11" rx="2.5" fill="#090d14" stroke="#05070c" stroke-width="2"/>
+
+  <!-- Dismissive Hand Resting / Gesturing Cockily on Table -->
+  <path d="M64 216 C72 202 94 198 118 204 L124 216 Z" fill="url(#skin-smug)" stroke="#05070c" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M96 206 L112 208 M98 211 L114 212" stroke="#05070c" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Cocked Head (-4deg Arrogant Tilt) -->
+  <g transform="rotate(-4 120 94)">
+    <path d="M77 92 C71 92 69 105 74 112 C76 115 80 115 81 112" fill="#b57149" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+    <path d="M163 92 C169 92 171 105 166 112 C164 115 160 115 159 112" fill="#9c5c38" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+
+    <path d="M80 73 C80 51 98 43 120 43 C142 43 160 51 160 73 L158 109 C157 123 146 134 132 139 C124 142 116 142 108 139 C94 134 83 123 82 109 Z" fill="url(#skin-smug)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+    <ellipse cx="120" cy="66" rx="25" ry="9" fill="#fef08a" opacity="0.28"/>
+    <path d="M83 108 C86 123 99 133 120 137 C141 133 154 123 157 108 L156 116 C153 129 141 137 120 141 C99 137 87 129 84 116 Z" fill="#3a1d12" opacity="0.6"/>
+
+    <!-- Sleek Hair -->
+    <path d="M78 93 C74 71 76 49 92 39 C104 31 132 29 149 39 C164 47 166 69 162 93 C159 77 154 65 144 60 C131 63 112 62 97 55 C91 63 83 75 78 93 Z" fill="url(#hair-smug)" stroke="#05070c" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M104 38 C118 34 136 36 147 43" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" opacity="0.72"/>
+
+    <!-- Asymmetrical Cocky Eyebrows (Left low, Right arched high!) -->
+    <path d="M90 84 Q101 86 112 83" stroke="#05070c" stroke-width="3.8" stroke-linecap="round"/>
+    <path d="M128 78 Q140 69 151 77" stroke="#05070c" stroke-width="3.8" stroke-linecap="round"/>
+
+    <!-- Half-Lidded Condescending Mocking Eyes -->
+    <path d="M92 92 L110 93 Q102 98 92 92 Z" fill="#f8fafc" stroke="#05070c" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="102" cy="93.5" r="2.8" fill="#090d16"/>
+    <line x1="90" y1="91" x2="111" y2="92" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+
+    <path d="M130 90 L149 88 Q141 96 130 90 Z" fill="#f8fafc" stroke="#05070c" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="140" cy="90.5" r="2.8" fill="#090d16"/>
+    <line x1="129" y1="89" x2="150" y2="87" stroke="#05070c" stroke-width="2.8" stroke-linecap="round"/>
+
+    <!-- Nose -->
+    <path d="M120 88 L118 105 C118 108 124 109 127 106" stroke="#05070c" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Obnoxious Lopsided Mocking Smirk with Tooth Glint -->
+    <path d="M101 121 C113 122 127 118 141 110 C139 121 127 127 110 124 Z" fill="#ffffff" stroke="#05070c" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M140 107 Q146 109 144 115" stroke="#05070c" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M97 119 Q95 123 99 125" stroke="#5c2d1c" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M114 130 Q122 132 129 129" stroke="#3a1d12" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cold Steel Interrogation Table Foreground -->
+  <rect x="10" y="216" width="220" height="24" fill="url(#table-smug)"/>
+  <line x1="10" y1="216" x2="230" y2="216" stroke="#cbd5e1" stroke-width="2" opacity="0.65"/>
+</svg>

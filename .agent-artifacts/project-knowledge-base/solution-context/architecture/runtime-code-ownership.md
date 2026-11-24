@@ -17,6 +17,7 @@ This is the implementation map for the current code. Product scope and app desig
 | Play session | Coordinates gameplay actions and case lifecycle; guards delayed initialization and cancelled failure timers | [play-session](../../../../src/features/play-session/index.ts) |
 | Case runtime | Bundled cases/catalog, validation, existing default-content merge behavior, level-selector UI | [case-runtime](../../../../src/features/case-runtime/index.ts) |
 | Investigation | Shared narrative evidence UI and existing suspect-tag rules | [investigation](../../../../src/features/investigation/index.ts) |
+| Wife notebook | Corkboard graph engine, preflight dossier, scripted beat-by-beat confrontation state machine, noir comic husband portrait, and Cold War D-pad interrogation UI | [wife-notebook](../../../../src/features/wife-notebook/index.ts) |
 | Locks | Challenge lookup and shared PIN UI; nested unlocks retain the owning app | [locks](../../../../src/features/locks/index.ts) |
 | Suspicion | Remaining-strike transitions | [suspicion](../../../../src/features/suspicion/index.ts) |
 | Session | Repository contract, localStorage adapter, ordered snapshot writes/reset invalidation, resume UI | [session](../../../../src/features/session/index.ts) |
@@ -56,6 +57,6 @@ ESLint enforces these boundaries. The architecture check also inspects static/dy
 
 ## Remaining scope
 
-Full evidence locker/objectives, hints, confrontation/evaluation, progression-rule expansion, content-version migration, and sharing remain follow-on delivery work described in the plan. No empty implementation modules or remote SDKs were added for them.
+Sixth Sense hints, Level 2/3 scripted confrontation content, content-version migration, and social Roast Card canvas export remain follow-on delivery work described in the plan. No empty implementation modules or remote SDKs were added for them.
 
 Browser interaction/visual verification could not run because the browser tool failed to load its request-header policy. Unit tests, server rendering, design audits, type checking, lint, and production build are separate evidence and do not establish browser interaction timing or layout correctness.

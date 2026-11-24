@@ -10,6 +10,147 @@
     "narrativeRoast": "Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?",
     "overJealousRoast": "Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?"
   },
+  "confrontationScript": {
+    "opening": [
+      {
+        "choiceId": "open_ask",
+        "slot": "left",
+        "wifeLine": "Hoàng, anh có gì lừa dối tôi không?",
+        "husbandLine": "Lừa dối gì? Anh họp tới tối mịt mới về, giờ chỉ muốn đi ngủ. Em lại xem clip drama bắt ghen trên TikTok rồi đúng không?",
+        "husbandMood": "confident"
+      },
+      {
+        "choiceId": "open_offer",
+        "slot": "right",
+        "wifeLine": "Tôi biết anh đang ngoại tình, và tôi muốn cho anh cơ hội thành thật.",
+        "husbandLine": "Ngoại tình? Cả ngày anh ngồi phòng họp với Team Dev. Thành thật thì anh nói luôn: anh buồn ngủ lắm rồi, đưa máy đây.",
+        "husbandMood": "confident"
+      }
+    ],
+    "beats": [
+      {
+        "beatId": "beat_tuan_identity",
+        "topic": "Anh Tuấn Thợ Điện là ai?",
+        "choices": [
+          {
+            "choiceId": "tuan_shared_phone",
+            "slot": "up",
+            "wifeLine": "Thợ điện nào mà dùng chung số 0988886677 với người nhận đơn váy lụa trên Shopee?",
+            "requiredEdgeIds": ["edge_order_phone"],
+            "onTrue": {
+              "husbandLine": "Ơ... chắc shop ghi nhầm số thôi. Số đó của thợ điện thật mà, hôm trước anh gọi nhờ sửa dây mạng văn phòng!",
+              "husbandMood": "nervous"
+            },
+            "onFalse": {
+              "husbandLine": "Thợ điện thì gọi điện, nhắn hẹn giờ sửa là chuyện thường. Em có gì ngoài cái tên trong danh bạ không?",
+              "husbandMood": "smug"
+            }
+          },
+          {
+            "choiceId": "tuan_herring_thao",
+            "slot": "left",
+            "wifeLine": "Thảo PT California nhắn riêng cho anh là có ý gì?",
+            "onFalse": {
+              "husbandLine": "Người ta nhắc anh mang phiếu đánh giá cột sống. Em bắt được lưng đau, chưa bắt được người tình.",
+              "husbandMood": "smug"
+            }
+          },
+          {
+            "choiceId": "tuan_herring_lan_anh",
+            "slot": "right",
+            "wifeLine": "Lan Anh Kế Toán đòi anh chuyển tiền là sao?",
+            "onFalse": {
+              "husbandLine": "Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?",
+              "husbandMood": "smug"
+            }
+          }
+        ]
+      },
+      {
+        "beatId": "beat_dress_recipient",
+        "topic": "Váy lụa và tấm thiệp gửi cho ai?",
+        "choices": [
+          {
+            "choiceId": "dress_legal_name",
+            "slot": "up",
+            "wifeLine": "Đơn váy lụa kèm thiệp \"15/09 - 15/10\" giao cho Nguyen Thi Thu Huong, đúng tên người chuyển khoản hoàn tiền cho anh.",
+            "requiredEdgeIds": ["edge_order_name"],
+            "onTrue": {
+              "husbandLine": "À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi, nó chuyển trả anh tiền mà. Anh biết gì đâu!",
+              "husbandMood": "nervous"
+            },
+            "onFalse": {
+              "husbandLine": "Váy với thiệp thì sao? Shop giao nhầm địa chỉ, em định bắt ghen cả bên giao hàng à?",
+              "husbandMood": "smug"
+            }
+          },
+          {
+            "choiceId": "dress_herring_mai",
+            "slot": "left",
+            "wifeLine": "Mai Lễ Tân giữ gói đồ của anh dưới sảnh là thế nào?",
+            "onFalse": {
+              "husbandLine": "Mai giữ cả hoa sinh nhật lẫn gói đồ, còn nhắc anh ký sổ. Sảnh lễ tân đâu phải danh sách người tình.",
+              "husbandMood": "smug"
+            }
+          },
+          {
+            "choiceId": "dress_herring_ngoc",
+            "slot": "right",
+            "wifeLine": "Bé Ngọc nhận tiền của anh rồi nhắn cảm ơn ngọt thế là sao?",
+            "onFalse": {
+              "husbandLine": "Em gái nhắn cảm ơn anh trai còn chưa đủ rõ à? Chủ nhật về quê chắc phải giới thiệu lại gia phả.",
+              "husbandMood": "smug"
+            }
+          }
+        ]
+      },
+      {
+        "beatId": "beat_meeting_alibi",
+        "topic": "Tối nay anh thật sự ở đâu?",
+        "choices": [
+          {
+            "choiceId": "alibi_card_swipe",
+            "slot": "up",
+            "wifeLine": "20:46 anh nhắn tôi vẫn ở phòng họp, 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Hai phút anh bay từ công ty ra quán à?",
+            "requiredEdgeIds": ["edge_alibi_contradiction"],
+            "onTrue": {
+              "husbandLine": "Anh xin lỗi vợ... Anh không họp gì cả. Tối nay anh đi ăn với Hương, kỷ niệm một tháng. Anh sai rồi, em cho anh giải thích...",
+              "husbandMood": "broken"
+            },
+            "onFalse": {
+              "husbandLine": "Anh ở phòng họp tới khuya, cả Team Dev làm chứng. Em định gọi hỏi từng người một à?",
+              "husbandMood": "smug"
+            }
+          },
+          {
+            "choiceId": "alibi_herring_team_dev",
+            "slot": "down",
+            "wifeLine": "Team Dev họp gì mà tới 9 giờ tối còn chưa xong?",
+            "onFalse": {
+              "husbandLine": "Dự án chạy deadline, cả team ở lại. Em muốn xem biên bản họp không, mai anh in cho mà đọc.",
+              "husbandMood": "smug"
+            }
+          }
+        ]
+      }
+    ],
+    "ending": [
+      {
+        "choiceId": "end_divorce",
+        "slot": "left",
+        "wifeLine": "Ký đơn đi. Tôi không sống với người nói dối thêm ngày nào nữa.",
+        "husbandLine": "Vợ ơi, anh van em... cho anh một cơ hội thôi mà!",
+        "husbandMood": "broken"
+      },
+      {
+        "choiceId": "end_forgive",
+        "slot": "right",
+        "wifeLine": "Lần này tôi tha. Xóa số Anh Tuấn Thợ Điện ngay trước mặt tôi.",
+        "husbandLine": "Anh xóa ngay, anh hứa không bao giờ có lần sau nữa!",
+        "husbandMood": "broken"
+      }
+    ]
+  },
   "suspectPool": [
     {
       "suspectId": "suspect_huong",

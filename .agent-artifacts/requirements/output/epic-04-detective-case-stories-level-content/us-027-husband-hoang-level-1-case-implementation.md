@@ -61,17 +61,17 @@ As a Player, I want to investigate Husband Hoàng's Level 1 case ("Cơn ghen lú
 #### 4. Evidence Inspection & Knowledge Graph Integration
 13. Long-pressing any dynamic story evidence item for 380ms opens the blurred `UniversalEvidenceModal` through `StoryEvidenceTarget`. Chrome elements (headers, tabs, search bars, dock buttons) never trigger evidence modals.
 14. Pinning evidence queues the item into the Wife's Detective Notebook bottom drawer ("Khay Manh Mối") under the canonical Knowledge Graph nodes (`node_alias_tuan`, `node_bridge_phone`, `node_bridge_name`, `node_record_zola_chat`, `node_record_wife_alibi`, `node_record_bank_receipt`, `node_record_ecommerce_order`, `node_record_phone_call`, `node_timeline_dinner`).
-15. The case defines 3 core smoking-gun edges required for a 3-star victory:
-    - `edge_name_suspect`: Linking legal name "Nguyen Thi Thu Huong" (`node_bridge_name`) to suspect profile (`node_suspect_huong`).
+15. The case defines 2 core smoking-gun edges required for a 3-star victory (`requiredSmokingGunEdgeIds`):
+    - `edge_order_phone`: Linking the satin dress order (`node_record_ecommerce_order`) to phone number `0988886677` (`node_bridge_phone`), the number saved as "Anh Tuấn Thợ Điện", which exposes the disguise.
     - `edge_alibi_contradiction`: Linking meeting alibi at 20:46 (`node_record_wife_alibi`) to restaurant payment at 20:48 (`node_record_bank_receipt`).
-    - `edge_zola_order_anniversary`: Linking dinner chat "như tháng trước" (`node_record_zola_chat`) to anniversary card "15/09 - 15/10" (`node_record_ecommerce_order`).
+    - Supporting (non-required) evidence: `edge_order_name` / `edge_name_suspect` link the legal name "Nguyen Thi Thu Huong" from the refund to the order and suspect profile.
 
-#### 5. Confrontation, Excuse Ladder & Comedic Roasts
-16. The confrontation dialogue ladder evaluates the number of unique smoking-gun cards attached by the player:
-    - 0 cards (Premature accusation): Husband dismisses accusations ("Em lại lướt TikTok drama rồi đa nghi đúng không?"), resulting in failure (0 stars).
-    - 1 card: Husband offers defensive excuses ("Số thợ điện hôm trước anh gọi nhờ sửa dây mạng văn phòng"), yielding a 1-star win.
-    - 2 cards: Husband offers stammering explanations ("Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra"), yielding a 2-star win.
-    - 3 cards (Full smoking-gun chain): Husband confesses fully ("Anh xin lỗi vợ... Bọn anh có hẹn riêng tối nay"), yielding a 3-star victory.
+#### 5. Beat-by-Beat Interrogation (`confrontationScript`), Excuse Ladder & Comedic Roasts
+16. Level 1 defines a declarative `confrontationScript` executed inside the dark interrogation room (`ConfrontationModal`) via the COD Cold War D-pad:
+    - **Beat 1 (`opening`)**: 2 opening lines (`open_ask` on `left`, `open_offer` on `right`), each triggering a distinct `confident` denial from Hoàng before advancing to Beat 2.
+    - **Beat 2 (`beat_tuan_identity`)**: Lead choice `tuan_shared_phone` (`up`, requires `edge_order_phone`) shifts Hoàng to `nervous` ("Ơ... chắc shop ghi nhầm số thôi..."); lacking `edge_order_phone` or picking red herrings (`tuan_herring_thao`, `tuan_herring_lan_anh`) triggers `smug` failure (`canAccuse = false`, +1 strike on exit).
+    - **Beat 3 (`beat_dress_recipient`)**: Lead choice `dress_legal_name` (`up`, requires `edge_order_name`) keeps Hoàng `nervous` ("À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi..."); lacking `edge_order_name` or picking red herrings (`dress_herring_mai`, `dress_herring_ngoc`) triggers `smug` failure.
+    - **Beat 4 (`beat_meeting_alibi`)**: Lead choice `alibi_card_swipe` (`up`, requires `edge_alibi_contradiction`) breaks Hoàng down (`broken`: "Anh xin lỗi vợ... Anh không họp gì cả. Tối nay anh đi ăn với Hương, kỷ niệm một tháng...") and unlocks `ending` (`end_divorce` on `left`, `end_forgive` on `right`), resolving into a 3-star victory.
 17. A 3-star victory triggers the victory roast narrative: "Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?"
 18. Accusing innocent red-herring suspects triggers specific over-jealous roast punchlines:
     - Lan Anh Kế Toán: "Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?"

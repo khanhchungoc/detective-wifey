@@ -15,7 +15,7 @@ import { deriveNodesFromTaggedEvidence } from './WifeNotebookModal';
 import { createEdgeBetweenNodes, placeNewNodesBelow } from './graphEngine';
 import { CorkboardCanvas } from './components/CorkboardCanvas';
 import { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
-import type { CaseGraphNode } from '../../shared/contracts/knowledge-graph';
+import type { CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
 import type { PlacedNode } from './types';
 import { ContactAvatar } from '../../shared/ui/ContactAvatar';
 import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -667,6 +667,72 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       expect(html).toContain('transform:translate(-875px, -1050px)');
       expect(html).not.toContain('scale(1.75)');
       expect(html).toContain('zoom:1.75');
+    });
+
+    it('renders red strings for both alibi contradictions and verified key smoking-gun links, and yellow for neutral or speculative links', () => {
+      const nodes: PlacedNode[] = [
+        { nodeId: 'n1', type: 'record_clue', label: 'Vợ', x: 100, y: 100 },
+        { nodeId: 'n2', type: 'record_clue', label: 'Cơm Niêu', x: 400, y: 100 },
+        { nodeId: 'n3', type: 'record_clue', label: 'Đơn hàng', x: 100, y: 300 },
+        { nodeId: 'n4', type: 'bridge_id', label: 'SĐT', x: 400, y: 300 },
+        { nodeId: 'n5', type: 'alias', label: 'Anh Tuấn', x: 700, y: 300 },
+      ];
+      const edges: CaseGraphEdge[] = [
+        {
+          edgeId: 'edge_alibi_contradiction',
+          sourceNodeId: 'n1',
+          targetNodeId: 'n2',
+          relationship: 'contradicts_alibi',
+          isCanonical: true,
+          isSmokingGun: true,
+        },
+        {
+          edgeId: 'edge_order_phone',
+          sourceNodeId: 'n3',
+          targetNodeId: 'n4',
+          relationship: 'bridges_identity',
+          isCanonical: true,
+          isSmokingGun: true,
+        },
+        {
+          edgeId: 'edge_alias_phone',
+          sourceNodeId: 'n4',
+          targetNodeId: 'n5',
+          relationship: 'bridges_identity',
+          isCanonical: true,
+          isSmokingGun: false,
+        },
+        {
+          edgeId: 'custom_speculative',
+          sourceNodeId: 'n1',
+          targetNodeId: 'n5',
+          relationship: 'bridges_identity',
+          isCanonical: false,
+          isSmokingGun: true,
+        },
+      ];
+
+      const html = renderToStaticMarkup(
+        <CorkboardCanvas
+          placedNodes={nodes}
+          edges={edges}
+          verifiedKeyEdgeIds={['edge_alibi_contradiction', 'edge_order_phone']}
+          viewport={{ x: 0, y: 0, zoom: 1 }}
+          activePairing={{ sourceNodeId: null }}
+          unmaskedSuspectIds={[]}
+          activeContradictions={['edge_alibi_contradiction']}
+          selectedEdgeId={null}
+          onSelectNode={vi.fn()}
+          onMoveNode={vi.fn()}
+          onSelectEdge={vi.fn()}
+          onSeverEdge={vi.fn()}
+          onNavigateToSource={vi.fn()}
+          onCancelPairing={vi.fn()}
+        />,
+      );
+
+      expect(html.match(/stroke="#DC2626"/g)).toHaveLength(2);
+      expect(html.match(/stroke="#FBBF24"/g)).toHaveLength(2);
     });
   });
 });
