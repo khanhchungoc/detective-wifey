@@ -130,3 +130,12 @@ To recreate the physical sensation of interacting with a real mobile phone:
 * **Error / Strike Thud**: Low-frequency warning buzz ($180\text{Hz}$, $200\text{ms}$) + warning vibration (`navigator.vibrate([40, 60, 40])`).
 * **Level Victory Fanfare**: Celebratory chime sequence + triumphant triple vibration pulse.
 * **Audio Preference**: Mute preferences set in the player state (`audioMutePreference: true`) suppress audio playback while preserving silent haptic vibrations where supported.
+
+### 2.5. Narrative Subtitle Typewriter Cadence
+
+For character-anchored interrogation replies where player choices follow a spoken reaction:
+
+* **Bounded Reveal Interval**: Typewriter ticks reveal one Unicode character per step at `22ms` (`TYPEWRITER_CHAR_MS`), dynamically shortened (`Math.max(10, Math.floor(1600 / charCount))`) so even long replies complete within `1600ms` (`TYPEWRITER_MAX_DURATION_MS`).
+* **Layout-Stable Spacer**: Reserve the wrapped line height with an `aria-hidden` invisible copy in the same CSS grid cell so options never jump vertically as text wraps.
+* **Interactive Deck Gating & Tap-to-Skip**: Interactive choice decks remain hidden and disabled until typing finishes so player attention stays on the dialogue without competing screen highlights; tapping the stage/subtitle or pressing `Space`/`Enter`/`1`-`4` skips immediately to full reveal.
+* **Reduced Motion**: Under `prefers-reduced-motion: reduce`, skip character-by-character typing and render full dialogue + interactive choices immediately.

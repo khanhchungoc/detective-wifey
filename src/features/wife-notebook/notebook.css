@@ -2,8 +2,16 @@
   color-scheme: dark;
   --notebook-bg: #080b0f;
   --notebook-canvas: #0f151d;
+  --notebook-choice-bg: rgba(15, 22, 34, 0.85);
   --notebook-paper: #f5f1e8;
   --notebook-border: #c9bfae;
+  --notebook-divider: rgba(255, 255, 255, 0.08);
+  --notebook-crimson: #e11d48;
+  --notebook-text-primary: #f1f5f9;
+  --notebook-text-dialogue: #94a3b8;
+  --notebook-text-muted: #78889c;
+  --notebook-speaker-wife: #7d9bb8;
+  --notebook-speaker-husband: #b57684;
   position: relative;
 }
 
@@ -102,4 +110,101 @@
     rgba(71, 85, 105, 0.1) 21px,
     rgba(71, 85, 105, 0.1) 22px
   );
+}
+
+/* HMR-safe zero-specificity fallbacks for darkroom interrogation tokens */
+:where(.bg-darkroom-bg) {
+  background-color: var(--notebook-bg, #080b0f);
+}
+
+:where(.bg-darkroom-choice-surface) {
+  background-color: var(--notebook-choice-bg, rgba(15, 22, 34, 0.85));
+}
+
+:where(.bg-darkroom-crimson) {
+  background-color: var(--notebook-crimson, #e11d48);
+}
+
+:where(.bg-darkroom-speaker-husband) {
+  background-color: var(--notebook-speaker-husband, #b57684);
+}
+
+:where(.text-darkroom-text-primary) {
+  color: var(--notebook-text-primary, #f1f5f9);
+}
+
+:where(.text-darkroom-text-dialogue) {
+  color: var(--notebook-text-dialogue, #94a3b8);
+}
+
+:where(.text-darkroom-text-muted) {
+  color: var(--notebook-text-muted, #78889c);
+}
+
+:where(.text-darkroom-speaker-wife) {
+  color: var(--notebook-speaker-wife, #7d9bb8);
+}
+
+:where(.text-darkroom-speaker-husband) {
+  color: var(--notebook-speaker-husband, #b57684);
+}
+
+:where(.border-darkroom-divider) {
+  border-color: var(--notebook-divider, rgba(255, 255, 255, 0.08));
+}
+
+/* Unframed interrogation character lateral edge fade into #080b0f */
+.confrontation-stage-fade {
+  mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+/* Vertical numbered tactical choice bar: equal rest state, inverted light strip on active/focus/desktop hover */
+.confrontation-choice {
+  transition:
+    transform 85ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 110ms ease,
+    color 110ms ease,
+    border-color 110ms ease;
+}
+
+.confrontation-choice:active {
+  transform: scale(0.985);
+}
+
+.confrontation-choice:active,
+.confrontation-choice:focus-visible {
+  background-color: #f5f1e8;
+  color: #080b0f;
+  border-color: #f5f1e8;
+}
+
+.confrontation-choice:active .confrontation-keycap,
+.confrontation-choice:focus-visible .confrontation-keycap {
+  background-color: #080b0f;
+  color: #f5f1e8;
+  border-color: #080b0f;
+}
+
+.confrontation-choice:active .confrontation-chevron,
+.confrontation-choice:focus-visible .confrontation-chevron {
+  color: #080b0f;
+}
+
+@media (hover: hover) {
+  .confrontation-choice:hover {
+    background-color: #f5f1e8;
+    color: #080b0f;
+    border-color: #f5f1e8;
+  }
+
+  .confrontation-choice:hover .confrontation-keycap {
+    background-color: #080b0f;
+    color: #f5f1e8;
+    border-color: #080b0f;
+  }
+
+  .confrontation-choice:hover .confrontation-chevron {
+    color: #080b0f;
+  }
 }

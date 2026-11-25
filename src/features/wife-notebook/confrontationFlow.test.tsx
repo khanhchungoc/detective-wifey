@@ -11,6 +11,11 @@ import {
 } from './confrontationEngine';
 import { ConfrontationModal } from './components/ConfrontationModal';
 import { HOANG_COMIC_ASSETS, HusbandCharacterImage } from './components/HusbandCharacterImage';
+import {
+  TYPEWRITER_CHAR_MS,
+  TYPEWRITER_MAX_DURATION_MS,
+  getTypewriterStepMs,
+} from './confrontationMotion';
 
 const VERIFIED_EDGES_ALL: CaseGraphEdge[] = [
   {
@@ -91,9 +96,67 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     );
     expect(html).toContain('data-choice-slot="left"');
     expect(html).toContain('data-choice-slot="right"');
+    expect(html).toContain('confrontation-choice');
+    expect(html).toContain('confrontation-keycap');
+    expect(html).toContain('confrontation-stage-fade');
+    expect(html).toContain('>1<');
+    expect(html).toContain('>2<');
+    expect(html).not.toContain('grid-cols-[1fr_44px_1fr]');
     expect(html).toContain('role="progressbar"');
     expect(RAW_EMOJI_REGEX.test(html)).toBe(false);
     expect(EM_DASH_REGEX.test(html)).toBe(false);
+  });
+
+  it('Beat stage renders character-anchored Wife recall + Husband reply and numbered vertical options 1..3', () => {
+    let state = createScriptedConfrontation({
+      caseConfig: case01,
+      knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+      activeEdges: VERIFIED_EDGES_ALL,
+      currentStrikes: 5,
+    })!;
+    state = advanceScriptedConfrontation(state, 'open_ask', {
+      caseConfig: case01,
+      knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+      activeEdges: VERIFIED_EDGES_ALL,
+    });
+
+    const beatHtml = renderToStaticMarkup(
+      <ConfrontationModal
+        isOpen
+        session={state}
+        maxStrikes={5}
+        onSelectChoice={vi.fn()}
+        onContinueInvestigation={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(beatHtml).toContain('Vợ :');
+    expect(beatHtml).toContain('Hoàng :');
+    expect(beatHtml).toContain(state.lastWifeLine!);
+    expect(beatHtml).toContain(state.husbandLine!);
+    expect(beatHtml).toContain('data-testid="confrontation-husband-line"');
+    expect(beatHtml).toContain('bg-darkroom-bg');
+    expect(beatHtml).toContain('bg-darkroom-choice-surface');
+    expect(beatHtml).toContain('text-darkroom-text-muted');
+    expect(beatHtml).toContain('text-darkroom-text-dialogue');
+    expect(beatHtml).not.toContain('text-[#F8FAFC]');
+    expect(beatHtml).not.toContain('text-ios-subheadline font-medium');
+    expect(beatHtml).toContain('>1<');
+    expect(beatHtml).toContain('>2<');
+    expect(beatHtml).toContain('>3<');
+    expect(beatHtml).not.toContain('font-mono');
+    expect(RAW_EMOJI_REGEX.test(beatHtml)).toBe(false);
+    expect(EM_DASH_REGEX.test(beatHtml)).toBe(false);
+  });
+
+  it('getTypewriterStepMs scales cleanly and caps long lines at TYPEWRITER_MAX_DURATION_MS', () => {
+    expect(getTypewriterStepMs(0)).toBe(TYPEWRITER_CHAR_MS);
+    expect(getTypewriterStepMs(40)).toBe(TYPEWRITER_CHAR_MS);
+    const longLineLen = 140;
+    const longStep = getTypewriterStepMs(longLineLen);
+    expect(longStep).toBeLessThan(TYPEWRITER_CHAR_MS);
+    expect(longStep * longLineLen).toBeLessThanOrEqual(TYPEWRITER_MAX_DURATION_MS);
+    expect(getTypewriterStepMs(400)).toBe(10);
   });
 
   it('False branch: missing evidence or red herring triggers smug mood, locks canAccuse, hides all accusation buttons, and deducts 1 strike', () => {
@@ -326,17 +389,25 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(htmlL2).toContain('1/4');
   });
 
-  it('HusbandCharacterImage renders all 4 comic moods (confident, smug, nervous, broken) cleanly', () => {
+  it('HusbandCharacterImage renders all 4 comic moods (confident, smug, nervous, broken) cleanly in framed and stage variants', () => {
     for (const mood of ['confident', 'smug', 'nervous', 'broken'] as const) {
       expect(HOANG_COMIC_ASSETS[mood]).toBeTruthy();
-      const html = renderToStaticMarkup(
+      const framedHtml = renderToStaticMarkup(
         <HusbandCharacterImage mood={mood} hitTrigger={1} size={172} />,
       );
-      expect(html).toContain('<svg');
-      expect(html).toContain(`url(#bg-${mood})`);
-      expect(html).toContain(HOANG_COMIC_ASSETS[mood]);
-      expect(RAW_EMOJI_REGEX.test(html)).toBe(false);
-      expect(EM_DASH_REGEX.test(html)).toBe(false);
+      expect(framedHtml).toContain('<svg');
+      expect(framedHtml).toContain(`url(#bg-${mood})`);
+      expect(framedHtml).toContain(HOANG_COMIC_ASSETS[mood]);
+      expect(RAW_EMOJI_REGEX.test(framedHtml)).toBe(false);
+      expect(EM_DASH_REGEX.test(framedHtml)).toBe(false);
+
+      const stageHtml = renderToStaticMarkup(
+        <HusbandCharacterImage mood={mood} hitTrigger={1} variant="stage" />,
+      );
+      expect(stageHtml).toContain('confrontation-stage-fade');
+      expect(stageHtml).not.toContain('rounded-2xl');
+      expect(stageHtml).not.toContain('viewBox="0 0 200 200"');
+      expect(stageHtml).toContain(HOANG_COMIC_ASSETS[mood]);
     }
   });
 });

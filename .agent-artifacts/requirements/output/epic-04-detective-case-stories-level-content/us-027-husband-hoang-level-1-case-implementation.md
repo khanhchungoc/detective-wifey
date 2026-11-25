@@ -67,7 +67,7 @@ As a Player, I want to investigate Husband Hoàng's Level 1 case ("Cơn ghen lú
     - Supporting (non-required) evidence: `edge_order_name` / `edge_name_suspect` link the legal name "Nguyen Thi Thu Huong" from the refund to the order and suspect profile.
 
 #### 5. Beat-by-Beat Interrogation (`confrontationScript`), Excuse Ladder & Comedic Roasts
-16. Level 1 defines a declarative `confrontationScript` executed inside the dark interrogation room (`ConfrontationModal`) via the COD Cold War D-pad:
+16. Level 1 defines a declarative `confrontationScript` executed inside the dark interrogation room (`ConfrontationModal`) via the Vertical Numbered Choice List:
     - **Beat 1 (`opening`)**: 2 opening lines (`open_ask` on `left`, `open_offer` on `right`), each triggering a distinct `confident` denial from Hoàng before advancing to Beat 2.
     - **Beat 2 (`beat_tuan_identity`)**: Lead choice `tuan_shared_phone` (`up`, requires `edge_order_phone`) shifts Hoàng to `nervous` ("Ơ... chắc shop ghi nhầm số thôi..."); lacking `edge_order_phone` or picking red herrings (`tuan_herring_thao`, `tuan_herring_lan_anh`) triggers `smug` failure (`canAccuse = false`, +1 strike on exit).
     - **Beat 3 (`beat_dress_recipient`)**: Lead choice `dress_legal_name` (`up`, requires `edge_order_name`) keeps Hoàng `nervous` ("À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi..."); lacking `edge_order_name` or picking red herrings (`dress_herring_mai`, `dress_herring_ngoc`) triggers `smug` failure.

@@ -37,3 +37,18 @@ export const REDUCED_FADE = {
 
 /** Max 4 choice buttons staggered by 40ms each. */
 export const CHOICE_STAGGER_S = 0.04;
+
+/** Per-character reveal interval (ms) for husband interrogation subtitles. */
+export const TYPEWRITER_CHAR_MS = 22;
+
+/** Upper cap on typewriter duration (ms) so long replies remain snappy. */
+export const TYPEWRITER_MAX_DURATION_MS = 1600;
+
+/** Computes bounded per-character step duration in milliseconds. */
+export function getTypewriterStepMs(charCount: number): number {
+  if (charCount <= 0) return TYPEWRITER_CHAR_MS;
+  return Math.max(
+    10,
+    Math.min(TYPEWRITER_CHAR_MS, Math.floor(TYPEWRITER_MAX_DURATION_MS / charCount)),
+  );
+}

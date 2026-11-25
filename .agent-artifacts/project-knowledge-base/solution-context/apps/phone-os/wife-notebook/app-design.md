@@ -48,6 +48,16 @@ timestamp: "2026-10-14T13:00:00+07:00"
 │ Contradiction / CTA:  Crimson Alert    #E11D48 / #DC2626│
 │ Innocent / Verified:  Emerald Signal   #22C55E         │
 │ Neutral String:       Evidence Yellow  #FBBF24         │
+├────────────────────────────────────────────────────────┤
+│       INTERROGATION DARKROOM TOKENS (notebook.css)     │
+├────────────────────────────────────────────────────────┤
+│ Option Card Surface:  Darkroom Choice  rgba(15,22,34,.85)
+│ Choice Primary Ink:   Cool Off-White   #F1F5F9         │
+│ Husband Subtitle Ink: Slate Dialogue   #94A3B8         │
+│ Wife Recall / Meta:   Muted Slate      #78889C         │
+│ Wife Speaker Tag:     Muted Steel Blue #7D9BB8         │
+│ Husband Speaker Tag:  Muted Dusty Rose #B57684         │
+│ Soft Deck Divider:    Hairline Veil    rgba(255,255,255,.08)
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -151,42 +161,41 @@ timestamp: "2026-10-14T13:00:00+07:00"
 >   1. **Step 1 (Suspect Selection)**: Polaroid suspect cards on `.suspect-cork-tray` with 3D red pushpins and `"NGHI PHẠM"` / `"ĐÃ LỘT MẶT NẠ"` stamps.
 >   2. **Step 2 (Confrontation Confirmation)**: Tilted Polaroid face-off (Husband vs Suspect) linked by a red string, 5-segment conviction strength indicator (`Tỉ lệ thành công`), **Deductive Linkage Bridges** (`verifiedStringsList` pairing connected clues via relationship bridge badges instead of raw text lists), and a red embossed dossier stamp CTA (`MÀY DÁM LỪA BÀ!`).
 >
-> **Interrogation Room & COD Cold War D-Pad (`ConfrontationModal`, `z-80`)**: Fullscreen 3-tier vertical interrogation room (`max-w-[480px] h-[100dvh]`, `#080B0F` / `#0B1017` dark concrete stage) driven by `caseConfig.confrontationScript` (with automatic fallback to tiered evaluation when `confrontationScript` is absent):
->   1. **Top Tier (Noir Spotlight Stage & Comic Portrait)**: Industrial overhead lamp casting a volumetric top-down spotlight cone (`transform` + `opacity` compositor-only pulse) onto `HusbandCharacterImage` (`hoang-comic-{confident,smug,nervous,broken}.svg` modeled on the OS wallpaper persona), flanked by a `44x44px` close button, discrete header (`ĐỐI CHẤT · HOÀNG`), and `usedStrikes/maxStrikes` pill.
->   2. **Middle Tier (`- • -` Progress Rail & Subtitle Card)**: Elastic minimalist `- • -` progress indicator (`role="progressbar"`, completed steps as `-` dashes, active step as glowing `•` dot, upcoming steps as muted `-` dashes), current beat `topic` header, and a darkroom subtitle card (`font-sans`, `text-ios-callout` / `text-ios-body`, zero hardcoded narrative strings).
->   3. **Bottom Tier (COD Cold War Cross / D-Pad Selector)**: Central `44x44px` vector tactical reticle (`ColdWarReticleSvg` highlighting active cardinal ticks) surrounded by `up` / `left` / `right` / `down` choice buttons (`min-h-[48px]` to `min-h-[54px]`, `text-ios-footnote` / `text-ios-subheadline`, supporting desktop `ArrowUp`/`ArrowRight`/`ArrowDown`/`ArrowLeft` and `Escape` keys plus `useSwipeBack`).
+> **Interrogation Room & Vertical Numbered Choice List (`ConfrontationModal`, `z-80`)**: Fullscreen darkroom interrogation room (`max-w-[480px] h-[100dvh]`, `bg-darkroom-bg` `#080B0F` dark concrete stage) driven by `caseConfig.confrontationScript` (with automatic fallback to tiered evaluation when `confrontationScript` is absent):
+>   1. **Top Spotlight Stage, Balanced Comic Portrait & Subdued Character-Anchored Subtitles**: Screen-wide industrial overhead lamp (`pt-1 pb-1` above the header) casting a volumetric top-down spotlight cone (`transform` + `opacity` compositor-only pulse) onto unframed `HusbandCharacterImage` (`variant="stage"`, `max-w-[380px] max-h-[360px] short:max-h-[260px] xshort:max-h-[180px]`, `hoang-comic-{confident,smug,nervous,broken}.svg` with lateral edge fade `.confrontation-stage-fade` into `#080B0F`) so the portrait fills the upper stage without excess empty headroom. Top bar flanks a `44x44px` close button, `ĐỐI CHẤT · HOÀNG` + compact `- • -` progress rail (`role="progressbar"`), and `usedStrikes/maxStrikes` pill. A seamless dark bottom scrim (`h-[50%]`) anchors dual-speaker subtitles directly over Hoàng's lower torso/table with generous vertical breathing room (`pb-5` / `20px` below subtitles + `pt-3.5` / `14px` inside the deck header) across a subtle `border-darkroom-divider` hairline. Both `Vợ :` recall (`text-darkroom-text-muted` `#78889C`, prefix `text-darkroom-speaker-wife` `#7D9BB8`) and `Hoàng :` reply (`text-darkroom-text-dialogue` `#94A3B8`, prefix `text-darkroom-speaker-husband` `#B57684`) render in `text-ios-footnote` (`13px`, zero boxed card clutter and no bright white glare competing with options).
+>   2. **Typewriter Reveal & Bottom Tactical Deck (Vertical Numbered Choice List)**: New replies from Hoàng reveal character-by-character via a layout-stable CSS grid spacer (`TYPEWRITER_CHAR_MS = 22ms`, capped at `TYPEWRITER_MAX_DURATION_MS = 1600ms`), keeping choice buttons hidden and disabled (`isDeckReady = false`) with a subtle `"Chạm để hiện nhanh..."` hint until typing finishes (or the player taps the stage/subtitle or presses `Space`/`Enter`/`1`-`4` to skip; `useReducedMotion()` reveals immediately). Once ready, options stack in a single vertical column (`gap-2.5`, `min-h-[48px]`, `text-left`) in `bg-darkroom-choice-surface` with `22x22px` numbered square keycaps (`1`, `2`, `3`, `font-sans tabular-nums`), `text-ios-subheadline` (`15px`, `text-darkroom-text-primary` `#F1F5F9`) `wifeLine` copy, and trailing chevrons (`IoChevronForwardOutline`, or semantic `IoWarningOutline` / `IoLockOpenOutline` on `ending`). Rest state keeps all choices equal; touch press (`:active`), `ArrowUp`/`ArrowDown` keyboard focus (`:focus-visible`), or desktop hover inverts to `#F5F1E8` light paper with `#080B0F` ink (plus `1`-`4` numeric shortcuts and `Escape` / `useSwipeBack`).
 
 ```
 ┌────────────────────────────────────────────────────────┐
 │ [X]              ĐỐI CHẤT · HOÀNG          [Scale 0/5] │
-│                   ▄▄▄▄▄▄▄▄▄▄▄▄▄▄                       │
-│                ╱   (Spotlight)    ╲                    │
-│               ╱  [ Comic Hoàng ]   ╲                   │
-│              ╱  (confident->broken) ╲                  │
+│                    -  •  -  -                          │
+│                   (Overhead Lamp)                      │
+│               Unframed Comic Hoàng                     │
+│            (confident -> nervous -> broken)            │
+│   Vợ : "Hoàng, anh có gì lừa dối tôi không?"           │
+│   Hoàng : "Lừa dối gì? Anh họp tới tối mịt mới về..."  │
+│                                                        │
 ├────────────────────────────────────────────────────────┤
-│                     -  •  -  -                         │
-│              ANH TUẤN THỢ ĐIỆN LÀ AI?                  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │ Vợ: "Hoàng, anh có gì lừa dối tôi không?"        │  │
-│  │──────────────────────────────────────────────────│  │
-│  │ Hoàng                             Khoanh tay     │  │
-│  │ "Lừa dối gì? Anh họp tới tối mịt mới về..."      │  │
-│  └──────────────────────────────────────────────────┘  │
+│ ANH TUẤN THỢ ĐIỆN LÀ AI?           Khoanh tay, tự tin  │
+│ ┌────────────────────────────────────────────────────┐ │
+│ │ [1] Thợ điện nào dùng chung số 0988886677...    >  │ │
+│ └────────────────────────────────────────────────────┘ │
+│ ┌────────────────────────────────────────────────────┐ │
+│ │ [2] Thảo PT California nhắn riêng cho anh...    >  │ │
+│ └────────────────────────────────────────────────────┘ │
+│ ┌────────────────────────────────────────────────────┐ │
+│ │ [3] Lan Anh Kế Toán đòi anh chuyển tiền...      >  │ │
+│ └────────────────────────────────────────────────────┘ │
 ├────────────────────────────────────────────────────────┤
-│       ┌────────────────────────────────────────┐       │
-│       │ Thợ điện nào dùng chung số 0988886677? │ [^]   │
-│       └────────────────────────────────────────┘       │
-│  ┌───────────────────┐  ( + )  ┌────────────────────┐  │
-│  │ Thảo PT nhắn [<]  │ Reticle │ [>] Lan Anh đòi... │  │
-│  └───────────────────┘         └────────────────────┘  │
+│ HỒ SƠ #01 · HOÀNG                            BƯỚC 2/5  │
 └────────────────────────────────────────────────────────┘
 ```
 
 * **Confrontation Motion Vocabulary (`confrontationMotion.ts` & `HusbandCharacterImage.tsx`)**:
-  * **Narrative vs Responsive**: System-driven dialogue, mood cross-fades, and spotlight shifts use `NARRATIVE_IN` (`240ms` ease-out) and faster `NARRATIVE_OUT` (`160ms`, ~0.7x entrance). Direct button touches use `active:scale-[0.97] active:opacity-75` (`85ms`) and `useSwipeBack`.
-  * **Two-Spring Discipline**: `SNAP` (`stiffness: 400, damping: 40, mass: 1`, 0% overshoot) drives D-pad cluster transitions with `40ms` stagger across up to 4 buttons; `POP` (`stiffness: 400, damping: 26, mass: 1`, ~6.8% overshoot <= 8%) is reserved strictly for critical evidence hit recoil on Hoàng (`hitTrigger`) and stamping the final `End` verdict badge.
-  * **Compositor & Accessibility Guardrails**: Animates exclusively `transform` and `opacity` (idle breathing, hit recoil, `broken` micro-tremble, spotlight pulse) and collapses all spatial motion to `150ms` opacity cross-fade under `useReducedMotion()`.
+  * **Narrative vs Responsive**: System-driven dialogue, mood cross-fades, and spotlight shifts use `NARRATIVE_IN` (`240ms` ease-out) and faster `NARRATIVE_OUT` (`160ms`, ~0.7x entrance). Husband replies type out at `TYPEWRITER_CHAR_MS = 22ms` (`1600ms` max cap via `getTypewriterStepMs`) before unlocking the interactive deck. Direct button touches use `.confrontation-choice` `active:scale-[0.985]` (`85ms`) and `useSwipeBack`.
+  * **Two-Spring Discipline**: `SNAP` (`stiffness: 400, damping: 40, mass: 1`, 0% overshoot) drives vertical choice list transitions with `40ms` stagger across up to 4 buttons once `isDeckReady` becomes true; `POP` (`stiffness: 400, damping: 26, mass: 1`, ~6.8% overshoot <= 8%) is reserved strictly for critical evidence hit recoil on Hoàng (`hitTrigger`) and stamping the final `End` verdict badge.
+  * **Compositor & Accessibility Guardrails**: Animates exclusively `transform` and `opacity` (idle breathing, hit recoil, `broken` micro-tremble, spotlight pulse) and collapses all spatial motion and typewriter ticks to `150ms` opacity cross-fade + instant text reveal under `useReducedMotion()`.
 * **Scripted Branching & Legacy Fallback Outcomes**:
   * **Scripted False Branch (`phase: 'failed'`, `husbandMood: 'smug'`)**: Selecting a red herring, accusing the wrong suspect, or lacking any required canonical edge (`requiredEdgeIds`) triggers Hoàng's `smug` rebuttal, locks `canAccuse = false` (zero accusation/verdict buttons rendered), displays only `[Quay lại điều tra]`, and deducts **+1 strike** upon exiting the room.
-  * **Scripted True Chain -> `End` (`confident -> nervous -> broken -> ending -> resolved`)**: Clearing every beat unlocks `script.ending` choices on the D-pad (e.g., divorce vs forgive), then stamps the case verdict (`BẮT QUẢ TANG NGOẠI TÌNH` / `VẠCH TRẦN SUGAR DADDY` / `MINH OAN CHỒNG VÔ TỘI`), 3 stars, Wife Title, comedic roast, `[Tạo thẻ Roast khoe MXH]`, and level progression CTA.
+  * **Scripted True Chain -> `End` (`confident -> nervous -> broken -> ending -> resolved`)**: Clearing every beat unlocks `script.ending` choices in the vertical choice list (e.g., divorce vs forgive), then stamps the case verdict (`BẮT QUẢ TANG NGOẠI TÌNH` / `VẠCH TRẦN SUGAR DADDY` / `MINH OAN CHỒNG VÔ TỘI`), 3 stars, Wife Title, comedic roast, `[Tạo thẻ Roast khoe MXH]`, and level progression CTA.
   * **Fallback Tiered Mode (Levels without `confrontationScript`, e.g. Level 2 & Level 3)**: Retains M1 (0 stars + 1 strike), M2 (1-2 stars partial conviction), and M3 (3 stars full confession).

@@ -27,8 +27,8 @@ All parody apps and the Phone OS shell inherit these universal semantic color to
 | `--sys-text-primary` | `#F8FAFC` (`#FFFFFF`) | Primary high-contrast text, dialogue narrative, view titles, and input text (Dark Mode) |
 | `--sys-text-secondary` | `#94A3B8` | Secondary metadata, timestamps, subtitles, photo EXIF, and list snippets (Dark Mode) |
 | `--sys-text-tertiary` | `#64748B` | Footnotes, inactive labels, and input placeholders (Dark Mode) |
-| `--sys-divider` | `rgba(255, 255, 255, 0.12)` | Hairline dividers ($0.5\text{px}$–$1\text{px}$) and micro-borders |
-| `--sys-accent` | `#007AFF` / `#38BDF8` | Universal iOS blue interactive controls, focus outlines, and active state tint |
+| `--sys-divider` | `rgba(255, 255, 255, 0.12)` | Hairline dividers ($0.5\text{px}$-$1\text{px}$) and micro-borders |
+| `--sys-accent` | `#38BDF8` (`#007AFF` light) | Universal iOS blue interactive controls, focus outlines, and active state tint |
 | `--sys-badge-red` | `#EF4444` | Notification badge counter pills, unread alerts, and strike indicators |
 | `--sys-clue-amber` | `#F59E0B` | Uncollected clue warning pills and detective HUD highlights |
 | `--sys-success-green` | `#22C55E` | Verified checkmarks, successful transactions, online status, and victory state |
@@ -44,7 +44,7 @@ For components rendering over light surfaces (e.g. `.glass-toast-light`, modal a
 | `--ios-label-quaternary` | **`rgba(60, 60, 67, 0.18)`** | `rgba(235, 235, 245, 0.18)` | Hairline dividers, disabled labels, and decorative accents |
 
 ### 1.2. Color Ownership & Delegation Rules
-1. **Universal Enforcement**: Universal semantic tokens (`--sys-*`) govern text contrast, hairline borders, feedback states (red/amber/green), and base glass materials across **all virtual apps**.
+1. **Universal Enforcement**: Universal semantic tokens (`--sys-*`, `--space-*`, `--radius-*`, `--ios-label-*`) are declared in `src/index.css` and mapped in `tailwind.config.js` (`sys.*`, `ios-label.*`) to govern text contrast, hairline borders, feedback states (red/amber/green), and base glass materials across **all virtual apps**.
 2. **Phone OS Shell Colors**: Physical hardware bezel (`#18181B`), metallic slate ring (`#3F3F46`), Dynamic Island (`#000000`), wallpaper gradients, and launcher dock styling are authoritatively owned by [phone-os/app-design.md](../apps/phone-os/app-design.md) and [phone-os/shell/app-design.md](../apps/phone-os/shell/app-design.md).
 3. **Parody App Brand Palettes**: Third-party parody apps authoritatively define and encapsulate their proprietary brand colors (e.g. `Zola` electric blue, `Techcornbank` scarlet red, `Shopoo` vibrant orange, `Grap` green) inside their local scopes under [`../apps/<app_id>/app-design.md`](../apps/). Brand colors must never pollute universal tokens or cross app boundaries.
 
