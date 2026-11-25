@@ -100,16 +100,14 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Cool-gray physical evidence slips inside the darkroom casefile */
-.dossier-paper-card {
-  background-color: #eaeff4;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 21px,
-    rgba(71, 85, 105, 0.1) 21px,
-    rgba(71, 85, 105, 0.1) 22px
-  );
+/* Darkroom evidence linkage cards inside the pre-confrontation casefile */
+.dossier-evidence-card {
+  background-color: #0b1119;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(8, 11, 15, 0.45) 100%);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* HMR-safe zero-specificity fallbacks for darkroom interrogation tokens */

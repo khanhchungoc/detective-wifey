@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useReducedMotion } from 'motion/react';
 import {
-  IoChatbubbleEllipsesOutline,
   IoDocumentTextOutline,
   IoWarningOutline,
   IoCloseOutline,
   IoChevronBackOutline,
+  IoChevronForwardOutline,
   IoLinkOutline,
   IoHeart,
   IoGlassesOutline,
@@ -17,7 +18,242 @@ import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import '../notebook.css';
 import type { ConfrontationPreflightInfo, SuspectOnBoard } from '../confrontationEngine';
 
-export const CONFRONTATION_LABELS = ['Làm cho ra nhẽ', 'Lừa sao được bà', 'Mày dám lừa bà', 'Tôi biết hết rồi'] as const;
+export const CONFRONTATION_LABELS = ['Vào việc'] as const;
+
+const EVIDENCE_CARD_WIDTH_PCT = 88;
+const SWIPE_DISTANCE_PX = 36;
+const SWIPE_VELOCITY_PX_PER_MS = 0.35;
+const SWIPE_MIN_FLICK_PX = 18;
+
+/** Computes horizontal track offset percentage so neighboring peeking cards stay framed without DOM reads. */
+export function getDeckTrackOffsetPct(index: number, count: number): number {
+  if (count <= 1 || index <= 0) return 0;
+  if (index >= count - 1) return -(count * EVIDENCE_CARD_WIDTH_PCT - 100);
+  return -(index * EVIDENCE_CARD_WIDTH_PCT - (100 - EVIDENCE_CARD_WIDTH_PCT) / 2);
+}
+
+/** Evaluates a horizontal drag distance and duration into a deck slide delta (-1, 0, or 1). */
+export function resolveSwipeStep(dx: number, elapsedMs: number): -1 | 0 | 1 {
+  const absDx = Math.abs(dx);
+  const isFlick =
+    elapsedMs > 0 &&
+    absDx >= SWIPE_MIN_FLICK_PX &&
+    absDx / elapsedMs >= SWIPE_VELOCITY_PX_PER_MS;
+  if (absDx < SWIPE_DISTANCE_PX && !isFlick) return 0;
+  return dx < 0 ? 1 : -1;
+}
+
+interface EvidenceSwipeDeckProps<T> {
+  items: readonly T[];
+  getKey: (item: T) => string;
+  renderCard: (item: T) => React.ReactNode;
+}
+
+/**
+ * Swipeable dark-mode card deck for linked evidence items with zero-reflow pointer tracking.
+ */
+function EvidenceSwipeDeck<T>({ items, getKey, renderCard }: EvidenceSwipeDeckProps<T>) {
+  const prefersReducedMotion = Boolean(useReducedMotion());
+  const [activeIndex, setActiveIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startTime: number;
+    lockedAxis: 'x' | 'y' | null;
+    currentDx: number;
+  } | null>(null);
+
+  const totalItems = items.length;
+  const safeIndex = Math.min(activeIndex, Math.max(0, totalItems - 1));
+  const baseOffsetPct = getDeckTrackOffsetPct(safeIndex, totalItems);
+
+  useEffect(() => () => {
+    if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+  }, []);
+
+  const commitOffset = (index: number) => {
+    const clamped = Math.max(0, Math.min(totalItems - 1, index));
+    if (trackRef.current) {
+      trackRef.current.style.transition = '';
+      trackRef.current.style.transform = `translate3d(${getDeckTrackOffsetPct(clamped, totalItems)}%, 0, 0)`;
+    }
+    setActiveIndex(clamped);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (totalItems <= 1 || e.button !== 0) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    dragRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      startTime: performance.now(),
+      lockedAxis: null,
+      currentDx: 0,
+    };
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const dx = e.clientX - drag.startX;
+    const dy = e.clientY - drag.startY;
+
+    if (!drag.lockedAxis) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        drag.lockedAxis = 'y';
+        dragRef.current = null;
+        return;
+      }
+      drag.lockedAxis = 'x';
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch {
+        // Ignore capture failure on synthetic or detached pointers.
+      }
+    }
+
+    const atStartEdge = safeIndex === 0 && dx > 0;
+    const atEndEdge = safeIndex === totalItems - 1 && dx < 0;
+    const resistedDx = atStartEdge || atEndEdge ? dx * 0.25 : dx;
+    drag.currentDx = Math.max(-220, Math.min(220, resistedDx));
+
+    if (frameRef.current === null) {
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null;
+        const active = dragRef.current;
+        if (!active || !trackRef.current) return;
+        trackRef.current.style.transition = 'none';
+        trackRef.current.style.transform = `translate3d(calc(${baseOffsetPct}% + ${active.currentDx}px), 0, 0)`;
+      });
+    }
+  };
+
+  const finishDrag = (e: React.PointerEvent<HTMLDivElement>, cancelled: boolean) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+    try {
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      // Ignore release errors when capture was not held.
+    }
+
+    if (drag.lockedAxis === 'x') {
+      const elapsed = performance.now() - drag.startTime;
+      const step = cancelled ? 0 : resolveSwipeStep(e.clientX - drag.startX, elapsed);
+      commitOffset(safeIndex + step);
+    }
+    dragRef.current = null;
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (totalItems <= 1) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      commitOffset(safeIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      commitOffset(safeIndex + 1);
+    }
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between gap-2">
+        <h4 className="font-sans text-ios-caption-2 uppercase tracking-[0.12em] text-slate-400">
+          Bằng chứng liên kết
+        </h4>
+        {totalItems > 1 && (
+          <div className="flex items-center">
+            <span className="pointer-events-none -mr-2.5 font-sans text-ios-caption-2 tabular-nums text-slate-400">
+              {safeIndex + 1}/{totalItems}
+            </span>
+            <button
+              type="button"
+              onClick={() => commitOffset(safeIndex - 1)}
+              disabled={safeIndex === 0}
+              aria-label="Bằng chứng trước"
+              className="group -my-2.5 flex min-h-[44px] min-w-[44px] items-center justify-end pr-0.5 cursor-pointer disabled:opacity-35 disabled:pointer-events-none outline-none"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-[4px] border border-slate-700/80 bg-[#0B1119] text-slate-300 transition-colors group-hover:border-slate-500 group-hover:text-white group-active:scale-95 group-focus-visible:ring-2 group-focus-visible:ring-[#E11D48]">
+                <IoChevronBackOutline className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => commitOffset(safeIndex + 1)}
+              disabled={safeIndex >= totalItems - 1}
+              aria-label="Bằng chứng tiếp theo"
+              className="group -my-2.5 -mr-3 flex min-h-[44px] min-w-[44px] items-center justify-start pl-0.5 cursor-pointer disabled:opacity-35 disabled:pointer-events-none outline-none"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-[4px] border border-slate-700/80 bg-[#0B1119] text-slate-300 transition-colors group-hover:border-slate-500 group-hover:text-white group-active:scale-95 group-focus-visible:ring-2 group-focus-visible:ring-[#E11D48]">
+                <IoChevronForwardOutline className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div
+        data-swipe-surface=""
+        tabIndex={totalItems > 1 ? 0 : undefined}
+        role="region"
+        aria-roledescription={totalItems > 1 ? 'carousel' : undefined}
+        aria-label="Thẻ bằng chứng liên kết"
+        onKeyDown={handleKeyDown}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={e => finishDrag(e, false)}
+        onPointerCancel={e => finishDrag(e, true)}
+        className="relative overflow-hidden rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48]"
+        style={{ touchAction: totalItems > 1 ? 'pan-y' : 'auto' }}
+      >
+        <div
+          ref={trackRef}
+          className={`flex items-stretch ${
+            prefersReducedMotion ? 'transition-none' : 'transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]'
+          } ${totalItems > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
+          style={{
+            transform: `translate3d(${baseOffsetPct}%, 0, 0)`,
+            willChange: totalItems > 1 ? 'transform' : undefined,
+          }}
+        >
+          {items.map(item => (
+            <div
+              key={getKey(item)}
+              className={totalItems > 1 ? 'w-[88%] shrink-0 px-1 flex' : 'w-full shrink-0 flex'}
+            >
+              {renderCard(item)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {totalItems > 1 && (
+        <div aria-hidden="true" className="flex items-center justify-center gap-1.5 pt-0.5">
+          {items.map((item, idx) => (
+            <span
+              key={getKey(item)}
+              className={`h-1.5 rounded-full transition-[width,background-color] duration-200 ${
+                idx === safeIndex ? 'w-4 bg-[#E11D48]' : 'w-1.5 bg-slate-600/80'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const POLAROID_TILTS = [1.6, -1.8, -1.1, 1.9, -1.4] as const;
 
@@ -143,7 +379,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
   onCancel,
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const [confrontLabel] = useState(() => CONFRONTATION_LABELS[Math.floor(Math.random() * CONFRONTATION_LABELS.length)]);
+  const confrontLabel = CONFRONTATION_LABELS[0];
 
   const [internalSelectedId, setInternalSelectedId] = useState<string | null>(selectedSuspectId ?? null);
 
@@ -201,17 +437,17 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
         <span
           role="img"
           aria-label={app.displayName}
-          className={`flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-[4px] border border-[#D4C9B6] text-white bg-gradient-to-br ${app.themeGradient}`}
+          className={`flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-[4px] border border-white/15 bg-slate-800 text-white bg-gradient-to-br ${app.themeGradient}`}
         >
           {app.iconAsset ? (
             <img src={app.iconAsset} alt="" className="h-full w-full object-cover" />
           ) : (
-            <app.icon className="h-3.5 w-3.5" />
+            <app.icon className="h-3 w-3" />
           )}
         </span>
       );
     }
-    return <IoDocumentTextOutline aria-hidden="true" className="h-5 w-5 shrink-0 text-[#7A6B57]" />;
+    return <IoDocumentTextOutline aria-hidden="true" className="h-5 w-5 shrink-0 text-slate-400" />;
   };
 
   return (
@@ -227,19 +463,12 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className="relative w-full max-w-[560px] max-h-[calc(100%_-_0.5rem)] flex flex-col pt-5 animate-scaleUp outline-none"
+        className="relative w-full max-w-[560px] max-h-[calc(100%_-_0.5rem)] flex flex-col animate-scaleUp outline-none"
         onClick={e => e.stopPropagation()}
         onKeyDown={e => { if (e.key === 'Escape') { e.stopPropagation(); onCancel(); } }}
       >
-        {/* Sealed Casefile Top File Tab */}
-        <div className="pointer-events-none absolute top-0 left-3 z-10 flex items-center rounded-t-[4px] border border-b-0 border-[#2A3544] bg-[#141A22] px-2.5 py-0.5 shadow-sm">
-          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-[#FACC15]">
-            FILE 01
-          </span>
-        </div>
-
         {/* Main Sealed Dark Casefile Container */}
-        <div className="dossier-folder-sheet relative flex min-h-0 flex-1 flex-col gap-2.5 sm:gap-3 overflow-y-auto rounded-[4px] rounded-tl-none border border-[#2A3544] border-l-[6px] border-l-[#E11D48] p-3 sm:p-4 text-[#F1F5F9]">
+        <div className="dossier-folder-sheet relative flex min-h-0 flex-1 flex-col gap-2.5 sm:gap-3 overflow-y-auto overflow-x-hidden rounded-[8px] border border-[#2A3544] p-3 sm:p-4 text-[#F1F5F9]">
           <header className="flex items-center gap-1.5 border-b border-slate-800 pb-2 shrink-0">
             {!isStep1 && hasSuspectList && (
               <button
@@ -282,7 +511,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
 
           {isStep1 ? (
             hasSuspectList ? (
-              <div className="suspect-cork-tray min-h-0 overflow-y-auto rounded-[4px] border border-[#2A3544] p-4 sm:p-5">
+              <div className="suspect-cork-tray min-h-0 overflow-y-auto overflow-x-hidden rounded-[4px] border border-[#2A3544] p-4 sm:p-5">
                 <div className="flex flex-wrap items-start justify-center gap-3.5 sm:gap-5">
                   {suspectsOnBoard.map((suspect, index) => (
                     <SuspectPolaroidCard
@@ -403,72 +632,101 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
                 </div>
               </div>
 
-              {/* Evidence Linkage Summary (scrolls naturally with the dossier) */}
-              <section className="shrink-0 space-y-2">
-                <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
-                  Bằng chứng liên kết
-                </h4>
-
+              {/* Evidence Linkage Summary (compact swipeable dark-mode cards) */}
+              <section className="shrink-0">
                 {linkedBridges.length > 0 ? (
-                  <ul className="space-y-2">
-                    {linkedBridges.map(bridge => (
-                      <li
-                        key={bridge.id}
-                        className="dossier-paper-card rounded-[3px] border border-[#B8C4D0] p-2 shadow-sm"
+                  <EvidenceSwipeDeck
+                    key={`bridges-${currentSuspectId ?? 'none'}`}
+                    items={linkedBridges}
+                    getKey={bridge => bridge.id}
+                    renderCard={bridge => (
+                      <article
+                        className={`dossier-evidence-card w-full rounded-[6px] border p-2.5 ${
+                          bridge.isSmokingGun
+                            ? 'border-[#E11D48]/50 border-l-[3px] border-l-[#E11D48]'
+                            : 'border-slate-700/80'
+                        }`}
                       >
-                        <div className="flex items-center gap-2 text-xs">
-                          {renderAppBadge(bridge.sourceApp)}
-                          <span className="font-semibold text-slate-900 leading-snug break-words">
-                            {bridge.sourceTitle}
-                          </span>
-                        </div>
-
-                        <div className="my-1 flex items-center gap-1.5 pl-2">
-                          <span className="h-3 w-[2px] bg-[#DC2626]/80" aria-hidden="true" />
+                        <div className="mb-1.5 flex items-center justify-between gap-2">
                           <span
-                            className={`inline-flex items-center gap-1 rounded-[2px] border px-1.5 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider ${
+                            className={`inline-flex items-center gap-1 rounded-[3px] border px-1.5 py-0.5 font-sans text-ios-caption-2 uppercase tracking-wider ${
                               bridge.isSmokingGun
-                                ? 'border-rose-300 bg-rose-100 text-rose-800'
-                                : 'border-[#B8C4D0] bg-[#D5DDE5] text-slate-700'
+                                ? 'border-[#E11D48]/45 bg-[#E11D48]/15 text-[#FDA4AF]'
+                                : 'border-slate-700 bg-slate-800/85 text-slate-300'
                             }`}
                           >
-                            <IoLinkOutline className="h-3 w-3 shrink-0" />
-                            {bridge.relationshipLabel || 'Mắt xích liên kết'}
+                            <IoLinkOutline className="h-3 w-3 shrink-0" aria-hidden="true" />
+                            <span>{bridge.relationshipLabel || 'Mắt xích liên kết'}</span>
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 text-xs">
-                          {renderAppBadge(bridge.targetApp)}
-                          <span className="font-semibold text-slate-900 leading-snug break-words">
-                            {bridge.targetTitle}
-                          </span>
+                        <div className="flex items-stretch gap-2">
+                          <div aria-hidden="true" className="flex w-2.5 shrink-0 flex-col items-center py-2">
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                bridge.isSmokingGun ? 'bg-[#FB7185]' : 'bg-slate-400'
+                              }`}
+                            />
+                            <span
+                              className={`my-0.5 w-[1.5px] flex-1 ${
+                                bridge.isSmokingGun ? 'bg-[#E11D48]/70' : 'bg-slate-600'
+                              }`}
+                            />
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                bridge.isSmokingGun ? 'bg-[#FB7185]' : 'bg-slate-400'
+                              }`}
+                            />
+                          </div>
+
+                          <div className="min-w-0 flex-1 space-y-1.5">
+                            <div className="flex min-w-0 items-center gap-2">
+                              {renderAppBadge(bridge.sourceApp)}
+                              <span className="min-w-0 flex-1 font-sans text-ios-footnote font-semibold text-slate-100 line-clamp-2 break-words">
+                                {bridge.sourceTitle}
+                              </span>
+                            </div>
+                            <div className="flex min-w-0 items-center gap-2">
+                              {renderAppBadge(bridge.targetApp)}
+                              <span className="min-w-0 flex-1 font-sans text-ios-footnote font-semibold text-slate-100 line-clamp-2 break-words">
+                                {bridge.targetTitle}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
+                      </article>
+                    )}
+                  />
                 ) : verifiedCluesList.length > 0 ? (
-                  <ul className="space-y-1.5">
-                    {verifiedCluesList.map(clue => (
-                      <li
-                        key={clue.id}
-                        className="dossier-paper-card flex items-start gap-2 rounded-[3px] border border-[#B8C4D0] p-2 text-sm shadow-sm"
-                      >
+                  <EvidenceSwipeDeck
+                    key={`clues-${currentSuspectId ?? 'none'}`}
+                    items={verifiedCluesList}
+                    getKey={clue => clue.id}
+                    renderCard={clue => (
+                      <article className="dossier-evidence-card flex w-full items-start gap-2 rounded-[6px] border border-slate-700/80 p-2.5">
                         <span className="mt-0.5">{renderAppBadge(clue.sourceApp)}</span>
                         <div className="min-w-0 flex-1">
-                          <h5 className="font-semibold text-xs text-slate-900 break-words">{clue.title}</h5>
+                          <h5 className="font-sans text-ios-footnote font-semibold text-slate-100 line-clamp-1 break-words">
+                            {clue.title}
+                          </h5>
                           {clue.snippet && (
-                            <p className="mt-0.5 line-clamp-2 break-words text-xs leading-relaxed text-slate-600">
+                            <p className="mt-0.5 line-clamp-2 break-words font-sans text-ios-caption-1 text-slate-400">
                               {clue.snippet}
                             </p>
                           )}
                         </div>
-                      </li>
-                    ))}
-                  </ul>
+                      </article>
+                    )}
+                  />
                 ) : (
-                  <p className="rounded-[4px] border border-dashed border-slate-700 bg-[#0E131B]/70 py-2.5 text-center font-sans text-xs text-slate-400">
-                    Chưa có mắt xích chứng cứ nào được xác thực.
-                  </p>
+                  <div className="space-y-1.5">
+                    <h4 className="font-sans text-ios-caption-2 uppercase tracking-[0.12em] text-slate-400">
+                      Bằng chứng liên kết
+                    </h4>
+                    <p className="rounded-[6px] border border-dashed border-slate-700 bg-[#0B1119]/80 py-2.5 text-center font-sans text-ios-caption-1 text-slate-400">
+                      Chưa có mắt xích chứng cứ nào được xác thực.
+                    </p>
+                  </div>
                 )}
               </section>
 
@@ -485,21 +743,16 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
               <footer className="flex flex-col gap-1 pt-0.5 shrink-0">
                 <button
                   type="button"
+                  data-testid="confrontation-confirm-cta"
                   onClick={handleConfirm}
-                  className="flex h-10 items-center justify-between gap-2.5 rounded-[4px] border border-[#FB7185]/40 bg-[#E11D48] px-3.5 text-xs font-sans font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] transition-transform hover:bg-[#BE123C] active:scale-[0.98]"
+                  className="flex min-h-[44px] w-full items-center justify-center rounded-[4px] border border-[#FB7185]/40 bg-[#E11D48] px-4 py-2 text-center font-sans text-ios-footnote font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(225,29,72,0.4)] transition-transform hover:bg-[#BE123C] active:scale-[0.98] cursor-pointer"
                 >
-                  <span className="flex items-center gap-2">
-                    <IoChatbubbleEllipsesOutline className="h-4 w-4 shrink-0" />
-                    <span>{confrontLabel.toLocaleUpperCase('vi')}!</span>
-                  </span>
-                  <span className="rounded-[2px] bg-[#090C10] px-1.5 py-0.5 font-sans text-[11px] font-extrabold text-[#FDA4AF] shadow-sm">
-                    #01
-                  </span>
+                  <span>{confrontLabel.toLocaleUpperCase('vi')}!</span>
                 </button>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="py-1 font-sans text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 underline underline-offset-4"
+                  className="py-1 font-sans text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 underline underline-offset-4 cursor-pointer"
                 >
                   Điều tra thêm
                 </button>

@@ -699,7 +699,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(html).toContain('Xác nhận đối chất');
       expect(html).not.toContain('4/10 manh mối');
       expect(html).toContain('Tỉ lệ thành công');
-      expect(html).toMatch(/LÀM CHO RA NHẼ!|LỪA SAO ĐƯỢC BÀ!|MÀY DÁM LỪA BÀ!|TÔI BIẾT HẾT RỒI!/);
+      expect(html).toContain('VÀO VIỆC!');
       expect(html).toContain('Đối chất thất bại: mất 1 lượt nghi ngờ.');
       expect(html).toContain('Điều tra thêm');
 
@@ -730,7 +730,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
       expect(html).not.toContain('10/10 manh mối');
       expect(html).toContain('Tỉ lệ thành công');
-      expect(html).toMatch(/LÀM CHO RA NHẼ!|LỪA SAO ĐƯỢC BÀ!|MÀY DÁM LỪA BÀ!|TÔI BIẾT HẾT RỒI!/);
+      expect(html).toContain('VÀO VIỆC!');
       expect(html).toContain('Bằng chứng');
 
       // Invariant: Zero red strings in the popup as requested
@@ -907,7 +907,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
       expect(html).not.toContain('Không áp dụng');
       expect(html).toContain('Tỉ lệ thành công');
-      expect(html).toMatch(/LÀM CHO RA NHẼ!|LỪA SAO ĐƯỢC BÀ!|MÀY DÁM LỪA BÀ!|TÔI BIẾT HẾT RỒI!/);
+      expect(html).toContain('VÀO VIỆC!');
       expect(html).toContain('Đối chất thất bại: mất 1 lượt nghi ngờ.');
 
       // The bar hides exact percentages

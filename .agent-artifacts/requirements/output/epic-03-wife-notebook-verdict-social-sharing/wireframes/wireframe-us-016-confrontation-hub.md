@@ -29,7 +29,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |---|---|---|
 | M0-A | Chọn nghi phạm: Chưa lột mặt nạ | Khay Polaroid, vỏ bọc "Anh Tuấn Thợ Điện", ảnh túi đồ nghề, con dấu "NGHI PHẠM" |
 | M0-B | Chọn nghi phạm: ĐÃ LỘT MẶT NẠ | Thẻ Polaroid chuyển hóa: tên thật "Nguyễn Thị Thu Hương", ảnh chân dung nữ, nhãn `Vỏ bọc: "Anh Tuấn Thợ Điện"` (`IoGlassesOutline`), manh mối `Trùng SĐT 0988886677` (`IoCallOutline`), dấu "ĐÃ LỘT MẶT NẠ" |
-| M0-C | Xác nhận đối chất (Darkroom Casefile Dossier) | Tập hồ sơ niêm phong tối (`FILE 01`), 2 thẻ Polaroid giấy lạnh dập ghim nối chỉ đỏ đối đầu, thước đo tỉ lệ thành công, các cặp **Mắt xích suy luận (Linkage Bridges)**, nút dấu mộc đỏ "MÀY DÁM LỪA BÀ!" |
+| M0-C | Xác nhận đối chất (Darkroom Casefile Dossier) | Tập hồ sơ niêm phong tối (viền `#2A3544` đồng nhất), 2 thẻ Polaroid giấy lạnh dập ghim nối chỉ đỏ đối đầu, thước đo tỉ lệ thành công, carousel thẻ **Bằng chứng liên kết** dark mode vuốt ngang, nút CTA căn giữa "VÀO VIỆC!" |
 | M1 | Phòng thẩm vấn: Nhịp 1 Mở màn & Nhịp 2..N Chất vấn (Danh sách chọn dọc đánh số) | Sân khấu tối `#080b0f` + spotlight chiếu đỉnh + Comic Hoàng cỡ lớn (`confident` -> `nervous`), thanh tiến độ `- • -`, phụ đề 13px dịu màu chạy chữ, danh sách lựa chọn dọc đánh số (`1`, `2`, `3`) mở khóa sau khi chạy xong chữ |
 | M2 | Nhánh False: Thiếu chứng cứ / Bẫy nghi ngờ (`smug` & Khóa kết tội) | Comic Hoàng cười cợt (`smug`), khóa hoàn toàn lựa chọn kết tội (`canAccuse = false`), cảnh báo trừ 1 lượt nghi ngờ khi rút lui, chỉ hiện nút "Quay lại điều tra" |
 | M3 | Nhánh True Cuối -> Bước `End` (`broken` -> Phán quyết & Roast 3 sao) | Comic Hoàng suy sụp khóc xin tha (`broken`), mở khóa lựa chọn kết cục (`Ly hôn` / `Tha thứ`), đóng dấu phán quyết theo `groundTruth.verdict`, 3 sao, danh hiệu Vợ, Roast Card và qua màn |
@@ -89,42 +89,40 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 
 ```text
 +------------------------------------------------+
-|  [<]         HỒ SƠ ĐỐI CHẤT               [X]  |
-+------------------------------------------------+
-|   +---------+                                  |
-|   | FILE 01 |                                  |
-| +-+---------+--------------------------------+ |
-| |  IN PROGRESS                 [ #01 ]       | |
-| |                                            | |
+| +--------------------------------------------+ |
+| | [<] HỒ SƠ ĐỐI CHẤT            [ #01 ]  [X] | |
+| |--------------------------------------------| |
 | |   +-------------+        +-------------+   | |
 | |   | (Pin đỏ)    |        | (Pin đỏ)    |   | |
 | |   | [Ảnh Hoàng] |══Chỉ đỏ| [Ảnh Bồ/Vỏ] |   | |
-| |   |             |        | [NGHI PHẠM] |   | |
+| |   |             |        |             |   | |
 | |   | Hoàng       |        | Thu Hương   |   | |
 | |   +-------------+        +-------------+   | |
-| |                                            | |
-| |  TỈ LỆ THÀNH CÔNG (ÁP LỰC KẾT TỘI)         | |
+| |--------------------------------------------| |
+| |               TỈ LỆ THÀNH CÔNG             | |
 | |  [ ==== ] [ ==== ] [ ==== ] [ ==== ] [ ==== ]|
+| |--------------------------------------------| |
+| | BẰNG CHỨNG LIÊN KẾT        1/5   [<] [>]   | |
+| | +-----------------------------------+ +--+ | |
+| | | [🔗 Nhãn liên kết]                | |  | | |
+| | | • [App] Manh mối A (Điểm chạm)    | |  | | |
+| | | • [App] Manh mối B (Điểm chạm)    | |  | | |
+| | +-----------------------------------+ +--+ | |
+| |                 ●  •  •  •  •              | |
 | |                                            | |
-| |  CÁC MẮT XÍCH SUY LUẬN:                    | |
-| |  +--------------------------------------+  | |
-| |  | [App] Manh mối A (Điểm chạm)         |  | |
-| |  |       ▲ [ 🔗 Nhãn liên kết ] ▼       |  | |
-| |  | [App] Manh mối B (Điểm chạm)         |  | |
-| |  +--------------------------------------+  | |
+| | ⚠️ Đối chất thất bại: mất 1 lượt nghi ngờ. | |
 | |                                            | |
-| |  ⚠️ Đối chất thất bại: mất 1 lượt nghi ngờ.| |
-| |                                            | |
-| |  +--------------------------------------+  | |
-| |  | [💬] MÀY DÁM LỪA BÀ!          [ #01 ]|  | |
-| |  +--------------------------------------+  | |
+| | +----------------------------------------+ | |
+| | |               VÀO VIỆC!                | | |
+| | +----------------------------------------+ | |
 | |               Điều tra thêm                | |
 | +--------------------------------------------+ |
 +------------------------------------------------+
 ```
 
-- Giao diện sử dụng phong cách **Darkroom Casefile Dossier** đồng bộ với bảng điều tra Cold War: nền tối sẫm, tập hồ sơ niêm phong tối (`#141A22`, viền trái `#E11D48`), tab `FILE 01`, font chính của dự án (`font-sans`), dấu mộc đỏ, ảnh Polaroid giấy lạnh (`#EEF2F6`) và phiếu chứng cứ giấy lạnh (`#EAEFF4`) ghim đinh đỏ nối bằng sợi chỉ đỏ.
-- Phần tóm tắt bằng chứng hiển thị theo từng **Cặp mắt xích liên kết (Linkage Bridges)** trích xuất từ `verifiedStringsList` (chỉ giữ tiêu đề/điểm chạm cốt lõi + nhãn kết nối ở giữa), loại bỏ đoạn văn bản dài dòng thừa thông tin.
+- Giao diện sử dụng phong cách **Darkroom Casefile Dossier** đồng bộ với bảng điều tra Cold War: nền tối sẫm, tập hồ sơ tối (`#141A22`, viền `#2A3544` bo đều 4 góc `rounded-[8px]`, `overflow-x-hidden`, không tab `FILE 01`, không sọc đỏ dày ở mép), font chính của dự án (`font-sans`), dấu mộc đỏ `#01` trên header, và 2 ảnh Polaroid giấy lạnh (`#EEF2F6`) ghim đinh đỏ nối bằng sợi chỉ đỏ.
+- Phần **Bằng chứng liên kết** hiển thị dạng **carousel thẻ dark mode (`.dossier-evidence-card`, `#0B1119`)** tiết kiệm diện tích: khi có `> 1` thẻ, thẻ rộng `88%` để hé nhẹ thẻ kế tiếp (`data-swipe-surface` tách cử chỉ vuốt ngang khỏi `useSwipeBack` của modal), đi kèm bộ đếm `1/N`, nút `<`/`>` (`44x44px`), chấm chỉ báo trang và điều hướng phím `ArrowLeft`/`ArrowRight`. Mỗi thẻ trích xuất từ `verifiedStringsList` (badge nhãn liên kết ở trên + trục dọc nối 2 điểm chạm), fallback sang `verifiedCluesList` khi chưa có mắt xích nối.
+- Nút CTA chính hiển thị wording **"VÀO VIỆC!"** căn giữa (`justify-center`), bỏ icon bong bóng chát và nhãn `#01` trong nút.
 
 ---
 
