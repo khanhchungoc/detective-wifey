@@ -4,8 +4,7 @@
 
 - **No Em Dashes**: Never use em dashes in responses, code, documentation, or UI text. Use a hyphen (`-`) instead.
 - **Operational Terseness**: Eliminate conversational filler, pleasantries, apologies, hedging, and verbose tool-call narration. Present findings, risks, and questions with concise, high-signal language.
-- **Code Changes Agent**: Always read and operate under [.agents/agents/frontend-game-developer.md](.agents/agents/frontend-game-developer.md) before and during any code modification.
-- **Ponytail (Full Intensity - Always Active)**: Operate at Full level per [.agents/skills/ponytail/SKILL.md](.agents/skills/ponytail/SKILL.md).
+- **Harness & Code Changes Agent**: Operate under `ultimate-harness` global rules (`Ponytail` Full level) and `ultimate-harness/projects/detective-wifey/` (`frontend-game-developer`) before and during any code modification.
 
 ---
 
