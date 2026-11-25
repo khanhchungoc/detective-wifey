@@ -10,7 +10,6 @@ import {
   IoShareSocialOutline,
   IoLockOpenOutline,
   IoCloseOutline,
-  IoChevronForwardOutline,
 } from 'react-icons/io5';
 import type { VerdictType } from '../../../shared/contracts/case-schema';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
@@ -25,6 +24,7 @@ import {
   getTypewriterStepMs,
 } from '../confrontationMotion';
 import { HusbandCharacterImage, type HusbandMood } from './HusbandCharacterImage';
+import { OverheadLampHighlight } from './OverheadLampHighlight';
 import type {
   ActiveConfrontationChoice,
   ConfrontationEvaluationResult,
@@ -291,7 +291,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
             {choice.wifeLine}
           </span>
 
-          {isEndingPhase ? (
+          {isEndingPhase && (
             isDivorceEnding ? (
               <IoWarningOutline
                 aria-hidden="true"
@@ -303,11 +303,6 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
                 className="confrontation-chevron mt-0.5 h-4 w-4 shrink-0 text-emerald-300"
               />
             )
-          ) : (
-            <IoChevronForwardOutline
-              aria-hidden="true"
-              className="confrontation-chevron mt-1 h-3.5 w-3.5 shrink-0 text-darkroom-text-muted"
-            />
           )}
         </motion.button>
       );
@@ -332,30 +327,48 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
           }}
         >
           {/* TOP STAGE: Screen-Wide Spotlight + Unframed Large Comic Hoang + Character-Anchored Subtitle */}
-          <section className="relative flex-1 min-h-0 flex flex-col justify-between overflow-hidden bg-darkroom-bg">
-            {/* Full-Stage Volumetric Overhead Spotlight */}
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 origin-top will-change-[transform,opacity]"
-              style={{ background: spotlightBackground }}
-              animate={
-                prefersReducedMotion
-                  ? { opacity: 0.9, scaleX: 1 }
-                  : { opacity: [0.82, 1, 0.86], scaleX: [0.99, 1.02, 0.99] }
+          <section className="isolate relative flex-1 min-h-0 flex flex-col justify-between overflow-hidden bg-darkroom-bg">
+            {/* Synced Overhead Lamp Wash, Conical Beam, Bulb Glow & Inverse Room Dimming Veil */}
+            <OverheadLampHighlight
+              repeatDelay={5.5}
+              dimmerClassName="inset-0 z-[15]"
+              sourceClassName="inset-x-0 top-0 z-[19] flex justify-center pt-1"
+              staticWashOpacity={0.9}
+              staticSourceOpacity={0.92}
+              wash={
+                <div className="relative h-full w-full">
+                  <div className="absolute inset-0" style={{ background: spotlightBackground }} />
+                  <svg
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    className="absolute inset-0 h-full w-full"
+                  >
+                    <defs>
+                      <linearGradient id="confrontation-beam-cone" x1="50%" y1="0%" x2="50%" y2="100%">
+                        <stop offset="0%" stopColor="#e2ecf8" stopOpacity="0.20" />
+                        <stop offset="46%" stopColor="#94a3b8" stopOpacity="0.08" />
+                        <stop offset="100%" stopColor="#080b0f" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <polygon points="44,0 56,0 96,100 4,100" fill="url(#confrontation-beam-cone)" />
+                  </svg>
+                </div>
               }
-              transition={
-                prefersReducedMotion
-                  ? REDUCED_FADE
-                  : { duration: 4.2, repeat: Infinity, ease: 'easeInOut' }
+              source={
+                <div className="relative h-[12px] w-[88px]">
+                  <svg width="88" height="12" viewBox="0 0 88 12" fill="none" className="block">
+                    <ellipse cx="44" cy="9.5" rx="18" ry="2" fill="#f8fafc" />
+                  </svg>
+                  <div className="absolute left-1/2 top-[9px] -translate-x-1/2 h-[2px] w-9 rounded-full bg-[#E2ECF8]/85 shadow-[0_0_16px_4px_rgba(226,236,248,0.5),0_8px_28px_8px_rgba(148,163,184,0.2)]" />
+                </div>
               }
             />
 
-            {/* Industrial Overhead Lamp Fixture */}
-            <div aria-hidden="true" className="pointer-events-none relative z-10 flex justify-center pt-1 pb-1 shrink-0">
+            {/* Industrial Overhead Lamp Fixture (Static Cord & Metal Hood) */}
+            <div aria-hidden="true" className="pointer-events-none relative z-[18] flex justify-center pt-1 pb-1 shrink-0">
               <svg width="88" height="12" viewBox="0 0 88 12" fill="none">
                 <line x1="44" y1="0" x2="44" y2="4" stroke="#475569" strokeWidth="2" />
                 <path d="M22 9 L31 3 L57 3 L66 9 Z" fill="#1e293b" stroke="#64748b" strokeWidth="1" />
-                <ellipse cx="44" cy="9.5" rx="18" ry="2" fill="#f8fafc" opacity="0.92" />
               </svg>
             </div>
 
@@ -430,7 +443,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
 
             {/* Unframed Large Comic Character + Direct Bottom Scrim + Dual-Speaker Subtitle */}
             <div className="relative flex-1 min-h-0 flex flex-col justify-end items-center">
-              <div className="relative w-full flex-1 min-h-[120px] flex items-end justify-center overflow-hidden">
+              <div className="relative z-[1] w-full flex-1 min-h-[120px] flex items-end justify-center overflow-hidden">
                 <HusbandCharacterImage
                   variant="stage"
                   mood={session.husbandMood}
@@ -446,7 +459,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
               {/* Seamless Bottom Scrim Directly Over Lower Table & Torso */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-[50%]"
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-[16] h-[50%]"
                 style={{
                   background:
                     'linear-gradient(to top, var(--notebook-bg, #080b0f) 0%, rgba(8,11,15,0.94) 44%, rgba(8,11,15,0.62) 72%, transparent 100%)',
@@ -468,7 +481,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
                     y: prefersReducedMotion ? 0 : -4,
                     transition: prefersReducedMotion ? REDUCED_FADE : NARRATIVE_OUT,
                   }}
-                  className="relative z-10 w-full px-4 pt-2 pb-5 short:pb-3.5 xshort:pb-2.5 space-y-1.5"
+                  className="relative z-20 w-full px-4 pt-2 pb-5 short:pb-3.5 xshort:pb-2.5 space-y-1.5"
                 >
                   {session.husbandLine ? (
                     <>
@@ -517,15 +530,12 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
 
           {/* BOTTOM DECK: Vertical Numbered Tactical Options / Failed / Resolved Verdict */}
           <footer className="relative z-20 shrink-0 bg-darkroom-bg px-4">
-            <div className="border-t border-darkroom-divider pt-3.5 pb-2 short:pt-2.5 short:pb-1.5 flex items-center justify-between gap-2">
+            <div className="border-t border-darkroom-divider pt-3.5 pb-2 short:pt-2.5 short:pb-1.5 flex items-center">
               {stageTopicLabel && (
                 <span className="font-sans text-ios-caption-1 uppercase tracking-wider text-darkroom-text-muted truncate">
                   {stageTopicLabel}
                 </span>
               )}
-              <span className="font-sans text-ios-caption-2 text-darkroom-text-muted shrink-0">
-                {MOOD_LABELS[session.husbandMood]}
-              </span>
             </div>
 
             <div className="relative">
@@ -682,11 +692,6 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
                   )}
                 </AnimatePresence>
               </div>
-            </div>
-
-            <div className="border-t border-darkroom-divider pt-2 flex items-center justify-between font-sans text-ios-caption-2 tabular-nums text-darkroom-text-muted">
-              <span>HỒ SƠ #01 · {session.husbandName.toUpperCase()}</span>
-              <span>BƯỚC {session.currentStepIndex + 1}/{session.totalSteps}</span>
             </div>
           </footer>
         </div>

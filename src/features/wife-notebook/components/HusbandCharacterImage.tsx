@@ -6,6 +6,7 @@ import hoangConfidentSvg from '../assets/hoang-comic-confident.svg';
 import hoangSmugSvg from '../assets/hoang-comic-smug.svg';
 import hoangNervousSvg from '../assets/hoang-comic-nervous.svg';
 import hoangBrokenSvg from '../assets/hoang-comic-broken.svg';
+import { OverheadLampHighlight } from './OverheadLampHighlight';
 
 export type HusbandMood = ConfrontationMood | 'surprised';
 
@@ -119,30 +120,32 @@ export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({
           {/* Static Base Spotlight Cone */}
           <polygon points="82,6 118,6 186,200 14,200" fill={`url(#cone-${mood})`} />
 
-          {/* Industrial Overhead Spotlight Fixture */}
+          {/* Industrial Overhead Spotlight Fixture (Static Cord & Metal Shade) */}
           <line x1="100" y1="0" x2="100" y2="5" stroke="#475569" strokeWidth="2" />
           <path d="M 80 8 L 88 3 L 112 3 L 120 8 Z" fill="#1e293b" stroke="#64748b" strokeWidth="1" />
-          <ellipse cx="100" cy="8.5" rx="17" ry="2.2" fill="#f8fafc" opacity="0.92" />
         </svg>
       )}
 
-      {/* Compositor-Only Volumetric Top-Down Spotlight Pulse */}
+      {/* Synced Overhead Lamp Wash, Bulb & Inverse Dimming Veil (framed variant only) */}
       {!isStage && (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 origin-top will-change-[transform,opacity]"
-          style={{
-            background: `radial-gradient(ellipse 68% 88% at 50% 4%, ${accent.beam} 0%, transparent 74%)`,
-          }}
-          animate={
-            prefersReducedMotion
-              ? { opacity: 0.85, scaleX: 1 }
-              : { opacity: [0.74, 0.96, 0.8], scaleX: [0.98, 1.03, 0.99] }
+        <OverheadLampHighlight
+          repeatDelay={5.5}
+          dimmerClassName="inset-0 z-[15]"
+          sourceClassName="inset-0 z-[16]"
+          staticWashOpacity={0.85}
+          staticSourceOpacity={0.92}
+          wash={
+            <div
+              className="h-full w-full"
+              style={{
+                background: `radial-gradient(ellipse 68% 88% at 50% 4%, ${accent.beam} 0%, transparent 74%)`,
+              }}
+            />
           }
-          transition={
-            prefersReducedMotion
-              ? REDUCED_FADE
-              : { duration: 4.2, repeat: Infinity, ease: 'easeInOut' }
+          source={
+            <svg viewBox="0 0 200 200" width={size} height={size} className="h-full w-full">
+              <ellipse cx="100" cy="8.5" rx="17" ry="2.2" fill="#f8fafc" />
+            </svg>
           }
         />
       )}

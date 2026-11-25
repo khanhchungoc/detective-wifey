@@ -142,7 +142,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |   Hoàng : "Lừa dối gì? Anh họp tới tối mịt..." |
 |                                                |
 |------------------------------------------------|
-| ANH TUẤN THỢ ĐIỆN LÀ AI?     Khoanh tay, tự tin|
+| ANH TUẤN THỢ ĐIỆN LÀ AI?                       |
 |  +------------------------------------------+  |
 |  | [1] Thợ điện nào dùng chung số 098888... |  |
 |  +------------------------------------------+  |
@@ -152,14 +152,12 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |  +------------------------------------------+  |
 |  | [3] Lan Anh Kế Toán đòi anh chuyển...    |  |
 |  +------------------------------------------+  |
-|------------------------------------------------|
-| HỒ SƠ #01 · HOÀNG                    BƯỚC 2/5  |
 +------------------------------------------------+
 ```
 
 - **Tầng trên**: Sân khấu phòng hỏi cung tối (`#080b0f`), đèn spotlight chiếu từ đỉnh xuống Comic Hoàng cỡ lớn (`HusbandCharacterImage` `max-w-[380px] max-h-[360px]` lấp đầy khoảng trống trên đầu, giữ nhịp thở nhẹ và giật lùi `POP` khi trúng chứng cứ), đi kèm thanh tiến độ `- • -` trên header.
 - **Vùng phụ đề thoại**: Hiển thị liền trên nền tối dưới chân Hoàng (`text-ios-footnote` `13px`), giữ `Vợ :` ở tông trầm (`#78889C`) và `Hoàng :` (`#94A3B8`) chạy chữ từng ký tự (`22ms/ký tự`, tối đa `1600ms`, chạm/phím để hiện nhanh), tạo khoảng thở `pb-5` (`20px`) phía trên đường kẻ mảnh `border-darkroom-divider`.
-- **Tầng dưới**: Danh sách lựa chọn dọc đánh số `1`..`4` (`min-h-[48px]`, `text-ios-subheadline` `15px` `#F1F5F9`), chỉ hiện và mở khóa bấm sau khi lời thoại của Hoàng chạy xong chữ (giữ nguyên chiều cao khung để tránh giật bố cục), hỗ trợ phím `1`-`4` và `ArrowUp`/`ArrowDown` trên desktop, chuyển cụm bằng spring `SNAP` (không overshoot).
+- **Tầng dưới**: Danh sách lựa chọn dọc đánh số `1`..`4` (`min-h-[48px]`, `text-ios-subheadline` `15px` `#F1F5F9`, không mũi tên đuôi ở các bước `opening`/`beat`, không hiển thị nhãn biểu cảm hay thanh footer hồ sơ/bước ở đáy), chỉ hiện và mở khóa bấm sau khi lời thoại của Hoàng chạy xong chữ (giữ nguyên chiều cao khung để tránh giật bố cục), hỗ trợ phím `1`-`4` và `ArrowUp`/`ArrowDown` trên desktop, chuyển cụm bằng spring `SNAP` (không overshoot).
 
 ---
 

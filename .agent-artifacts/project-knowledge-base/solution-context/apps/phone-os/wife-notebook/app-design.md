@@ -163,7 +163,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 >
 > **Interrogation Room & Vertical Numbered Choice List (`ConfrontationModal`, `z-80`)**: Fullscreen darkroom interrogation room (`max-w-[480px] h-[100dvh]`, `bg-darkroom-bg` `#080B0F` dark concrete stage) driven by `caseConfig.confrontationScript` (with automatic fallback to tiered evaluation when `confrontationScript` is absent):
 >   1. **Top Spotlight Stage, Balanced Comic Portrait & Subdued Character-Anchored Subtitles**: Screen-wide industrial overhead lamp (`pt-1 pb-1` above the header) casting a volumetric top-down spotlight cone (`transform` + `opacity` compositor-only pulse) onto unframed `HusbandCharacterImage` (`variant="stage"`, `max-w-[380px] max-h-[360px] short:max-h-[260px] xshort:max-h-[180px]`, `hoang-comic-{confident,smug,nervous,broken}.svg` with lateral edge fade `.confrontation-stage-fade` into `#080B0F`) so the portrait fills the upper stage without excess empty headroom. Top bar flanks a `44x44px` close button, `ĐỐI CHẤT · HOÀNG` + compact `- • -` progress rail (`role="progressbar"`), and `usedStrikes/maxStrikes` pill. A seamless dark bottom scrim (`h-[50%]`) anchors dual-speaker subtitles directly over Hoàng's lower torso/table with generous vertical breathing room (`pb-5` / `20px` below subtitles + `pt-3.5` / `14px` inside the deck header) across a subtle `border-darkroom-divider` hairline. Both `Vợ :` recall (`text-darkroom-text-muted` `#78889C`, prefix `text-darkroom-speaker-wife` `#7D9BB8`) and `Hoàng :` reply (`text-darkroom-text-dialogue` `#94A3B8`, prefix `text-darkroom-speaker-husband` `#B57684`) render in `text-ios-footnote` (`13px`, zero boxed card clutter and no bright white glare competing with options).
->   2. **Typewriter Reveal & Bottom Tactical Deck (Vertical Numbered Choice List)**: New replies from Hoàng reveal character-by-character via a layout-stable CSS grid spacer (`TYPEWRITER_CHAR_MS = 22ms`, capped at `TYPEWRITER_MAX_DURATION_MS = 1600ms`), keeping choice buttons hidden and disabled (`isDeckReady = false`) with a subtle `"Chạm để hiện nhanh..."` hint until typing finishes (or the player taps the stage/subtitle or presses `Space`/`Enter`/`1`-`4` to skip; `useReducedMotion()` reveals immediately). Once ready, options stack in a single vertical column (`gap-2.5`, `min-h-[48px]`, `text-left`) in `bg-darkroom-choice-surface` with `22x22px` numbered square keycaps (`1`, `2`, `3`, `font-sans tabular-nums`), `text-ios-subheadline` (`15px`, `text-darkroom-text-primary` `#F1F5F9`) `wifeLine` copy, and trailing chevrons (`IoChevronForwardOutline`, or semantic `IoWarningOutline` / `IoLockOpenOutline` on `ending`). Rest state keeps all choices equal; touch press (`:active`), `ArrowUp`/`ArrowDown` keyboard focus (`:focus-visible`), or desktop hover inverts to `#F5F1E8` light paper with `#080B0F` ink (plus `1`-`4` numeric shortcuts and `Escape` / `useSwipeBack`).
+>   2. **Typewriter Reveal & Bottom Tactical Deck (Vertical Numbered Choice List)**: New replies from Hoàng reveal character-by-character via a layout-stable CSS grid spacer (`TYPEWRITER_CHAR_MS = 22ms`, capped at `TYPEWRITER_MAX_DURATION_MS = 1600ms`), keeping choice buttons hidden and disabled (`isDeckReady = false`) with a subtle `"Chạm để hiện nhanh..."` hint until typing finishes (or the player taps anywhere in the interrogation dialog outside `[X]` or presses `Space`/`Enter`/`1`-`4` to skip; `useReducedMotion()` reveals immediately). Focus rests on the dialog container (`tabIndex={-1}`) rather than choice `1` so options stay visually equal on open and `:focus-visible` highlights only trigger during explicit keyboard navigation (`ArrowUp`/`ArrowDown`). Darkroom token utilities (`bg-darkroom-*`, `text-darkroom-*`, `border-darkroom-divider`) also ship zero-specificity `:where(...)` CSS fallbacks in `notebook.css` alongside `tailwind.config.js`. Once ready, options stack in a single vertical column (`gap-2.5`, `min-h-[48px]`, `text-left`) in `bg-darkroom-choice-surface` with `22x22px` numbered square keycaps (`1`, `2`, `3`, `font-sans tabular-nums`), `text-ios-subheadline` (`15px`, `text-darkroom-text-primary` `#F1F5F9`) `wifeLine` copy (with semantic `IoWarningOutline` / `IoLockOpenOutline` on `ending`). Rest state keeps all choices equal; touch press (`:active`), `ArrowUp`/`ArrowDown` keyboard focus (`:focus-visible`), or desktop hover inverts to `#F5F1E8` light paper with `#080B0F` ink (plus `1`-`4` numeric shortcuts and `Escape` / `useSwipeBack`).
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -176,18 +176,16 @@ timestamp: "2026-10-14T13:00:00+07:00"
 │   Hoàng : "Lừa dối gì? Anh họp tới tối mịt mới về..."  │
 │                                                        │
 ├────────────────────────────────────────────────────────┤
-│ ANH TUẤN THỢ ĐIỆN LÀ AI?           Khoanh tay, tự tin  │
+│ ANH TUẤN THỢ ĐIỆN LÀ AI?                               │
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [1] Thợ điện nào dùng chung số 0988886677...    >  │ │
+│ │ [1] Thợ điện nào dùng chung số 0988886677...       │ │
 │ └────────────────────────────────────────────────────┘ │
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [2] Thảo PT California nhắn riêng cho anh...    >  │ │
+│ │ [2] Thảo PT California nhắn riêng cho anh...       │ │
 │ └────────────────────────────────────────────────────┘ │
 │ ┌────────────────────────────────────────────────────┐ │
-│ │ [3] Lan Anh Kế Toán đòi anh chuyển tiền...      >  │ │
+│ │ [3] Lan Anh Kế Toán đòi anh chuyển tiền...         │ │
 │ └────────────────────────────────────────────────────┘ │
-├────────────────────────────────────────────────────────┤
-│ HỒ SƠ #01 · HOÀNG                            BƯỚC 2/5  │
 └────────────────────────────────────────────────────────┘
 ```
 

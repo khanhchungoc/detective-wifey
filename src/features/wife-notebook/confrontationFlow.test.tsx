@@ -99,6 +99,10 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(html).toContain('confrontation-choice');
     expect(html).toContain('confrontation-keycap');
     expect(html).toContain('confrontation-stage-fade');
+    expect(html).toContain('data-lamp-layer="wash"');
+    expect(html).toContain('data-lamp-layer="dimmer"');
+    expect(html).toContain('data-lamp-layer="source"');
+    expect(html).toContain('confrontation-beam-cone');
     expect(html).toContain('>1<');
     expect(html).toContain('>2<');
     expect(html).not.toContain('grid-cols-[1fr_44px_1fr]');
@@ -141,6 +145,10 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(beatHtml).toContain('text-darkroom-text-dialogue');
     expect(beatHtml).not.toContain('text-[#F8FAFC]');
     expect(beatHtml).not.toContain('text-ios-subheadline font-medium');
+    expect(beatHtml).not.toContain('Khoanh tay, tự tin');
+    expect(beatHtml).not.toContain('HỒ SƠ #01');
+    expect(beatHtml).not.toContain('BƯỚC ');
+    expect(beatHtml).not.toContain('confrontation-chevron');
     expect(beatHtml).toContain('>1<');
     expect(beatHtml).toContain('>2<');
     expect(beatHtml).toContain('>3<');
@@ -324,6 +332,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     );
     expect(endingHtml).toContain('data-choice-id="end_divorce"');
     expect(endingHtml).toContain('data-choice-id="end_forgive"');
+    expect(endingHtml).toContain('confrontation-chevron');
 
     // Final Verdict Choice: Divorce vs Forgive
     const divorced = advanceScriptedConfrontation(state, 'end_divorce', ctx);
@@ -398,6 +407,9 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
       expect(framedHtml).toContain('<svg');
       expect(framedHtml).toContain(`url(#bg-${mood})`);
       expect(framedHtml).toContain(HOANG_COMIC_ASSETS[mood]);
+      expect(framedHtml).toContain('data-lamp-layer="wash"');
+      expect(framedHtml).toContain('data-lamp-layer="dimmer"');
+      expect(framedHtml).toContain('data-lamp-layer="source"');
       expect(RAW_EMOJI_REGEX.test(framedHtml)).toBe(false);
       expect(EM_DASH_REGEX.test(framedHtml)).toBe(false);
 
@@ -407,6 +419,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
       expect(stageHtml).toContain('confrontation-stage-fade');
       expect(stageHtml).not.toContain('rounded-2xl');
       expect(stageHtml).not.toContain('viewBox="0 0 200 200"');
+      expect(stageHtml).not.toContain('data-lamp-layer=');
       expect(stageHtml).toContain(HOANG_COMIC_ASSETS[mood]);
     }
   });

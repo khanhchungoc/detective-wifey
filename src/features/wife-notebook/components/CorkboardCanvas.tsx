@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useLayoutEffect, useMemo, useState, useRef } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
 import {
   IoNavigateOutline,
   IoGlassesOutline,
@@ -22,6 +21,7 @@ import {
   ClueTimelineRail,
   parseNodeToTimelineEntries,
 } from './ClueTimelineRail';
+import { OverheadLampHighlight } from './OverheadLampHighlight';
 
 export const CARD_WIDTH = 210;
 export const PIN_OFFSET_X = 105;
@@ -36,9 +36,6 @@ function getCardTiltDeg(nodeId: string): number {
 }
 
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
-  const prefersReducedMotion = useReducedMotion();
-  const [phase, setPhase] = useState<'ignition' | 'ambient'>('ignition');
-
   const tubeEl = (
     <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
   );
@@ -47,90 +44,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
     <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_0%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
   );
 
-  const roomDimmerEl = (
-    <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
-  );
-
-  if (prefersReducedMotion) {
-    return (
-      <>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-          {boardWashEl}
-        </div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center"
-        >
-          {tubeEl}
-        </div>
-      </>
-    );
-  }
-
-  const sharedTransition =
-    phase === 'ignition'
-      ? { duration: 0.85, times: [0, 0.18, 0.34, 0.55, 0.72, 1], ease: 'linear' as const }
-      : {
-          duration: 0.42,
-          times: [0, 0.22, 0.48, 0.72, 1],
-          ease: 'linear' as const,
-          repeat: Infinity,
-          repeatDelay: 8.5,
-        };
-
-  return (
-    <>
-      {/* Single overhead light wash across the entire board, synced 1:1 with lamp flicker */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 will-change-[opacity]"
-        initial={phase === 'ignition' ? { opacity: 0.12 } : false}
-        animate={
-          phase === 'ignition'
-            ? { opacity: [0.12, 0.95, 0.22, 1, 0.55, 1] }
-            : { opacity: [1, 0.45, 0.94, 0.62, 1] }
-        }
-        transition={sharedTransition}
-      >
-        {boardWashEl}
-      </motion.div>
-
-      {/* Global board & card dimming veil inversely synced to the single overhead lamp */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[25] will-change-[opacity]"
-        initial={phase === 'ignition' ? { opacity: 0.65 } : false}
-        animate={
-          phase === 'ignition'
-            ? { opacity: [0.65, 0.04, 0.58, 0, 0.34, 0] }
-            : { opacity: [0, 0.42, 0.05, 0.28, 0] }
-        }
-        transition={sharedTransition}
-      >
-        {roomDimmerEl}
-      </motion.div>
-
-      {/* Overhead fluorescent tube */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center will-change-[opacity]"
-        initial={phase === 'ignition' ? { opacity: 0.12 } : false}
-        animate={
-          phase === 'ignition'
-            ? { opacity: [0.12, 0.95, 0.22, 1, 0.55, 1] }
-            : { opacity: [1, 0.45, 0.94, 0.62, 1] }
-        }
-        transition={sharedTransition}
-        onAnimationComplete={() => {
-          if (phase === 'ignition') {
-            setPhase('ambient');
-          }
-        }}
-      >
-        {tubeEl}
-      </motion.div>
-    </>
-  );
+  return <OverheadLampHighlight wash={boardWashEl} source={tubeEl} repeatDelay={8.5} />;
 });
 
 interface CorkboardCanvasProps {
