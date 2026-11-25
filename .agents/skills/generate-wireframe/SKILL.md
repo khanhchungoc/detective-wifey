@@ -49,7 +49,7 @@ Before authoring any wireframe for virtual apps or OS shell features in the *Jea
    - *Canonical Icon Pack & Zero-Emoji Policy* (`phone-os/app-design.md` Section 2.4): Extract the canonical Ionicons vector SVG icons styled to match iOS SF Symbols. Strictly prohibit raw Unicode emojis.
    - *UI Wireframes & Layout Architecture* (Section 3): Exact ASCII screen hierarchy, header formats, drawer modals, and tag clouds.
 3. **UX & Accessibility Intelligence (`ui-ux-pro-max`)**:
-   - Query mobile UX, form ergonomics, and accessibility guidelines via `python .agents/skills/ui-ux-pro-max/scripts/search.py "<component>" --domain ux` to establish proper `inputmode`, touch target constraints ($\ge 44 \times 44\text{px}$), and clear contrast before finalizing wireframe structure or authoring `app-design.md`.
+   - Use the global `ui-ux-pro-max` skill from `ultimate-harness` to query mobile UX, form ergonomics, and accessibility guidelines (`--domain ux`) and establish proper `inputmode`, touch target constraints ($\ge 44 \times 44\text{px}$), and clear contrast before finalizing wireframe structure or authoring `app-design.md`.
 4. **Fallback for Non-App Screens**: If the wireframe is an abstract system architecture diagram or non-app administrative screen with no matching `app-design.md`, verify if a global `design.md` exists or fall back to neutral wireframe defaults.
 
 - Infer a practical user flow and layout from the request.

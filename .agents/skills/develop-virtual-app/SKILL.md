@@ -26,7 +26,7 @@ Query these files on demand using progressive disclosure:
   - GeeMail (Email): [email/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/email/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/email/features.md)
   - InkedLin (Professional Network): [professional-network/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/professional-network/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/professional-network/features.md)
   - Tim (Team Collaboration): [team-collaboration/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/team-collaboration/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/team-collaboration/features.md)
-  - Comms (Phone & SMS): [phone-os/comms/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/comms/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/comms/features.md)
+  - Phone & Messages (Comms): [phone-os/phone/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/phone/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/phone/features.md) \| [messages](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/messages/app-design.md)
   - Photos (Media Gallery): [phone-os/photos/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/photos/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/photos/features.md)
   - Husband's Notes: [personal-notes/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/personal-notes/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/personal-notes/features.md)
   - Wife's Notebook: [phone-os/wife-notebook/app-design.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md) \| [features.md](../../../.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md)
@@ -53,7 +53,7 @@ Query these files on demand using progressive disclosure:
    - Screen hierarchy and layout wireframes.
 2. Read the app's `features.md` to identify forensic capabilities (e.g. chat search, hidden albums, ride history).
 3. Audit `src/shared/ui/` to map existing shared components against the app-design layout wireframes. Never create new components if an existing primitive can be reused or extended.
-4. When inspecting wireframes, extract strictly the inner micro-app view hierarchy conforming to the Pure OS invariant in [frontend-game-developer.md](../../agents/frontend-game-developer.md); discard documentation scaffolding and simulated browser chrome.
+4. When inspecting wireframes, extract strictly the inner micro-app view hierarchy conforming to the Pure OS invariant (render only in-game screen content - never outer phone bezels, camera cutouts, doc headers, or simulated browser chrome).
 
 ### Step 2: Component Scaffolding & Registry Setup
 1. Instantiate [assets/app-component.template.tsx](assets/app-component.template.tsx) into `src/apps/<appId>/<AppName>App.tsx`.
@@ -141,5 +141,5 @@ Execute the following verification commands in order. All checks must pass with 
 - **Never write monolithic single-file apps**: Decompose apps into subcomponents with clear single responsibilities.
 - **Never create redundant UI primitives**: If a header, back button, modal sheet, lock pad, or suspect tag button already exists in `src/shared/ui/`, you MUST reuse or compose it instead of writing a duplicate version inside the app.
 - **Never use raw Unicode emojis for UI icons or buttons**: Strictly render vector SVG icons from the canonical icon pack (**Ionicons** (`react-icons/io5`)) defined in `phone-os/app-design.md`.
-- **Never port wireframe documentation chrome or wrap apps in fake chassis frames**: Micro-apps mount directly within the Pure OS viewport defined in [frontend-game-developer.md](../../agents/frontend-game-developer.md); never copy multi-view comparison headers, simulated browser toolbars, or outer hardware casings.
+- **Never port wireframe documentation chrome or wrap apps in fake chassis frames**: Micro-apps mount directly within the Pure OS viewport (Status Bar, wallpaper, active viewport, dock, home indicator); never copy multi-view comparison headers, simulated browser toolbars, or outer hardware casings.
 
