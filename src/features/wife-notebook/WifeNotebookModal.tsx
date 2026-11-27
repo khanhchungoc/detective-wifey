@@ -696,6 +696,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     onTapBackground: point => tapBackgroundRef.current(point),
     onDoubleTapBackground: () => doubleTapBackgroundRef.current(),
     onPinchOutAtMinZoom: () => pinchCloseRef.current(),
+    onPinchInFromLocked: () => pinchOpenRef.current(),
     locked: boardMode === 'wall',
     reducedMotion: Boolean(prefersReducedMotion),
     planeRef,
@@ -733,6 +734,11 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   pinchCloseRef.current = () => {
     enterWallView();
   };
+  const pinchOpenRef = useRef<() => void>(() => {});
+  pinchOpenRef.current = () => {
+    setBoardMode('focus');
+    boardModeRef.current = 'focus';
+  };
 
   // Wall view: cards are not interactive; a single tap on the board or a card brings the board forward into focus view.
   const handleWallClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -756,12 +762,14 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
 
   const boardContainerProps = boardMode === 'wall'
     ? {
-        // Swallow card drags and pan starts; only taps (clicks) act in wall view.
+        // Keep move/up/cancel capture handlers mounted so pinch-to-close never orphans pointers
+        // and 1-gesture pinch-to-zoom works directly from wall view.
+        ...containerProps,
         onPointerDownCapture: (e: React.PointerEvent<HTMLDivElement>) => {
+          containerProps.onPointerDownCapture(e);
           if (!isBoardChromeControl(e.target)) e.stopPropagation();
         },
         onClickCapture: handleWallClickCapture,
-        style: containerProps.style,
       }
     : containerProps;
 

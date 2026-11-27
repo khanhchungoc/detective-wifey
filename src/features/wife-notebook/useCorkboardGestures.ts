@@ -32,6 +32,8 @@ export interface UseCorkboardGesturesOptions {
   onDoubleTapBackground?: (worldPoint: { x: number; y: number }) => void;
   /** Called when the user starts a pinch-out gesture while already at MIN_ZOOM. */
   onPinchOutAtMinZoom?: () => void;
+  /** Called when the user spreads two fingers (or trackpad-pinches in) while locked in wall view to enter focus view in one gesture. */
+  onPinchInFromLocked?: () => void;
   /** Ignore pan, pinch and wheel input (e.g. wall overview mode). */
   locked?: boolean;
   /** Skip animated camera moves (prefers-reduced-motion). */
@@ -46,6 +48,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   const onTapBackground = options?.onTapBackground;
   const onDoubleTapBackground = options?.onDoubleTapBackground;
   const onPinchOutAtMinZoom = options?.onPinchOutAtMinZoom;
+  const onPinchInFromLocked = options?.onPinchInFromLocked;
   const planeRef = options?.planeRef;
   const surfaceRef = options?.surfaceRef;
   const boardRef = options?.boardRef;
@@ -139,9 +142,31 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     animationFrameRef.current = null;
   }, []);
 
+  const isDragging = useRef(false);
+  const dragStart = useRef({ x: 0, y: 0, startCamX: 0, startCamY: 0, moved: false });
+  const pinchStart = useRef<{
+    initialDist: number;
+    initialZoom: number;
+    initialCamX: number;
+    initialCamY: number;
+    centroidX: number;
+    centroidY: number;
+    screenCenterX: number;
+    screenCenterY: number;
+    startedAtMinZoom: boolean;
+    startedWhileLocked: boolean;
+    minAllowedZoom: number;
+  } | null>(null);
+  const pinchClosedRef = useRef(false);
+  const lastTapTime = useRef(0);
+  const touchPointers = useRef(new Map<number, { clientX: number; clientY: number }>());
+  const multiTouch = useRef(false);
+  const [isPinching, setIsPinching] = useState(false);
+
   // Eased camera flight on the GPU plane (no React renders); commits crisp zoom on arrival.
   const animateTo = useCallback((target: CorkboardViewport, durationMs = 420) => {
     cancelAnimation();
+    isDragging.current = false;
     if (durationMs <= 0 || !planeRef?.current) {
       scheduleViewportUpdate(target, true);
       return;
@@ -172,30 +197,12 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
 
   useEffect(() => () => {
     if (animationFrameRef.current !== null) cancelAnimationFrame(animationFrameRef.current);
+    animationFrameRef.current = null;
     if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     frameRef.current = null;
     if (wheelSettleTimerRef.current !== null) window.clearTimeout(wheelSettleTimerRef.current);
     wheelSettleTimerRef.current = null;
   }, []);
-
-  const isDragging = useRef(false);
-  const dragStart = useRef({ x: 0, y: 0, startCamX: 0, startCamY: 0, moved: false });
-  const pinchStart = useRef<{
-    initialDist: number;
-    initialZoom: number;
-    initialCamX: number;
-    initialCamY: number;
-    centroidX: number;
-    centroidY: number;
-    screenCenterX: number;
-    screenCenterY: number;
-    startedAtMinZoom: boolean;
-  } | null>(null);
-  const pinchClosedRef = useRef(false);
-  const lastTapTime = useRef(0);
-  const touchPointers = useRef(new Map<number, { clientX: number; clientY: number }>());
-  const multiTouch = useRef(false);
-  const [isPinching, setIsPinching] = useState(false);
 
   // Discrete Step Zoom Handlers
   const zoomIn = useCallback(() => {
@@ -230,11 +237,19 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     target: HTMLElement,
   ) => {
     e.preventDefault();
-    if (lockedRef.current || animationFrameRef.current !== null) return;
+    if (animationFrameRef.current !== null) return;
     const rect = target.getBoundingClientRect();
     const unitScale = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.height : 1;
     const dxPixels = e.deltaX * unitScale;
     const dyPixels = e.deltaY * unitScale;
+    if (lockedRef.current) {
+      if ((e.ctrlKey || e.metaKey) && dyPixels < 0 && onPinchInFromLocked) {
+        lockedRef.current = false;
+        onPinchInFromLocked();
+      } else {
+        return;
+      }
+    }
     const useDirectPlane = Boolean(planeRef?.current);
 
     if (useDirectPlane) {
@@ -267,7 +282,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       x: Math.max(-100, Math.min(CANVAS_WIDTH + 100, prev.x + dxPixels / prev.zoom)),
       y: Math.max(-100, Math.min(CANVAS_HEIGHT + 100, prev.y + dyPixels / prev.zoom)),
     }), !useDirectPlane);
-  }, [flushViewportCommit, planeRef, scheduleViewportUpdate]);
+  }, [flushViewportCommit, onPinchInFromLocked, planeRef, scheduleViewportUpdate]);
 
   const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
     if (boardRef?.current) return;
@@ -381,8 +396,12 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   // Capture touch pointers before card drag handlers. One owner for the entire pinch,
   // including the remaining finger after the first finger lifts.
   const handleTouchPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== 'touch' || lockedRef.current || animationFrameRef.current !== null) return;
+    if (e.pointerType !== 'touch' || animationFrameRef.current !== null) return;
+    if (lockedRef.current && !onPinchInFromLocked) return;
     if ((e.target as HTMLElement).closest('button, .corkboard-control-dock, .corkboard-drawer')) return;
+    if (e.isPrimary && !multiTouch.current) {
+      touchPointers.current.clear();
+    }
     touchPointers.current.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
     if (touchPointers.current.size < 2) return;
     e.stopPropagation();
@@ -393,16 +412,20 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     setIsPinching(true);
     const [t1, t2] = [...touchPointers.current.values()];
     const rect = e.currentTarget.getBoundingClientRect();
+    const currentZoom = viewportRef.current.zoom;
+    const isWallPinch = lockedRef.current;
     pinchStart.current = {
       initialDist: Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY),
-      initialZoom: viewportRef.current.zoom,
+      initialZoom: currentZoom,
       initialCamX: viewportRef.current.x,
       initialCamY: viewportRef.current.y,
       centroidX: (t1.clientX + t2.clientX) / 2 - rect.left - rect.width / 2,
       centroidY: (t1.clientY + t2.clientY) / 2 - rect.top - rect.height / 2,
       screenCenterX: rect.left + rect.width / 2,
       screenCenterY: rect.top + rect.height / 2,
-      startedAtMinZoom: viewportRef.current.zoom <= MIN_ZOOM + 0.02,
+      startedAtMinZoom: !isWallPinch && currentZoom <= MIN_ZOOM + 0.02,
+      startedWhileLocked: isWallPinch,
+      minAllowedZoom: isWallPinch ? currentZoom : MIN_ZOOM,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
@@ -416,7 +439,14 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     if (touchPointers.current.size !== 2 || !start) return;
     const [t1, t2] = [...touchPointers.current.values()];
     const rawRatio = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY) / Math.max(1, start.initialDist);
-    // At min zoom, a deliberate second pinch-in closes the board back onto the wall.
+    // In wall view, spreading fingers apart transitions directly into live focus zoom in one gesture.
+    if (start.startedWhileLocked) {
+      if (rawRatio <= 1.08) return;
+      start.startedWhileLocked = false;
+      lockedRef.current = false;
+      onPinchInFromLocked?.();
+    }
+    // At min zoom in focus view, a deliberate second pinch-in closes the board back onto the wall.
     if (start.startedAtMinZoom && rawRatio < 0.85 && onPinchOutAtMinZoom) {
       pinchStart.current = null;
       pinchClosedRef.current = true;
@@ -424,7 +454,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       onPinchOutAtMinZoom();
       return;
     }
-    const zoom = clampZoom(start.initialZoom * rawRatio);
+    const zoom = Math.min(MAX_ZOOM, Math.max(start.minAllowedZoom, start.initialZoom * rawRatio));
     scheduleViewportUpdate({
       zoom,
       x: start.initialCamX + start.centroidX / start.initialZoom -
@@ -439,15 +469,29 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     if (!multiTouch.current) return;
     e.stopPropagation();
     if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+    const endedStart = pinchStart.current;
     if (touchPointers.current.size < 2) pinchStart.current = null;
     if (touchPointers.current.size === 0) {
       const closedByPinch = pinchClosedRef.current;
       pinchClosedRef.current = false;
       multiTouch.current = false;
-      if (!closedByPinch && planeRef?.current) {
+      setIsPinching(false);
+      if (closedByPinch || lockedRef.current) return;
+      // If a 1-gesture pinch from wall view stopped below MIN_ZOOM, settle cleanly to MIN_ZOOM or back to wall.
+      if (viewportRef.current.zoom < MIN_ZOOM - 0.005) {
+        const wallZoom = endedStart?.minAllowedZoom ?? viewportRef.current.zoom;
+        if (viewportRef.current.zoom > wallZoom * 1.25) {
+          animateTo({ ...viewportRef.current, zoom: MIN_ZOOM }, reducedMotionRef.current ? 0 : 220);
+        } else if (onPinchOutAtMinZoom) {
+          onPinchOutAtMinZoom();
+        } else if (planeRef?.current) {
+          flushViewportCommit();
+        }
+        return;
+      }
+      if (planeRef?.current) {
         flushViewportCommit();
       }
-      setIsPinching(false);
     }
   };
 
@@ -463,7 +507,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     animateTo,
     containerProps: {
       onClickCapture: (e: React.MouseEvent<HTMLDivElement>) => {
-        if (dragStart.current.moved) {
+        if (dragStart.current.moved || multiTouch.current) {
           e.stopPropagation();
           e.preventDefault();
           dragStart.current.moved = false;
