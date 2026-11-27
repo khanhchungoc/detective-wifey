@@ -5,9 +5,7 @@
 /* Parody app navigation follows the banking app's 64px bar. */
 nav.app-bottom-nav {
   box-sizing: border-box;
-  height: 64px;
   min-height: 64px;
-  max-height: 64px;
   flex-shrink: 0;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -44,8 +42,8 @@ nav.app-bottom-nav > button svg {
   --ios-label-tertiary: #64748B;
   --ios-label-quaternary: rgba(60, 60, 67, 0.18);
   --ios-label-dark-primary: #FFFFFF;
-  --ios-label-dark-secondary: rgba(235, 235, 245, 0.60);
-  --ios-label-dark-tertiary: rgba(235, 235, 245, 0.30);
+  --ios-label-dark-secondary: rgba(235, 235, 245, 0.78);
+  --ios-label-dark-tertiary: rgba(235, 235, 245, 0.68);
   --ios-label-dark-quaternary: rgba(235, 235, 245, 0.18);
 
   /* Apple HIG iOS Dynamic Typography Scale Tokens */
@@ -223,13 +221,17 @@ body {
   .phone-dock { padding-block: 8px; }
 }
 
-/* App launcher icon touch (data-pressed) & desktop click (:active) feedback */
-[data-launch-app][data-pressed="true"],
-[data-launch-app]:active {
+/* Scale only the inner icon visual so the clickable button hit-box never shrinks mid-tap on touchscreens */
+[data-launch-app] .phone-app-icon {
+  transition: transform 90ms cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
+}
+[data-launch-app][data-pressed="true"] .phone-app-icon,
+[data-launch-app]:active .phone-app-icon {
   transform: scale(0.9);
 }
-[data-launch-app][data-grayed-out="true"][data-pressed="true"],
-[data-launch-app][data-grayed-out="true"]:active {
+[data-launch-app][data-grayed-out="true"][data-pressed="true"] .phone-app-icon,
+[data-launch-app][data-grayed-out="true"]:active .phone-app-icon {
   transform: scale(0.95);
 }
 [data-launch-app][data-pressed="true"] .phone-app-icon-overlay,

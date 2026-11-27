@@ -64,10 +64,10 @@ export const LevelSelectorSheet: React.FC<LevelSelectorSheetProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-200 shrink-0"
             aria-label="Đóng"
           >
-            <IoClose className="w-4 h-4" />
+            <IoClose className="w-5 h-5" />
           </button>
         </div>
 

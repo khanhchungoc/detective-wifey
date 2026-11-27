@@ -18,6 +18,8 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const downTimeRef = useRef(0);
+  const downPosRef = useRef<{ x: number; y: number; id: number } | null>(null);
+  const touchActivatedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const IconComponent = app.icon;
   const badgeCount =
@@ -38,15 +40,19 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
         timerRef.current = null;
       }
       downTimeRef.current = Date.now();
+      downPosRef.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      touchActivatedRef.current = false;
       setIsPressed(true);
     }
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
     if (timerRef.current !== null) {
       window.clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    const start = downPosRef.current;
+    downPosRef.current = null;
     const elapsed = Date.now() - downTimeRef.current;
     const remaining = Math.max(0, 100 - elapsed);
     if (remaining > 0) {
@@ -57,6 +63,14 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
     } else {
       setIsPressed(false);
     }
+    // Launch directly on clean touch tap so Chrome Android never drops click due to micro-drift.
+    if (e.pointerType === 'touch' && start && start.id === e.pointerId) {
+      const moved = Math.hypot(e.clientX - start.x, e.clientY - start.y);
+      if (moved <= 16) {
+        touchActivatedRef.current = true;
+        onClick();
+      }
+    }
   };
 
   const handlePointerCancel = () => {
@@ -64,7 +78,16 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
       window.clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    downPosRef.current = null;
     setIsPressed(false);
+  };
+
+  const handleButtonClick = () => {
+    if (touchActivatedRef.current) {
+      touchActivatedRef.current = false;
+      return;
+    }
+    onClick();
   };
 
   return (
@@ -75,11 +98,11 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
       data-pressed={isPressed ? 'true' : undefined}
       aria-disabled={isGrayedOut ? 'true' : undefined}
       style={{ '--launcher-motion-name': `launcher-${app.appId ?? 'camera'}` } as CSSProperties}
-      onClick={onClick}
+      onClick={handleButtonClick}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
-      onPointerLeave={handlePointerCancel}
+      onPointerLeave={(e) => { if (e.pointerType === 'mouse') handlePointerCancel(); }}
       className={`flex flex-col items-center justify-center p-1 min-h-[48px] min-w-[48px] w-full group touch-manipulation select-none -webkit-tap-highlight-transparent ${isGrayedOut ? 'opacity-40' : ''} transition-transform cursor-pointer focus:outline-none`}
       aria-label={isGrayedOut ? `Ứng dụng ${app.displayName} (Tính năng đang phát triển)` : `Mở ứng dụng ${app.displayName}`}
     >
@@ -105,7 +128,7 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
         </div>
 
         {badgeCount > 0 && !isGrayedOut && (
-          <span className="absolute -top-[6px] -right-[8px] z-10 box-border flex h-[24px] min-w-[24px] items-center justify-center rounded-full bg-[#FF3B30] px-[6px] text-[16px] font-normal leading-none text-white tabular-nums [font-family:-apple-system,BlinkMacSystemFont,'Helvetica_Neue',sans-serif] pointer-events-none shadow-sm">
+          <span className="absolute -top-[6px] -right-[8px] z-10 box-border flex h-[24px] min-w-[24px] items-center justify-center rounded-full bg-[#D70015] px-[6px] text-[16px] font-normal leading-none text-white tabular-nums [font-family:-apple-system,BlinkMacSystemFont,'Helvetica_Neue',sans-serif] pointer-events-none shadow-sm">
             {badgeCount}
           </span>
         )}

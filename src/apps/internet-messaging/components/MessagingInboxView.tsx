@@ -76,14 +76,14 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
         >
           <IoChevronBack className="w-6 h-6" />
         </button>
-        <div className="flex-1 h-9 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
-          <IoSearchOutline className="w-4 h-4 text-white/80 shrink-0" />
+        <div className="flex-1 h-11 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
+          <IoSearchOutline className="w-4 h-4 text-white/85 shrink-0" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm"
-            className="w-full bg-transparent text-ios-subheadline text-white placeholder-white/80 outline-hidden"
+            className="w-full h-full bg-transparent text-ios-subheadline text-white placeholder-white/85 outline-hidden"
           />
         </div>
         <button
