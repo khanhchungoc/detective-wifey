@@ -553,7 +553,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       expect(selectedHtml).toContain('mask-image:linear-gradient');
     });
 
-    it('auto-places tagged clues directly on corkboard canvas below existing cards in 3 centered columns', () => {
+    it('auto-places a tagged clue onto the open bottom row of the wide board, re-centered under the cluster', () => {
       const existingCards: PlacedNode[] = [
         { nodeId: 'node_existing_1', type: 'record_clue', label: 'Váy lụa 1', x: 245, y: 160 },
         { nodeId: 'node_existing_2', type: 'record_clue', label: 'Váy lụa 2', x: 495, y: 160 },
@@ -568,8 +568,9 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
 
       const placed = placeNewNodesBelow(existingCards, [newClue]);
       expect(placed).toHaveLength(1);
-      expect(placed[0].y).toBeGreaterThan(160);
-      expect(placed[0].x).toBe(495); // Centered under the cluster
+      // Row still has room (up to 6), so the clue joins it; the 4-card row re-centers on x = 600.
+      expect(placed[0].y).toBe(160);
+      expect(placed[0].x).toBe(870);
     });
 
     it('collapses legacy separate message cards from the same person into EXACTLY ONE card', () => {

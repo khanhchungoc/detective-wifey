@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { autoArrangeNodes, calculateClueCardsCenter, calculateYarnStringCurve, CANVAS_SIZE } from './graphEngine';
+import { autoArrangeNodes, calculateClueCardsCenter, calculateYarnStringCurve, CANVAS_HEIGHT, CANVAS_WIDTH, clampCardPosition } from './graphEngine';
 import type { PlacedNode } from './types';
 import type { CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
 
@@ -50,7 +50,7 @@ describe('notebook auto layout', () => {
     expect(nodes).toEqual(original);
     expect(arranged.map(n => n.nodeId)).toEqual(nodes.map(n => n.nodeId));
     const center = calculateClueCardsCenter(arranged, dimensions);
-    expect(center).toEqual({ x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 });
+    expect(center).toEqual({ x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 });
     const tilt = Math.sin(1.6 * Math.PI / 180);
     for (let i = 0; i < count; i++) {
       for (let j = i + 1; j < count; j++) {
@@ -111,3 +111,12 @@ describe('notebook auto layout', () => {
     }
   });
 });
+
+describe('clampCardPosition', () => {
+  it('pulls cards from older, taller saves back inside the wide board', () => {
+    expect(clampCardPosition(100, 1700)).toEqual({ x: 100, y: CANVAS_HEIGHT - 180 });
+    expect(clampCardPosition(5000, -40)).toEqual({ x: CANVAS_WIDTH - 230, y: 20 });
+    expect(clampCardPosition(400.4, 300.6)).toEqual({ x: 400, y: 301 });
+  });
+});
+

@@ -338,10 +338,10 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
   });
 
   describe('Clue Cards Center Calculation (calculateClueCardsCenter)', () => {
-    it('returns canvas center (CANVAS_SIZE / 2, CANVAS_SIZE / 2) when no cards are placed', async () => {
-      const { calculateClueCardsCenter, CANVAS_SIZE } = await import('./graphEngine');
+    it('returns canvas center when no cards are placed', async () => {
+      const { calculateClueCardsCenter, CANVAS_WIDTH, CANVAS_HEIGHT } = await import('./graphEngine');
       const center = calculateClueCardsCenter([]);
-      expect(center).toEqual({ x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 });
+      expect(center).toEqual({ x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 });
     });
 
     it('centers precisely on a single card bounding box', async () => {
@@ -427,30 +427,29 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     ];
 
     it('places initial new nodes across 3 centered columns (545, 795, 1045) at row 0', async () => {
-      const { placeNewNodesBelow, CORKBOARD_COLUMNS_X } = await import('./graphEngine');
+      const { placeNewNodesBelow, CORKBOARD_COLUMNS_X, INITIAL_BASE_Y } = await import('./graphEngine');
       const placed = placeNewNodesBelow([], mockNodes.slice(0, 3));
 
       expect(placed).toHaveLength(3);
       expect(placed[0].x).toBe(CORKBOARD_COLUMNS_X[0]); // 545
       expect(placed[1].x).toBe(CORKBOARD_COLUMNS_X[1]); // 795 (center)
       expect(placed[2].x).toBe(CORKBOARD_COLUMNS_X[2]); // 1045
-      expect(placed[0].y).toBe(160);
-      expect(placed[1].y).toBe(160);
-      expect(placed[2].y).toBe(160);
+      expect(placed.every(n => n.y === INITIAL_BASE_Y)).toBe(true);
     });
 
-    it('wraps the 4th node to row 1 below, centered at cluster center', async () => {
-      const { placeNewNodesBelow, CORKBOARD_ROW_HEIGHT } = await import('./graphEngine');
-      const placed = placeNewNodesBelow([], mockNodes);
+    it('fills a row of up to 6 cards across the wide board before wrapping to the next row', async () => {
+      const { placeNewNodesBelow, CORKBOARD_ROW_HEIGHT, INITIAL_BASE_Y, MAX_ROW_COLUMNS, CANVAS_WIDTH } = await import('./graphEngine');
+      const many = Array.from({ length: MAX_ROW_COLUMNS + 1 }, (_, i) => ({ ...mockNodes[0], nodeId: `n${i}`, label: `N${i}` }));
+      const placed = placeNewNodesBelow([], many);
 
-      expect(placed).toHaveLength(4);
-      // Row 0 has 3 nodes
-      expect(placed[0].y).toBe(160);
-      expect(placed[1].y).toBe(160);
-      expect(placed[2].y).toBe(160);
-      // Row 1 has 1 node, centered at 900 - 105 = 795
-      expect(placed[3].x).toBe(795);
-      expect(placed[3].y).toBe(160 + CORKBOARD_ROW_HEIGHT);
+      expect(placed).toHaveLength(7);
+      const firstRow = placed.slice(0, MAX_ROW_COLUMNS);
+      expect(firstRow.every(n => n.y === INITIAL_BASE_Y)).toBe(true);
+      expect(Math.min(...firstRow.map(n => n.x))).toBeGreaterThanOrEqual(30);
+      expect(Math.max(...firstRow.map(n => n.x)) + 210).toBeLessThanOrEqual(CANVAS_WIDTH - 30);
+      // 7th card wraps to row 1, centered at 900 - 105 = 795
+      expect(placed[6].x).toBe(795);
+      expect(placed[6].y).toBe(INITIAL_BASE_Y + CORKBOARD_ROW_HEIGHT);
     });
 
     it('places 2 new clues side by side on the same row, centered under the cluster', async () => {

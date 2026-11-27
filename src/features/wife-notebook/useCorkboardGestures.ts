@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { clampZoom, CANVAS_SIZE, MAX_ZOOM } from './graphEngine';
+import { clampZoom, CANVAS_HEIGHT, CANVAS_WIDTH, MAX_ZOOM } from './graphEngine';
 import type { CorkboardViewport } from './types';
 
 export function formatCorkboardTransform(viewport: CorkboardViewport, settledZoom = viewport.zoom): string {
@@ -41,8 +41,8 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   reducedMotionRef.current = Boolean(options?.reducedMotion);
   const animationFrameRef = useRef<number | null>(null);
   const [viewport, commitViewport] = useState<CorkboardViewport>(() => options?.initialViewport ?? {
-    x: CANVAS_SIZE / 2,
-    y: CANVAS_SIZE / 2,
+    x: CANVAS_WIDTH / 2,
+    y: CANVAS_HEIGHT / 2,
     zoom: 1.0,
   });
 
@@ -190,8 +190,8 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
 
   const resetZoom = useCallback(() => {
     setViewport({
-      x: CANVAS_SIZE / 2,
-      y: CANVAS_SIZE / 2,
+      x: CANVAS_WIDTH / 2,
+      y: CANVAS_HEIGHT / 2,
       zoom: 1.0,
     });
   }, []);
@@ -240,8 +240,8 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
 
     scheduleViewportUpdate(prev => ({
       ...prev,
-      x: Math.max(-100, Math.min(CANVAS_SIZE + 100, prev.x + dxPixels / prev.zoom)),
-      y: Math.max(-100, Math.min(CANVAS_SIZE + 100, prev.y + dyPixels / prev.zoom)),
+      x: Math.max(-100, Math.min(CANVAS_WIDTH + 100, prev.x + dxPixels / prev.zoom)),
+      y: Math.max(-100, Math.min(CANVAS_HEIGHT + 100, prev.y + dyPixels / prev.zoom)),
     }), !useDirectPlane);
   }, [flushViewportCommit, planeRef, scheduleViewportUpdate]);
 
@@ -302,11 +302,11 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     const dx = rawDx / viewportRef.current.zoom;
     const dy = rawDy / viewportRef.current.zoom;
 
-    // Generous boundary padding (-100 to CANVAS_SIZE + 100) so edge cards are never clipped
+    // Generous boundary padding (100 past each board edge) so edge cards are never clipped
     scheduleViewportUpdate(prev => ({
       ...prev,
-      x: Math.max(-100, Math.min(CANVAS_SIZE + 100, dragStart.current.startCamX - dx)),
-      y: Math.max(-100, Math.min(CANVAS_SIZE + 100, dragStart.current.startCamY - dy)),
+      x: Math.max(-100, Math.min(CANVAS_WIDTH + 100, dragStart.current.startCamX - dx)),
+      y: Math.max(-100, Math.min(CANVAS_HEIGHT + 100, dragStart.current.startCamY - dy)),
     }), false);
   }, [scheduleViewportUpdate]);
 
