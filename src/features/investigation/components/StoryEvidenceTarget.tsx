@@ -108,6 +108,15 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
     clearTimer();
   };
 
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    // The modal opens under the finger, so the browser's follow-up tap would land on its
+    // backdrop and close it. Cancelling the touchend stops that synthesized click.
+    if (isLongPressTriggeredRef.current && e.cancelable) {
+      e.preventDefault();
+      isLongPressTriggeredRef.current = false;
+    }
+  };
+
   const handleClickCapture = (e: React.MouseEvent) => {
     // If long press was triggered, suppress the subsequent click event
     if (isLongPressTriggeredRef.current) {
@@ -140,12 +149,14 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
   return (
     <div
       role="button"
+      data-evidence-target="true"
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled ? 'true' : undefined}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
+      onTouchEnd={handleTouchEnd}
       onClickCapture={handleClickCapture}
       onContextMenu={handleContextMenu}
       onKeyDown={handleKeyDown}

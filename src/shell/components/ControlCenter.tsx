@@ -225,10 +225,12 @@ export function ControlCenter({
           }
           suppressActionClick.current = false;
           panelSwipeStart.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
-          try {
-            event.currentTarget.setPointerCapture(event.pointerId);
-          } catch {
-            // fallback if pointer capture is unsupported
+          if (!(event.target instanceof Element && event.target.closest('button'))) {
+            try {
+              event.currentTarget.setPointerCapture(event.pointerId);
+            } catch {
+              // fallback if pointer capture is unsupported
+            }
           }
         }}
         onPointerUp={event => {
