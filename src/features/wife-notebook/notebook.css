@@ -3,8 +3,9 @@
   --notebook-bg: #080b0f;
   --notebook-canvas: #0f151d;
   --notebook-frame: #1b2129;
-  --notebook-paper: #f5f1e8;
-  --notebook-border: #c9bfae;
+  /* Dimly-lit aged paper & muted border so notes sit naturally under the overhead lamp without glowing */
+  --notebook-paper: #cbc5b8;
+  --notebook-border: #9a9080;
   position: relative;
 }
 
@@ -17,7 +18,7 @@
 }
 
 /* Cold War chalkboard surface: fixed 1800x1200 GPU-scaled layer (no CSS zoom)
-   wrapped in a physical muted dark brown wooden frame. */
+   wrapped in a physical 4-rail mitered dark walnut wooden frame. */
 .notebook-board-surface {
   position: relative;
   background-color: var(--notebook-canvas);
@@ -26,34 +27,131 @@
 .notebook-board-frame {
   position: absolute;
   inset: -28px;
-  border-radius: 5px;
+  border-radius: 4px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.72);
+  pointer-events: none;
+}
+
+/* Top & bottom wooden rails: horizontal wood grain running lengthwise */
+.notebook-board-rail-top,
+.notebook-board-rail-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 28px;
   background-color: #362419;
   background-image:
     repeating-linear-gradient(
-      90deg,
-      rgba(16, 9, 4, 0.24) 0px,
-      rgba(16, 9, 4, 0.24) 3px,
-      transparent 3px,
-      transparent 11px,
-      rgba(96, 68, 46, 0.14) 11px,
-      rgba(96, 68, 46, 0.14) 15px,
-      transparent 15px,
-      transparent 29px
-    ),
-    linear-gradient(
-      180deg,
-      rgba(116, 84, 58, 0.32) 0%,
-      rgba(54, 36, 25, 0.08) 12%,
-      rgba(26, 16, 10, 0.16) 88%,
-      rgba(12, 7, 4, 0.55) 100%
+      0deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
     );
-  border-width: 5px;
-  border-style: solid;
-  border-color: #543b29 #38251a #1f130c #3d291d;
-  box-shadow:
-    inset 0 1px 0 rgba(164, 128, 96, 0.22),
-    inset 0 -2px 4px rgba(10, 5, 2, 0.65),
-    0 14px 28px rgba(0, 0, 0, 0.72);
+}
+
+.notebook-board-rail-top {
+  top: 0;
+  border-top: 3px solid #553c2a;
+  border-bottom: 2px solid #1e120b;
+  background-image:
+    linear-gradient(180deg, rgba(132, 98, 70, 0.28) 0%, rgba(42, 28, 19, 0.08) 65%, rgba(12, 7, 4, 0.42) 100%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-bottom {
+  bottom: 0;
+  border-top: 2px solid #493324;
+  border-bottom: 3px solid #1b100a;
+  background-image:
+    linear-gradient(180deg, rgba(92, 66, 46, 0.18) 0%, rgba(28, 18, 12, 0.2) 60%, rgba(8, 4, 2, 0.58) 100%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+/* Left & right wooden stiles: vertical wood grain with 45-degree mitered corners */
+.notebook-board-rail-left,
+.notebook-board-rail-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  background-color: #342217;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-left {
+  left: 0;
+  border-left: 3px solid #4b3424;
+  border-right: 2px solid #1e120b;
+  clip-path: polygon(0 0, 100% 28px, 100% calc(100% - 28px), 0 100%);
+  background-image:
+    linear-gradient(90deg, rgba(114, 82, 58, 0.22) 0%, rgba(36, 24, 16, 0.1) 65%, rgba(12, 7, 4, 0.42) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-right {
+  right: 0;
+  border-left: 2px solid #493324;
+  border-right: 3px solid #1d120b;
+  clip-path: polygon(0 28px, 100% 0, 100% 100%, 0 calc(100% - 28px));
+  background-image:
+    linear-gradient(90deg, rgba(96, 68, 48, 0.18) 0%, rgba(30, 20, 13, 0.14) 65%, rgba(10, 5, 3, 0.5) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
 }
 
 .notebook-board-recess {
@@ -84,7 +182,7 @@
     radial-gradient(ellipse 98% 88% at 50% 45%, transparent 56%, rgba(4, 6, 9, 0.52) 100%);
 }
 
-/* Crisp font rendering and cool-gray physical paper texture for pinned evidence cards */
+/* Crisp font rendering and muted dim-room physical paper texture for pinned evidence cards */
 .corkboard-node-card {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -96,37 +194,37 @@
   background-color: var(--notebook-paper);
   background-image:
     /* Horizontal & diagonal paper fold creases */
-    linear-gradient(178deg, transparent 47%, rgba(120, 96, 68, 0.07) 49%, rgba(255, 255, 255, 0.42) 50.5%, transparent 54%),
-    linear-gradient(104deg, transparent 36%, rgba(120, 96, 68, 0.05) 37.5%, rgba(255, 255, 255, 0.3) 38.5%, transparent 41%),
-    /* Soft aged tea-stain / hoen ố blotches, kept light for contrast with yellow sticky note */
-    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(176, 144, 104, 0.11) 0%, transparent 70%),
-    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(168, 136, 98, 0.09) 0%, transparent 68%),
-    radial-gradient(ellipse 46% 36% at 72% 72%, rgba(160, 128, 92, 0.06) 0%, transparent 72%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, transparent 45%);
+    linear-gradient(178deg, transparent 47%, rgba(78, 62, 44, 0.1) 49%, rgba(255, 255, 255, 0.2) 50.5%, transparent 54%),
+    linear-gradient(104deg, transparent 36%, rgba(78, 62, 44, 0.07) 37.5%, rgba(255, 255, 255, 0.14) 38.5%, transparent 41%),
+    /* Soft aged tea-stain / hoen ố blotches */
+    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(122, 98, 68, 0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(114, 92, 64, 0.13) 0%, transparent 68%),
+    radial-gradient(ellipse 46% 36% at 72% 72%, rgba(108, 86, 60, 0.09) 0%, transparent 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 42%, rgba(15, 18, 24, 0.14) 100%);
   background-size: 100% 100%;
   box-shadow:
-    inset 0 0 14px rgba(138, 112, 82, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    inset 0 0 18px rgba(24, 18, 12, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26);
 }
 
-/* Yellow sticky note title tab stuck onto top-left of evidence card */
+/* Muted ochre sticky note title tab stuck onto top-left of evidence card (dim-room saturation) */
 .corkboard-sticky-note {
-  background-color: #f6e271;
+  background-color: #c4b05e;
   background-image:
-    linear-gradient(176deg, rgba(190, 150, 20, 0.08) 0%, rgba(255, 252, 220, 0.14) 38%, rgba(210, 170, 30, 0.1) 100%);
+    linear-gradient(176deg, rgba(110, 84, 18, 0.14) 0%, rgba(235, 224, 170, 0.14) 36%, rgba(92, 70, 14, 0.16) 100%);
   border: none;
   box-shadow:
-    2px 4px 6px -2px rgba(0, 0, 0, 0.26),
-    0 1px 2px rgba(0, 0, 0, 0.12);
+    2px 4px 6px -2px rgba(0, 0, 0, 0.34),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
-/* Square white-bordered film photo frame for suspect/contact avatar */
+/* Muted film photo frame for suspect/contact avatar */
 .corkboard-film-frame {
-  background-color: #fbfaf7;
+  background-color: #d2cdc2;
   border: none;
   box-shadow:
-    1px 3px 5px -1px rgba(0, 0, 0, 0.3),
-    0 1px 2px rgba(0, 0, 0, 0.14);
+    1px 3px 5px -1px rgba(0, 0, 0, 0.34),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 /* Darkroom Cold War tray for Polaroid suspect selection inside confirmation modal */

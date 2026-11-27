@@ -4,7 +4,7 @@ import type { PlacedNode } from './types';
 /** Wide 3:2 evidence board (world units). Sized for the 20-30 clue ceiling of a level. */
 export const CANVAS_WIDTH = 1800;
 export const CANVAS_HEIGHT = 1200;
-export const MIN_ZOOM = 0.5;
+export const MIN_ZOOM = 0.35;
 export const MAX_ZOOM = 2.0;
 
 /**

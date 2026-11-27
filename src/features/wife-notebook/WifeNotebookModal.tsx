@@ -695,6 +695,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     initialViewport,
     onTapBackground: point => tapBackgroundRef.current(point),
     onDoubleTapBackground: () => doubleTapBackgroundRef.current(),
+    onPinchOutAtMinZoom: () => pinchCloseRef.current(),
     locked: boardMode === 'wall',
     reducedMotion: Boolean(prefersReducedMotion),
     planeRef,
@@ -715,7 +716,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     animateTo({ x: point.x, y: point.y, zoom: FOCUS_ZOOM }, flightMs);
   }, [animateTo, flightMs]);
 
-  // Focus view: tapping the wall around the board or double-tapping the board puts it back on the wall.
+  // Focus view: tapping the wall around the board, double-tapping the board, or pinching out at min zoom puts it back on the wall.
   const tapBackgroundRef = useRef<(point: { x: number; y: number }) => void>(() => {});
   tapBackgroundRef.current = point => {
     if (!isInsideBoard(point)) {
@@ -728,21 +729,16 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   doubleTapBackgroundRef.current = () => {
     enterWallView();
   };
+  const pinchCloseRef = useRef<() => void>(() => {});
+  pinchCloseRef.current = () => {
+    enterWallView();
+  };
 
-  // Wall view: cards are not interactive; double-tapping the board or a card brings the board forward into focus view.
-  const wallLastTapRef = useRef<{ time: number; x: number; y: number } | null>(null);
+  // Wall view: cards are not interactive; a single tap on the board or a card brings the board forward into focus view.
   const handleWallClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (isBoardChromeControl(e.target)) return;
     e.stopPropagation();
     e.preventDefault();
-    const now = Date.now();
-    const prev = wallLastTapRef.current;
-    const isDoubleTap = prev !== null && now - prev.time < 360 && Math.hypot(e.clientX - prev.x, e.clientY - prev.y) <= 48;
-    if (!isDoubleTap) {
-      wallLastTapRef.current = { time: now, x: e.clientX, y: e.clientY };
-      return;
-    }
-    wallLastTapRef.current = null;
     const cardEl = (e.target as HTMLElement).closest<HTMLElement>('[data-node-id]');
     const node = cardEl ? placedNodes.find(n => n.nodeId === cardEl.dataset.nodeId) : undefined;
     if (node && cardEl) {

@@ -40,6 +40,18 @@ function getCardTiltDeg(nodeId: string): number {
   return ((Math.abs(hash) % 29) - 14) / 10;
 }
 
+function getProfileName(node: PlacedNode): string | undefined {
+  if (
+    node.type === 'suspect' ||
+    node.type === 'alias' ||
+    node.conversationId ||
+    (node.visibleAlias && ['phone', 'messages', 'internet-messaging'].includes(node.sourceAppId || ''))
+  ) {
+    return node.visibleAlias || node.label;
+  }
+  return undefined;
+}
+
 const LAMP_IGNITION = { duration: 850, offsets: [0, 0.18, 0.34, 0.55, 0.72, 1] };
 const LAMP_LIGHT_IGNITION = [0.12, 0.95, 0.22, 1, 0.55, 1];
 const LAMP_VEIL_IGNITION = [0.65, 0.04, 0.58, 0, 0.34, 0];
@@ -90,12 +102,12 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active
 
   return (
     <>
-      {/* Overhead light wash on the detective office wall behind the board, synced 1:1 with lamp flicker */}
-      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2]" style={{ willChange: 'opacity' }}>
-        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_4%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
+      {/* Overhead light wash cast onto both wall and board (z-[14]); physical tube stays behind the board at z-[4] */}
+      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]" style={{ willChange: 'opacity' }}>
+        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_4%,rgba(226,236,248,0.2)_0%,rgba(148,163,184,0.09)_38%,rgba(148,163,184,0.02)_70%,transparent_96%)]" />
       </div>
-      {/* Wall dimming veil inversely synced to the overhead lamp flicker (hidden at rest) */}
-      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3]" style={{ opacity: 0, willChange: 'opacity' }}>
+      {/* Room dimming veil inversely synced to the overhead lamp flicker (hidden at rest) */}
+      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]" style={{ opacity: 0, willChange: 'opacity' }}>
         <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_4%,rgba(4,7,12,0.68)_0%,rgba(4,7,12,0.84)_55%,rgba(3,5,9,0.92)_100%)]" />
       </div>
       {/* Overhead fluorescent tube glow aligned to the wall fixture behind the board (covered when board moves forward) */}
@@ -285,9 +297,7 @@ const CorkboardContents = memo(function CorkboardContents({
           const isUnmasked = unmaskedSuspectIds.includes(node.nodeId);
           const hasContradiction = activeContradictions.some(id => id.includes(node.nodeId));
           const sourceApp = node.sourceAppId ? getSourceApp?.(node.sourceAppId) : undefined;
-          const avatarName = node.type === 'suspect' || node.type === 'alias' || node.conversationId ||
-            (node.visibleAlias && ['phone', 'messages', 'internet-messaging'].includes(node.sourceAppId || ''))
-            ? node.visibleAlias || node.label : undefined;
+          const avatarName = getProfileName(node);
           const isDraggingThis = activeDragId === node.nodeId;
           const tiltDeg = getCardTiltDeg(node.nodeId);
           const photoMeta = (() => {
@@ -413,7 +423,7 @@ const CorkboardContents = memo(function CorkboardContents({
               }}
               className={`corkboard-node-card absolute cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 node.imageSrc
-                  ? 'rounded-[2px] border bg-[#FBF9F4] p-2 pt-3 pb-2.5'
+                  ? 'rounded-[2px] border bg-[#d2cdc2] p-2 pt-3 pb-2.5'
                   : 'corkboard-paper-card rounded-[3px] border p-2.5 pt-[16px]'
               } ${
                 isDraggingThis
@@ -421,12 +431,12 @@ const CorkboardContents = memo(function CorkboardContents({
                   : isSelected
                   ? 'z-30 border-[#DC2626] ring-2 ring-[#EF4444]/85 shadow-[0_14px_30px_rgba(0,0,0,0.65)]'
                   : isUnmasked && isAlias
-                  ? 'z-20 border-[#E11D48] ring-1 ring-[#FB7185] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
+                  ? 'z-20 border-[#b91c3c] ring-1 ring-[#c94b5b] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
                   : hasContradiction
-                  ? 'z-20 border-[#EAB308] ring-1 ring-[#FACC15] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
+                  ? 'z-20 border-[#ca8a04] ring-1 ring-[#eab308]/80 shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
                   : node.imageSrc
-                  ? 'z-20 border-[#DDD5C7] shadow-[0_10px_24px_rgba(0,0,0,0.6),0_2px_6px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.7)]'
-                  : 'z-20 border-[#C9BFAE] shadow-[0_8px_18px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.65)]'
+                  ? 'z-20 border-[#a79f91] shadow-[0_10px_24px_rgba(0,0,0,0.6),0_2px_6px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.7)]'
+                  : 'z-20 border-[#9a9080] shadow-[0_8px_18px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.65)]'
               }`}
               style={{
                 width: `${CARD_WIDTH}px`,
@@ -436,16 +446,16 @@ const CorkboardContents = memo(function CorkboardContents({
                 touchAction: 'none',
               }}
             >
-              {/* Cold War Masking Tape + Steel/Crimson Marker Pin at Top Center */}
+              {/* Cold War Masking Tape + Muted Crimson Marker Pin at Top Center */}
               <div className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center" style={{ top: PIN_OFFSET_Y - 10 }}>
                 <div
                   aria-hidden="true"
-                  className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#D4B44C]/80 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
+                  className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#b39c52]/75 shadow-[0_1px_2px_rgba(0,0,0,0.35)]"
                 />
-                <div className={`relative h-5 w-5 rounded-full border flex items-center justify-center transition-transform duration-150 bg-gradient-to-br from-[#FB7185] via-[#E11D48] to-[#881337] border-[#FDA4AF]/75 ${
+                <div className={`relative h-5 w-5 rounded-full border flex items-center justify-center transition-transform duration-150 bg-gradient-to-br from-[#c94b5b] via-[#9f1d32] to-[#590d1c] border-[#d48b95]/55 ${
                   isDraggingThis ? 'scale-110 shadow-[0_6px_12px_rgba(0,0,0,0.7)]' : 'shadow-[0_3px_6px_rgba(0,0,0,0.6)]'
                 }`}>
-                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
+                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/50" />
                   <div className="h-1 w-1 rounded-full bg-[#090C10]/80 shadow-inner" />
                 </div>
                 <div className={`w-1.5 h-0.5 bg-black/55 rounded-full -mt-0.5 transition-opacity duration-150 ${
@@ -805,16 +815,21 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
         />
       </picture>
 
-      {/* Overhead Cold War Fluorescent Lamp Highlight: mounted on the wall BEHIND the board */}
+      {/* Overhead Cold War Fluorescent Lamp Highlight: tube behind board (z-[4]), light wash over wall & board (z-[14]) */}
       <FluorescentLampHighlight active={isOpen} />
 
       {/* Focus view: dims the office wall and overhead lamp behind the board (opacity fade only) */}
       <div aria-hidden="true" className="notebook-wall-veil pointer-events-none absolute inset-0 z-[5]" />
 
-      {/* Chalkboard surface + physical dark brown wooden frame: moves forward in front of the wall & lamp */}
+      {/* Chalkboard surface + physical 4-rail mitered dark brown wooden frame: moves forward in front of the wall & lamp */}
       <div ref={surfaceRef} aria-hidden="true" className="pointer-events-none absolute z-[10]" style={surfaceStyle}>
         <div className="notebook-board-surface" style={surfaceSizeStyle}>
-          <div className="notebook-board-frame" />
+          <div className="notebook-board-frame">
+            <div className="notebook-board-rail-top" />
+            <div className="notebook-board-rail-bottom" />
+            <div className="notebook-board-rail-left" />
+            <div className="notebook-board-rail-right" />
+          </div>
           <div className="notebook-board-recess">
             <img
               src={chalkboardBoardUrl}
