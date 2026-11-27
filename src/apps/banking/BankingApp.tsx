@@ -77,7 +77,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     else onReturnHome();
   };
 
-  const swipe = useSwipeBack({ onBack: handleBack, enabled: !selectedTx && !evidenceItem && !selectedVault });
+  const swipe = useSwipeBack({ onBack: handleBack, enabled: !selectedTx && !evidenceItem && !selectedVault, exitsApp: !selectedVaultId && activeTab === 'home' });
   const vaultSwipe = useSwipeBack({ onBack: () => setSelectedVaultId(null), enabled: Boolean(selectedVault) });
 
   const selectVault = (vault: BankingVault) => {

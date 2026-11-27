@@ -20,6 +20,9 @@ export interface UseSwipeBackOptions {
   onSwipeProgress?: (progress: number, displacement: number) => void;
   /** Optional callback fired when the swipe gesture ends, indicating whether back was committed */
   onSwipeEnd?: (committed: boolean) => void;
+  /** True when this back leaves the app: the whole app card slides (not just this element), so the
+   *  app background never stays behind as a bar and the home screen is revealed. */
+  exitsApp?: boolean;
 }
 
 export interface SwipeCheckParams {
@@ -81,6 +84,8 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
   let startCoords: { x: number; y: number; time: number } | null = null;
   let lastTriggered = 0;
   let surface: HTMLElement | null = null;
+  /** Gesture owner (marked so outer handlers stand down); differs from surface when exitsApp moves the card. */
+  let owner: HTMLElement | null = null;
   let displacement = 0;
   let restingTransform = '';
   let settling: { animation: Animation; element: HTMLElement; rest: string } | undefined;
@@ -107,7 +112,8 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
     options.onSwipeEnd?.(false);
     stopFrame();
     const element = surface;
-    delete element.dataset.swipeSurface;
+    if (owner) delete owner.dataset.swipeSurface;
+    owner = null;
     const from = `translate3d(${displacement}px, 0, 0) ${restingTransform}`.trim();
     element.style.transform = restingTransform;
     if (animate && displacement && element.animate && !reducedMotion) {
@@ -137,20 +143,23 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
           || event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       }
       resetVisual(false);
+      // exitsApp: the whole app card moves while this element stays the marked gesture owner.
+      const target = (options.exitsApp && element.closest<HTMLElement>('[data-app-surface]')) || element;
       initialDisplacement = 0;
-      let rest = element.style.transform;
-      if (settling?.element === element) {
+      let rest = target.style.transform;
+      if (settling?.element === target) {
         // Measure once when re-grabbing, before cancelling the browser animation.
-        const visible = getComputedStyle(element).transform;
+        const visible = getComputedStyle(target).transform;
         rest = settling.rest;
         initialDisplacement = new DOMMatrixReadOnly(visible === 'none' ? undefined : visible).m41
           - new DOMMatrixReadOnly(rest || undefined).m41;
       }
       settling?.animation.cancel();
       settling = undefined;
-      surface = element;
+      surface = target;
+      owner = element;
       restingTransform = rest;
-      width = element.clientWidth;
+      width = target.clientWidth;
       reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
       displacement = initialDisplacement;
       if (displacement) paint();
@@ -207,7 +216,8 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
       paint();
       options.onSwipeEnd?.(true);
       const element = surface;
-      if (element) delete element.dataset.swipeSurface;
+      if (owner) delete owner.dataset.swipeSurface;
+      owner = null;
       const rest = restingTransform;
       const distance = displacement;
       surface = null;
@@ -221,7 +231,7 @@ export function createSwipeBackEngine(options: UseSwipeBackOptions): SwipeBackEn
   return {
     dispose: () => {
       startCoords = null;
-      if (surface) delete surface.dataset.swipeSurface;
+      if (owner) delete owner.dataset.swipeSurface;
       resetVisual(false);
       stopFrame();
       settling?.animation.cancel();
@@ -297,6 +307,9 @@ export function useSwipeBack(options: UseSwipeBackOptions): SwipeBackHandlers {
       },
       get onSwipeEnd() {
         return optionsRef.current.onSwipeEnd;
+      },
+      get exitsApp() {
+        return optionsRef.current.exitsApp;
       },
     });
     engineRef.current = { handlers, dispose };

@@ -20,6 +20,7 @@ export const SwipeBackContainer: React.FC<SwipeBackContainerProps> = ({
   maxStartDistance,
   onSwipeProgress,
   onSwipeEnd,
+  exitsApp,
   children,
   className = '',
   ...props
@@ -33,6 +34,7 @@ export const SwipeBackContainer: React.FC<SwipeBackContainerProps> = ({
     maxStartDistance,
     onSwipeProgress,
     onSwipeEnd,
+    exitsApp,
   });
 
   return (
