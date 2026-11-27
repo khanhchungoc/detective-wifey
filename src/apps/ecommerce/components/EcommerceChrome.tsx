@@ -79,7 +79,7 @@ export function EcommerceHeader({
   children,
 }: {
   title: string;
-  onBack: () => void;
+  onBack?: () => void;
   onChat?: () => void;
   cartCount?: number;
   chatCount?: number;
@@ -87,9 +87,11 @@ export function EcommerceHeader({
 }) {
   return (
     <header className="ecommerce-header">
-      <button type="button" onClick={onBack} aria-label="Quay lại">
-        <IoArrowBack />
-      </button>
+      {onBack && (
+        <button type="button" onClick={onBack} aria-label="Quay lại">
+          <IoArrowBack />
+        </button>
+      )}
       {children ?? <h1>{title}</h1>}
       {onChat && (
         <div className="ecommerce-header-actions">

@@ -21,7 +21,7 @@ export function CommsApp(props: VirtualAppProps) {
   const calls = data.calls.filter(call => !missedOnly || call.direction === 'missed');
   const openContact = (next: Contact) => { setContact(next); setFeedback(''); setNotesOpen(true); };
   return <SwipeBackContainer className="min-h-[44px] communication-app phone-app" onBack={props.onReturnHome} enabled={!contact && !evidence.active}>
-    <CommunicationHeader title="Điện thoại" onBack={props.onReturnHome} />
+    <CommunicationHeader title="Điện thoại" />
     <main className="communication-scroll">
       <h2 className="communication-large-title">{tab === 'calls' ? 'Gần đây' : 'Danh bạ'}</h2>
       {tab === 'calls' ? <>

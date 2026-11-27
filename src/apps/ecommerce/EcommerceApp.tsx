@@ -117,7 +117,7 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
       <div className="ecommerce-screen min-h-[44px]" inert={selectedOrder !== null || evidence !== null}>
         <EcommerceHeader
           title={titles[view.screen]}
-          onBack={back}
+          onBack={!root ? back : undefined}
           onChat={root ? () => push({ screen: 'inbox' }) : undefined}
           cartCount={data?.cartCount}
           chatCount={data?.chatUnreadCount}

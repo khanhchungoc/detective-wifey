@@ -40,6 +40,17 @@ function getCardTiltDeg(nodeId: string): number {
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active = true }: { active?: boolean }) {
   const prefersReducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<'ignition' | 'ambient'>('ignition');
+  const [animReady, setAnimReady] = useState(false);
+
+  // Defer lamp flicker motion until after the board slide-in completes so frame 1 stays 120Hz smooth.
+  useEffect(() => {
+    if (!active || prefersReducedMotion) {
+      setAnimReady(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setAnimReady(true), 400);
+    return () => window.clearTimeout(timer);
+  }, [active, prefersReducedMotion]);
 
   const tubeEl = (
     <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
@@ -53,7 +64,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active
     <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
   );
 
-  if (prefersReducedMotion || !active) {
+  if (prefersReducedMotion || !animReady) {
     return (
       <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">

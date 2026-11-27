@@ -671,13 +671,20 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     setViewport({ ...center, zoom: 1.0 });
   }, [placedNodes, setViewport]);
 
-  // Flush position immediately when modal closes
+  // Flush position after close slide completes so storage serialization never stalls frame 1.
   const prevIsOpen = useRef(isOpen);
   useEffect(() => {
+    let timer: number | undefined;
     if (prevIsOpen.current && !isOpen) {
-      saveCorkboard(caseId, placedNodes, edges, viewportRef.current);
+      const snapshotViewport = viewportRef.current;
+      timer = window.setTimeout(() => {
+        saveCorkboard(caseId, placedNodes, edges, snapshotViewport);
+      }, 360);
     }
     prevIsOpen.current = isOpen;
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, [isOpen, caseId, placedNodes, edges, viewportRef, saveCorkboard]);
 
   // Card Movement Handler (repositioning card on the corkboard & persisting)
@@ -1299,12 +1306,23 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           >
             <button
               type="button"
+              onPointerDown={(e) => {
+                // Keep left-edge swipe-back from intercepting taps on the close button.
+                e.stopPropagation();
+              }}
+              onPointerUp={(e) => {
+                if (e.pointerType === 'touch' && e.isPrimary) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onClose();
+                }
+              }}
               onClick={onClose}
               aria-label="Đóng sổ tay của vợ"
               title="Quay lại màn hình chính"
-              className="pointer-events-auto relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+              className="group pointer-events-auto relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 transition-colors cursor-pointer touch-manipulation"
             >
-              <IoChevronBack className="h-4 w-4" aria-hidden="true" />
+              <IoChevronBack className="h-4 w-4 transition-transform duration-100 group-active:scale-90" aria-hidden="true" />
             </button>
 
             <div className="pointer-events-auto flex items-center gap-1 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-0.5 shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)]">
