@@ -72,6 +72,8 @@
 | `CLUE-PHOT-02` | **Reflective Surfaces & Background Details:** A seemingly harmless photo of a dinner plate at a fancy restaurant, but in the reflection of the wine glass or water cup, a woman's manicured hand/face is visible. | Visual Forensics | Cheating | Hard |
 | `CLUE-PHOT-03` | **Passenger Seat Footprint:** Photo of his car dashboard showing a female luxury handbag on the passenger seat that does not belong to the wife. | In-Car Evidence | Cheating | Medium |
 | `CLUE-PHOT-04` | **Innocent Surprise Photo:** Hidden folder containing drafts of a hand-drawn portrait of the wife or receipt for custom-engraved anniversary jewelry. | Hidden Folder | Innocent | Hard |
+| `CLUE-PHOT-05` | **Ảnh bữa tối đối lập ngoại phạm:** Ảnh chụp cận mâm cơm niêu tối D-Day (EXIF 19:45, Phố Cổ, Hoàn Kiếm) đối lập lời khai đang họp tại văn phòng lúc 18:55 và 20:46; phóng to góc trên thấy thêm một chén trà và đôi đũa thứ hai trên bàn gỗ nhỏ cho 2 người, không lộ mặt hay đồ vật phụ nữ. | EXIF / Visual Forensics | Cheating | Easy |
+
 
 ---
 
