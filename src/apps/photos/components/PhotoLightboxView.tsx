@@ -13,6 +13,7 @@ import {
   IoSparklesOutline,
 } from 'react-icons/io5';
 import type { PhotoItem } from '../types';
+import { buildPhotoEvidenceItem } from '../data';
 import { PhotoPreview } from './PhotoPreview';
 import { StoryEvidenceTarget, type UniversalEvidenceItem } from '../../../features/investigation';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
@@ -501,22 +502,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     }
   };
 
-  const evidenceItem: UniversalEvidenceItem = {
-    title: photo.title,
-    subtitle: `${photo.date} • ${photo.locationTag || photo.exif.locationName}`,
-    snippet: photo.hotspotClueDescription
-      ? `Chi tiết pháp y phát hiện: ${photo.hotspotClueDescription}`
-      : (photo.description || photo.title),
-    suspectToTag: photo.suspectName || husbandName,
-    source: {
-      caseId,
-      recordId: photo.id,
-      clueRefId: photo.clueRefId,
-      title: photo.title,
-      snippet: photo.description || photo.title,
-      kind: 'photo',
-    },
-  };
+  const evidenceItem = buildPhotoEvidenceItem(photo, caseId, husbandName, 'lightbox');
 
   const hotspot = photo.hotspotCoordinates;
   const isHotspotRevealed = (isMagnifierActive || isZoomed) && photo.hasForensicHotspot && hotspot;

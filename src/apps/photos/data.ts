@@ -1,6 +1,8 @@
 import { record, records, text, textFields } from '../../shared/data/read';
+import type { UniversalEvidenceItem } from '../../shared/contracts/evidence';
 import type { NormalizedPhotosState, PhotoAlbum, PhotoExif, PhotoItem } from './types';
 import photosAnniversary from './assets/photos-anniversary.jpg';
+import photosDinnerClaypot from './assets/photos-dinner-claypot.jpg';
 import photosEveryday01 from './assets/photos-everyday-01.jpg';
 import photosEveryday02 from './assets/photos-everyday-02.jpg';
 import photosEveryday03 from './assets/photos-everyday-03.jpg';
@@ -61,7 +63,22 @@ const photoArtworkByClue: Readonly<Record<string, PhotoArtwork>> = {
   'CLUE-PHOT-04': forensic.bottomRight,
 };
 
+const standalonePhotoUrlById: Readonly<Record<string, string>> = {
+  photo_dinner_claypot: photosDinnerClaypot,
+};
+
+const standalonePhotoUrlByClue: Readonly<Record<string, string>> = {
+  'CLUE-PHOT-05': photosDinnerClaypot,
+};
+
+function getStandalonePhotoUrl(photo: Record<string, unknown>): string | undefined {
+  return standalonePhotoUrlByClue[text(photo.clueRefId)]
+    || standalonePhotoUrlById[text(photo.id)]
+    || standalonePhotoUrlById[text(photo.photoId)];
+}
+
 function getPhotoArtwork(photo: Record<string, unknown>): PhotoArtwork | undefined {
+  if (getStandalonePhotoUrl(photo)) return undefined;
   const clueArtwork = photoArtworkByClue[text(photo.clueRefId)];
   return clueArtwork || photoArtworkById[text(photo.id)] || photoArtworkById[text(photo.photoId)];
 }
@@ -145,6 +162,26 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
       filename: 'IMG_9711.HEIC',
     },
   },
+  'CLUE-PHOT-05': {
+    hasForensicHotspot: true,
+    hotspotCoordinates: { x: 47, y: 43, zoomLevel: 2.6 },
+    hotspotClueDescription: 'Góc bàn đối diện có chén trà, bát và đôi đũa thứ hai trên bàn gỗ nhỏ cho 2 người.',
+    locationTag: 'Phố Cổ, Hoàn Kiếm, Hà Nội',
+    exif: {
+      device: 'Apple iPhone 15 Pro',
+      format: 'HEIF',
+      lens: 'Camera chính - 24 mm ƒ1,78',
+      resolution: '24 MP • 4284 × 5712 • 2,3 MB',
+      iso: 400,
+      focalLength: 24,
+      ev: 0,
+      aperture: 'ƒ1,78',
+      shutterSpeed: '1/50 s',
+      locationName: 'Phố Cổ, Hoàn Kiếm, Hà Nội',
+      streetLabels: ['P. Hàng Trống', 'HÀNG GAI', 'LƯƠNG VĂN CAN'],
+      filename: 'IMG_9518.HEIC',
+    },
+  },
 };
 
 function buildDefaultExif(photo: Record<string, unknown>, id: string, clueRefId?: string): PhotoExif {
@@ -199,6 +236,8 @@ function normalizeSinglePhoto(photo: Record<string, unknown>, isFromLockedAlbum 
   const isVideo = photo.isVideo === true || Boolean(photo.duration);
   const duration = text(photo.duration) || (isVideo ? '0:13' : undefined);
 
+  const standaloneUrl = getStandalonePhotoUrl(photo);
+
   return {
     id,
     photoId: id,
@@ -210,8 +249,8 @@ function normalizeSinglePhoto(photo: Record<string, unknown>, isFromLockedAlbum 
     suspectName: text(photo.suspectName) || undefined,
     clueRefId,
     artwork: getPhotoArtwork(photo),
-    thumbnailUrl: text(photo.thumbnailUrl) || undefined,
-    highResUrl: text(photo.highResUrl) || undefined,
+    thumbnailUrl: text(photo.thumbnailUrl) || standaloneUrl || undefined,
+    highResUrl: text(photo.highResUrl) || standaloneUrl || undefined,
     locationTag: text(photo.locationTag) || clueDefaults?.locationTag || undefined,
     isHiddenAlbum,
     hasForensicHotspot,
@@ -282,5 +321,52 @@ export function readPhotosData(value: unknown): NormalizedPhotosState {
     hiddenAlbumLocked,
     lockChallengeId,
     hasHiddenPhotos,
+  };
+}
+
+export function buildPhotoEvidenceItem(
+  photo: PhotoItem,
+  caseId: string,
+  husbandName: string,
+  mode: 'grid' | 'lightbox' | 'exif' = 'lightbox',
+  formattedDate?: string,
+): UniversalEvidenceItem {
+  const imageSrc = photo.highResUrl || photo.thumbnailUrl || photo.artwork?.src;
+  const imagePosition = (photo.highResUrl || photo.thumbnailUrl) ? undefined : photo.artwork?.position;
+  const location = photo.locationTag || photo.exif.locationName;
+  const rawTimestamp = photo.timestamp || photo.date;
+
+  let subtitle = photo.date;
+  let snippet = photo.description || photo.title;
+  if (mode === 'lightbox') {
+    subtitle = location ? `${photo.date} • ${location}` : photo.date;
+    snippet = photo.hotspotClueDescription
+      ? `Chi tiết pháp y phát hiện: ${photo.hotspotClueDescription}`
+      : (photo.description || photo.title);
+  } else if (mode === 'exif') {
+    const dateLabel = formattedDate || photo.date;
+    subtitle = `${dateLabel} • ${photo.exif.locationName}`;
+    snippet = `EXIF [${photo.exif.device}] ${dateLabel} tại ${photo.exif.locationName}. Thông số: ISO ${photo.exif.iso}, tiêu cự ${photo.exif.focalLength}mm, ${photo.exif.aperture}, ${photo.exif.shutterSpeed}.`;
+  }
+
+  return {
+    title: photo.title,
+    subtitle,
+    snippet,
+    suspectToTag: photo.suspectName || husbandName,
+    kind: 'photo',
+    rawTimestamp,
+    source: {
+      caseId,
+      recordId: photo.id,
+      clueRefId: photo.clueRefId,
+      title: photo.title,
+      subtitle,
+      snippet,
+      kind: 'photo',
+      rawTimestamp,
+      imageSrc,
+      imagePosition,
+    },
   };
 }
