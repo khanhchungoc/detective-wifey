@@ -140,6 +140,7 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
   return (
     <div
       role="button"
+      data-evidence-target="true"
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled ? 'true' : undefined}
       onPointerDown={handlePointerDown}
