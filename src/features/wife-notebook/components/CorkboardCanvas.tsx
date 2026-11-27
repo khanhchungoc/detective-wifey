@@ -97,7 +97,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active
       </div>
       {/* Overhead fluorescent tube */}
       <div ref={tubeRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center" style={{ willChange: 'opacity' }}>
-        <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
+        <div className="notebook-lamp-tube h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
       </div>
     </>
   );
@@ -108,6 +108,9 @@ interface CorkboardCanvasProps {
   viewport: CorkboardViewport;
   viewportRef?: React.RefObject<CorkboardViewport>;
   planeRef?: React.RefObject<HTMLDivElement | null>;
+  surfaceRef?: React.RefObject<HTMLDivElement | null>;
+  /** 'wall' shows the whole board on a lit wall; 'focus' zooms in and pushes the wall back. */
+  mode?: 'wall' | 'focus';
   isOpen?: boolean;
   isPinching?: boolean;
   placedNodes: PlacedNode[];
@@ -132,7 +135,7 @@ interface CorkboardCanvasProps {
 
 export { calculateYarnStringCurve } from '../graphEngine';
 
-type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'isOpen'> & {
+type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'surfaceRef' | 'mode' | 'isOpen'> & {
   zoomRef: React.RefObject<number>;
 };
 
@@ -739,6 +742,8 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
   viewport,
   viewportRef: externalViewportRef,
   planeRef,
+  surfaceRef,
+  mode = 'focus',
   isOpen = true,
   ...contentsProps
 }) => {
@@ -753,14 +758,31 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
     transformOrigin: '0 0',
     transform: formatCorkboardTransform(viewport),
   };
+  const planeSizeStyle: React.CSSProperties = {
+    width: `${CANVAS_SIZE}px`,
+    height: `${CANVAS_SIZE}px`,
+    zoom: viewport.zoom,
+  };
   return (
     <div
-      className="notebook-cardboard isolate relative w-full h-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
+      data-board-mode={mode}
+      className={`notebook-cardboard isolate relative w-full h-full overflow-hidden select-none ${mode === 'wall' ? 'cursor-zoom-in' : 'cursor-grab active:cursor-grabbing'}`}
       onClick={() => {
         onSelectCard?.(null);
         onSelectEdge?.(null);
       }}
     >
+      {/* Chalkboard surface + frame: moves and zooms with the cards so the board edge is visible */}
+      {/* Focus view: dims the wall behind the board (opacity fade only) */}
+      <div aria-hidden="true" className="notebook-wall-veil pointer-events-none absolute inset-0" />
+
+      <div ref={surfaceRef} aria-hidden="true" className="pointer-events-none absolute" style={planeStyle}>
+        <div className="notebook-board-surface" style={planeSizeStyle} />
+      </div>
+
+      {/* Screen-fixed edge falloff over the board, under the cards */}
+      <div aria-hidden="true" className="notebook-board-shade pointer-events-none absolute inset-0" />
+
       {/* Overhead Cold War Fluorescent Lamp Highlight */}
       <FluorescentLampHighlight active={isOpen} />
 
@@ -811,14 +833,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
 
       {/* Zoomable & Pannable Virtual Plane (GPU transform during gestures, crisp CSS zoom when settled) */}
       <div ref={planeRef} className="absolute" style={planeStyle}>
-        <div
-          className="relative"
-          style={{
-            width: `${CANVAS_SIZE}px`,
-            height: `${CANVAS_SIZE}px`,
-            zoom: viewport.zoom,
-          }}
-        >
+        <div className="relative" style={planeSizeStyle}>
           <CorkboardContents {...contentsProps} zoomRef={zoomRef} />
         </div>
       </div>

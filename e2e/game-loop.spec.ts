@@ -62,6 +62,17 @@ async function openNotebook(page: Page): Promise<void> {
   await expect(page.locator('[data-node-id]').first()).toBeVisible();
 }
 
+/** Waits until the camera flight ends (card box stops moving between frames). */
+async function waitForCardToSettle(card: Locator): Promise<void> {
+  let last = '';
+  await expect.poll(async () => {
+    const box = JSON.stringify(await card.boundingBox());
+    const settled = box === last;
+    last = box;
+    return settled;
+  }, { intervals: [100] }).toBe(true);
+}
+
 /**
  * Taps a corkboard card. The board is wider than the phone, so pan with the wheel
  * until the card is clearly on screen first.
@@ -70,6 +81,12 @@ async function tapCard(page: Page, nodeId: string): Promise<void> {
   const vp = page.viewportSize();
   if (!vp) throw new Error('No viewport');
   const card = page.locator(`[data-node-id="${nodeId}"]`);
+  // The board opens in wall view: the first tap on a card only zooms in to it.
+  if (await page.locator('[data-board-mode="wall"]').count()) {
+    await card.click();
+    await expect(page.locator('[data-board-mode="focus"]')).toBeVisible();
+    await waitForCardToSettle(card);
+  }
   const centerX = async (): Promise<number> => {
     const box = await card.boundingBox();
     if (!box) throw new Error(`Card ${nodeId} has no bounding box`);

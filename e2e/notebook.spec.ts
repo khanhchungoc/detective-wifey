@@ -26,6 +26,38 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await expect(page.locator('[data-node-id="node_record_ecommerce_order"]')).toBeVisible();
     await expect(page.locator('[aria-label^="Định vị bảng"]')).toHaveAttribute('aria-label', /1 manh mối/);
 
+    // Opens in wall view; tapping the card zooms in, tapping the wall zooms back out.
+    const board = page.locator('[data-board-mode]');
+    await expect(board).toHaveAttribute('data-board-mode', 'wall');
+    const card = page.locator('[data-node-id="node_record_ecommerce_order"]');
+    const wallWidth = (await card.boundingBox())!.width;
+    await card.click();
+    await expect(board).toHaveAttribute('data-board-mode', 'focus');
+    await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(wallWidth * 3);
+
+    // Pan the board partly off screen, then tap the exposed wall to return to wall view.
+    const vp = page.viewportSize()!;
+    await page.mouse.move(vp.width / 2, vp.height / 2);
+    await page.mouse.wheel(-3000, -3000);
+    await expect.poll(async () => {
+      await page.mouse.click(vp.width / 2, 160);
+      return board.getAttribute('data-board-mode');
+    }).toBe('wall');
+
+    // Closing and reopening keeps the current view.
+    await card.click();
+    await expect(board).toHaveAttribute('data-board-mode', 'focus');
+    await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(wallWidth * 3);
+    const focusedBox = await card.boundingBox();
+    await page.getByRole('dialog', { name: 'Bảng bằng chứng' }).getByRole('button', { name: 'Đóng sổ tay của vợ' }).last().click();
+    await expect(page.getByRole('dialog', { name: 'Bảng bằng chứng' })).toBeHidden();
+    await page.locator('[data-notebook-tab]').click();
+    await expect(board).toHaveAttribute('data-board-mode', 'focus');
+    await expect.poll(async () => {
+      const box = (await card.boundingBox())!;
+      return Math.max(Math.abs(box.x - focusedBox!.x), Math.abs(box.y - focusedBox!.y));
+    }).toBeLessThan(2);
+
     // Auto-arrange keeps the card on the board.
     await page.getByRole('button', { name: 'Xếp gọn' }).click();
     await expect(page.locator('[data-node-id="node_record_ecommerce_order"]')).toBeVisible();

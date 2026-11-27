@@ -2,22 +2,53 @@
   color-scheme: dark;
   --notebook-bg: #080b0f;
   --notebook-canvas: #0f151d;
+  --notebook-frame: #1b2129;
   --notebook-paper: #f5f1e8;
   --notebook-border: #c9bfae;
   position: relative;
 }
 
-/* Cold War chalkboard evidence board: unlit base + chalk map texture + edge falloff (lit solely by overhead lamp) */
+/* Dark room behind the evidence board (visible past the board frame) */
 .notebook-cardboard {
-  background-color: var(--notebook-canvas);
-  background-image:
-    linear-gradient(to top, rgba(4, 6, 9, 0.88) 0%, rgba(4, 6, 9, 0.36) 24%, transparent 55%),
-    radial-gradient(ellipse 96% 86% at 50% 10%, transparent 38%, rgba(4, 6, 9, 0.78) 100%),
-    url('./assets/chalkboard-map.png');
-  background-size: 100% 100%, 100% 100%, 680px 680px;
+  background-color: var(--notebook-bg);
   box-shadow:
     inset 12px 0 24px rgba(0, 0, 0, 0.68),
     inset -12px 0 24px rgba(0, 0, 0, 0.68);
+}
+
+/* Cold War chalkboard surface: lives on the zoom plane, so keep it to one tiled image + a flat frame (no blur, no gradients) */
+.notebook-board-surface {
+  background-color: var(--notebook-canvas);
+  background-image: url('./assets/chalkboard-map.webp');
+  background-size: 680px 680px;
+  outline: 14px solid var(--notebook-frame);
+  box-shadow:
+    0 0 0 15px rgba(148, 163, 184, 0.14),
+    0 40px 90px rgba(0, 0, 0, 0.75);
+}
+
+/* Focus view pushes the wall back: dim veil fades in (opacity only), lamp tube goes soft.
+   The blur is switched once per mode change on a tiny element, never animated per frame. */
+.notebook-wall-veil {
+  background-color: rgba(2, 3, 5, 0.62);
+  opacity: 0;
+  transition: opacity 360ms ease-out;
+  will-change: opacity;
+}
+
+[data-board-mode='focus'] .notebook-wall-veil {
+  opacity: 1;
+}
+
+[data-board-mode='focus'] .notebook-lamp-tube {
+  filter: blur(3px);
+}
+
+/* Screen-fixed edge falloff (lit solely by overhead lamp); never repaints during pan/zoom */
+.notebook-board-shade {
+  background-image:
+    linear-gradient(to top, rgba(4, 6, 9, 0.88) 0%, rgba(4, 6, 9, 0.36) 24%, transparent 55%),
+    radial-gradient(ellipse 96% 86% at 50% 10%, transparent 38%, rgba(4, 6, 9, 0.78) 100%);
 }
 
 /* Crisp font rendering and cool-gray physical paper texture for pinned evidence cards */
@@ -71,7 +102,7 @@
   background-image:
     radial-gradient(ellipse 88% 52% at 50% 0%, rgba(226, 236, 248, 0.18) 0%, rgba(148, 163, 184, 0.07) 48%, transparent 80%),
     radial-gradient(ellipse 86% 78% at 50% 48%, rgba(148, 163, 184, 0.1) 0%, rgba(15, 23, 42, 0.55) 60%, rgba(5, 7, 10, 0.94) 100%),
-    url('./assets/chalkboard-map.png');
+    url('./assets/chalkboard-map.webp');
   background-size: 100% 100%, 100% 100%, 480px 480px;
   box-shadow:
     inset 0 6px 16px rgba(0, 0, 0, 0.7),
