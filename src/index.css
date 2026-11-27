@@ -32,6 +32,27 @@ nav.app-bottom-nav > button svg {
   min-width: 44px;
 }
 
+@keyframes ios-unlock-fly-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--fly-x, 0px), var(--fly-y, 0px), 0) scale(var(--fly-scale, 1.65));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.ios-unlock-fly-in {
+  animation: ios-unlock-fly-in 760ms cubic-bezier(0.16, 1, 0.3, 1) var(--fly-delay, 0ms) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ios-unlock-fly-in {
+    animation: none;
+  }
+}
+
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", -system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color-scheme: dark;
@@ -62,6 +83,29 @@ nav.app-bottom-nav > button svg {
   --ios-font-caption-2: 0.6875rem; /* 11px */
   --ios-font-lockpad-digit: 2.125rem; /* 34px */
   --ios-font-lockpad-subtext: 0.625rem; /* 10px */
+
+  /* Game App Design System Tokens (Cold War Darkroom & Detective Dossier) */
+  --game-backdrop: #080B0F;
+  --game-canvas: #0F151D;
+  --game-dossier: #141A22;
+  --game-surface-elevated: #1B2330;
+  --game-hairline: rgba(255, 255, 255, 0.12);
+  --game-paper: #F5F1E8;
+  --game-paper-border: #C9BFAE;
+  --game-paper-slip: #EAEFF4;
+  --game-polaroid: #EEF2F6;
+  --game-film-frame: #FBFAF7;
+  --game-sticky-note: #F6E271;
+  --game-tape: #D4B44C;
+  --game-text-primary: #F8FAFC;
+  --game-text-secondary: #94A3B8;
+  --game-text-muted: #64748B;
+  --game-ink-primary: #0F172A;
+  --game-ink-secondary: #475569;
+  --game-crimson: #E11D48;
+  --game-crimson-deep: #DC2626;
+  --game-amber: #FBBF24;
+  --game-emerald: #22C55E;
 }
 
 /* Universal Simplified Slim Transparent Scrollbars across OS and apps */

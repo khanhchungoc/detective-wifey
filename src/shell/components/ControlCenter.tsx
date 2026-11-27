@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { IoChevronDown, IoChevronUp, IoContractOutline, IoExpandOutline, IoHomeOutline, IoLayersOutline } from 'react-icons/io5';
+import {
+  IoChevronDown,
+  IoChevronUp,
+  IoContractOutline,
+  IoDocumentTextOutline,
+  IoExpandOutline,
+  IoHomeOutline,
+  IoLayersOutline,
+  IoRefreshOutline,
+} from 'react-icons/io5';
 import { useDialogFocus } from '../../shared/ui/useDialogFocus';
 
 export const isControlSwipe = (dx: number, dy: number, direction: 'down' | 'up') =>
@@ -31,9 +40,26 @@ export function setNotificationHintSeen(): void {
   }
 }
 
-export function ControlCenter({ disabled, isFullscreen, showStatusBar = true, onToggleFullscreen, onGoHome, onOpenLevels, open: controlledOpen, onOpenChange }: {
-  disabled: boolean; isFullscreen: boolean; showStatusBar?: boolean; onToggleFullscreen: () => void;
-  onGoHome: () => void; onOpenLevels: () => void;
+export function ControlCenter({
+  disabled,
+  isFullscreen,
+  showStatusBar = true,
+  onToggleFullscreen,
+  onGoHome,
+  onOpenLevels,
+  onOpenBriefing,
+  onRestartLevel,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  disabled: boolean;
+  isFullscreen: boolean;
+  showStatusBar?: boolean;
+  onToggleFullscreen: () => void;
+  onGoHome: () => void;
+  onOpenLevels: () => void;
+  onOpenBriefing?: () => void;
+  onRestartLevel?: () => void;
   open?: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -121,7 +147,9 @@ export function ControlCenter({ disabled, isFullscreen, showStatusBar = true, on
 
   const actions = [
     { label: isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình', icon: isFullscreen ? IoContractOutline : IoExpandOutline, run: onToggleFullscreen },
+    ...(onOpenBriefing ? [{ label: 'Hồ sơ vụ án', icon: IoDocumentTextOutline, run: onOpenBriefing }] : []),
     { label: 'Chọn màn chơi', icon: IoLayersOutline, run: onOpenLevels },
+    ...(onRestartLevel ? [{ label: 'Chơi lại', icon: IoRefreshOutline, run: onRestartLevel }] : []),
     { label: 'Màn hình chính', icon: IoHomeOutline, run: onGoHome },
   ];
 
@@ -192,6 +220,9 @@ export function ControlCenter({ disabled, isFullscreen, showStatusBar = true, on
         }}
         onPointerDown={event => {
           if (event.button !== 0 || !event.isPrimary) return;
+          if ((event.target as HTMLElement | null)?.closest('button, a, input, [role="button"]')) {
+            return;
+          }
           suppressActionClick.current = false;
           panelSwipeStart.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
           try {

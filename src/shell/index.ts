@@ -9,3 +9,5 @@ export type {
 } from './useNavigationGuard';
 export { ExitConfirmModal } from './components/ExitConfirmModal';
 export type { ExitConfirmModalProps } from './components/ExitConfirmModal';
+export { PhoneLockscreen } from './components/PhoneLockscreen';
+export type { PhoneLockscreenProps } from './components/PhoneLockscreen';
