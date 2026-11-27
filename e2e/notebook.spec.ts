@@ -35,8 +35,15 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await expect(board).toHaveAttribute('data-board-mode', 'focus');
     await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(wallWidth * 3);
 
-    // Pan the board partly off screen, then tap the exposed wall to return to wall view.
+    // Double tap on empty board zooms to 2x, double tap again returns to 1x.
     const vp = page.viewportSize()!;
+    const focusWidth = (await card.boundingBox())!.width;
+    await page.mouse.dblclick(vp.width / 2, vp.height - 190);
+    await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(focusWidth * 1.8);
+    await page.mouse.dblclick(vp.width / 2, vp.height - 190);
+    await expect.poll(async () => Math.round((await card.boundingBox())!.width)).toBe(Math.round(focusWidth));
+
+    // Pan the board partly off screen, then tap the exposed wall to return to wall view.
     await page.mouse.move(vp.width / 2, vp.height / 2);
     await page.mouse.wheel(-3000, -3000);
     await expect.poll(async () => {

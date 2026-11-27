@@ -16,11 +16,13 @@
     inset -12px 0 24px rgba(0, 0, 0, 0.68);
 }
 
-/* Cold War chalkboard surface: lives on the zoom plane, so keep it to one tiled image + a flat frame (no blur, no gradients) */
+/* Cold War chalkboard surface: lives on the zoom plane, so keep it to one image + a flat frame (no blur, no gradients) */
 .notebook-board-surface {
   background-color: var(--notebook-canvas);
-  background-image: url('./assets/chalkboard-map.webp');
-  background-size: 680px 680px;
+  /* One opaque 2400x1600 full-board image (no tiling, base colour baked in) so chalk never repeats in a grid and stays sharp at 2x */
+  background-image: url('./assets/chalkboard-board.webp');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   outline: 14px solid var(--notebook-frame);
   box-shadow:
     0 0 0 15px rgba(148, 163, 184, 0.14),

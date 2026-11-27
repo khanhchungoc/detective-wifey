@@ -1,7 +1,9 @@
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
 import type { PlacedNode } from './types';
 
-export const CANVAS_SIZE = 1800;
+/** Wide 3:2 evidence board (world units). Sized for the 20-30 clue ceiling of a level. */
+export const CANVAS_WIDTH = 1800;
+export const CANVAS_HEIGHT = 1200;
 export const MIN_ZOOM = 0.5;
 export const MAX_ZOOM = 2.0;
 
@@ -17,7 +19,9 @@ export const CARD_WIDTH = 210;
 export const COLUMN_GAP = 40;
 export const CORKBOARD_ROW_HEIGHT = 220;
 export const CORKBOARD_VERTICAL_GAP = 40;
-export const INITIAL_BASE_Y = 160;
+export const INITIAL_BASE_Y = 100;
+/** Auto-placed rows hold up to 6 cards so the wide board fills sideways before downwards. */
+export const MAX_ROW_COLUMNS = 6;
 
 /**
  * Default fallback columns (centered at 900 with 40px gap).
@@ -32,12 +36,12 @@ export const CORKBOARD_COLUMNS_X = [545, 795, 1045] as const;
  * centered horizontally around `clusterCenterX`.
  */
 export function getRowColumnPositions(count: number, clusterCenterX: number): number[] {
-  const clampedCount = Math.max(1, Math.min(3, count));
+  const clampedCount = Math.max(1, Math.min(MAX_ROW_COLUMNS, count));
   const totalWidth = clampedCount * CARD_WIDTH + (clampedCount - 1) * COLUMN_GAP;
   let startX = clusterCenterX - totalWidth / 2;
 
-  // Clamp within canvas boundaries [30, CANVAS_SIZE - totalWidth - 30]
-  startX = Math.max(30, Math.min(CANVAS_SIZE - totalWidth - 30, startX));
+  // Clamp within canvas boundaries [30, CANVAS_WIDTH - totalWidth - 30]
+  startX = Math.max(30, Math.min(CANVAS_WIDTH - totalWidth - 30, startX));
 
   const positions: number[] = [];
   for (let i = 0; i < clampedCount; i++) {
@@ -70,7 +74,7 @@ export function placeNewNodesBelow(
   if (newNodes.length === 0) return [];
 
   // 1. Calculate the horizontal center of existing card areas
-  let clusterCenterX = CANVAS_SIZE / 2; // 600 default
+  let clusterCenterX = CANVAS_WIDTH / 2;
   if (existingNodes.length > 0) {
     const lefts = existingNodes.map(n => n.x);
     const rights = existingNodes.map(n => n.x + CARD_WIDTH);
@@ -100,8 +104,8 @@ export function placeNewNodesBelow(
 
     const isBottomShelf = isMatchingShelf && (otherCards.length === 0 || maxY >= otherMaxBottom - 20);
 
-    if (isBottomShelf && bottomRowCards.length >= 1 && bottomRowCards.length < 3) {
-      const slotsToFill = Math.min(3 - bottomRowCards.length, remainingNewNodes.length);
+    if (isBottomShelf && bottomRowCards.length >= 1 && bottomRowCards.length < MAX_ROW_COLUMNS) {
+      const slotsToFill = Math.min(MAX_ROW_COLUMNS - bottomRowCards.length, remainingNewNodes.length);
       const newTotalInRow = bottomRowCards.length + slotsToFill;
       const newXs = getRowColumnPositions(newTotalInRow, clusterCenterX);
 
@@ -130,9 +134,9 @@ export function placeNewNodesBelow(
 
     let idx = 0;
     while (idx < remainingNewNodes.length) {
-      const nodesInThisRow = Math.min(3, remainingNewNodes.length - idx);
+      const nodesInThisRow = Math.min(MAX_ROW_COLUMNS, remainingNewNodes.length - idx);
       const xs = getRowColumnPositions(nodesInThisRow, clusterCenterX);
-      const currentY = Math.max(40, Math.min(CANVAS_SIZE - 200, baseY));
+      const currentY = Math.max(40, Math.min(CANVAS_HEIGHT - 200, baseY));
 
       for (let c = 0; c < nodesInThisRow; c++) {
         const node = remainingNewNodes[idx + c];
@@ -463,7 +467,15 @@ export function autoArrangeNodes(
     ...node, x: positions[i].x - sizes[i].width / 2, y: positions[i].y - sizes[i].height / 2,
   }));
   const center = calculateClueCardsCenter(placed, id => sizes[indices.get(id)!]);
-  return placed.map(node => ({ ...node, x: node.x + CANVAS_SIZE / 2 - center.x, y: node.y + CANVAS_SIZE / 2 - center.y }));
+  return placed.map(node => ({ ...node, x: node.x + CANVAS_WIDTH / 2 - center.x, y: node.y + CANVAS_HEIGHT / 2 - center.y }));
+}
+
+/** Keeps a card's top-left corner inside the board (drag and restored saves share this rule). */
+export function clampCardPosition(x: number, y: number): { x: number; y: number } {
+  return {
+    x: Math.round(Math.max(20, Math.min(CANVAS_WIDTH - 230, x))),
+    y: Math.round(Math.max(20, Math.min(CANVAS_HEIGHT - 180, y))),
+  };
 }
 
 /**
@@ -475,14 +487,14 @@ export function clampZoom(scale: number): number {
 
 /**
  * Calculates the bounding box center of all placed clue cards.
- * If no cards are placed, defaults to the canvas center (CANVAS_SIZE / 2).
+ * If no cards are placed, defaults to the canvas center.
  */
 export function calculateClueCardsCenter(
   nodes: PlacedNode[],
   getCardDimension?: (nodeId: string) => { width?: number; height?: number } | undefined,
 ): { x: number; y: number } {
   if (nodes.length === 0) {
-    return { x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 };
+    return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 };
   }
   const minX = Math.min(...nodes.map(n => n.x));
   const maxX = Math.max(

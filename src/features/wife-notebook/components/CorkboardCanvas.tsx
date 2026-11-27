@@ -16,7 +16,7 @@ import {
 } from 'react-icons/io5';
 import type { AppDefinition } from '../../../shared/contracts/app-contracts';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
-import { CANVAS_SIZE, calculateYarnStringCurve } from '../graphEngine';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, calculateYarnStringCurve, clampCardPosition } from '../graphEngine';
 import { formatCorkboardTransform } from '../useCorkboardGestures';
 import type { CorkboardViewport, PlacedNode, PairingState } from '../types';
 import type { CaseGraphEdge } from '../../../shared/contracts/knowledge-graph';
@@ -369,8 +369,9 @@ const CorkboardContents = memo(function CorkboardContents({
                 if (Math.hypot(dx, dy) > 4) {
                   drag.hasMoved = true;
                 }
-                drag.pendingX = Math.round(Math.max(20, Math.min(CANVAS_SIZE - 230, drag.origX + dx)));
-                drag.pendingY = Math.round(Math.max(20, Math.min(CANVAS_SIZE - 180, drag.origY + dy)));
+                const clamped = clampCardPosition(drag.origX + dx, drag.origY + dy);
+                drag.pendingX = clamped.x;
+                drag.pendingY = clamped.y;
                 if (dragFrameRef.current === null) {
                   dragFrameRef.current = requestAnimationFrame(() => {
                     dragFrameRef.current = null;
@@ -757,10 +758,12 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
     top: '50%',
     transformOrigin: '0 0',
     transform: formatCorkboardTransform(viewport),
+    // Permanently promoted: dropping the layer after each pan/zoom/flight made cards flash for a frame.
+    willChange: 'transform',
   };
   const planeSizeStyle: React.CSSProperties = {
-    width: `${CANVAS_SIZE}px`,
-    height: `${CANVAS_SIZE}px`,
+    width: `${CANVAS_WIDTH}px`,
+    height: `${CANVAS_HEIGHT}px`,
     zoom: viewport.zoom,
   };
   return (

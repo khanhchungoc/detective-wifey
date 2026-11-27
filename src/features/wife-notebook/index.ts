@@ -20,7 +20,8 @@ export {
   CORKBOARD_VERTICAL_GAP,
   clampZoom,
   calculateClueCardsCenter,
-  CANVAS_SIZE,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
   MIN_ZOOM,
   MAX_ZOOM,
 } from './graphEngine';

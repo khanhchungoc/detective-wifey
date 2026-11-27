@@ -17,7 +17,9 @@ import {
   placeNewNodesBelow,
   calculateClueCardsCenter,
   CORKBOARD_COLUMNS_X,
-  CANVAS_SIZE,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  clampCardPosition,
 } from './graphEngine';
 import {
   evaluateConfrontation,
@@ -36,7 +38,7 @@ import { useCorkboardGestures } from './useCorkboardGestures';
 import { CorkboardCanvas } from './components/CorkboardCanvas';
 import { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 import { ConfrontationModal } from './components/ConfrontationModal';
-import chalkboardMapUrl from './assets/chalkboard-map.webp';
+import chalkboardBoardUrl from './assets/chalkboard-board.webp';
 import './notebook.css';
 import type { PlacedNode, CorkboardViewport, PairingState, TaggedEvidenceItem, UndoAction } from './types';
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
@@ -80,7 +82,7 @@ const WALL_VIEW_MARGIN_PX = 28;
 const FOCUS_ZOOM = 1.0;
 
 function isInsideBoard(point: { x: number; y: number }): boolean {
-  return point.x >= 0 && point.y >= 0 && point.x <= CANVAS_SIZE && point.y <= CANVAS_SIZE;
+  return point.x >= 0 && point.y >= 0 && point.x <= CANVAS_WIDTH && point.y <= CANVAS_HEIGHT;
 }
 
 /** Floating controls over the board (not the buttons printed on cards) stay usable in wall view. */
@@ -92,8 +94,11 @@ function isBoardChromeControl(target: EventTarget): boolean {
 function computeWallViewport(board: HTMLElement | null): CorkboardViewport {
   const width = board?.clientWidth || 390;
   const height = board?.clientHeight || 844;
-  const fit = Math.min(width, height) - WALL_VIEW_MARGIN_PX * 2;
-  return { x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2, zoom: Math.max(0.05, fit / CANVAS_SIZE) };
+  const fit = Math.min(
+    (width - WALL_VIEW_MARGIN_PX * 2) / CANVAS_WIDTH,
+    (height - WALL_VIEW_MARGIN_PX * 2) / CANVAS_HEIGHT,
+  );
+  return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2, zoom: Math.max(0.05, fit) };
 }
 
 function getStorageKey(caseId?: string): string {
@@ -171,10 +176,10 @@ function buildInitialPlacedNodes(
 
       if (targetNode && !seenIds.has(targetNode.nodeId)) {
         seenIds.add(targetNode.nodeId);
+        // Older saves came from a taller board; pull any off-board card back inside.
         restoredPlaced.push({
           ...targetNode,
-          x: saved.x,
-          y: saved.y,
+          ...clampCardPosition(saved.x, saved.y),
         });
       }
     }
@@ -651,7 +656,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     const warmAssets = () => {
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.src = chalkboardMapUrl;
+        img.src = chalkboardBoardUrl;
         void img.decode?.().catch(() => {});
       }
       void document.fonts?.load('400 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
@@ -671,6 +676,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   }, []);
 
   // Corkboard gestures and zoom engine
+  const prefersReducedMotion = useReducedMotion();
   const {
     viewport,
     viewportRef,
@@ -683,12 +689,12 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     initialViewport,
     onTapBackground: point => tapBackgroundRef.current(point),
     locked: boardMode === 'wall',
+    reducedMotion: Boolean(prefersReducedMotion),
     planeRef,
     surfaceRef,
     boardRef,
   });
 
-  const prefersReducedMotion = useReducedMotion();
   const flightMs = prefersReducedMotion ? 0 : 420;
   const enterWallView = useCallback(() => {
     handleDismissSelection();
@@ -1102,7 +1108,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       Array.from(boardRef.current?.querySelectorAll<HTMLElement>('[data-node-id]') ?? [])
         .map(card => [card.dataset.nodeId, card]),
     );
-    if (boardModeRef.current === 'focus') setCenter(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+    if (boardModeRef.current === 'focus') setCenter(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
     setPlacedNodes(prev => {
       const updated = autoArrangeNodes(prev, edges, nodeId => {
         const card = cards.get(nodeId);
@@ -1115,7 +1121,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
 
   const handleCenterCluster = useCallback(() => {
     if (placedNodes.length === 0) {
-      enterFocusView({ x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 });
+      enterFocusView({ x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 });
       return;
     }
     const avgX = placedNodes.reduce((acc, n) => acc + n.x + 105, 0) / placedNodes.length;
