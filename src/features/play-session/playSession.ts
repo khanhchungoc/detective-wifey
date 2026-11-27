@@ -44,6 +44,8 @@ export class PlaySession {
   private initialization = 0;
   private cancelToast?: () => void;
   private cancelFailure?: () => void;
+  /** Unfinished save loaded at startup, offered again when the player picks its level. */
+  private savedSession: ActiveSessionState | null = null;
 
   constructor(private dependencies: PlaySessionDependencies, initialCase?: CaseConfig) {
     const caseConfig = initialCase ?? dependencies.loadCaseByLevel(1);
@@ -78,8 +80,9 @@ export class PlaySession {
         ...session,
         taggedSuspects: normalizeTaggedSuspects(session.taggedSuspects || []),
       } : null;
+      this.savedSession = normalizedSession && normalizedSession.taggedSuspects.length > 0 ? normalizedSession : null;
       this.update({ playerProgress, resumableSession:
-        normalizedSession?.caseId === this.state.caseConfig.caseId && normalizedSession.taggedSuspects.length > 0 ? normalizedSession : null });
+        this.savedSession?.caseId === this.state.caseConfig.caseId ? this.savedSession : null });
     } catch {
       if (initialization === this.initialization && revision === this.revision) this.notify('Không thể tải phiên điều tra. Vui lòng thử lại!');
     }
@@ -105,6 +108,7 @@ export class PlaySession {
   resume = () => {
     const session = this.state.resumableSession;
     if (!session) return;
+    this.savedSession = null;
     this.revision++;
     const normalizedTags = normalizeTaggedSuspects(session.taggedSuspects || []);
     this.update({ strikes: session.suspicionStrikes, taggedSuspects: normalizedTags,
@@ -116,6 +120,7 @@ export class PlaySession {
 
   restart = async () => {
     const caseId = this.state.caseConfig.caseId;
+    this.savedSession = null;
     this.reset(this.state.caseConfig);
     const revision = this.revision;
     const level = this.state.caseConfig.levelNumber;
@@ -126,8 +131,14 @@ export class PlaySession {
   selectLevel = (level: number): boolean => {
     try {
       const next = this.dependencies.loadCaseByLevel(level, this.state.caseConfig.husbandId);
+      // Picking the level of an unfinished save keeps it and offers Resume; any other pick starts fresh.
+      const saved = this.savedSession?.caseId === next.caseId ? this.savedSession : null;
       this.reset(next);
-      void this.clearSavedSession(next.caseId);
+      if (saved) {
+        this.update({ resumableSession: saved });
+      } else {
+        void this.clearSavedSession(next.caseId);
+      }
       this.notify(`Đã nạp ${next.husbandName} - Màn ${level}!`);
       return true;
     } catch (error: unknown) {
@@ -288,6 +299,8 @@ export class PlaySession {
   }
 
   private save() {
+    // New progress replaces the startup save, so it must not be offered again.
+    this.savedSession = null;
     const state = this.state;
     const snapshot: ActiveSessionState = {
       schemaVersion: 1, gameId: 'jealous_wife', caseId: state.caseConfig.caseId,

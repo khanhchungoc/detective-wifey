@@ -124,9 +124,7 @@ export function activeEvidence(page: Page): Locator {
 /**
  * Long-presses a story target with a real touch until the evidence dialog opens, optionally
  * inspects it, then pins it with "Ghim".
- * The finger is dragged away and the touch cancelled, not lifted: a plain lift currently lands as
- * a tap on the dialog backdrop and closes it (see the release test in investigation.spec.ts).
- * shortcut: cancel instead of lift, switch back to a plain lift once that bug is fixed.
+ * The finger lifts as a player would, so a release that dismisses the dialog fails the test.
  */
 export async function longPressAndPin(
   page: Page,
@@ -140,15 +138,9 @@ export async function longPressAndPin(
   const x = box.x + box.width / 2;
   const y = box.y + box.height / 2;
   const dialog = page.getByRole('dialog');
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
-  try {
+  await touchHold(page, { x, y }, async () => {
     await expect(dialog).toBeVisible({ timeout: 2500 });
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + 60, y: y + 60 }] });
-  } finally {
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
-    await cdp.detach();
-  }
+  });
   if (inspect) await inspect(dialog);
   const pin = dialog.getByRole('button', { name: 'Ghim', exact: true });
   await expect(pin).toBeEnabled();

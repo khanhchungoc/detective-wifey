@@ -281,7 +281,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   expectedPin={pendingChallenge.challenge.expectedAnswer} currentStrikes={state.strikes}
                   maxStrikes={caseConfig.allowedStrikes} onSuccess={id => transition('sheet-out', () => game.solveChallenge(id))}
                   onFailStrike={game.failChallenge} onCancel={() => transition('sheet-out', game.cancelChallenge)} />}
-                {state.resumableSession && <ResumeSessionModal session={state.resumableSession}
+                {state.resumableSession && flowStage === 'phone-home' && <ResumeSessionModal session={state.resumableSession}
                   onResume={() => transition('fade', game.resume)} onRestart={() => transition('fade', game.restart)} />}
               </>}
             >

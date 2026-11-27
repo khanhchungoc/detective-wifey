@@ -4,7 +4,7 @@ import { launchApp, startCleanPhone, swipeUpHome } from './helpers/phone';
 // Reduced motion skips the view-transition fly-out, which is exactly what this spec observes.
 test.use({ reducedMotion: 'no-preference' });
 
-type Sample = { x: number; y: number; scale: number };
+type Sample = { cx: number; cy: number; scale: number };
 type SampleWindow = Window & { __cardSamples?: Sample[] };
 
 async function center(page: Page, selector: string): Promise<{ x: number; y: number }> {
@@ -18,19 +18,21 @@ test.describe('App switch animation', () => {
     const errors = await startCleanPhone(page);
     const iconSelector = '[data-launch-app="internet-messaging"]';
     await launchApp(page, 'internet-messaging');
-    const cardCenter = await center(page, '[data-app-surface]');
 
-    // The closing card is a view-transition snapshot (not a DOM node), so read its animated
-    // transform from the ::view-transition-old(phone-app) pseudo element on every frame.
+    // The closing card is a view-transition group (not a DOM node). Its animated transform places
+    // and scales the whole card around its centre, so the card centre on screen is the matrix
+    // translation plus half the group's size. Sampled every frame.
     await page.evaluate(() => {
       const w = window as SampleWindow;
       w.__cardSamples = [];
       const tick = (): void => {
-        const t = getComputedStyle(document.documentElement, '::view-transition-old(phone-app)').transform;
-        const m = /^matrix\(([^)]+)\)$/.exec(t);
-        if (m) {
+        const cs = getComputedStyle(document.documentElement, '::view-transition-group(phone-app)');
+        const m = /^matrix\(([^)]+)\)$/.exec(cs.transform);
+        const width = parseFloat(cs.width);
+        const height = parseFloat(cs.height);
+        if (m && width > 0 && height > 0) {
           const v = m[1].split(',').map(Number);
-          w.__cardSamples?.push({ x: v[4], y: v[5], scale: v[0] });
+          w.__cardSamples?.push({ cx: v[4] + width / 2, cy: v[5] + height / 2, scale: v[0] });
         }
         requestAnimationFrame(tick);
       };
@@ -47,9 +49,8 @@ test.describe('App switch animation', () => {
 
     const icon = await center(page, iconSelector);
     const last = samples[samples.length - 1];
-    const finalCenter = { x: cardCenter.x + last.x, y: cardCenter.y + last.y };
     // Card ends on the icon (a few dozen px) and shrank to icon size, not stuck mid-screen.
-    expect(Math.hypot(finalCenter.x - icon.x, finalCenter.y - icon.y)).toBeLessThan(40);
+    expect(Math.hypot(last.cx - icon.x, last.cy - icon.y)).toBeLessThan(40);
     expect(last.scale).toBeLessThan(0.3);
 
     expect(errors).toEqual([]);
