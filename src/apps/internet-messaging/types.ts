@@ -12,6 +12,12 @@ export interface MessagingMessage {
   isRead?: boolean;
   clueRefId?: string;
   reaction?: string;
+  /** Group threads: sender resolved to the saved contact name (MessagingContact.id). */
+  senderContactId?: string;
+  /** Group threads: literal sender label when the sender is not a saved contact. */
+  senderName?: string;
+  /** Group threads: id of the message this one replies to. */
+  replyToId?: string;
   locationData?: {
     venueName: string;
     address: string;
@@ -33,6 +39,11 @@ export interface MessagingThread {
   suspectId?: string;
   realIdentity?: string;
   systemBanner?: string;
+  /** Group thread flag; group messages carry senderContactId or senderName. */
+  isGroup?: boolean;
+  memberCount?: number;
+  /** Id of a message in `messages` shown as the pinned banner. */
+  pinnedMessageId?: string;
   messages: MessagingMessage[];
 }
 

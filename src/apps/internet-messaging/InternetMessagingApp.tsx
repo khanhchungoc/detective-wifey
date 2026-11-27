@@ -26,14 +26,6 @@ const DEFAULT_CONTACTS: MessagingContact[] = [
     avatarGradient: 'from-slate-500 to-slate-700',
   },
   {
-    id: 'c_tuan',
-    name: 'Anh Tuấn Thợ Điện',
-    phone: '0988886677',
-    department: 'Kỹ thuật toà nhà',
-    section: 'A',
-    avatarGradient: 'from-amber-400 to-orange-500',
-  },
-  {
     id: 'c_bao_ve',
     name: 'Bác Bảo Vệ Chung Cư',
     department: 'Trực ca đêm sảnh B',
@@ -226,6 +218,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
         {selectedThreadId && activeThread && (
           <MessagingChatThreadView
             caseId={caseData.caseId}
+            contacts={contacts}
             thread={activeThread}
             onBack={() => setSelectedThreadId(null)}
             onTagSuspect={handleTag}
