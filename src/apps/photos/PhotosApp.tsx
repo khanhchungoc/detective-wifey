@@ -24,7 +24,6 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
   const rootRef = useRef<HTMLDivElement>(null);
   const [activePhotoId, setActivePhotoId] = useState<string | null>(null);
   const [originDelta, setOriginDelta] = useState<PhotoOriginDelta | null>(null);
-  const [navDirection, setNavDirection] = useState<-1 | 0 | 1>(0);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isViewingHidden, setIsViewingHidden] = useState(false);
   const [evidenceItem, setEvidenceItem] = useState<UniversalEvidenceItem | null>(null);
@@ -59,7 +58,6 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     const target = activeAlbumPhotos[activePhotoIndex + direction];
     if (!target) return;
     setOriginDelta(null);
-    setNavDirection(direction);
     setActivePhotoId(target.id);
     setIsInfoOpen(false);
   }, [activeAlbumPhotos, activePhotoIndex]);
@@ -93,13 +91,11 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     } else {
       setOriginDelta(null);
     }
-    setNavDirection(0);
     setActivePhotoId(id);
     setIsInfoOpen(false);
   }, []);
 
   const handleCloseLightbox = useCallback(() => {
-    setNavDirection(0);
     setActivePhotoId(null);
     setIsInfoOpen(false);
   }, []);
@@ -165,6 +161,8 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
             <PhotoLightboxView
               key="photo-lightbox"
               photo={selectedPhoto}
+              prevPhoto={activePhotoIndex > 0 ? activeAlbumPhotos[activePhotoIndex - 1] : null}
+              nextPhoto={activePhotoIndex >= 0 && activePhotoIndex < activeAlbumPhotos.length - 1 ? activeAlbumPhotos[activePhotoIndex + 1] : null}
               caseId={caseData.caseId}
               husbandName={caseData.husbandName}
               onBack={handleCloseLightbox}
@@ -173,7 +171,6 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
               onTriggerEvidence={handleTriggerEvidence}
               onShowToast={showToast}
               originDelta={originDelta}
-              navDirection={navDirection}
               hasPrev={activePhotoIndex > 0}
               hasNext={activePhotoIndex >= 0 && activePhotoIndex < activeAlbumPhotos.length - 1}
               onPrevPhoto={() => handleStepPhoto(-1)}
