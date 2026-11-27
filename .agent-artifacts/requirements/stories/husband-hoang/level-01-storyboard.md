@@ -55,6 +55,7 @@ level: 1
 | `EVT-08` | D-Day 16:45 | Hoàng nhắc kỷ niệm 1 tháng | Hoàng nhắn: "Nay tròn 1 tháng ngày em nhận sửa điện cho anh lần đầu đấy, tối nay để anh khao." | Zola | `internet-messaging` | `thread_tuan` (`CLUE-ZOLA-07`) | Khớp chuẩn xác mốc 15/09 - 15/10 trên thiệp váy lụa |
 | `EVT-09` | D-Day 18:55 | Hoàng nói dối vợ lần 1 | Vợ hỏi mấy giờ về ăn cơm; Hoàng nói dối: "Anh còn ở công ty, họp với cả nhóm. Em ăn trước nhé." | Zola vợ | `internet-messaging` | `thread_wife` (`CLUE-ZOLA-07`) | Tạo chứng cứ ngoại phạm giả mạo |
 | `EVT-10` | D-Day 19:20 | Hương đến điểm hẹn | Hương nhắn đang gửi xe dưới quán Cơm Niêu. Hoàng gọi 26s (`call_tuan_early`) đón Hương lên bàn tầng 2 | Quán Cơm Niêu Phố Cổ | `internet-messaging` + `phone` | `thread_tuan`, `call_tuan_early` | Gặp nhau ăn tối riêng tư, tặng hộp váy lụa kèm thiệp |
+| `EVT-10B` | D-Day 19:45 | Hoàng chụp ảnh bữa tối | Hoàng chụp cận niêu cơm cháy và bát canh trên bàn gỗ tầng 2 (không lộ mặt hay đồ phụ nữ) | Quán Cơm Niêu Phố Cổ (bàn 2 người) | `photos` | `photo_dinner_claypot` (`CLUE-PHOT-05`) | Nhìn như ảnh đồ ăn bình thường; EXIF `19:45 Phố Cổ, Hoàn Kiếm` trái lời khai họp công ty; phóng to góc trên lộ chén trà và đôi đũa thứ hai (bàn 2 người) |
 | `EVT-11` | D-Day 20:46 | Hoàng nói dối vợ lần 2 | Vợ hỏi họp xong chưa; Hoàng tiếp tục nói dối: "Chưa em, cả nhóm vẫn ở phòng họp." | Zola vợ | `internet-messaging` | `thread_wife` (`CLUE-ZOLA-07`) | Củng cố ngoại phạm giả mạo |
 | `EVT-12` | D-Day 20:48 | Hoàng quẹt thẻ thanh toán | Đúng 2 phút sau tin nhắn nói dối vợ, Hoàng quẹt thẻ Techcombank thanh toán 640.000đ tại Cơm Niêu Phố Cổ | Cơm Niêu Phố Cổ | `banking` | `tx_01` (`CLUE-BANK-06`) | Smoking Gun 1: Mâu thuẫn ngoại phạm trực tiếp (20:46 vs 20:48) |
 | `ACT-11` | D-Day 21:18 | Bạn thân Tuấn Đụt nhắn bóng đá | Tuấn rủ mang áo xanh đá bóng chủ nhật; Hoàng trả lời giày đang phơi | Zola | `internet-messaging` | `thread_friend` (Sinh hoạt) | Sinh hoạt bạn bè đời thường |
@@ -85,13 +86,14 @@ flowchart TD
   subgraph D_DAY_NIGHT ["3. Cao trào Tối D-Day (Ngoại phạm Giả & Bắt quả tang Pháp y)"]
     T8["18:55 - EVT-09<br/>Hoàng nhắn dối vợ: 'Anh còn ở công ty, họp với cả nhóm'<br/>📱 App: internet-messaging (thread_wife)"]
     T9["19:30 - EVT-10<br/>Hoàng ăn tối cùng Hương tại Cơm Niêu Phố Cổ, trao hộp quà váy lụa<br/>📱 App: internet-messaging (thread_tuan) & phone (call_tuan_early)"]
+    T9B["19:45 - EVT-10B<br/>Hoàng chụp cận mâm cơm niêu (EXIF Phố Cổ; góc trên lộ chén trà & đôi đũa thứ hai)<br/>📱 App: photos (photo_dinner_claypot)"]
     T10["20:46 - EVT-11<br/>Hoàng nhắn dối vợ lần 2: 'Chưa em, cả nhóm vẫn ở phòng họp'<br/>📱 App: internet-messaging (thread_wife)"]
     T11["20:48 - EVT-12<br/>Hoàng quẹt thẻ 640.000đ tại Com Nieu Pho Co (lệch lời khai 2 phút!)<br/>📱 App: banking (tx_01)"]
     T12["23:30 - EVT-13<br/>Hoàng gọi điện đêm 96 giây cho 'Anh Tuấn Thợ Điện' (0988886677)<br/>📱 App: phone (call_tuan_late)"]
     T13["23:44 (Toast 23:45) - EVT-14<br/>Hương nhắn: 'Đồ anh để quên em cất rồi, mai em mang qua nhé.'<br/>📱 App: internet-messaging (toast_01, thread_tuan)"]
   end
 
-  T1 --> T2 --> T3 --> T4 --> T5 --> T6 --> T7 --> T8 --> T9 --> T10 --> T11 --> T12 --> T13
+  T1 --> T2 --> T3 --> T4 --> T5 --> T6 --> T7 --> T8 --> T9 --> T9B --> T10 --> T11 --> T12 --> T13
 ```
 
 ---
@@ -101,7 +103,7 @@ flowchart TD
 *Sơ đồ phục vụ trực tiếp cho việc lập trình `CaseKnowledgeGraph` (`nodes[]` và `edges[]`), bố cục từ Trái sang Phải theo đúng 4 cột (`ALL_SUSPECTS -> ALIASES -> APPS -> CLUE_NODES`):*
 1. **Cột 1 (`ALL_SUSPECTS`)**: Container gom toàn bộ nghi phạm thật trong màn (Kẻ chủ mưu Hương và các nghi phạm giải oan Lan Anh, Thảo, Ngọc, Mai).
 2. **Cột 2 (`ALIASES`)**: Các vỏ bọc danh bạ, tài khoản ngụy trang hoặc tên pháp lý (`node_alias_*` / `node_bridge_*`).
-3. **Cột 3 (`APPS`)**: Các ứng dụng nơi vỏ bọc/danh tính xuất hiện (`internet-messaging`, `phone`, `messages`, `banking`, `ecommerce`).
+3. **Cột 3 (`APPS`)**: Các ứng dụng nơi vỏ bọc/danh tính xuất hiện (`internet-messaging`, `phone`, `messages`, `banking`, `ecommerce`, `photos`).
 4. **Cột 4 (`CLUE_NODES`)**: Các nút bản ghi manh mối (`node_record_*`) và các cạnh nối trực tiếp (`Clue <--> Clue`) khớp 100% với `LEVEL_01_KNOWLEDGE_GRAPH`.
 
 ```mermaid
@@ -131,6 +133,7 @@ flowchart LR
     App_Phone["phone"]
     App_Bank["banking"]
     App_Shop["ecommerce"]
+    App_Photos["photos"]
   end
 
   subgraph CLUE_NODES ["4. 🔍 NÚT MANH MỐI & LIÊN KẾT (CLUE NODES & EDGES)"]
@@ -139,6 +142,7 @@ flowchart LR
     Record_BankReceipt["node_record_bank_receipt (CLUE-BANK-06)<br/>Cơm Niêu Phố Cổ 640k (20:48)"]
     Record_ShopOrder["node_record_ecommerce_order (CLUE-POSH-05)<br/>Váy Satin + Thiệp '15/09 - 15/10'"]
     Record_PhoneCall["node_record_phone_call (CLUE-PHONE-01)<br/>Cuộc gọi đêm 23:30 (96s)"]
+    Record_PhotoDinner["node_record_photo_dinner (CLUE-PHOT-05)<br/>Ảnh cơm niêu (EXIF 19:45 Phố Cổ, bàn 2 người)"]
     Slot_Dinner["node_timeline_dinner<br/>Tối 15/10 (20:46 - 20:48)"]
     Proof_LanAnh["Quỹ hoa 500k sinh nhật sếp (tx_04)"]
     Proof_Thao["Phiếu đánh giá đau cột sống"]
@@ -172,6 +176,7 @@ flowchart LR
   App_Bank --> Record_BankReceipt
   App_Shop --> Record_ShopOrder
   App_Phone --> Record_PhoneCall
+  App_Photos --> Record_PhotoDinner
   App_Bank --> Proof_LanAnh
   App_Zola --> Proof_Thao
   App_Bank --> Proof_Ngoc
@@ -185,6 +190,8 @@ flowchart LR
   Record_ShopOrder <-->|"edge_order_name (bridges_identity)"| Bridge_Name
   Record_WifeAlibi <==>|"🔥 SG2 (contradicts_alibi): Họp vs Quẹt thẻ 20:48"| Record_BankReceipt
   Record_ZolaChat -.->|"edge_zola_dinner_receipt (occurred_at)"| Record_BankReceipt
+  Record_PhotoDinner -.->|"edge_photo_dinner_alibi (contradicts_alibi): EXIF 19:45 Phố Cổ & bàn 2 người"| Record_WifeAlibi
+  Record_PhotoDinner -.->|"edge_photo_dinner_receipt (occurred_at): Trùng quán tối 15/10"| Record_BankReceipt
 
   %% 5. Red Herring Exonerations
   Alias_LanAnh -.->|"Giải oan quỹ công đoàn"| Proof_LanAnh
@@ -203,5 +210,5 @@ flowchart LR
   class Suspect_LanAnh,Suspect_Thao,Suspect_Ngoc,Suspect_Mai innocent;
   class Bridge_Phone,Bridge_Name bridge;
   class Alias_Tuan,Alias_TuanSMS,Alias_LanAnh,Alias_Thao,Alias_Ngoc,Alias_Mai alias;
-  class App_Zola,App_Messages,App_Phone,App_Bank,App_Shop app;
+  class App_Zola,App_Messages,App_Phone,App_Bank,App_Shop,App_Photos app;
 ```

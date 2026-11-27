@@ -4,7 +4,7 @@
 
 ## 1. Quy tắc phân bố
 
-- Chỉ bốn ứng dụng có manh mối kết tội: `internet-messaging`, `banking`, `ecommerce`, `phone`. `messages` và bảy ứng dụng còn lại có sinh hoạt bình thường.
+- Chỉ năm ứng dụng có manh mối kết tội hoặc hỗ trợ đối chiếu: `internet-messaging`, `banking`, `ecommerce`, `phone`, `photos` (`photos` đóng vai trò manh mối phụ trợ ngoại phạm, không phải khóa cứng để qua màn). `messages` và sáu ứng dụng còn lại có sinh hoạt bình thường.
 - Ít nhất 75% bản ghi cấp danh sách trong từng ứng dụng có manh mối là sinh hoạt hoặc dữ liệu giải oan. Không tính từng bong bóng chat thành một bản ghi để đạt tỷ lệ. Tin nhắn trong luồng nghi vấn vẫn có trao đổi bình thường.
 - Hiển thị theo thời gian của từng ứng dụng. Không ghim sẵn, đổi màu, tăng số chưa đọc hoặc đẩy manh mối lên đầu vì vai trò trong vụ án. Dữ liệu sinh hoạt có chi tiết để đọc, không chỉ có tiêu đề rỗng.
 - Các nhãn “sinh hoạt”, “giải oan”, “manh mối” chỉ dành cho tác giả; không xuất hiện trên điện thoại. Không tự gắn người mới vào danh sách nghi phạm.
@@ -223,9 +223,14 @@ Không có chuyến xe ngày D định vị bữa tối. Các hoạt động tha
 
 Lịch sử: 11/10 09:10 “React cập nhật trạng thái”; 11/10 09:25 “TypeScript kiểu dữ liệu tổng hợp”; 12/10 08:20 “Dự báo mưa cuối tuần”; 12/10 12:15 “Lịch bóng đá chủ nhật”; 13/10 15:10 “Cách vệ sinh bàn phím cơ”; 14/10 07:30 “Bảo dưỡng xe máy định kỳ”; D 10:00 “CSS grid căn cột”; D 17:10 “Cách bảo quản bưởi”. Tab mở: bài CSS grid, lịch bóng đá. Khi mở lại hiển thị đoạn nội dung phù hợp truy vấn; không có tab riêng tư hoặc bài hướng dẫn che giấu hành vi.
 
-### `photos` - 10 ảnh
+### `photos` - 11 ảnh (10 sinh hoạt + 1 manh mối phụ trợ)
 
-10/10: bàn phím mới, hộp bàn phím; 11/10: mâm cơm nhà, chậu húng quế ban công; 12/10: hai túi đồ siêu thị, ảnh gia đình ở quê; 13/10: ghi chú bảng họp, cáp sạc bị gãy; 14/10: bưởi mẹ gửi, giày đá bóng đang phơi. Mô tả ảnh đúng nội dung và ngày; không thêm phản chiếu, hóa đơn, địa chỉ hoặc ảnh đôi liên quan vụ án. Không có album khóa.
+- **10 ảnh sinh hoạt**: 10/10: bàn phím mới, hộp bàn phím; 11/10: mâm cơm nhà, chậu húng quế ban công; 12/10: hai túi đồ siêu thị, ảnh gia đình ở quê; 13/10: ghi chú bảng họp, cáp sạc bị gãy; 14/10: bưởi mẹ gửi, giày đá bóng đang phơi.
+- **`photo_dinner_claypot` (`CLUE-PHOT-05`, manh mối phụ trợ ngoại phạm)**:
+  - **EXIF**: `D 19:45` (`15/10/2026 19:45`), địa điểm `Phố Cổ, Hoàn Kiếm, Hà Nội`.
+  - **Nội dung ảnh**: Ảnh chụp cận một niêu cơm cháy và bát canh nóng trên bàn gỗ; không lộ gương mặt, bàn tay phụ nữ, hay hộp quà.
+  - **Chi tiết phóng to (`hasForensicHotspot: true`)**: Góc trên khung hình lộ mép một chén trà và đôi đũa thứ hai đặt đối diện trên bàn gỗ nhỏ dành cho 2 người (đối lập lời khai họp nhóm ở công ty lúc 18:55 / 20:46 và ngụy biện "cả nhóm kéo ra quán ăn").
+  - **Ràng buộc**: Không dùng album khóa (Màn 1 có 0 khóa). Ghi nhận khoảng trống runtime: `photos` hiện chưa hỗ trợ ghim ảnh lên Bảng Điều tra, cần dev bổ sung long-press pinning trước khi nối vào đồ thị runtime.
 
 ### `personal-notes` - 6 ghi chú
 
@@ -271,7 +276,7 @@ Mỗi thư có người gửi theo vai trò và đoạn thân thư như trên, k
 2. Không suy danh tính từ tiền chia bữa trưa: tên pháp lý và họ tên trong hồ sơ nghi phạm là cầu nối, chưa đủ chứng minh mối quan hệ.
 3. Bữa tối ngày D trái lời khai 18:55; giờ đặt bàn, cuộc gọi, thanh toán và mốc trên thiệp nhất quán. Kết luận cần toàn chuỗi, không chỉ việc hai đồng nghiệp ăn cùng nhau.
 4. Người chơi đọc được ngữ cảnh giải oan của Lan Anh, Thảo, Ngọc và Mai trước khi đối chất; thông tin không chỉ có trong kết thúc thua.
-5. Có ít nhất 8/10 luồng chat, 18/20 giao dịch, 7/8 đơn và 13/14 cuộc gọi không mang manh mối kết tội; dữ liệu giải oan được tính là sinh hoạt có ngữ cảnh.
+5. Có ít nhất 8/10 luồng chat, 18/20 giao dịch, 7/8 đơn, 13/14 cuộc gọi và 10/11 ảnh không mang manh mối kết tội; dữ liệu giải oan được tính là sinh hoạt có ngữ cảnh.
 6. Mở vài ứng dụng bất kỳ thấy sở thích, gia đình, việc nhà và công việc thực tế. Không biến mọi bản ghi thành một bẫy nghi ngờ.
 7. Một clue xuất hiện nhiều bản ghi chỉ tạo một thẻ hợp lệ. Giữ cơ chế chấm sao hiện hành; chưa đề xuất thay đổi bộ máy đối chất.
 
@@ -282,7 +287,7 @@ Mỗi thư có người gửi theo vai trò và đoạn thân thư như trên, k
 - **Chuẩn bị**: Hoàng đặt váy ngày 12/10, nhờ ghi hai mốc 15/09 - 15/10. Cuộc trao đổi sửa file ngày 13/10 giữ quan hệ công việc có thật; không phải mọi tin với Hương đều là tán tỉnh.
 - **Lấy đồ**: Hai kiện đến sảnh D 11:35; Mai báo và giữ hộ. Tới 15:05 Hoàng đã lấy đủ. Tin 15:20 cho người liên hệ ngụy trang biết anh sẽ mang đồ tối nay, nhưng không gọi tên món đồ.
 - **Hẹn gặp**: Người liên hệ đặt bàn 19h30 như tháng trước. Lúc 18:55 Hoàng nói với vợ đang họp; 19:22 gọi 26 giây, 19:20 người kia báo đã tới quán. Đây là cùng một cuộc gặp, không phải các cuộc hẹn rời rạc.
-- **Che giấu**: 20:46 Hoàng vẫn báo ở phòng họp; 20:48 có thanh toán tại Cơm Niêu Phố Cổ. Chỉ biên lai mới nêu quán; chat không lặp nguyên tên quán để người chơi tìm bằng từ khóa.
+- **Che giấu**: Lúc 19:45 Hoàng chụp cận niêu cơm nóng (`photo_dinner_claypot`, EXIF `Phố Cổ, Hoàn Kiếm`, mép trên lộ chén trà và đôi đũa thứ hai của bàn 2 người); 20:46 Hoàng vẫn báo ở phòng họp; 20:48 có thanh toán tại Cơm Niêu Phố Cổ. Chỉ biên lai mới nêu tên quán; chat và ảnh không lặp nguyên tên quán để người chơi tự đối chiếu thời gian và vị trí.
 - **Dư âm**: Cuộc gọi 23:30 có cùng số liên hệ, nhưng nội dung không được biết. Tin 23:44 nói chiếc áo đang được người kia giữ, khép lại việc để quên đồ. Sự thật tác giả: Hoàng quên áo khi rời bữa tối, Hương cầm về; người chơi chỉ được suy rằng hai người đã trao đồ/ở cùng dịp, không được suy họ về chung nhà.
 
 Khoản hoàn tiền trưa D 12:40 là một nhánh nhận diện có thật trong sinh hoạt đồng nghiệp, không phải tiền trả váy hoặc tiền bữa tối. Không ép mọi giao dịch thành mắt xích tình cảm.
