@@ -89,7 +89,7 @@ export const UniversalEvidenceModal = ({
             <h3 id="universal-evidence-title" className="text-[17px] font-semibold text-black leading-snug break-words">
               {item.title}
             </h3>
-            {subtitle && <p className="text-[13px] text-[#8E8E93] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
+            {subtitle && <p className="text-[13px] text-[#52525B] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
           </div>
         </div>
 

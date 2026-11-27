@@ -157,7 +157,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600"
+              className="w-11 h-11 flex items-center justify-center text-[#52525B] hover:text-slate-800"
               aria-label="Xoá tìm kiếm"
             >
               <IoClose className="w-4 h-4" />
@@ -301,7 +301,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                 ? 'Chưa có liên kết web nào được lưu vào Cloud'
                 : 'Không tìm thấy tài liệu phù hợp'}
             </p>
-            <p className="text-ios-footnote text-slate-400">
+            <p className="text-ios-footnote text-[#64748B]">
               Các tài liệu và tin nhắn bí mật sẽ hiển thị tại đây
             </p>
           </div>
@@ -311,7 +311,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
             <div key={dateLabel} className="space-y-3">
               {/* Date separator pill */}
               <div className="flex justify-center my-2">
-                <span className="px-3 py-0.5 rounded-full bg-slate-400/60 text-white text-ios-caption-2 font-medium shadow-xs">
+                <span className="px-3 py-0.5 rounded-full bg-slate-700/90 text-white text-ios-caption-2 font-medium shadow-xs">
                   {dateLabel}
                 </span>
               </div>
@@ -381,7 +381,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                                   Người nộp: Nguyễn Huy Hoàng
                                 </div>
                               </div>
-                              <div className="text-ios-caption-2 text-slate-400 flex justify-between">
+                              <div className="text-ios-caption-2 text-[#52525B] flex justify-between">
                                 <span>Ban Quản Lý Toà Nhà</span>
                                 <span>P.402 Chùa Láng</span>
                               </div>
@@ -409,14 +409,14 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
 
                       {/* Photo Bottom Bar: Timestamp and Heart Reaction */}
                       <div className="flex items-center gap-2 pl-1">
-                        <span className="px-2 py-0.5 rounded-full bg-slate-400/50 text-white text-ios-caption-2 font-medium">
+                        <span className="px-2 py-0.5 rounded-full bg-slate-700/90 text-white text-ios-caption-2 font-medium">
                           {doc.time || '10:46'}
                         </span>
                         <button
                           type="button"
                           onClick={(e) => toggleHeart(doc.id, e)}
-                          className={`w-7 h-7 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center transition-all active:scale-90 ${
-                            isHearted ? 'text-rose-500 fill-rose-500' : 'text-slate-400 hover:text-slate-600'
+                          className={`w-11 h-11 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center transition-all active:scale-90 ${
+                            isHearted ? 'text-rose-600 fill-rose-600' : 'text-[#52525B] hover:text-slate-800'
                           }`}
                           aria-label="Thích"
                         >
@@ -471,7 +471,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                           </div>
 
                           {/* Timestamp */}
-                          <div className="text-ios-caption-1 text-slate-400 text-right mt-1 font-medium">
+                          <div className="text-ios-caption-1 text-[#52525B] text-right mt-1 font-medium">
                             {doc.time || '16:17'}
                           </div>
                         </div>

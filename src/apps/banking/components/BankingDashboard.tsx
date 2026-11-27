@@ -127,7 +127,7 @@ export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingD
           aria-label="Gửi tiết kiệm"
           className="bank-control flex flex-col items-center gap-1.5 text-center group"
         >
-          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E5E7EB] bg-white text-[#ED1C24] shadow-sm group-hover:border-[#ED1C24] group-active:scale-95 transition-all">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E5E7EB] bg-white text-[#C81018] shadow-sm group-hover:border-[#C81018] group-active:scale-95 transition-all">
             <IoWalletOutline aria-hidden="true" className="h-5 w-5" />
           </span>
           <span className="w-full text-center text-xs font-medium text-[#111827] leading-tight">
@@ -231,12 +231,12 @@ export function BankingProfile({ data, husbandName = 'Pham Quoc Bao' }: { data: 
       {/* Profile Header */}
       <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ED1C24] text-lg font-bold text-white shadow-sm">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C81018] text-lg font-bold text-white shadow-sm">
             {initials}
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-lg font-bold text-[#111827]">{husbandName}</h2>
-            <p className="text-xs font-semibold text-[#ED1C24]">Hội viên {tier}</p>
+            <p className="text-xs font-semibold text-[#C81018]">Hội viên {tier}</p>
             <p className="bank-amount mt-0.5 text-xs text-[#6B7280]">
               STK: {data.accountNumber || '1903 8888 6688'}
             </p>

@@ -1,18 +1,18 @@
 .app-banking {
-  --bank-brand: #ed1c24;
+  --bank-brand: #c81018;
   --bank-deep: #b71c1c;
-  --bank-inflow: #00a86b;
+  --bank-inflow: #008055;
   --bank-outflow: #111827;
-  --bank-outflow-alert: #e53935;
+  --bank-outflow-alert: #c81018;
   --bank-canvas: #f5f6f8;
   --bank-card: #ffffff;
   --bank-surface: #ffffff;
   --bank-text: #111827;
-  --bank-muted: #6b7280;
-  --bank-date: #8e8e93;
+  --bank-muted: #52525b;
+  --bank-date: #64748b;
   --bank-border: #e5e7eb;
   --bank-hairline: #f3f4f6;
-  --bank-blue: #007aff;
+  --bank-blue: #0066cc;
   --bank-coral-wave-1: #ffa07a;
   --bank-coral-wave-2: #ff7f50;
   --bank-coral-wave-3: #ff6b6b;

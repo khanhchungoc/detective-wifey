@@ -78,7 +78,7 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
             </span>
           </div>
 
-          <div className="absolute bottom-2 right-2 text-ios-caption-2 text-slate-400 font-sans">
+          <div className="absolute bottom-2 right-2 text-ios-caption-2 text-[#52525B] font-sans">
             GPS: 21.0285° N, 105.8015° E
           </div>
         </div>

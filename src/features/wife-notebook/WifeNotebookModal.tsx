@@ -1302,7 +1302,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
               onClick={onClose}
               aria-label="Đóng sổ tay của vợ"
               title="Quay lại màn hình chính"
-              className="pointer-events-auto relative flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+              className="pointer-events-auto relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             >
               <IoChevronBack className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -1313,18 +1313,18 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
                 onClick={handleAutoArrange}
                 aria-label="Xếp gọn"
                 title="Xếp gọn"
-                className="relative flex h-9 w-9 items-center justify-center rounded-[4px] text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+                className="relative flex h-11 w-11 items-center justify-center rounded-[4px] text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer"
               >
-                <IoGridOutline className="h-3.5 w-3.5 text-[#94A3B8]" aria-hidden="true" />
+                <IoGridOutline className="h-4 w-4 text-[#CBD5E1]" aria-hidden="true" />
               </button>
 
               <button
                 type="button"
                 onClick={handleOpenConfrontation}
-                className="relative flex h-9 items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-3 text-white shadow-[0_4px_12px_rgba(225,29,72,0.38)] active:scale-95 transition-all cursor-pointer after:absolute after:-inset-y-1 after:inset-x-0 after:content-['']"
+                className="relative flex h-11 items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-3 text-white shadow-[0_4px_12px_rgba(225,29,72,0.38)] active:scale-95 transition-all cursor-pointer"
               >
                 <IoScaleOutline className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="whitespace-nowrap font-sans text-[11px] font-bold uppercase tracking-[0.05em] text-white leading-none">
+                <span className="whitespace-nowrap font-sans text-ios-caption-2 font-bold uppercase tracking-[0.05em] text-white leading-none">
                   Đối chất
                 </span>
               </button>
