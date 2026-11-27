@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { appTransition, handoffSwipe, launcherFlight, navigationMotion, transition } from './transition';
+import { appTransition, handoffLift, handoffSwipe, launcherFlight, navigationMotion, transition } from './transition';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -165,6 +165,35 @@ describe('motion navigation safety', () => {
     expect(navigate).toHaveBeenCalledOnce();
     finish();
     await Promise.resolve();
+  });
+
+  it('resets a swipe-home lift before capture and replays its pose as close keyframe variables', async () => {
+    let finish = () => {};
+    const vars = new Map<string, string>();
+    const style = { setProperty: (k: string, v: string) => vars.set(k, v), removeProperty: (k: string) => vars.delete(k) };
+    const restore = vi.fn();
+    vi.stubGlobal('window', { matchMedia: () => ({ matches: false }) });
+    vi.stubGlobal('document', { documentElement: { dataset: {}, style }, startViewTransition: () => {
+      expect(restore).toHaveBeenCalledOnce();
+      expect(vars.get('--lift-tx')).toBe('12px');
+      expect(vars.get('--lift-ty')).toBe('-140px');
+      expect(vars.get('--lift-scale')).toBe('0.8');
+      return { skipTransition: vi.fn(), ready: Promise.resolve(), finished: new Promise<void>(resolve => { finish = resolve; }) };
+    } });
+    handoffLift({ x: 12, y: -140, scale: 0.8 }, restore, () => transition('close', () => {}));
+    expect(restore).not.toHaveBeenCalled();
+    await Promise.resolve();
+    expect(restore).toHaveBeenCalledOnce();
+    finish();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(vars.has('--lift-tx')).toBe(false);
+  });
+
+  it('restores a lift immediately when navigation starts no transition', () => {
+    const restore = vi.fn();
+    handoffLift({ x: 0, y: -60, scale: 0.9 }, restore, () => {});
+    expect(restore).toHaveBeenCalledOnce();
   });
 
   it('captures only app content for a fade and restores names after capture', async () => {

@@ -508,6 +508,8 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
+      // Without this, mobile browsers claim the vertical drag as a scroll and cancel the pointer.
+      style={{ touchAction: 'none' }}
       initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: shouldReduceMotion ? 0.14 : 0.26, ease: EASE_OUT_IOS }}
@@ -853,19 +855,6 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                   </motion.button>
                 </div>
 
-                <button
-                  type="button"
-                  aria-label="Mở khóa điện thoại"
-                  data-lockscreen-home-bar="true"
-                  disabled={isScanning}
-                  onClick={() => handleRequestUnlock()}
-                  className="touch-target-min -mb-3 flex items-center justify-center px-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-full"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="block w-32 h-1 rounded-full bg-white/90"
-                  />
-                </button>
               </div>
             </div>
           </motion.div>

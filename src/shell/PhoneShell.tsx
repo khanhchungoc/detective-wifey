@@ -436,7 +436,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
       )}
 
       {/* One gesture area keeps launcher and app geometry identical. */}
-      {!isIOS && <button
+      {!isIOS && !isLocked && <button
         type="button"
         onClick={onReturnHome}
         className="phone-system-home relative z-40 flex w-full shrink-0 items-center justify-center cursor-pointer active:opacity-75 transition-opacity"
