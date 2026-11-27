@@ -2,6 +2,7 @@ import { useMotionState } from '../shared/motion/useMotionState';
 import React, { useState, useEffect, useRef, type ReactNode } from 'react';
 import type { AppDefinition, AppId } from '../shared/contracts/app-contracts';
 import type { DeviceMetadata, NotificationToast } from '../shared/contracts/case-schema';
+import type { PhoneLockscreenConfig } from '../shared/contracts/game-flow';
 import { detectDeviceMode, detectFullscreen, isMobileDevice, shouldShowStatusBar } from './deviceMode';
 import { systemForeground } from './systemChrome';
 import { StatusBar } from './components/StatusBar';
@@ -11,6 +12,7 @@ import { NotebookTab } from './components/NotebookTab';
 import { ControlCenter, isControlSwipe, setNotificationHintSeen } from './components/ControlCenter';
 import { PwaGuideSheet } from './components/PwaGuideSheet';
 import { ExitConfirmModal } from './components/ExitConfirmModal';
+import { PhoneLockscreen } from './components/PhoneLockscreen';
 import { usePwa } from './usePwa';
 import { useNavigationGuard } from './useNavigationGuard';
 import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
@@ -42,6 +44,14 @@ export interface PhoneShellProps {
   notebookCaseNumber?: number;
   onNotify: (message: string) => void;
   enableNavigationGuard?: boolean;
+  isLocked?: boolean;
+  lockscreenConfig?: PhoneLockscreenConfig;
+  currentStrikes?: number;
+  maxStrikes?: number;
+  onUnlockPhone?: (targetAppId?: string) => void;
+  onLockscreenPasscodeFail?: () => void;
+  onOpenBriefing?: () => void;
+  onRequestLevelSelector?: () => void;
 }
 
 /** Phone presentation and transient OS state. Gameplay is supplied by the host. */
@@ -49,9 +59,17 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   deviceMetadata, activeAppId, activeAppDefinition, activeUpperApps, activeDockApps,
   grayedOutAppIds,
   systemAlertToast, incomingNotification, children, overlays, renderLevelSelector,
-  onLaunchApp: handleLaunchApp, onReturnHome,
+  onLaunchApp: handleLaunchApp, onReturnHome, onRestartLevel,
   onOpenNotebook, onCloseNotebook, notebookOpen = false, notebookEvidenceCount = 0, notebookCaseNumber = 1, onNotify,
   enableNavigationGuard = true,
+  isLocked = false,
+  lockscreenConfig,
+  currentStrikes = 5,
+  maxStrikes = 5,
+  onUnlockPhone,
+  onLockscreenPasscodeFail,
+  onOpenBriefing,
+  onRequestLevelSelector,
 }) => {
   const { showExitConfirm, handleStay, handleLeave } = useNavigationGuard({
     enabled: enableNavigationGuard,
@@ -65,6 +83,14 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   const [showPwaGuide, setShowPwaGuide] = useMotionState(false, 'sheet');
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(() => new Date());
+  const prevLockedRef = useRef(isLocked);
+  const [unlockBurstKey, setUnlockBurstKey] = useState(0);
+  useEffect(() => {
+    if (prevLockedRef.current && !isLocked) {
+      setUnlockBurstKey(k => k + 1);
+    }
+    prevLockedRef.current = isLocked;
+  }, [isLocked]);
   const pwa = usePwa();
   const previousApp = useRef(activeAppId);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -280,7 +306,11 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
             {/* Top Section: Clock & Upper Apps */}
             <div className="flex flex-col min-h-0">
               {/* Clock Widget */}
-              <div className="phone-clock-widget">
+              <div
+                key={`clock-${unlockBurstKey}`}
+                className={`phone-clock-widget ${unlockBurstKey > 0 ? 'ios-unlock-fly-in' : ''}`}
+                style={unlockBurstKey > 0 ? ({ '--fly-x': '0px', '--fly-y': '-52px', '--fly-scale': '1.22', '--fly-delay': '0ms' } as React.CSSProperties) : undefined}
+              >
                 <div className="text-4xl font-light tracking-tight text-white leading-none tabular-nums">
                   {currentDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false })}
                 </div>
@@ -291,28 +321,42 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
 
               {/* Upper App Grid (Level-Based Filtered) */}
               <div className="phone-app-grid grid grid-cols-4">
-                {activeUpperApps.map((app) => {
+                {activeUpperApps.map((app, index) => {
                   const isGrayedOut = Boolean(grayedOutAppIds?.includes(app.appId));
+                  const col = index % 4;
+                  const row = Math.floor(index / 4);
+                  const flyX = `${Math.round((col - 1.5) * 76)}px`;
+                  const flyY = `${Math.round((row - 0.8) * 68 - 28)}px`;
+                  const flyDelay = `${Math.round(Math.abs(col - 1.5) * 45 + row * 38)}ms`;
                   return (
-                    <AppIconSquircle
-                      key={app.appId}
-                      app={app}
-                      isGrayedOut={isGrayedOut}
-                      onClick={() => {
-                        if (isGrayedOut) {
-                          onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
-                        } else {
-                          handleLaunchApp(app.appId);
-                        }
-                      }}
-                    />
+                    <div
+                      key={`${app.appId}-${unlockBurstKey}`}
+                      className={unlockBurstKey > 0 ? 'ios-unlock-fly-in' : undefined}
+                      style={unlockBurstKey > 0 ? ({ '--fly-x': flyX, '--fly-y': flyY, '--fly-scale': '1.65', '--fly-delay': flyDelay } as React.CSSProperties) : undefined}
+                    >
+                      <AppIconSquircle
+                        app={app}
+                        isGrayedOut={isGrayedOut}
+                        onClick={() => {
+                          if (isGrayedOut) {
+                            onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
+                          } else {
+                            handleLaunchApp(app.appId);
+                          }
+                        }}
+                      />
+                    </div>
                   );
                 })}
               </div>
             </div>
 
             {/* Bottom Section: IoSearchOutline Pill, Dock, Home Bar */}
-            <div className="flex flex-col gap-3 shrink-0">
+            <div
+              key={`dock-${unlockBurstKey}`}
+              className={`flex flex-col gap-3 shrink-0 ${unlockBurstKey > 0 ? 'ios-unlock-fly-in' : ''}`}
+              style={unlockBurstKey > 0 ? ({ '--fly-x': '0px', '--fly-y': '80px', '--fly-scale': '1.2', '--fly-delay': '40ms' } as React.CSSProperties) : undefined}
+            >
               {/* Search Pill */}
               <div className="flex justify-center mb-0.5 tall:mb-1">
                 <div className="glass-subtle rounded-full px-4 min-h-[44px] flex items-center gap-1.5 text-ios-caption-1 text-white/90">
@@ -411,14 +455,32 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
 
       <ControlCenter
         open={controlCenterOpen}
-        disabled={notebookOpen || showLevelSheet || showPwaGuide}
+        disabled={isLocked || notebookOpen || showLevelSheet || showPwaGuide}
         isFullscreen={isFullscreen}
         showStatusBar={showStatusBar}
         onToggleFullscreen={handleToggleFullscreen}
         onGoHome={onReturnHome}
-        onOpenLevels={() => setShowLevelSheet(true)}
+        onOpenLevels={() => {
+          if (onRequestLevelSelector) {
+            onRequestLevelSelector();
+          } else {
+            setShowLevelSheet(true);
+          }
+        }}
+        onOpenBriefing={onOpenBriefing}
+        onRestartLevel={onRestartLevel}
         onOpenChange={setControlCenterOpen}
       />
+
+      {isLocked && lockscreenConfig && onUnlockPhone && (
+        <PhoneLockscreen
+          config={{ ...lockscreenConfig, wallpaperUrl: lockscreenConfig.wallpaperUrl ?? defaultWallpaper }}
+          currentStrikes={currentStrikes}
+          maxStrikes={maxStrikes}
+          onUnlock={onUnlockPhone}
+          onPasscodeFailStrike={onLockscreenPasscodeFail ?? (() => {})}
+        />
+      )}
 
       {overlays}
 
@@ -430,7 +492,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
 
       <NotebookTab
         open={notebookOpen}
-        hidden={notebookOpen || controlCenterOpen || showLevelSheet || showPwaGuide}
+        hidden={isLocked || notebookOpen || controlCenterOpen || showLevelSheet || showPwaGuide}
         evidenceCount={notebookEvidenceCount}
         caseNumber={notebookCaseNumber}
         onOpen={onOpenNotebook}
