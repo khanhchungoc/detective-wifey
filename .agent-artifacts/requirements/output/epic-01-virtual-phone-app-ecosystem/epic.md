@@ -10,26 +10,26 @@ timestamp: "2026-10-13T17:35:00+07:00"
 
 ## Summary
 
-The Virtual Phone Shell & MVP Parody App Suite establishes the central player interface for *Bắt được Tiểu tam* (Jealous Wife Detective Game) for **Release 1 (MVP)**. It emulates a modern Vietnamese husband's smartphone using an authentic iOS-inspired shell architecture, featuring a titanium bezel frame, Dynamic Island pill cutout, split iOS status bar, Level 1 dynamic home screen launcher (mounting the 4 active clue apps: Zola, Techcornbank, Shopoo, Comms), dynamic notification toasts, in-app navigation headers, an iOS AssistiveTouch floating quick action menu, a Level Selector modal sheet, and pluggable micro-app integration contracts.
+The Virtual Phone Shell & MVP Parody App Suite establishes the central player interface for *Bắt được Tiểu tam* (Jealous Wife Detective Game) for **Release 1 (MVP)**. It covers the full entry flow (Startup Boot Screen -> Husband Carousel & Level Selector Hub -> Level Context & Persona Briefing -> iOS 27 Phone Shell Lockscreen -> Home Screen) and emulates a modern Vietnamese husband's smartphone with a titanium bezel frame, Dynamic Island pill cutout, split iOS status bar, Level 1 dynamic home screen launcher, dynamic notification toasts, top-down Notification Dropdown controls (replacing deprecated AssistiveTouch), in-app navigation headers, and pluggable micro-app integration contracts.
 
 ## Business Value
 
 - Delivers the core immersive "phone snooping" experience central to the game's comedic premise.
 - Limits active apps on Level 1 strictly to the 4 clue apps to eliminate cognitive overload and reading fatigue for casual players.
-- Provides an omnipresent iOS AssistiveTouch floating menu allowing players to return home, inspect the Wife's Detective Notebook, select levels, or restart cases from any screen.
+- Provides a native iOS-style top-down Notification Dropdown allowing players to re-read Case Context, switch levels via the Level Selector Hub, restart cases, or open the Wife's Detective Notebook from any in-phone screen.
 - Provides a scalable, decoupled architecture (`AppDefinition`, `CaseConfig`, `LevelCatalog`) allowing future micro-apps and detective cases to be added via declarative data schemas without modifying the UI engine.
 
 ## High-Level Requirements
 
 - Outer mobile frame container rendering realistic iOS smartphone ergonomics (393px × 852px viewport base, centered desktop frame).
+- Full entry flow: Startup preloader & tap-to-start audio unlock (`US-035`), swipeable Husband Carousel & Level Selector Hub (`US-036`), skippable intro dialogue & Case Context/Persona briefing (`US-037`), and iOS 27 Phone Shell Lockscreen with privacy-masked notifications and hybrid unlock (`US-038`).
 - Apple Dynamic Island pill cutout with split status bar displaying narrative clock (*23:45*) on the left and status indicators (cellular signal, *5G*, battery glyph *42%*) on the right.
 - Level-based dynamic iOS launcher layout displaying the 4 active MVP clue apps for Level 1 (Zola, Techcornbank, Shopoo, Comms dialer/SMS) across launcher grid and frosted glass dock.
-- Omnipresent iOS AssistiveTouch floating button expanding a quick menu: Home (`🏠`), Wife's Notebook (`🎀`), Level Selector (`🗂️`), Case Restart (`🔄`), and Fullscreen (`⛶`).
+- Top-down Notification Dropdown providing quick mid-case access to Case Briefing (`Hồ sơ vụ án`), Level Selector Hub (`Chọn màn` with confirmation), Case Restart (`Chơi lại`), and Wife's Notebook (`Sổ tay Vợ`). (AssistiveTouch is deprecated.)
 - Mobile browser chrome suppression: PWA standalone capability (`apple-mobile-web-app-capable`, `theme-color`), W3C Fullscreen API request on Android/desktop, iOS Safari Add-to-Home-Screen guidance sheet, and viewport scroll/rubber-band lock (`overscroll-behavior: none`).
-- Level Selector modal sheet displaying progressive case levels, earned star ratings (1 to 3 stars), and locked gating validation.
 - Sub-100ms client-side screen switching between home screen launcher and mounted app views.
 - Declarative case configuration schema engine statically bundled for zero runtime server dependencies.
-- Optional Level 0 entry offer on first play, Skip to Level 1, and Replay from the existing level selector. Tutorial completion is distinct from skipping.
+- Optional Level 0 highlighted on first play in the Level Selector Hub, Skip to Level 1, and Replay. Tutorial completion is distinct from skipping.
 
 ## Business Outcome
 
@@ -56,11 +56,14 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 * [US-008 - `Photos` Gallery & Media Forensics App Module](us-008-photos-gallery-media-forensics-app-module.md) - *Status: draft*
 * [US-009 - `Phone` Mobile Dialer & Contacts App Module](us-009-phone-mobile-dialer-contacts-app-module.md) - *Status: draft*
 * [US-026 - `Messages` SMS & Parody Chat App Module](us-026-messages-sms-parody-chat-app-module.md) - *Status: draft*
-* [US-023 - AssistiveTouch Floating Quick Action Menu & Viewport Controls](us-023-assistivetouch-floating-quick-action-menu-viewport-controls.md) - *Status: planned*
 * [US-024 - Unified Virtual Phone Motion Choreography, Transitions & App Animations](us-024-unified-virtual-phone-motion-choreography-transitions-app-animations.md) - *Status: planned*
-* [US-025 - Game Boot Title Screen & Parody Virtual App Launch Splash Screens](us-025-game-boot-title-screen-parody-virtual-app-launch-splash-screens.md) - *Status: draft; ASCII approved*.
+* [US-025 - Parody Virtual App Launch Splash Screens & Warm Resume Caching](us-025-game-boot-title-screen-parody-virtual-app-launch-splash-screens.md) - *Status: draft; ASCII approved (boot routing moved to US-035)*.
 * [US-030 - `Zola` Group Chat & Multi-Participant Thread Module](us-030-zola-group-chat-multi-participant-messaging.md) - *Status: draft*
 * [US-031 - Level 0 Entry, Skip & Replay](us-031-level-0-entry-skip-replay.md) - *Status: draft; revision-2 ASCII approved*.
+* [US-035 - Detective App Startup & Entry Routing](us-035-detective-app-startup-entry-routing.md) - *Status: draft; ASCII signed-off*
+* [US-036 - Husband Carousel & Level Selector Hub](us-036-husband-carousel-level-selector-hub.md) - *Status: draft; ASCII signed-off*
+* [US-037 - Level Context, Husband Persona & Interactive Intro Briefing](us-037-level-context-persona-intro-briefing.md) - *Status: draft; ASCII signed-off*
+* [US-038 - iOS 27 Phone Shell Lockscreen & Hybrid Unlock](us-038-ios27-phone-shell-lockscreen-hybrid-unlock.md) - *Status: draft; ASCII signed-off*
 
 ## GUI Specifications
 
@@ -78,6 +81,7 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 * [Messages Investigation ASCII Wireframe](wireframes/wireframe-messages-investigation.md)
 * [Màn 0: bắt đầu, bỏ qua và chơi lại](wireframes/wireframe-level-0-entry.md) - *Status: signed-off, revision 2*.
 * [Game Boot & Parody App Launch Splash Screens ASCII Wireframe](wireframes/wireframe-us-025-boot-and-splash-screens.md) - *Status: signed-off*.
+* [Startup, Level Selector Hub, Case Context & iOS 27 Lockscreen Flow ASCII Wireframe](wireframes/wireframe-startup-level-flow-lockscreen.md) - *Status: signed-off*.
 
 ## Diagrams
 

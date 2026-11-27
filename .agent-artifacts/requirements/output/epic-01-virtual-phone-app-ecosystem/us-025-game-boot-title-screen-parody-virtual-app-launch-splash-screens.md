@@ -7,11 +7,13 @@ tags: [requirement, user-story, phone-os, shell, boot-screen, splash-screen]
 timestamp: "2026-10-21"
 ---
 
-# US-025 - Game Boot Title Screen & Parody Virtual App Launch Splash Screens
+# US-025 - Parody Virtual App Launch Splash Screens & Warm Resume Caching
 
 ### Epic: [Epic 01: Virtual Phone Shell & MVP Parody App Suite (Release 1)](./epic.md)
 
-As a **Player**, I want to view a dramatic detective game boot loading screen upon loading the web application, followed by authentic branded launch splash screens when opening third-party parody apps.
+As a **Player**, I want authentic branded 350ms launch splash screens when opening third-party parody apps, with warm resume caching during an active case.
+
+> **Scope Alignment Note (2026-11-27)**: Game startup loading, Web Audio unlock, and entry routing into the Level Selector Hub have been extracted to [US-035 - Detective App Startup & Entry Routing](./us-035-detective-app-startup-entry-routing.md). This story owns third-party parody app launch splash screens and warm resume caching.
 
 ---
 
@@ -25,17 +27,8 @@ As a **Player**, I want to view a dramatic detective game boot loading screen up
 
 ### Acceptance Criteria
 
-#### AC01: Game Boot Loading & Asset Preloader
-1. Loading the web application displays the fullscreen `GameBootLoadingView` with Noir Charcoal background (`#09090B`), dramatic game title (*"VỢ BẮT GIAN - BẮT ĐƯỢC TIỂU TAM"*), and subtitle (*"Chồng vừa ngủ say... Đã đến lúc điều tra!"*).
-2. The view displays a 6px height rounded progress bar showing asset caching progress (audio clips, character portraits, app icon sprites) advancing smoothly from 0% to 100%.
-3. Under local or cached conditions, asset preloading completes in under 1.5 seconds without layout shifting.
-
-#### AC02: Interactive Tap-to-Start Gate & Audio Unlock
-1. Once asset preloading reaches 100%, the progress bar transitions into an interactive prompt: *"CHẠM ĐỂ BẮT ĐẦU"* with caption *(Chạm màn hình để mở khóa máy)*.
-2. The boot screen requires explicit player touch or mouse click to advance; it does not automatically dismiss into the phone home screen.
-3. The first player interaction initializes and unlocks the browser Web Audio context for in-game sound effects and background ambience.
-4. Tapping the prompt triggers a 200ms smooth crossfade transition, unmounts `GameBootLoadingView`, and mounts the emulated `PhoneShell` SpringBoard launcher grid.
-5. Rapid double-tapping on the prompt is debounced to prevent duplicate initialization events.
+#### AC01 & AC02: Game Boot Loading & Entry Routing (Moved to US-035)
+1. Superseded by [US-035 - Detective App Startup & Entry Routing](./us-035-detective-app-startup-entry-routing.md), which routes from the startup tap-to-start gate into the Level Selector Hub (`US-036`) -> Level Context (`US-037`) -> iOS 27 Lockscreen (`US-038`) -> Phone Home Screen.
 
 #### AC03: Third-Party Parody App Launch Splash Screens
 1. Launching any of the 8 third-party parody apps (`Zola`, `Techcornbank`, `Shopoo`, `Grap`, `NetSurf`, `GeeMail`, `InkedLin`, `Tim`) from the SpringBoard launcher grid displays the branded `AppLaunchSplashView`.

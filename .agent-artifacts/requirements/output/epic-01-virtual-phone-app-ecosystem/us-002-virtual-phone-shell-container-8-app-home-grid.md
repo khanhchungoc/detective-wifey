@@ -54,8 +54,7 @@ As a **Player**, I want to view a virtual smartphone frame mounting only the act
 
 - **Level-Based App Launcher Provisioning Rule**: The home screen launcher dynamically mounts only the active registered parody applications configured for the loaded level (Level 1: 3–4 apps; Level 2: 5–6 apps; Level 3: 8–11 apps). Inactive apps are completely omitted from the launcher for that level, preventing cognitive clutter and excessive text reading for casual players.
 - **iOS Shell Layout Structure**: The home screen dynamically populates the upper grid and the frosted bottom dock based on the active level's app list. Apps designated for fast access (`Zola`, `Techcornbank`, `Comms`) mount into the frosted dock when active; remaining apps mount into the upper grid rows.
-- **AssistiveTouch Floating Quick Menu Rule**: A floating button floats over the viewport across all screens, expanding an action menu with 4 primary targets: Home (`🏠 Màn hình chính`), Wife Notebook (`🎀 Sổ tay của vợ`), Level Selector (`🗂️ Chọn màn chơi`), and Level Restart (`🔄 Chơi lại màn này`).
-- **Level Selector Gating Rule**: The Level Selector sheet displays 3 progressive levels for the active husband. Unlocked levels display earned star ratings (1 to 3 stars). Locked levels render with a padlock icon and block gameplay entry until prerequisite levels are passed.
+- **Mid-Case Navigation & Level Selector Alignment (2026-11-27)**: AssistiveTouch is deprecated and removed. Mid-case access to Case Context, Level Selector Hub, Case Restart, and Wife's Notebook is now provided through the phone shell's top-down **Notification Dropdown** ([US-038](./us-038-ios27-phone-shell-lockscreen-hybrid-unlock.md)) and the full-screen **Level Selector Hub** ([US-036](./us-036-husband-carousel-level-selector-hub.md)).
 - **Sub-100ms Navigation SLA**: App launch and return transitions execute in-memory within 100 milliseconds with zero server latency.
 
 ---
