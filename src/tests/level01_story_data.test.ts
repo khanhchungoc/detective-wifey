@@ -102,7 +102,7 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(new Set(clues)).toEqual(new Set(['CLUE-ZOLA-07', 'CLUE-BANK-06', 'CLUE-POSH-05', 'CLUE-PHONE-01', 'CLUE-PHOT-05']));
     const dinnerPhoto = readPhotosData(data.photos).photos.find(photo => photo.id === 'photo_dinner_claypot');
     expect(dinnerPhoto?.clueRefId).toBe('CLUE-PHOT-05');
-    expect(dinnerPhoto?.hasForensicHotspot).toBe(true);
+    expect(dinnerPhoto?.locationTag).toContain('Phố Cổ');
     expect(dinnerPhoto?.highResUrl).toBeTruthy();
   });
 

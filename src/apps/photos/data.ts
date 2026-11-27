@@ -85,7 +85,6 @@ function getPhotoArtwork(photo: Record<string, unknown>): PhotoArtwork | undefin
 
 const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
   'CLUE-PHOT-01': {
-    hasForensicHotspot: false,
     isHiddenAlbum: true,
     locationTag: 'Khách sạn La Vela Saigon',
     exif: {
@@ -104,9 +103,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-02': {
-    hasForensicHotspot: true,
-    hotspotCoordinates: { x: 45, y: 65, zoomLevel: 3 },
-    hotspotClueDescription: 'Bóng ly rượu vang: Phản chiếu bàn tay phụ nữ làm móng đỏ và hình bóng bí mật.',
     locationTag: 'Nhà hàng The Deck Saigon - Thảo Điền',
     exif: {
       device: 'Apple iPhone 15 Pro',
@@ -124,9 +120,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-03': {
-    hasForensicHotspot: true,
-    hotspotCoordinates: { x: 74, y: 55, zoomLevel: 2.5 },
-    hotspotClueDescription: 'Ghế phụ ô tô: Túi xách nữ hàng hiệu lạ lẫm đặt trên ghế.',
     locationTag: 'Hầm xe Landmark 81',
     exif: {
       device: 'Apple iPhone 15 Pro',
@@ -144,7 +137,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-04': {
-    hasForensicHotspot: false,
     isHiddenAlbum: true,
     locationTag: 'Cửa hàng PNJ Vincom',
     exif: {
@@ -163,9 +155,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-05': {
-    hasForensicHotspot: true,
-    hotspotCoordinates: { x: 47, y: 43, zoomLevel: 2.6 },
-    hotspotClueDescription: 'Góc bàn đối diện có chén trà, bát và đôi đũa thứ hai trên bàn gỗ nhỏ cho 2 người.',
     locationTag: 'Phố Cổ, Hoàn Kiếm, Hà Nội',
     exif: {
       device: 'Apple iPhone 15 Pro',
@@ -222,17 +211,6 @@ function normalizeSinglePhoto(photo: Record<string, unknown>, isFromLockedAlbum 
   const title = text(photo.title) || text(photo.caption) || 'Ảnh';
   const description = text(photo.description) || title;
   const isHiddenAlbum = photo.isHiddenAlbum === true || isFromLockedAlbum || clueDefaults?.isHiddenAlbum === true;
-  const rawCoords = record(photo.hotspotCoordinates);
-
-  const hasForensicHotspot = photo.hasForensicHotspot === true || clueDefaults?.hasForensicHotspot === true;
-  const hotspotCoordinates = (rawCoords.x !== undefined && rawCoords.y !== undefined)
-    ? {
-      x: Number(rawCoords.x),
-      y: Number(rawCoords.y),
-      zoomLevel: rawCoords.zoomLevel !== undefined ? Number(rawCoords.zoomLevel) : 2.5,
-    }
-    : clueDefaults?.hotspotCoordinates;
-
   const isVideo = photo.isVideo === true || Boolean(photo.duration);
   const duration = text(photo.duration) || (isVideo ? '0:13' : undefined);
 
@@ -253,9 +231,6 @@ function normalizeSinglePhoto(photo: Record<string, unknown>, isFromLockedAlbum 
     highResUrl: text(photo.highResUrl) || standaloneUrl || undefined,
     locationTag: text(photo.locationTag) || clueDefaults?.locationTag || undefined,
     isHiddenAlbum,
-    hasForensicHotspot,
-    hotspotCoordinates,
-    hotspotClueDescription: text(photo.hotspotClueDescription) || clueDefaults?.hotspotClueDescription || undefined,
     isVideo,
     duration,
     exif: buildDefaultExif(photo, id, clueRefId),
@@ -340,9 +315,7 @@ export function buildPhotoEvidenceItem(
   let snippet = photo.description || photo.title;
   if (mode === 'lightbox') {
     subtitle = location ? `${photo.date} • ${location}` : photo.date;
-    snippet = photo.hotspotClueDescription
-      ? `Chi tiết pháp y phát hiện: ${photo.hotspotClueDescription}`
-      : (photo.description || photo.title);
+    snippet = photo.description || photo.title;
   } else if (mode === 'exif') {
     const dateLabel = formattedDate || photo.date;
     subtitle = `${dateLabel} • ${photo.exif.locationName}`;

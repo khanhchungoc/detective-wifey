@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
-  AnimatePresence,
   animate,
   motion,
   useMotionValue,
@@ -10,7 +9,6 @@ import {
   IoChevronBack,
   IoInformationCircleOutline,
   IoInformationCircle,
-  IoSparklesOutline,
 } from 'react-icons/io5';
 import type { PhotoItem } from '../types';
 import { buildPhotoEvidenceItem } from '../data';
@@ -20,7 +18,6 @@ import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import {
   clampImage,
   fitImage,
-  focusImagePoint,
   zoomImage,
   type ImageBounds,
   type ImageView,
@@ -65,7 +62,6 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
 }) => {
   const prefersReducedMotion = useReducedMotion();
   const [isZoomed, setIsZoomed] = useState(false);
-  const [isMagnifierActive, setIsMagnifierActive] = useState(false);
   const [manipulating, setManipulating] = useState(false);
   const [dismissedBySwipe, setDismissedBySwipe] = useState(false);
 
@@ -129,9 +125,6 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   const syncZoomFlag = useCallback((zoom: number) => {
     const zoomed = zoom > 1.05;
     setIsZoomed((prev) => (prev === zoomed ? prev : zoomed));
-    if (!zoomed) {
-      setIsMagnifierActive(false);
-    }
   }, []);
 
   const setViewImmediate = useCallback((next: ImageView) => {
@@ -250,19 +243,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     if (stageRectRef.current.width === 0) measureStage();
     const bounds = readCachedBounds();
     if (viewRef.current.zoom > 1.05) {
-      setIsMagnifierActive(false);
       animateToView(fitImage);
-      return;
-    }
-    if (photo.hasForensicHotspot && photo.hotspotCoordinates) {
-      setIsMagnifierActive(true);
-      animateToView(
-        focusImagePoint(
-          { x: photo.hotspotCoordinates.x, y: photo.hotspotCoordinates.y },
-          photo.hotspotCoordinates.zoomLevel || 2.5,
-          bounds,
-        ),
-      );
       return;
     }
     const rect = stageRectRef.current;
@@ -271,29 +252,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       y: clientY - rect.top - rect.height / 2,
     };
     animateToView(zoomImage(fitImage, 2.5, point, bounds));
-  }, [photo, measureStage, readCachedBounds, animateToView]);
-
-  const toggleMagnifier = useCallback(() => {
-    if (stageRectRef.current.width === 0) measureStage();
-    if (!isMagnifierActive) {
-      setIsMagnifierActive(true);
-      const targetZoom = photo.hotspotCoordinates?.zoomLevel || 2.5;
-      if (photo.hotspotCoordinates) {
-        animateToView(
-          focusImagePoint(
-            { x: photo.hotspotCoordinates.x, y: photo.hotspotCoordinates.y },
-            targetZoom,
-            readCachedBounds(),
-          ),
-        );
-      } else {
-        animateToView(zoomImage(fitImage, targetZoom, { x: 0, y: 0 }, readCachedBounds()));
-      }
-    } else {
-      setIsMagnifierActive(false);
-      animateToView(fitImage);
-    }
-  }, [isMagnifierActive, photo, measureStage, readCachedBounds, animateToView]);
+  }, [measureStage, readCachedBounds, animateToView]);
 
   // Pointer gesture handlers (pinch-to-zoom, 2D pan, iOS swipe-down dismiss, swipe-up EXIF, double-tap)
   const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
@@ -504,9 +463,6 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
 
   const evidenceItem = buildPhotoEvidenceItem(photo, caseId, husbandName, 'lightbox');
 
-  const hotspot = photo.hotspotCoordinates;
-  const isHotspotRevealed = (isMagnifierActive || isZoomed) && photo.hasForensicHotspot && hotspot;
-
   const heroInitial = originDelta
     ? { x: originDelta.dx, y: originDelta.dy, scale: originDelta.scale, opacity: 0.85 }
     : { x: 0, y: 24, scale: 0.9, opacity: 0 };
@@ -631,78 +587,10 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                   className="w-full h-full"
                   zoomLevel={1}
                 />
-
-                {/* Forensic Cyan Ring Hotspot Indicator */}
-                <AnimatePresence>
-                  {isHotspotRevealed && (
-                    <motion.div
-                      key="hotspot-ring"
-                      initial={{ opacity: 0, scale: 0.6 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.6 }}
-                      transition={IOS_SPRING}
-                      className="absolute pointer-events-none z-10"
-                      style={{
-                        left: `${hotspot.x}%`,
-                        top: `${hotspot.y}%`,
-                        translateX: '-50%',
-                        translateY: '-50%',
-                      }}
-                    >
-                      <div className="w-14 h-14 rounded-full border-2 border-[#00E5FF] shadow-[0_0_15px_#00E5FF] animate-pulse flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[#00E5FF]" />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
             </motion.div>
           </motion.div>
         </StoryEvidenceTarget>
-
-        {/* Forensic Hotspot Callout Box */}
-        <AnimatePresence>
-          {isHotspotRevealed && photo.hotspotClueDescription && (
-            <motion.div
-              key="hotspot-callout"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 12 }}
-              transition={{ duration: 0.22, ease: IOS_EASE }}
-              style={{ opacity: chromeOpacity }}
-              className="absolute bottom-6 inset-x-4 z-20 p-3 rounded-2xl bg-black/85 backdrop-blur-md border border-[#00E5FF]/40 shadow-2xl text-left pointer-events-none"
-            >
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#00E5FF] mb-1">
-                <IoSparklesOutline className="w-3.5 h-3.5" />
-                <span>Phát hiện chi tiết pháp y</span>
-              </div>
-              <p className="text-ios-caption-1 text-slate-200">
-                {photo.hotspotClueDescription}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Forensic Magnifier Action Button (AI Clean Up / Spatial Reframing) */}
-        {photo.hasForensicHotspot && (
-          <motion.button
-            type="button"
-            style={{ opacity: chromeOpacity }}
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleMagnifier();
-            }}
-            className={`absolute top-4 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md border transition-colors active:scale-95 min-h-[44px] ${
-              isMagnifierActive
-                ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]'
-                : 'bg-[#1C1C1E]/80 text-white/90 border-white/20 hover:text-white'
-            }`}
-          >
-            <IoSparklesOutline className="w-3.5 h-3.5" />
-            <span>{isMagnifierActive ? 'Tắt kính lúp' : 'Bật kính lúp'}</span>
-          </motion.button>
-        )}
       </main>
     </motion.div>
   );
