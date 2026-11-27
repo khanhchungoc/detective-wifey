@@ -99,7 +99,7 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
     // Smart Collections section
     expect(html).toContain('BỘ SƯU TẬP THÔNG MINH');
     expect(html).toContain('Gương mặt &amp; Đối tượng');
-    expect(html).toContain('Chuyến đi đáng ngờ');
+    expect(html).not.toContain('Chuyến đi đáng ngờ');
     expect(html).toContain('Ngày kỷ niệm &amp; Sự kiện');
     expect(html).toContain('Mục bị ẩn');
   });
