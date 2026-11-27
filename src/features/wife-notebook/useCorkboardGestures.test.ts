@@ -267,6 +267,30 @@ describe('corkboard mobile gesture ownership', () => {
     expect(updates).toHaveLength(0);
   });
 
+  it('triggers onPinchOutAtMinZoom only when a new pinch-in gesture starts already at MIN_ZOOM', () => {
+    const onPinchOutAtMinZoom = vi.fn();
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 600, zoom: 1 },
+      onPinchOutAtMinZoom,
+    });
+    // First pinch from 1.0 down to min zoom clamps cleanly without closing the board.
+    handlers.onPointerDownCapture(pointer(1, 100, 300));
+    handlers.onPointerDownCapture(pointer(2, 300, 300));
+    handlers.onPointerMoveCapture(pointer(2, 140, 300));
+    flushFrame();
+    handlers.onPointerUpCapture(pointer(2, 140, 300));
+    handlers.onPointerUpCapture(pointer(1, 100, 300));
+    expect(onPinchOutAtMinZoom).not.toHaveBeenCalled();
+
+    // Second pinch starting already at MIN_ZOOM and pinching inward triggers close to wall view.
+    handlers.onPointerDownCapture(pointer(3, 100, 300));
+    handlers.onPointerDownCapture(pointer(4, 300, 300));
+    handlers.onPointerMoveCapture(pointer(4, 240, 300));
+    expect(onPinchOutAtMinZoom).toHaveBeenCalledTimes(1);
+    handlers.onPointerUpCapture(pointer(4, 240, 300));
+    handlers.onPointerUpCapture(pointer(3, 100, 300));
+  });
+
   it('ignores pan, pinch and wheel input while locked (wall view)', () => {
     const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
     const { containerProps: handlers } = useCorkboardGestures({

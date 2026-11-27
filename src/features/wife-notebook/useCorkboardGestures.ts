@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { clampZoom, CANVAS_HEIGHT, CANVAS_WIDTH, MAX_ZOOM } from './graphEngine';
+import { clampZoom, CANVAS_HEIGHT, CANVAS_WIDTH, MAX_ZOOM, MIN_ZOOM } from './graphEngine';
 import type { CorkboardViewport } from './types';
 
 export function formatCorkboardTransform(viewport: CorkboardViewport, settledZoom = viewport.zoom): string {
@@ -30,6 +30,8 @@ export interface UseCorkboardGesturesOptions {
   onTapBackground?: (worldPoint: { x: number; y: number }) => void;
   /** Double tap on empty board space; overrides the default 1x/2x zoom toggle when provided. */
   onDoubleTapBackground?: (worldPoint: { x: number; y: number }) => void;
+  /** Called when the user starts a pinch-out gesture while already at MIN_ZOOM. */
+  onPinchOutAtMinZoom?: () => void;
   /** Ignore pan, pinch and wheel input (e.g. wall overview mode). */
   locked?: boolean;
   /** Skip animated camera moves (prefers-reduced-motion). */
@@ -43,6 +45,7 @@ export interface UseCorkboardGesturesOptions {
 export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   const onTapBackground = options?.onTapBackground;
   const onDoubleTapBackground = options?.onDoubleTapBackground;
+  const onPinchOutAtMinZoom = options?.onPinchOutAtMinZoom;
   const planeRef = options?.planeRef;
   const surfaceRef = options?.surfaceRef;
   const boardRef = options?.boardRef;
@@ -186,7 +189,9 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     centroidY: number;
     screenCenterX: number;
     screenCenterY: number;
+    startedAtMinZoom: boolean;
   } | null>(null);
+  const pinchClosedRef = useRef(false);
   const lastTapTime = useRef(0);
   const touchPointers = useRef(new Map<number, { clientX: number; clientY: number }>());
   const multiTouch = useRef(false);
@@ -384,6 +389,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     isDragging.current = false;
     lastTapTime.current = 0;
     multiTouch.current = true;
+    pinchClosedRef.current = false;
     setIsPinching(true);
     const [t1, t2] = [...touchPointers.current.values()];
     const rect = e.currentTarget.getBoundingClientRect();
@@ -396,6 +402,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       centroidY: (t1.clientY + t2.clientY) / 2 - rect.top - rect.height / 2,
       screenCenterX: rect.left + rect.width / 2,
       screenCenterY: rect.top + rect.height / 2,
+      startedAtMinZoom: viewportRef.current.zoom <= MIN_ZOOM + 0.02,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
@@ -408,8 +415,16 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     const start = pinchStart.current;
     if (touchPointers.current.size !== 2 || !start) return;
     const [t1, t2] = [...touchPointers.current.values()];
-    const zoom = clampZoom(start.initialZoom *
-      Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY) / Math.max(1, start.initialDist));
+    const rawRatio = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY) / Math.max(1, start.initialDist);
+    // At min zoom, a deliberate second pinch-in closes the board back onto the wall.
+    if (start.startedAtMinZoom && rawRatio < 0.85 && onPinchOutAtMinZoom) {
+      pinchStart.current = null;
+      pinchClosedRef.current = true;
+      setIsPinching(false);
+      onPinchOutAtMinZoom();
+      return;
+    }
+    const zoom = clampZoom(start.initialZoom * rawRatio);
     scheduleViewportUpdate({
       zoom,
       x: start.initialCamX + start.centroidX / start.initialZoom -
@@ -426,8 +441,10 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
     if (touchPointers.current.size < 2) pinchStart.current = null;
     if (touchPointers.current.size === 0) {
+      const closedByPinch = pinchClosedRef.current;
+      pinchClosedRef.current = false;
       multiTouch.current = false;
-      if (planeRef?.current) {
+      if (!closedByPinch && planeRef?.current) {
         flushViewportCommit();
       }
       setIsPinching(false);
