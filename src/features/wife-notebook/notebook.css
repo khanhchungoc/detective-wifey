@@ -22,7 +22,26 @@
   background-image: url('./assets/chalkboard-map.webp');
   background-size: 680px 680px;
   outline: 14px solid var(--notebook-frame);
-  box-shadow: 0 0 0 15px rgba(148, 163, 184, 0.14);
+  box-shadow:
+    0 0 0 15px rgba(148, 163, 184, 0.14),
+    0 40px 90px rgba(0, 0, 0, 0.75);
+}
+
+/* Focus view pushes the wall back: dim veil fades in (opacity only), lamp tube goes soft.
+   The blur is switched once per mode change on a tiny element, never animated per frame. */
+.notebook-wall-veil {
+  background-color: rgba(2, 3, 5, 0.62);
+  opacity: 0;
+  transition: opacity 360ms ease-out;
+  will-change: opacity;
+}
+
+[data-board-mode='focus'] .notebook-wall-veil {
+  opacity: 1;
+}
+
+[data-board-mode='focus'] .notebook-lamp-tube {
+  filter: blur(3px);
 }
 
 /* Screen-fixed edge falloff (lit solely by overhead lamp); never repaints during pan/zoom */

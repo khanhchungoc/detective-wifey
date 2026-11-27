@@ -20,10 +20,10 @@ const updates: unknown[] = [];
 const cleanups: (() => void)[] = [];
 const frames = new Map<number, FrameRequestCallback>();
 let nextFrameId = 0;
-function flushFrame() {
+function flushFrame(time = 0) {
   const pending = [...frames.values()];
   frames.clear();
-  pending.forEach(callback => callback(0));
+  pending.forEach(callback => callback(time));
 }
 beforeEach(() => {
   frames.clear();
@@ -218,6 +218,62 @@ describe('corkboard mobile gesture ownership', () => {
     handlers.onPointerUp(pointer(1, 250, 330));
     expect(surface.style.willChange).toBe('');
     expect(surface.style.transform).toBe(plane.style.transform);
+  });
+
+  it('reports single background taps in board coordinates so the notebook can tell board from wall', () => {
+    const taps: { x: number; y: number }[] = [];
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 2 },
+      onTapBackground: point => taps.push(point),
+    });
+    handlers.onPointerDown(pointer(1, 300, 400));
+    handlers.onPointerUp(pointer(1, 300, 400));
+    // Screen center is (200, 300); 100px right and 100px down at zoom 2 = +50 board units.
+    expect(taps).toEqual([{ x: 950, y: 950 }]);
+  });
+
+  it('ignores pan, pinch and wheel input while locked (wall view)', () => {
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 0.2 },
+      planeRef: { current: plane },
+      locked: true,
+    });
+    handlers.onPointerDownCapture(pointer(1, 100, 100));
+    handlers.onPointerDownCapture(pointer(2, 200, 200));
+    handlers.onPointerDown(pointer(1, 100, 100));
+    handlers.onPointerMove(pointer(1, 200, 250));
+    handlers.onPointerUp(pointer(1, 200, 250));
+    flushFrame();
+    expect(plane.style.willChange).toBe('');
+    expect(plane.style.transform).toBe('');
+    expect(updates).toHaveLength(0);
+  });
+
+  it('flies the camera on the GPU plane and commits the target viewport once on arrival', () => {
+    vi.spyOn(performance, 'now').mockReturnValue(0);
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const surface = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const { animateTo, containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 0.2 },
+      planeRef: { current: plane },
+      surfaceRef: { current: surface },
+    });
+    animateTo({ x: 400, y: 500, zoom: 1 }, 400);
+    flushFrame(200);
+    expect(plane.style.willChange).toBe('transform');
+    expect(surface.style.transform).toBe(plane.style.transform);
+    expect(updates).toHaveLength(0);
+
+    // Input is ignored mid-flight so a stray drag cannot fight the animation.
+    handlers.onPointerDown(pointer(1, 100, 100));
+    handlers.onPointerMove(pointer(1, 200, 200));
+
+    flushFrame(400);
+    expect(updates).toEqual([{ x: 400, y: 500, zoom: 1 }]);
+    expect(plane.style.willChange).toBe('');
+    expect(plane.style.transform).toBe('translate(-400px, -500px)');
+    vi.restoreAllMocks();
   });
 
   it('attaches a non-passive native wheel listener on boardRef so trackpad pinch zooms the board without zooming the page', () => {

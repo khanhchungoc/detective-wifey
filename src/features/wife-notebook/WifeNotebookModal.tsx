@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useReducedMotion } from 'motion/react';
 import {
   IoChevronBack,
   IoDocumentsOutline,
@@ -64,10 +65,35 @@ export interface WifeNotebookModalProps {
   onCaught?: () => void;
 }
 
+/** 'wall' = whole board hung on the wall (no pan/zoom); 'focus' = zoomed into the board. */
+export type CorkboardMode = 'wall' | 'focus';
+
 interface SavedCorkboardState {
   placedNodes: PlacedNode[];
   edges: CaseGraphEdge[];
   viewport?: CorkboardViewport;
+  mode?: CorkboardMode;
+}
+
+/** Screen gap (px) kept around the board in wall view so the wall and lamp stay visible. */
+const WALL_VIEW_MARGIN_PX = 28;
+const FOCUS_ZOOM = 1.0;
+
+function isInsideBoard(point: { x: number; y: number }): boolean {
+  return point.x >= 0 && point.y >= 0 && point.x <= CANVAS_SIZE && point.y <= CANVAS_SIZE;
+}
+
+/** Floating controls over the board (not the buttons printed on cards) stay usable in wall view. */
+function isBoardChromeControl(target: EventTarget): boolean {
+  const el = target as HTMLElement;
+  return Boolean(el.closest('button, .corkboard-control-dock, .corkboard-drawer')) && !el.closest('[data-node-id]');
+}
+
+function computeWallViewport(board: HTMLElement | null): CorkboardViewport {
+  const width = board?.clientWidth || 390;
+  const height = board?.clientHeight || 844;
+  const fit = Math.min(width, height) - WALL_VIEW_MARGIN_PX * 2;
+  return { x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2, zoom: Math.max(0.05, fit / CANVAS_SIZE) };
 }
 
 function getStorageKey(caseId?: string): string {
@@ -95,17 +121,20 @@ function persistCorkboard(
   placedNodes: PlacedNode[],
   edges: CaseGraphEdge[],
   viewport?: CorkboardViewport,
+  mode?: CorkboardMode,
 ): void {
   if (typeof window === 'undefined' || !window.localStorage) return;
   try {
     let resolvedViewport = viewport;
-    if (!resolvedViewport) {
+    let resolvedMode = mode;
+    if (!resolvedViewport || !resolvedMode) {
       const existing = loadSavedCorkboard(caseId);
-      resolvedViewport = existing?.viewport;
+      resolvedViewport ??= existing?.viewport;
+      resolvedMode ??= existing?.mode;
     }
     localStorage.setItem(
       getStorageKey(caseId),
-      JSON.stringify({ placedNodes, edges, viewport: resolvedViewport }),
+      JSON.stringify({ placedNodes, edges, viewport: resolvedViewport, mode: resolvedMode }),
     );
   } catch {
     // Ignore storage quota errors
@@ -421,6 +450,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   }), [storedEdges, placedNodes, knowledgeGraph, allTaggedNodes]);
 
   const hasDirtyBoardRef = useRef(false);
+  const [boardMode, setBoardMode] = useState<CorkboardMode>(() => loadSavedCorkboard(caseId)?.mode ?? 'wall');
+  const boardModeRef = useRef(boardMode);
+  boardModeRef.current = boardMode;
   const saveCorkboard = useCallback((
     targetCaseId: string | undefined,
     nextNodes: PlacedNode[],
@@ -428,7 +460,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     nextViewport?: CorkboardViewport,
   ) => {
     hasDirtyBoardRef.current = false;
-    persistCorkboard(targetCaseId, nextNodes, nextEdges, nextViewport);
+    persistCorkboard(targetCaseId, nextNodes, nextEdges, nextViewport, boardModeRef.current);
   }, []);
 
   const prevTaggedIdsRef = useRef<Set<string>>(new Set(allTaggedNodes.map(n => n.nodeId)));
@@ -646,18 +678,88 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     setViewport,
     setCenter,
     containerProps,
+    animateTo,
   } = useCorkboardGestures({
     initialViewport,
-    onTapBackground: handleDismissSelection,
+    onTapBackground: point => tapBackgroundRef.current(point),
+    locked: boardMode === 'wall',
     planeRef,
     surfaceRef,
     boardRef,
   });
 
+  const prefersReducedMotion = useReducedMotion();
+  const flightMs = prefersReducedMotion ? 0 : 420;
+  const enterWallView = useCallback(() => {
+    handleDismissSelection();
+    setBoardMode('wall');
+    boardModeRef.current = 'wall';
+    animateTo(computeWallViewport(boardRef.current), flightMs);
+  }, [animateTo, flightMs, handleDismissSelection]);
+  const enterFocusView = useCallback((point: { x: number; y: number }) => {
+    setBoardMode('focus');
+    boardModeRef.current = 'focus';
+    animateTo({ x: point.x, y: point.y, zoom: FOCUS_ZOOM }, flightMs);
+  }, [animateTo, flightMs]);
+
+  // Focus view: tapping the wall around the board flies back out to the wall view.
+  const tapBackgroundRef = useRef<(point: { x: number; y: number }) => void>(() => {});
+  tapBackgroundRef.current = point => {
+    if (!isInsideBoard(point)) {
+      enterWallView();
+      return;
+    }
+    handleDismissSelection();
+  };
+
+  // Wall view: cards are not interactive; a tap on a card zooms to it, a tap on the board zooms to that spot.
+  const handleWallClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (isBoardChromeControl(e.target)) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const cardEl = (e.target as HTMLElement).closest<HTMLElement>('[data-node-id]');
+    const node = cardEl ? placedNodes.find(n => n.nodeId === cardEl.dataset.nodeId) : undefined;
+    if (node && cardEl) {
+      enterFocusView({ x: node.x + cardEl.offsetWidth / 2, y: node.y + cardEl.offsetHeight / 2 });
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cam = viewportRef.current;
+    const point = {
+      x: cam.x + (e.clientX - rect.left - rect.width / 2) / cam.zoom,
+      y: cam.y + (e.clientY - rect.top - rect.height / 2) / cam.zoom,
+    };
+    if (isInsideBoard(point)) enterFocusView(point);
+  }, [enterFocusView, placedNodes, viewportRef]);
+
+  const boardContainerProps = boardMode === 'wall'
+    ? {
+        // Swallow card drags and pan starts; only taps (clicks) act in wall view.
+        onPointerDownCapture: (e: React.PointerEvent<HTMLDivElement>) => {
+          if (!isBoardChromeControl(e.target)) e.stopPropagation();
+        },
+        onClickCapture: handleWallClickCapture,
+        style: containerProps.style,
+      }
+    : containerProps;
+
+  // Keep the whole board framed in wall view when the screen size changes.
+  useEffect(() => {
+    if (boardMode !== 'wall') return;
+    const refit = () => setViewport(computeWallViewport(boardRef.current));
+    window.addEventListener('resize', refit);
+    return () => window.removeEventListener('resize', refit);
+  }, [boardMode, setViewport]);
+
   // On first open, once cards mount in DOM, accurately center the bounding box if not restoring a saved viewport
-  const hasInitializedViewport = useRef(hasRestoredCards);
+  const hasInitializedViewport = useRef(hasRestoredCards && boardMode === 'focus');
   useLayoutEffect(() => {
     if (hasInitializedViewport.current) return;
+    if (boardModeRef.current === 'wall') {
+      hasInitializedViewport.current = true;
+      setViewport(computeWallViewport(boardRef.current));
+      return;
+    }
     if (placedNodes.length === 0) return;
     hasInitializedViewport.current = true;
     const cards = new Map(
@@ -1000,7 +1102,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       Array.from(boardRef.current?.querySelectorAll<HTMLElement>('[data-node-id]') ?? [])
         .map(card => [card.dataset.nodeId, card]),
     );
-    setCenter(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+    if (boardModeRef.current === 'focus') setCenter(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
     setPlacedNodes(prev => {
       const updated = autoArrangeNodes(prev, edges, nodeId => {
         const card = cards.get(nodeId);
@@ -1013,13 +1115,13 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
 
   const handleCenterCluster = useCallback(() => {
     if (placedNodes.length === 0) {
-      setCenter(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+      enterFocusView({ x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 });
       return;
     }
     const avgX = placedNodes.reduce((acc, n) => acc + n.x + 105, 0) / placedNodes.length;
     const avgY = placedNodes.reduce((acc, n) => acc + n.y + 50, 0) / placedNodes.length;
-    setCenter(avgX, avgY);
-  }, [placedNodes, setCenter]);
+    enterFocusView({ x: avgX, y: avgY });
+  }, [placedNodes, enterFocusView]);
 
   const handleSelectCard = useCallback((id: string | null) => {
     setSelectedCardId(id);
@@ -1255,13 +1357,14 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   return (
     <div className="wife-notebook relative w-full h-full flex flex-col overflow-hidden bg-[#090C10] text-[#F1F5F9]">
       {/* Full-bleed Corkboard Viewport */}
-      <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0" {...containerProps}>
+      <div ref={boardRef} className="relative flex-1 w-full h-full overflow-hidden min-h-0" {...boardContainerProps}>
           <CorkboardCanvas
             getSourceApp={getSourceApp}
             viewport={viewport}
             viewportRef={viewportRef}
             planeRef={planeRef}
             surfaceRef={surfaceRef}
+            mode={boardMode}
             isOpen={isOpen}
             isPinching={isPinching}
             placedNodes={placedNodes}
