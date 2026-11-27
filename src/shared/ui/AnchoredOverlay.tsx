@@ -32,6 +32,14 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         const scale = Number((1 - remainingProgress * 0.06).toFixed(4));
         screen.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
       }
+      const tab = document.querySelector<HTMLElement>(anchorSelector);
+      if (tab) {
+        const dockY = parseFloat(tab.dataset.dockY || '0') || 0;
+        const tabWidth = tab.offsetWidth || 46;
+        tab.style.transition = 'none';
+        tab.style.opacity = '1';
+        tab.style.transform = `translate3d(${Number((displacement - tabWidth).toFixed(2))}px, ${dockY}px, 0)`;
+      }
     },
     onSwipeEnd: (committed) => {
       if (!committed) {
@@ -50,6 +58,14 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         } else {
           screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
         }
+      }
+      const tab = document.querySelector<HTMLElement>(anchorSelector);
+      if (tab && !committed) {
+        const dockY = parseFloat(tab.dataset.dockY || '0') || 0;
+        const tabWidth = tab.offsetWidth || 46;
+        tab.style.transition = `transform ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}, opacity ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
+        tab.style.transform = `translate3d(${-tabWidth}px, ${dockY}px, 0)`;
+        tab.style.opacity = '0';
       }
     },
   });
