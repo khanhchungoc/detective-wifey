@@ -31,7 +31,6 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         const remainingProgress = Math.max(0, Math.min(1, 1 - progress));
         const scale = Number((1 - remainingProgress * 0.06).toFixed(4));
         screen.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
-        screen.style.borderRadius = `${Number((remainingProgress * 28).toFixed(1))}px`;
       }
     },
     onSwipeEnd: (committed) => {
@@ -45,13 +44,11 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       }
       const screen = document.querySelector<HTMLElement>('[data-phone-screen]');
       if (screen) {
-        screen.style.transition = `transform ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}, border-radius ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
+        screen.style.transition = `transform ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
         if (committed) {
           screen.style.transform = 'translate3d(0, 0, 0) scale(1)';
-          screen.style.borderRadius = '0px';
         } else {
           screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
-          screen.style.borderRadius = '28px';
         }
       }
     },

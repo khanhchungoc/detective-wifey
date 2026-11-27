@@ -1,4 +1,4 @@
-﻿import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('react', () => ({
   useCallback: (callback: unknown) => callback,
@@ -165,6 +165,92 @@ describe('corkboard mobile gesture ownership', () => {
     handlers.onPointerDown(pointer(2, 200, 300));
     handlers.onPointerUp(pointer(2, 200, 300));
     expect(updates).toHaveLength(0);
+  });
+
+  it('drives pan directly on planeRef with zero React state commits until pointer up, and captures pointer only once', () => {
+    updates.length = 0;
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const planeRef = { current: plane };
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 1000, y: 1000, zoom: 1 },
+      planeRef,
+    });
+    const start = pointer(1, 200, 300);
+    start.target = { closest: (selector: string) => selector === '.corkboard-string' ? {} : null } as unknown as EventTarget;
+    handlers.onPointerDown(start);
+
+    const move1 = pointer(1, 220, 310);
+    const move2 = pointer(1, 250, 330);
+    move2.currentTarget = move1.currentTarget;
+    handlers.onPointerMove(move1);
+    handlers.onPointerMove(move2);
+    expect(move1.currentTarget.setPointerCapture).toHaveBeenCalledTimes(1);
+    expect(plane.style.willChange).toBe('transform');
+
+    flushFrame();
+    expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
+    expect(updates).toHaveLength(0);
+
+    handlers.onPointerUp(pointer(1, 250, 330));
+    expect(plane.style.willChange).toBe('');
+    expect(updates).toEqual([{ x: 950, y: 970, zoom: 1 }]);
+  });
+
+  it('attaches a non-passive native wheel listener on boardRef so trackpad pinch zooms the board without zooming the page', () => {
+    updates.length = 0;
+    let wheelHandler: ((e: WheelEvent) => void) | undefined;
+    const addEventListener = vi.fn((type: string, cb: EventListenerOrEventListenerObject, opts?: AddEventListenerOptions) => {
+      if (type === 'wheel') {
+        expect(opts).toEqual({ passive: false });
+        wheelHandler = cb as (e: WheelEvent) => void;
+      }
+    });
+    const removeEventListener = vi.fn();
+    const board = {
+      addEventListener,
+      removeEventListener,
+      getBoundingClientRect: () => ({ left: 0, top: 0, width: 400, height: 600 }),
+    } as unknown as HTMLDivElement;
+
+    useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 1 },
+      boardRef: { current: board },
+    });
+
+    expect(addEventListener).toHaveBeenCalledWith('wheel', expect.any(Function), { passive: false });
+    const preventDefault = vi.fn();
+    wheelHandler?.({
+      preventDefault,
+      clientX: 200,
+      clientY: 300,
+      deltaX: 0,
+      deltaY: -10,
+      deltaMode: 0,
+      ctrlKey: true,
+      metaKey: false,
+    } as unknown as WheelEvent);
+    expect(preventDefault).toHaveBeenCalledTimes(1);
+    flushFrame();
+    const zoomed = updates[0] as { zoom: number };
+    expect(zoomed.zoom).toBeGreaterThan(1);
+
+    // Two-finger trackpad scroll (no ctrlKey) pans in 2D
+    updates.length = 0;
+    wheelHandler?.({
+      preventDefault,
+      clientX: 200,
+      clientY: 300,
+      deltaX: 40,
+      deltaY: -20,
+      deltaMode: 0,
+      ctrlKey: false,
+      metaKey: false,
+    } as unknown as WheelEvent);
+    flushFrame();
+    const panned = updates[0] as { x: number; y: number; zoom: number };
+    expect(panned.zoom).toBe(zoomed.zoom);
+    expect(panned.x).toBeGreaterThan(900);
+    expect(panned.y).toBeLessThan(900);
   });
 });
 

@@ -9,25 +9,32 @@ import photosEveryday03 from './assets/photos-everyday-03.jpg';
 import photosEveryday04 from './assets/photos-everyday-04.jpg';
 import photosForensic from './assets/photos-forensic.jpg';
 
-export type PhotoArtwork = Readonly<{ src: string; position: string }>;
+export type PhotoArtwork = Readonly<{
+  src: string;
+  position: string;
+  tileWidth?: number;
+  tileHeight?: number;
+}>;
 
 type SpriteQuadrant = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 
-function spriteArtwork(src: string): Record<SpriteQuadrant, PhotoArtwork> {
+function spriteArtwork(src: string, aspect: '3:4' | '4:3' = '3:4'): Record<SpriteQuadrant, PhotoArtwork> {
+  const tileWidth = aspect === '4:3' ? 400 : 300;
+  const tileHeight = aspect === '4:3' ? 300 : 400;
   return {
-    topLeft: { src, position: '0% 0%' },
-    topRight: { src, position: '100% 0%' },
-    bottomLeft: { src, position: '0% 100%' },
-    bottomRight: { src, position: '100% 100%' },
+    topLeft: { src, position: '0% 0%', tileWidth, tileHeight },
+    topRight: { src, position: '100% 0%', tileWidth, tileHeight },
+    bottomLeft: { src, position: '0% 100%', tileWidth, tileHeight },
+    bottomRight: { src, position: '100% 100%', tileWidth, tileHeight },
   };
 }
 
-const everyday01 = spriteArtwork(photosEveryday01);
-const everyday02 = spriteArtwork(photosEveryday02);
-const everyday03 = spriteArtwork(photosEveryday03);
-const everyday04 = spriteArtwork(photosEveryday04);
-const anniversary = spriteArtwork(photosAnniversary);
-const forensic = spriteArtwork(photosForensic);
+const everyday01 = spriteArtwork(photosEveryday01, '4:3');
+const everyday02 = spriteArtwork(photosEveryday02, '3:4');
+const everyday03 = spriteArtwork(photosEveryday03, '3:4');
+const everyday04 = spriteArtwork(photosEveryday04, '4:3');
+const anniversary = spriteArtwork(photosAnniversary, '3:4');
+const forensic = spriteArtwork(photosForensic, '3:4');
 
 const photoArtworkById: Readonly<Record<string, PhotoArtwork>> = {
   photo_0: everyday01.topLeft,
@@ -308,13 +315,21 @@ export function buildPhotoEvidenceItem(
 ): UniversalEvidenceItem {
   const imageSrc = photo.highResUrl || photo.thumbnailUrl || photo.artwork?.src;
   const imagePosition = (photo.highResUrl || photo.thumbnailUrl) ? undefined : photo.artwork?.position;
+  const imageAspect: '3:4' | '4:3' | undefined = imagePosition
+    ? (photo.artwork?.tileWidth === 400 ? '4:3' : '3:4')
+    : undefined;
   const location = photo.locationTag || photo.exif.locationName;
   const rawTimestamp = photo.timestamp || photo.date;
+  const dateMatch = rawTimestamp.match(/(\d{1,2}\/\d{1,2}(?:\/\d{4})?)/);
+  const timeMatch = rawTimestamp.match(/(\d{1,2}:\d{2})/);
+  const eventDate = dateMatch ? dateMatch[1] : undefined;
+  const eventTime = timeMatch ? timeMatch[1] : undefined;
 
-  let subtitle = location ? `${photo.date} • ${location}` : photo.date;
+  const displayDateTime = rawTimestamp || photo.date;
+  let subtitle = location ? (displayDateTime ? `${displayDateTime} • ${location}` : location) : displayDateTime;
   let snippet = '';
   if (mode === 'exif') {
-    const dateLabel = formattedDate || photo.date;
+    const dateLabel = formattedDate || displayDateTime;
     subtitle = `${dateLabel} • ${photo.exif.locationName}`;
     snippet = `EXIF [${photo.exif.device}] ${dateLabel} tại ${photo.exif.locationName}. Thông số: ISO ${photo.exif.iso}, tiêu cự ${photo.exif.focalLength}mm, ${photo.exif.aperture}, ${photo.exif.shutterSpeed}.`;
   }
@@ -325,6 +340,8 @@ export function buildPhotoEvidenceItem(
     snippet,
     suspectToTag: photo.suspectName || husbandName,
     kind: 'photo',
+    eventDate,
+    eventTime,
     rawTimestamp,
     source: {
       caseId,
@@ -334,9 +351,12 @@ export function buildPhotoEvidenceItem(
       subtitle,
       snippet,
       kind: 'photo',
+      eventDate,
+      eventTime,
       rawTimestamp,
       imageSrc,
       imagePosition,
+      imageAspect,
     },
   };
 }

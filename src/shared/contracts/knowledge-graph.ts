@@ -42,6 +42,7 @@ export interface CaseGraphNode {
   sender?: string;
   imageSrc?: string;
   imagePosition?: string;
+  imageAspect?: '3:4' | '4:3';
 }
 
 export interface CaseGraphEdge {

@@ -42,6 +42,49 @@ function calculateDateRange(photos: PhotoItem[]): string {
   return `${first} - ${last}`;
 }
 
+interface PhotoDateGroup {
+  key: string;
+  label: string;
+  photos: PhotoItem[];
+}
+
+function extractPhotoDateKey(photo: PhotoItem): string {
+  const raw = (photo.date || photo.timestamp || '').trim();
+  if (!raw) return '';
+  return raw.replace(/\s+\d{1,2}:\d{2}(?::\d{2})?.*$/, '').trim();
+}
+
+function formatDateSeparatorLabel(dateKey: string): string {
+  if (!dateKey) return '';
+  const match = dateKey.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);
+  if (!match) return dateKey;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = match[3];
+  return year ? `${day} thg ${month}, ${year}` : `${day} thg ${month}`;
+}
+
+function groupPhotosByDate(photos: PhotoItem[]): PhotoDateGroup[] {
+  const groups: PhotoDateGroup[] = [];
+  const byKey = new Map<string, PhotoDateGroup>();
+  for (const photo of photos) {
+    const key = extractPhotoDateKey(photo);
+    const existing = byKey.get(key);
+    if (existing) {
+      existing.photos.push(photo);
+    } else {
+      const group: PhotoDateGroup = {
+        key: key || 'undated',
+        label: formatDateSeparatorLabel(key),
+        photos: [photo],
+      };
+      byKey.set(key, group);
+      groups.push(group);
+    }
+  }
+  return groups;
+}
+
 export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
   photos,
   hiddenPhotos,
@@ -59,6 +102,10 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
   const displayedPhotos = useMemo(() => {
     return isViewingHidden ? hiddenPhotos : photos;
   }, [photos, hiddenPhotos, isViewingHidden]);
+
+  const photoGroups = useMemo(() => {
+    return groupPhotosByDate(displayedPhotos);
+  }, [displayedPhotos]);
 
   const dateRangeSubtitle = useMemo(() => {
     return calculateDateRange(photos);
@@ -126,31 +173,48 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
               </div>
             )}
 
-            {/* Photo Grid */}
+            {/* Photo Grid Grouped by Date */}
             {displayedPhotos.length > 0 ? (
-              <div className="grid grid-cols-3 gap-0.5 sm:gap-1 p-0.5">
-                {displayedPhotos.map((photo) => (
-                  <StoryEvidenceTarget
-                    key={photo.id}
-                    item={buildPhotoEvidenceItem(photo, caseId, husbandName, 'grid')}
-                    onTriggerEvidence={onTriggerEvidence}
-                  >
-                    <div
-                      data-photo-tile={photo.id}
-                      onClick={(e) => onSelectPhoto(photo.id, e.currentTarget)}
-                      className="relative aspect-square overflow-hidden bg-[#1C1C1E] cursor-pointer active:scale-[0.96] active:opacity-80 transition-transform duration-100 select-none"
-                    >
-                      <PhotoPreview photo={photo} className="w-full h-full object-cover" />
+              <div className="space-y-3 pt-1">
+                {photoGroups.map((group, groupIndex) => (
+                  <section key={group.key} data-photo-date-group={group.key}>
+                    {group.label && (
+                      <div
+                        className={`px-3.5 pb-1.5 flex items-center justify-between ${
+                          groupIndex > 0 ? 'pt-2.5 border-t border-white/10' : 'pt-1'
+                        }`}
+                      >
+                        <h2 className="text-ios-footnote font-semibold text-white/90 tracking-tight">
+                          {group.label}
+                        </h2>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-3 gap-0.5 sm:gap-1 px-0.5">
+                      {group.photos.map((photo) => (
+                        <StoryEvidenceTarget
+                          key={photo.id}
+                          item={buildPhotoEvidenceItem(photo, caseId, husbandName, 'grid')}
+                          onTriggerEvidence={onTriggerEvidence}
+                        >
+                          <div
+                            data-photo-tile={photo.id}
+                            onClick={(e) => onSelectPhoto(photo.id, e.currentTarget)}
+                            className="relative aspect-square overflow-hidden bg-[#1C1C1E] cursor-pointer active:scale-[0.96] active:opacity-80 transition-transform duration-100 select-none"
+                          >
+                            <PhotoPreview photo={photo} className="w-full h-full object-cover" />
 
-                      {/* Video Duration Badge */}
-                      {photo.isVideo && photo.duration && (
-                        <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-xs text-ios-caption-2 font-medium text-white flex items-center gap-0.5 shadow-sm">
-                          <IoPlay className="w-2.5 h-2.5" />
-                          <span>{photo.duration}</span>
-                        </span>
-                      )}
+                            {/* Video Duration Badge */}
+                            {photo.isVideo && photo.duration && (
+                              <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-xs text-ios-caption-2 font-medium text-white flex items-center gap-0.5 shadow-sm">
+                                <IoPlay className="w-2.5 h-2.5" />
+                                <span>{photo.duration}</span>
+                              </span>
+                            )}
+                          </div>
+                        </StoryEvidenceTarget>
+                      ))}
                     </div>
-                  </StoryEvidenceTarget>
+                  </section>
                 ))}
               </div>
             ) : (

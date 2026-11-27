@@ -24,15 +24,13 @@
 .corkboard-node-card {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   transform-origin: center center;
+  contain: layout style;
 }
 
 .corkboard-paper-card {
   background-color: var(--notebook-paper);
   background-image:
-    /* Subtle paper fiber grain (inline SVG fractal noise) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
     /* Horizontal & diagonal paper fold creases */
     linear-gradient(178deg, transparent 47%, rgba(120, 96, 68, 0.07) 49%, rgba(255, 255, 255, 0.42) 50.5%, transparent 54%),
     linear-gradient(104deg, transparent 36%, rgba(120, 96, 68, 0.05) 37.5%, rgba(255, 255, 255, 0.3) 38.5%, transparent 41%),
@@ -41,7 +39,7 @@
     radial-gradient(ellipse 56% 42% at 88% 16%, rgba(168, 136, 98, 0.09) 0%, transparent 68%),
     radial-gradient(ellipse 46% 36% at 72% 72%, rgba(160, 128, 92, 0.06) 0%, transparent 72%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, transparent 45%);
-  background-size: 180px 180px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-size: 100% 100%;
   box-shadow:
     inset 0 0 14px rgba(138, 112, 82, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.65);
@@ -51,7 +49,6 @@
 .corkboard-sticky-note {
   background-color: #f6e271;
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
     linear-gradient(176deg, rgba(190, 150, 20, 0.08) 0%, rgba(255, 252, 220, 0.14) 38%, rgba(210, 170, 30, 0.1) 100%);
   border: none;
   box-shadow:

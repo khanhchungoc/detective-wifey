@@ -35,6 +35,7 @@ import { useCorkboardGestures } from './useCorkboardGestures';
 import { CorkboardCanvas } from './components/CorkboardCanvas';
 import { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 import { ConfrontationModal } from './components/ConfrontationModal';
+import chalkboardMapUrl from './assets/chalkboard-map.png';
 import './notebook.css';
 import type { PlacedNode, CorkboardViewport, PairingState, TaggedEvidenceItem, UndoAction } from './types';
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
@@ -308,7 +309,10 @@ export function deriveNodesFromTaggedEvidence(
       }
     } else {
       const hasMessages = incomingMessages.length > 0;
-      const subtitle = hasMessages ? undefined : (tag.isExplicitConversationPin ? undefined : (tag.evidence?.snippet ?? canonicalMatch?.subtitle));
+      const isPhotoEvidence = tag.evidence?.kind === 'photo' || Boolean(tag.evidence?.imageSrc);
+      const subtitle = isPhotoEvidence
+        ? (tag.evidence?.subtitle || (tag.evidence?.snippet?.trim() ? tag.evidence.snippet : canonicalMatch?.subtitle))
+        : (hasMessages ? undefined : (tag.isExplicitConversationPin ? undefined : (tag.evidence?.snippet ?? canonicalMatch?.subtitle)));
 
       if (canonicalMatch) {
         nodes.push({
@@ -331,6 +335,7 @@ export function deriveNodesFromTaggedEvidence(
           sender: tag.evidence?.sender,
           imageSrc: tag.evidence?.imageSrc || canonicalMatch.imageSrc,
           imagePosition: tag.evidence?.imagePosition || canonicalMatch.imagePosition,
+          imageAspect: tag.evidence?.imageAspect || canonicalMatch.imageAspect,
         });
       } else {
         nodes.push({
@@ -354,6 +359,7 @@ export function deriveNodesFromTaggedEvidence(
           sender: tag.evidence?.sender,
           imageSrc: tag.evidence?.imageSrc,
           imagePosition: tag.evidence?.imagePosition,
+          imageAspect: tag.evidence?.imageAspect,
           isInitialDisguise: false,
         });
       }
@@ -604,6 +610,33 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     };
   }, [hasRestoredCards, savedState, placedNodes]);
 
+  const planeRef = useRef<HTMLDivElement>(null);
+
+  // Warm chalkboard texture and handwriting font on idle so the first slide-out never stalls on decode.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const warmAssets = () => {
+      if (typeof Image !== 'undefined') {
+        const img = new Image();
+        img.src = chalkboardMapUrl;
+        void img.decode?.().catch(() => {});
+      }
+      void document.fonts?.load('400 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
+      void document.fonts?.load('500 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
+      void document.fonts?.load('600 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
+    };
+    const idleApi = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (idleApi.requestIdleCallback) {
+      const id = idleApi.requestIdleCallback(warmAssets, { timeout: 1200 });
+      return () => idleApi.cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(warmAssets, 300);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   // Corkboard gestures and zoom engine
   const {
     viewport,
@@ -615,6 +648,8 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   } = useCorkboardGestures({
     initialViewport,
     onTapBackground: handleDismissSelection,
+    planeRef,
+    boardRef,
   });
 
   // On first open, once cards mount in DOM, accurately center the bounding box if not restoring a saved viewport
@@ -1215,6 +1250,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           <CorkboardCanvas
             getSourceApp={getSourceApp}
             viewport={viewport}
+            viewportRef={viewportRef}
+            planeRef={planeRef}
+            isOpen={isOpen}
             isPinching={isPinching}
             placedNodes={placedNodes}
             edges={edges}
@@ -1243,7 +1281,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             aria-label={`Định vị bảng: ${placedNodes.length} manh mối, ${keyConnectionProgress.verifiedCount}/${keyConnectionProgress.requiredCount} mắt xích quan trọng`}
             title="Định vị các manh mối trên bảng"
             style={{ top: 'calc(max(6px, var(--phone-system-top, 59px)) + 6px)' }}
-            className="corkboard-stats-overlay absolute right-3 z-20 flex h-9 items-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/90 px-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md hover:bg-slate-800/95 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+            className="corkboard-stats-overlay absolute right-3 z-20 flex h-9 items-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/95 px-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800/95 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
           >
             <span className="flex items-center gap-1.5 font-sans text-ios-caption-2 font-semibold tabular-nums">
               <IoDocumentsOutline className="h-3.5 w-3.5 text-[#F1F5F9]" aria-hidden="true" />
@@ -1264,12 +1302,12 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
               onClick={onClose}
               aria-label="Đóng sổ tay của vợ"
               title="Quay lại màn hình chính"
-              className="pointer-events-auto relative flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md hover:bg-slate-800 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+              className="pointer-events-auto relative flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
             >
               <IoChevronBack className="h-4 w-4" aria-hidden="true" />
             </button>
 
-            <div className="pointer-events-auto flex items-center gap-1 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-0.5 shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md">
+            <div className="pointer-events-auto flex items-center gap-1 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-0.5 shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)]">
               <button
                 type="button"
                 onClick={handleAutoArrange}
@@ -1298,7 +1336,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             <div
               role="status"
               aria-live="polite"
-              className="fixed sm:absolute bottom-24 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[360px] z-50 flex items-center justify-between gap-3 rounded-[6px] bg-[#0D1219]/96 text-[#F1F5F9] px-4 py-2.5 shadow-2xl border border-slate-700/85 backdrop-blur-md animate-fadeIn"
+              className="fixed sm:absolute bottom-24 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-[360px] z-50 flex items-center justify-between gap-3 rounded-[6px] bg-[#0D1219]/96 text-[#F1F5F9] px-4 py-2.5 shadow-2xl border border-slate-700/85 animate-fadeIn"
               onMouseEnter={pauseUndoTimer}
               onMouseLeave={resumeUndoTimer}
               onFocus={pauseUndoTimer}
