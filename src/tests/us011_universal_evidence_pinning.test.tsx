@@ -24,8 +24,8 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     suspectToTag: 'Anh Tuấn Thợ Điện',
     source: {
       caseId: 'case_01',
-      recordId: 'thread_tuan_m4',
-      conversationId: 'thread_tuan',
+      recordId: 'thread_tuan_dien_m4',
+      conversationId: 'thread_tuan_dien',
       title: 'Anh Tuấn Thợ Điện',
       snippet: 'Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!',
       eventDate: '15/10',
@@ -188,8 +188,8 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     // Tag first message
     const tag1 = tagSuspect(suspects, 'Anh Tuấn Thợ Điện', 'internet-messaging', 1000, {
       caseId: 'case_01',
-      recordId: 'thread_tuan_m1',
-      conversationId: 'thread_tuan',
+      recordId: 'thread_tuan_dien_m1',
+      conversationId: 'thread_tuan_dien',
       title: 'Anh Tuấn Thợ Điện',
       snippet: 'Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!',
       eventDate: '15/10',
@@ -202,8 +202,8 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     // Tag second message in the same conversation
     const tag2 = tagSuspect(tag1.suspects, 'Anh Tuấn Thợ Điện', 'internet-messaging', 2000, {
       caseId: 'case_01',
-      recordId: 'thread_tuan_m2',
-      conversationId: 'thread_tuan',
+      recordId: 'thread_tuan_dien_m2',
+      conversationId: 'thread_tuan_dien',
       title: 'Anh Tuấn Thợ Điện',
       snippet: 'Xong việc nhớ gọi lại cho em số này...',
       eventDate: '15/10',
@@ -222,6 +222,31 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
 
     expect(bullet1).toBe('• 15/10 · 20:48: "Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!"');
     expect(bullet2).toBe('• 15/10 · 21:05: "Xong việc nhớ gọi lại cho em số này..."');
+  });
+
+  it('Group-chat messages pinned by message id fold into one thread card with their sender kept', () => {
+    const pin = (id: string, snippet: string, sender: string, t: number, prev: TaggedSuspect[]) =>
+      tagSuspect(prev, 'Technosoft - Toàn công ty', 'internet-messaging', t, {
+        caseId: 'case_01', recordId: id, conversationId: 'thread_company', kind: 'message',
+        title: 'Technosoft - Toàn công ty', snippet, sender,
+      });
+    const first = pin('msg_company_pin', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 1, []);
+    const second = pin('msg_company_khoa_post', 'Team MKT nhờ cả nhà share...', 'Khoa BE', 2, first.suspects);
+    expect(second.suspects).toHaveLength(1);
+    expect(second.suspects[0].conversationId).toBe('thread_company');
+    expect(second.suspects[0].messages?.map(m => [m.recordId, m.sender])).toEqual([
+      ['msg_company_pin', 'HR'], ['msg_company_khoa_post', 'Khoa BE'],
+    ]);
+    // Re-pinning the same message adds nothing.
+    expect(pin('msg_company_pin', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 3, second.suspects).added).toBe(false);
+  });
+
+  it('Khoa BE gets a neutral initial avatar, never a portrait of the real person', () => {
+    const alias = renderToStaticMarkup(<ContactAvatar name="Khoa BE" size={44} />);
+    expect(alias).not.toContain('background-image');
+    expect(alias).toContain('>K<');
+    expect(renderToStaticMarkup(<ContactAvatar name="Nguyễn Thị Thu Hương" size={44} />)).toContain('background-image');
+    expect(renderToStaticMarkup(<ContactAvatar name="Anh Tuấn Thợ Điện" size={44} />)).toContain('background-image');
   });
 
   it('AC 7: Tagging evidence triggers a 2-second confirmation toast in Dynamic Island area', () => {

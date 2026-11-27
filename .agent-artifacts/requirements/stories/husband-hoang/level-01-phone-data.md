@@ -1,301 +1,292 @@
 # Màn 1 - Dữ liệu sinh hoạt và lời thoại
 
-> Phần dữ liệu của [hồ sơ Màn 1](level-01.md) và [Storyboard](level-01-storyboard.md), dùng cùng hồ sơ khi hiện thực hóa. Các ngày bên dưới thuộc đồng hồ hư cấu của màn chơi; D = 15/10/2026, thời điểm kiểm tra máy 23:45, không gắn với ngày chạy ứng dụng.
+> Phần dữ liệu của [hồ sơ Màn 1](level-01.md) và [Storyboard](level-01-storyboard.md), dùng cùng hồ sơ khi hiện thực hóa. D = thứ Năm 15/10/2026, thời điểm kiểm tra máy 23:45. Ngày giờ thuộc đồng hồ hư cấu, không gắn với ngày chạy ứng dụng.
 
 ## 1. Quy tắc phân bố
 
-- Chỉ năm ứng dụng có manh mối kết tội hoặc hỗ trợ đối chiếu: `internet-messaging`, `banking`, `ecommerce`, `phone`, `photos` (`photos` đóng vai trò manh mối phụ trợ ngoại phạm, không phải khóa cứng để qua màn). `messages` và sáu ứng dụng còn lại có sinh hoạt bình thường.
-- Ít nhất 75% bản ghi cấp danh sách trong từng ứng dụng có manh mối là sinh hoạt hoặc dữ liệu giải oan. Không tính từng bong bóng chat thành một bản ghi để đạt tỷ lệ. Tin nhắn trong luồng nghi vấn vẫn có trao đổi bình thường.
-- Hiển thị theo thời gian của từng ứng dụng. Không ghim sẵn, đổi màu, tăng số chưa đọc hoặc đẩy manh mối lên đầu vì vai trò trong vụ án. Dữ liệu sinh hoạt có chi tiết để đọc, không chỉ có tiêu đề rỗng.
-- Các nhãn “sinh hoạt”, “giải oan”, “manh mối” chỉ dành cho tác giả; không xuất hiện trên điện thoại. Không tự gắn người mới vào danh sách nghi phạm.
-- Không có ngày sau D hoặc giờ sau 23:45 D. Cuộc gọi nhỡ có thời lượng kết nối bằng 0. Mã, tên, thời điểm và số tiền lặp giữa ứng dụng phải trùng nhau.
+- Bốn ứng dụng có manh mối kết tội: `internet-messaging`, `ecommerce`, `banking`, `phone`. `messages` chỉ có một SMS giải oan (Thảo). Các ứng dụng còn lại chỉ có sinh hoạt.
+- Ít nhất 75% bản ghi cấp danh sách trong từng ứng dụng có manh mối là sinh hoạt hoặc giải oan. Không đếm từng bong bóng chat để đạt tỷ lệ.
+- Hiển thị theo thời gian. Không ghim sẵn, đổi màu, tăng số chưa đọc hay đẩy manh mối lên đầu. Nhãn "sinh hoạt / giải oan / manh mối" chỉ dành cho tác giả.
+- Không có ngày sau D hoặc giờ sau 23:45 D. Cuộc gọi nhỡ có thời lượng 0. Mã, tên, giờ và số tiền lặp giữa các ứng dụng phải trùng nhau.
+- Nội dung chuyển khoản do Hoàng gõ để chung chung ("CK", "Coc"): người chơi phải đọc chat để hiểu.
 
-## 2. `internet-messaging` - 10 luồng
+## 2. `internet-messaging` - 12 luồng (10 luồng 1-1, 2 nhóm)
 
-Mỗi dòng có tiền tố người nói và giờ; ngày chung ở tiêu đề. Các tin cùng người được giữ thành bong bóng riêng. Có thể đọc trọn luồng, không chỉ bản xem trước.
+Mỗi dòng có giờ và người nói; ngày ghi ở đầu dòng. Bản xem trước của danh sách luồng là tin cuối cùng của luồng, cắt theo độ dài hiển thị.
 
-### `thread_tuan` - Anh Tuấn Thợ Điện
+### `thread_khoa` - Khoa BE
 
-Số liên hệ `0988886677`; danh tính thật chỉ dành cho tác giả: `suspect_huong`. Hương chính là kẻ đóng giả vỏ bọc thợ điện ("fake electrician"). Hoàng cố tình lưu tên danh bạ là "Anh Tuấn Thợ Điện" để đánh lừa vợ, và hai người thống nhất dùng cớ dịch vụ sửa điện làm bình phong nhắn tin. Tuy nhiên, nội dung hội thoại giữa người liên hệ (Hương đóng vai thợ điện xưng "em") và Hoàng (khách hàng xưng "anh") lại tràn ngập những ẩn ý vụng trộm, mập mờ và dấu hiệu ngoại tình phản bội (bảo hành tận nơi vì anh thấy người nóng ran, lắp đèn ngủ ấm áp đòi khao cơm niêu, hẹn chỗ cũ tầng 2 kín đáo mừng tròn 1 tháng ngày nhận sửa điện lần đầu, ăn xong về bảo dưỡng đường dây tiếp, nửa đêm nhắn treo áo khoác của khách hàng lên tủ).
+Liên hệ `contact_10`, SĐT `0988886677`. Danh tính tác giả: `suspect_huong`. Không ảnh đại diện người thật (dùng avatar chữ "K"). Văn phong như đồng nghiệp trẻ; các chỗ lỡ lời chỉ là gợi hướng.
 
-- 13/10 10:10 - Hoàng: “Tuấn ơi, tối mai qua kiểm tra lại cái đường dây điện giúp a đc ko?”
-- 13/10 10:14 - Người liên hệ: “Mai e kín lịch rùi a. Để tối thứ Năm (15/10) em ghé kiểm tra toàn bộ nhé.”
-- 13/10 10:18 - Người liên hệ: “Kiểm tra xong nhớ khao thợ điện bữa cơm niêu như a hứa đấy.”
-- 14/10 12:45 - Người liên hệ: “E gửi lại a 160k tiền thừa hôm trc a đưa mua cuộn băng dính vs cầu chì nhé.”
-- 14/10 12:50 - Hoàng: “Có mấy đồng mà cũng gửi lại. Để mai a bù vào bữa tối khao thợ điện nhé.”
-- D 15:20 - Hoàng: “Tối nay thợ điện nhớ mang đủ đồ nghề nhé. Đúng hẹn chứ?”
-- D 16:42 - Người liên hệ: “Vâng anh, em đặt bàn bên Phố Cổ rồi nhé, 19h30. Chỗ cũ trên tầng 2 cho yên tĩnh.”
-- D 16:45 - Hoàng: “Nay tròn 1 tháng ngày em nhận sửa điện cho anh lần đầu đấy, tối nay để anh khao.”
-- D 16:48 - Người liên hệ: “Khách hàng gì mà nhớ dai thế. Ăn cơm niêu xong nhớ về bảo dưỡng đường dây tiếp cho em đấy.”
-- D 19:20 - Người liên hệ: “Em đang gửi xe dưới quán Cơm Niêu rồi, anh tới chưa?”
-- D 23:44 - Người liên hệ: “Đồ anh để quên em cất rồi, mai em mang qua nhé.”
+- 12/10 09:40 - Khoa: "A ơi file banner e gửi a check giúp phần CTA nhé"
+- 12/10 09:52 - Hoàng: "Ok e, trưa a xem."
+- 13/10 12:10 - Khoa: "Trưa nay a ăn gì? E order cơm bên dưới luôn nha"
+- 13/10 12:12 - Hoàng: "Cho a 1 suất như hôm trc."
+- 14/10 21:12 - Khoa: "Thứ 5 tròn 1 tháng đó a 🥹"
+- 14/10 21:15 - Hoàng: "Tối đó a vướng họp sprint rồi e 😞"
+- 14/10 21:16 - Khoa: "Vâng ạ 😔"
+- D 17:35 - Hoàng: "Họp hủy rồi. Tối nay chỗ cũ nhé?"
+- D 17:40 - Khoa: "E book bàn 7h30 rồi nhé a. Tầng 2 như lần trước." (`msg_khoa_booking`, `CLUE-ZOLA-01`)
+- D 19:20 - Khoa: "E tới rồi, a lên thẳng tầng 2 nha"
+- D 21:30 - Khoa: "Vừa in luôn a ạ, khéo chọn ghê 🥹"
+- D 21:32 - Hoàng: "Về cẩn thận nhé e."
+- D 23:41 - Khoa: "Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty." (`toast_02`)
 
-Chỉ cụm hẹn ăn ngày D (16:42, 16:45, 19:20) mang `CLUE-ZOLA-07`. Sự liên kết giữa "chỗ cũ trên tầng 2 Phố Cổ" và cớ "tròn 1 tháng ngày em nhận sửa điện lần đầu" ngụy trang tinh tế cho mốc kỷ niệm 1 tháng (15/09 - 15/10) trên thiệp quà tặng ở ứng dụng mua sắm, đồng thời khớp với hóa đơn nhà hàng Cơm Niêu Phố Cổ lúc 20:48. Cuộc gọi 26s lúc 19:22 (`call_tuan_early`) giải thích việc đón tiếp tại bàn mà không cần nhắn tin khi đang ngồi ăn; sau đó hai người về phòng riêng "bảo dưỡng đường dây" và Hoàng bỏ quên đồ; cuộc gọi đêm 23:30 (`call_tuan_late`, 96s) giải thích việc Hoàng phát hiện để quên đồ trước khi có tin nhắn 23:44. Tin nhắn 23:44 là thông báo khởi phát (`toast_01`), không tự là bằng chứng độc lập.
+Ghi chú tác giả: "tròn 1 tháng" có thể bị hiểu là 1 tháng vào công ty, nhưng tin ghim HR ghi ngày vào là 08/09, còn thiệp váy ghi 15/09. "Đồ để quên" là áo khoác Hoàng bỏ lại ở quán. Chat không nêu tên quán, không nói "váy", không có từ ngữ yêu đương.
+
+### `thread_company` - Technosoft - Toàn công ty (nhóm, 46 thành viên)
+
+Tin của `contact_10` hiển thị theo tên danh bạ "Khoa BE" (đúng hành vi app thật). Các thành viên khác hiển thị tên tài khoản.
+
+- 📌 Tin ghim, 08/09 09:00 - HR Technosoft: "Chào mừng bạn Nguyễn Thị Thu Hương - Marketing Executive gia nhập Technosoft từ hôm nay 🎉 Mọi người nhớ hỗ trợ bạn nhé!" (`msg_company_pin`, `CLUE-ZOLA-08`)
+- 13/10 08:30 - HR Technosoft: "Nhắc cả nhà cập nhật thông tin người phụ thuộc trước 31/10 ạ."
+- 14/10 16:00 - Ban Hành chính: "Thứ 7 này vệ sinh điều hòa tầng 9, mọi người dọn bàn giúp nhé."
+- D 10:05 - Khoa BE: "Team MKT nhờ cả nhà share bài ra mắt app ShopNow giúp nha 🙏" (`msg_company_khoa_post`, `CLUE-ZOLA-08`)
+- D 10:20 - HR Technosoft: "Cảm ơn Hương nha 🙌 Đã share!" (trả lời tin 10:05, `msg_company_hr_thanks`)
+- D 10:22 - Bách Dev: "Đã share 👍"
+- D 11:00 - Ban Hành chính: "Bãi xe B1 sáng mai sơn lại vạch, mọi người gửi xe B2 nhé."
+
+### `thread_dev` - Team Dev Technosoft (nhóm: Hoàng, Nam, Bách)
+
+- D 09:05 - Nam: "Bản fix cart lên staging rùi nhé ae."
+- D 09:12 - Hoàng: "Nhờ ae test thêm case update quantity nhé."
+- D 14:10 - Bách: "E confirm hết bug cũ rùi a."
+- D 17:30 - Nam: "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae." (`msg_dev_cancel`, `CLUE-ZOLA-09`)
+- D 17:32 - Hoàng: "Ok ông 👍"
+- D 17:33 - Bách: "Ngon, về sớm 🎉"
 
 ### `thread_wife` - Vợ
 
-- 14/10 17:40 - Vợ: “Về mua giúp em túi rác loại vừa nhé.”
-- 14/10 17:43 - Hoàng: “Anh mua rồi, để cạnh cửa.”
-- D 18:52 - Vợ: “Em để phần canh trong nồi. Mấy giờ anh về?”
-- D 18:55 - Hoàng: “Anh còn ở công ty, họp với cả nhóm. Em ăn trước nhé.”
-- D 18:57 - Vợ: “Vâng, về hâm lại rồi ăn.”
-- D 20:45 - Vợ: “Anh họp xong chưa?”
-- D 20:46 - Hoàng: “Chưa em, cả nhóm vẫn ở phòng họp.”
+Lịch sử cũ (trước 12/10) giữ dạng sinh hoạt từ shared fixtures.
 
-Tin 18:55 và 20:46 thuộc cùng `CLUE-ZOLA-07`, tạo mốc đối chiếu; không tạo thêm thẻ để nhân điểm. Người chơi phải đọc thấy lời khai này, không phải tự biết từ phần mở đầu.
+- 13/10 21:00 - Vợ: "Thứ 5 em đi khám, anh xin về sớm đi cùng em được không?"
+- 13/10 21:05 - Hoàng: "Thứ 5 anh có họp sprint rồi vợ ơi. Em đi trước, có gì nhắn anh nhé."
+- 13/10 21:06 - Vợ: "Vâng."
+- 14/10 17:40 - Vợ: "Về mua giúp em túi rác loại vừa nhé."
+- 14/10 17:43 - Hoàng: "Anh đặt rồi, mai giao."
+- D 16:05 - Vợ: "Em khám xong rồi. Tối về em có chuyện muốn nói 🙂"
+- D 16:20 - Hoàng: "Chuyện gì thế vợ? Khám ổn không em?"
+- D 16:21 - Vợ: "Ổn mà. Tối nói 😊"
+- D 18:52 - Vợ: "Em nấu canh cua mồng tơi anh thích rồi. Mấy giờ anh về?"
+- D 18:55 - Hoàng: "Tối nay họp sprint với cả team, chắc 9h. Vợ ăn trước nhé ❤️" (`msg_wife_1855`, `CLUE-ZOLA-09`)
+- D 18:56 - Vợ: "Vâng. Em đợi anh."
+- D 20:45 - Vợ: "Họp xong chưa anh?"
+- D 20:46 - Hoàng: "Chưa em, sếp Hùng đang chốt nốt." (`msg_wife_2046`, `CLUE-ZOLA-09`)
+- D 22:10 - Hoàng: "Anh về tới hầm rồi."
 
-### `thread_lan_anh` - Lan Anh Kế Toán
+### `thread_tuan_dien` - Anh Tuấn Thợ Điện
 
-- 14/10 15:02 - Lan Anh: “A chuyển phần a trc nhé, e còn chốt vs bên hoa.”
-- 14/10 15:06 - Hoàng: “A ứng cả nhóm, tổng 500k đúng ko e?”
-- 14/10 15:08 - Lan Anh: “Đúng rồi. Sinh nhật anh Hùng thứ sáu, nhóm mình mỗi người 100.”
-- D 09:20 - Lan Anh: “E ghi nhận đủ 5 người rùi nhé a.”
+Liên hệ `contact_12`, SĐT `0912345801`. Danh tính tác giả: `suspect_tuan_dien` (vô tội). Hoàng xưng `em`, Tuấn xưng `anh`.
 
-Giải oan trong chính luồng; không dùng quỹ bí mật hoặc giấu vợ để làm bẫy giả tạo.
-
-### `thread_thao` - Thảo PT California
-
-- 13/10 17:15 - Thảo: “Buổi 20h30 e chuyển sang 18h30 đc ko a?”
-- 13/10 17:20 - Hoàng: “Đc e, lưng a hôm nay lại hơi căng.”
-- 13/10 17:22 - Thảo: “Anh mang phiếu đánh giá cột sống buổi trước. Mình tập nhẹ thôi.”
-- D 08:10 - Thảo: “Nhắc a đứng dậy đi lại sau mỗi tiếng ngồi làm việc nhé.”
-
-### `thread_ngoc` - Bé Ngọc KTX
-
-- 12/10 09:10 - Ngọc: “A ơi e nhận đc tiền phòng rùi nha.”
-- 12/10 09:12 - Hoàng: “Ừa, nhớ báo mẹ là a chuyển rùi nhé.”
-- 12/10 09:14 - Ngọc: “Mẹ bảo cn 2 a c về thì mang hộ e áo khoác nhé.”
-- 14/10 20:05 - Ngọc: “Đèn học sáng đỉnh chóp lun a, cảm ơn anh trai iu quý nha.”
-
-### `thread_mai` - Mai Lễ Tân
-
-- D 11:38 - Mai: “Sảnh có 2 kiện của a, 1 hộp nhỏ vs 1 túi dài ạ.”
-- D 11:42 - Hoàng: “Nhờ e giữ giúp, chiều a xuống lấy nha.”
-- D 15:05 - Mai: “Anh đã lấy đủ rồi nhé. Nhớ ký sổ lần sau giúp em.”
-
-Không chỉ giữ gói quà của vụ án; không có bằng chứng ngoại tình hoặc tên Hương trong lời Mai.
-
-### `thread_dev` - Team Dev Technosoft
-
-- D 09:05 - Nam: “Bản fix cart lên môi trường staging rùi nhé.”
-- D 09:12 - Hoàng: “Nhờ mn test thêm case update quantity nhé.”
-- D 14:10 - Bách: “Mik confirm hết bug cũ rùi.”
-- D 14:16 - Hoàng: “Cảm ơn, mai check tiếp flow refund nhé.”
-
-Không thêm câu xác nhận cả nhóm tan làm: ứng dụng sinh hoạt không trở thành nguồn kết tội thứ năm.
-
-### `thread_friend` - Tuấn Đụt
-
-- 14/10 12:02 - Tuấn: “Cn đủ ng đá chưa ông?”
-- 14/10 12:10 - Hoàng: “Tôi chỉ đá hiệp đầu thôi, chiều về quê.”
-- D 21:18 - Tuấn: “Mang áo xanh nhé, tuần trc lẫn đội suốt.”
-- D 21:34 - Hoàng: “Rùi, giày còn đang phơi.”
+- 13/10 08:10 - Hoàng: "Anh Tuấn ơi, em nhờ anh lắp bình nóng lạnh nhà mẹ em trước chủ nhật được không ạ? Em muốn làm bất ngờ cho mẹ dịp sinh nhật."
+- 13/10 08:25 - Tuấn: "Được em. Bình em đặt về thẳng nhà bà ấy à?"
+- 13/10 08:30 - Hoàng: "Vâng, shop giao thứ 6. Anh lắp sáng thứ 6 lúc mẹ em đi chợ nhé."
+- D 15:35 - Tuấn: "Anh nhận cọc rồi nhé."
+- D 22:58 - Tuấn: "Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu." (`toast_01`, `CLUE-ZOLA-11`)
 
 ### `thread_family` - Mẹ Ở Quê
 
-- 14/10 07:20 - Mẹ: “Gà mẹ gửi lên rồi, hai đứa nhớ cất ngăn đá.”
-- 14/10 07:35 - Hoàng: “Con nhận rồi mẹ. Chủ nhật chúng con về.”
-- D 18:12 - Mẹ: “Bưởi để ngoài cho ráo, đừng bọc túi kín.”
-- D 18:15 - Hoàng: “Vâng mẹ, tối con bảo vợ.”
+Liên hệ `contact_0`, SĐT `0915220011`. Mẹ viết đủ chữ, không viết tắt.
 
-### `thread_building` - Cư dân tầng 8
+- 13/10 07:15 - Mẹ: "Bình nóng lạnh nhà mình hỏng mấy hôm rồi con ạ. Mẹ đun nước tắm cũng được, con đừng lo."
+- 13/10 07:30 - Hoàng: "Mẹ cứ để con tính."
+- 14/10 07:20 - Mẹ: "Gà mẹ gửi xe lên rồi, hai đứa nhớ cất ngăn đá."
+- 14/10 07:35 - Hoàng: "Con nhận rồi mẹ. Chủ nhật chúng con về mừng sinh nhật mẹ."
+- 14/10 07:40 - Mẹ: "Về là vui rồi, đừng mua gì tốn kém."
+- D 18:12 - Mẹ: "Bưởi để ngoài cho ráo, đừng bọc túi kín."
+- D 18:15 - Hoàng: "Vâng mẹ."
 
-- D 07:45 - Ban quản lý: “Sáng thứ bảy bảo trì thang B từ 9h đến 11h.”
-- D 07:52 - Căn 806: “Thang A vẫn hoạt động chứ ạ?”
-- D 08:00 - Ban quản lý: “Vâng, thang A hoạt động bình thường.”
+### `thread_ngoc` - Bé Ngọc KTX
 
-## 3. `banking` - 20 giao dịch nòng cốt
+Liên hệ `contact_2`, SĐT `0922334455`. Bản xem trước của luồng trên danh sách: "Nhớ là a đừng kể gì nha 🙊".
 
-Số tiền có dấu là dòng tiền của Hoàng. Đây là các giao dịch hiển thị trong cửa sổ lịch sử, không phải toàn bộ sổ cái tài khoản; không suy số dư từ tổng bảng. Chỉ tên tài khoản pháp lý xuất hiện trên biên lai. Không in vai trò Marketing, nhãn nghi phạm hoặc số điện thoại suy từ số tài khoản.
+- 12/10 09:10 - Ngọc: "A ơi e nhận đc tiền phòng rùi nha."
+- 12/10 09:12 - Hoàng: "Ừa, nhớ báo mẹ là a chuyển rùi nhé."
+- 13/10 10:40 - Ngọc: "Đèn học về rùi, sáng đỉnh chóp lun a 😍"
+- D 19:50 - Ngọc: "A ơi cứu e 😭"
+- D 19:51 - Ngọc: "E trượt Vĩ mô rùi, mai hạn đóng tiền học lại 1tr2. Mẹ mà biết thì e toi."
+- D 20:02 - Hoàng: "Học hành kiểu gì thế. A chuyển rồi đấy."
+- D 20:12 - Ngọc: "E nhận đc rùi, cảm ơn a nhiều 😭"
+- D 20:13 - Ngọc: "Nhớ là a đừng kể gì nha 🙊" (`CLUE-ZOLA-10`, bẫy bản xem trước)
+
+### `thread_lan_anh` - Lan Anh Kế Toán
+
+Liên hệ `contact_6`, SĐT `0966778899`.
+
+- 14/10 15:02 - Lan Anh: "A ơi a đặt giúp e lẵng hoa sáp sinh nhật anh Hùng nhé. Để tên Mai lễ tân nhận cho kín, anh Hùng hay xuống sảnh lắm 😅"
+- 14/10 15:06 - Hoàng: "Ok e, a đặt luôn."
+- 14/10 15:10 - Lan Anh: "Quỹ nhóm mình mỗi người 100 nha a, e gom dần."
+- D 19:58 - Lan Anh: "A ơi, 6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Hùng 😤 Sinh nhật dời sang T2 vì a ấy đi công tác rồi."
+- D 20:31 - Hoàng: "A ck rồi nhé, ứng luôn 500k cho cả nhóm, mọi người gửi lại a sau."
+- D 20:35 - Lan Anh: "Nhận rồi ạ, e ghi sổ đủ 5 người nhé."
+
+### `thread_thao` - Thảo PT California
+
+Liên hệ `contact_4`, SĐT `0944556677`.
+
+- 13/10 17:15 - Thảo: "Thứ 5 a có họp tối thì mình tập sớm 18h nhé, buổi đánh giá lại cột sống."
+- 13/10 17:20 - Hoàng: "Đc e, lưng a dạo này lại căng."
+- 13/10 17:22 - Thảo: "A mang phiếu đánh giá buổi trước nha. Mình tập nhẹ thôi."
+- D 08:10 - Thảo: "Nhắc a đứng dậy đi lại sau mỗi tiếng ngồi làm việc nhé."
+- D 18:20 - Thảo: "A tới chưa? E đợi a nãy giờ 😤"
+- D 18:45 - Thảo: "A ko tới thì e trừ buổi nha a. Lưng mà đau lại thì đừng kêu e đấy."
+
+### `thread_mai` - Mai Lễ Tân
+
+Liên hệ `contact_8`, SĐT `0988990011`.
+
+- D 11:38 - Mai: "Sảnh có 2 kiện liên quan a ạ: 1 túi dài người nhận tên e (chị Lan Anh dặn rồi), 1 hộp nhỏ người nhận khác nhưng shipper bảo đưa a."
+- D 11:42 - Hoàng: "Ừ của a cả, chiều a xuống lấy hộp nhỏ nha."
+- D 15:05 - Mai: "A lấy hộp nhỏ rồi nhé. Túi hoa e cất kho tới T2 như chị Lan Anh dặn ạ. Lần sau a nhớ ký sổ giúp e 🙏"
+
+### `thread_friend` - Tuấn Đụt
+
+- 14/10 12:02 - Tuấn: "Cn đủ ng đá chưa ông?"
+- 14/10 12:10 - Hoàng: "Cn tôi về quê sinh nhật mẹ, nghỉ 1 tuần nhé."
+- 14/10 12:12 - Tuấn: "Ok, cho tôi gửi lời chúc bác."
+- D 21:18 - Tuấn: "Tuần sau nhớ mang áo xanh, tuần trc lẫn đội suốt."
+- D 21:34 - Hoàng: "Rùi, giày còn đang phơi."
+
+### `thread_building` - Cư dân tầng 12 CT2
+
+- D 07:45 - Ban quản lý: "Sáng thứ bảy bảo trì thang B từ 9h đến 11h."
+- D 07:52 - Căn 1204: "Thang A vẫn hoạt động chứ ạ?"
+- D 08:00 - Ban quản lý: "Vâng, thang A hoạt động bình thường."
+
+Tỷ lệ: 12 luồng, 2 luồng mang manh mối kết tội (`thread_khoa`, `thread_wife`) cộng tin rải rác trong 2 nhóm; các luồng còn lại là sinh hoạt hoặc giải oan.
+
+## 3. `banking` - 20 giao dịch
+
+Chỉ tên tài khoản pháp lý không dấu xuất hiện. Không có nhãn nghi phạm, chức danh hay SĐT.
 
 | ID | Ngày giờ | Số tiền (đ) | Đối tác | Nội dung |
 |---|---|---:|---|---|
-| `tx_07` | 10/10 08:30 | +35.000.000 | Cong Ty CP Cong Nghe Technosoft | Luong thang 10 Nguyen Huy Hoang |
-| `tx_home` | 10/10 08:45 | -31.500.000 | Vo | Sinh hoat thang 10 |
+| `tx_salary` | 10/10 08:30 | +35.000.000 | CONG TY CP CONG NGHE TECHNOSOFT | Luong thang 10 Nguyen Huy Hoang |
+| `tx_home` | 10/10 08:45 | -31.500.000 | TRAN MINH THU | Sinh hoat thang 10 |
 | `tx_net` | 10/10 09:10 | -280.000 | VNPT | Cuoc internet thang 10 |
-| `tx_power` | 10/10 09:12 | -1.450.000 | EVN Ha Noi | Thanh toan tien dien |
-| `tx_fuel` | 11/10 07:40 | -70.000 | Cua hang xang dau | Thanh toan QR |
-| `tx_coffee` | 11/10 08:05 | -35.000 | Ca phe dau ngo | Thanh toan QR |
-| `tx_05` | 12/10 08:50 | -2.500.000 | Nguyen Bao Ngoc | Tien phong thang 10 |
-| `tx_market` | 12/10 17:30 | -326.000 | Sieu thi | Thanh toan the |
-| `tx_06` | 13/10 17:45 | -1.500.000 | California Fitness | Goi tap thang 10 |
-| `tx_lunch` | 13/10 12:15 | -45.000 | Com van phong | Thanh toan QR |
-| `tx_parking` | 13/10 18:55 | -5.000 | Bai xe | Thanh toan QR |
-| `tx_04` | 14/10 15:10 | -500.000 | Nguyen Lan Anh | Ung nhom qua SN Hung |
-| `tx_water` | 14/10 18:20 | -60.000 | Nuoc uong | Thanh toan QR |
-| `tx_refund` | 14/10 19:10 | +89.000 | San mua sam | Hoan don huy |
-| `tx_breakfast` | D 07:35 | -30.000 | Banh mi | Thanh toan QR |
-| `tx_02` | D 12:40 | +160.000 | Nguyen Thi Thu Huong | Hoan phan trua 14/10 |
-| `tx_nam` | D 13:05 | +55.000 | Tran Van Nam | Com hom qua |
-| `tx_01` | D 20:48 | -640.000 | Com Nieu Pho Co | Thanh toan the |
-| `tx_phone` | D 21:15 | -100.000 | Nha mang | Nap tien dien thoai |
-| `tx_snack` | D 22:05 | -28.000 | Cua hang tien loi | Thanh toan QR |
+| `tx_power` | 10/10 09:12 | -1.450.000 | EVN HA NOI | Thanh toan tien dien |
+| `tx_fuel` | 11/10 07:40 | -70.000 | CUA HANG XANG DAU | Thanh toan QR |
+| `tx_ngoc_room` | 12/10 08:50 | -2.500.000 | NGUYEN BAO NGOC | Tien phong thang 10 |
+| `tx_market` | 12/10 17:30 | -326.000 | SIEU THI | Thanh toan the |
+| `tx_lunch` | 13/10 12:15 | -45.000 | COM VAN PHONG | Thanh toan QR |
+| `tx_gym` | 13/10 17:45 | -1.500.000 | CALIFORNIA FITNESS | Goi PT thang 10 |
+| `tx_parking` | 13/10 18:55 | -5.000 | BAI XE MINH AN | Thanh toan QR |
+| `tx_water` | 14/10 18:20 | -60.000 | NUOC UONG | Thanh toan QR |
+| `tx_refund` | 14/10 19:10 | +89.000 | SAN MUA SAM | Hoan don huy |
+| `tx_breakfast` | D 07:35 | -30.000 | BANH MI | Thanh toan QR |
+| `tx_nam` | D 13:05 | +55.000 | TRAN VAN NAM | Com hom qua |
+| `tx_tuan_coc` | D 15:30 | -1.500.000 | TRAN VAN TUAN | Coc |
+| `tx_ngoc` | D 20:10 | -1.200.000 | NGUYEN BAO NGOC | CK |
+| `tx_lan_anh` | D 20:30 | -500.000 | NGUYEN LAN ANH | CK |
+| `tx_01` | D 20:48 | -640.000 | COM NIEU PHO CO | Thanh toan the |
+| `tx_phone` | D 21:15 | -100.000 | NHA MANG | Nap tien dien thoai |
+| `tx_snack` | D 22:05 | -28.000 | CUA HANG TIEN LOI | Thanh toan QR |
 
-`CLUE-BANK-06` chỉ gắn `tx_01`, `tx_02` như cùng một nhóm manh mối. Tiền ăn trưa là một khoản chia tiền bình thường, không phải chứng cứ tự đủ. Khoản 640.000đ hỗ trợ mốc bữa tối; không suy số người từ số tiền. Bỏ giao dịch 2.000đ gửi lời tình cảm, không chuyển ý đó sang nơi khác.
+`CLUE-BANK-07` chỉ gắn `tx_01`. Ba khoản chuyển tối D (`tx_ngoc`, `tx_lan_anh`) và khoản cọc chiều (`tx_tuan_coc`) là bẫy có lời giải trong chat. Chuyển khoản online không chứng minh vị trí; chỉ thanh toán thẻ tại quán làm được việc đó. Không có giao dịch nào với Hương ở màn này.
 
-## 4. `ecommerce` - 8 đơn, 4 luồng người bán nòng cốt
+## 4. `ecommerce` - 9 đơn, 5 luồng người bán
 
-| ID | Đặt / nhận | Mặt hàng, phân loại | Giá đã trả | Người nhận / trạng thái |
+| ID | Đặt / nhận | Mặt hàng, phân loại | Giá đã trả | Người nhận, SĐT, địa chỉ / trạng thái |
 |---|---|---|---:|---|
-| `order_01` | 12/10 / D 11:35 | Set váy lụa công sở, be, S | 489.000đ | Nguyễn Thị Thu Hương, sảnh Technosoft / Đã giao |
-| `order_02` | 10/10 / 13/10 | Đèn học, trắng | 179.000đ | Nguyễn Bảo Ngọc, KTX Cầu Giấy / Đã giao |
-| `order_03` | 11/10 / D 11:35 | Lẵng hoa sáp, mẫu vàng | 350.000đ | Nguyễn Huy Hoàng, sảnh Technosoft / Đã giao |
-| `order_04` | 09/10 / 11/10 | Bàn phím cơ, nâu | 690.000đ | Nguyễn Huy Hoàng, nhà / Đã giao |
+| `order_01` | 12/10 20:10 / D 11:35 | Set váy lụa công sở, be, size S | 489.000đ | Nguyễn Thị Thu Hương, `0988886677`, Sảnh tầng 1 tòa Minh An, 28 Duy Tân / Đã giao (`CLUE-POSH-05`) |
+| `order_03` | 14/10 15:20 / D 11:35 | Lẵng hoa sáp, mẫu vàng | 350.000đ | Đỗ Thị Mai, `0988990011`, Sảnh tầng 1 tòa Minh An / Đã giao (`CLUE-POSH-06`) |
+| `order_heater` | 13/10 09:30 / chưa nhận | Bình nóng lạnh 20L, trắng | 2.390.000đ | Nguyễn Thị Hòa, `0915220011`, Xóm 3, xã Yên Phong, huyện Ý Yên, Nam Định / Đang vận chuyển, dự kiến 16/10 (`CLUE-POSH-06`) |
+| `order_02` | 10/10 / 13/10 | Đèn học, trắng | 179.000đ | Nguyễn Bảo Ngọc, `0922334455`, Phòng 305 nhà B2, KTX An Hòa, 16 ngõ 165 Xuân Thủy / Đã giao |
+| `order_04` | 09/10 / 11/10 | Bàn phím cơ, nâu | 690.000đ | Nguyễn Huy Hoàng, `0901236789`, Căn hộ 1206 tòa CT2 An Bình / Đã giao |
 | `order_cable` | 08/10 / 10/10 | Dây rút, túi 100 chiếc | 25.000đ | Nguyễn Huy Hoàng, nhà / Đã giao |
 | `order_coffee` | 10/10 / 12/10 | Cà phê hạt, 500g | 140.000đ | Nguyễn Huy Hoàng, nhà / Đã giao |
-| `order_polo` | 14/10 / chưa nhận | Áo polo nam, xanh, L | 0đ, hoàn 89.000đ ngày 14/10 | Nguyễn Huy Hoàng, nhà / Đã hủy |
-| `order_bag` | 14/10 / chưa nhận | Túi rác, cỡ vừa | 39.000đ | Nguyễn Huy Hoàng, nhà / Đang vận chuyển |
+| `order_polo` | 14/10 / - | Áo polo nam, xanh, L | 0đ (hoàn 89.000đ 14/10) | Nguyễn Huy Hoàng, nhà / Đã hủy |
+| `order_bag` | 14/10 / dự kiến 16/10 | Túi rác, cỡ vừa | 39.000đ | Nguyễn Huy Hoàng, nhà / Đang vận chuyển |
 
-Quy ước giao nhận thống nhất cho cả đơn nòng cốt và dữ liệu chi tiết (địa chỉ hư cấu phục vụ cốt truyện):
+Chat người bán:
+- `seller_satin` (Lụa Satin), 12/10: 20:10 Hoàng: "Mẫu be còn S không shop?"; 20:12 Shop: "Còn anh nhé."; 20:15 Hoàng: "Gửi kèm thiệp ghi giúp mình: 15/09 - 15/10 ♡"; 20:17 Shop: "Dạ, shop để thiệp trong hộp, không in ngoài kiện." (`CLUE-POSH-05`)
+- `seller_hoa` (Hoa Sáp Xinh), 14/10: 15:18 Hoàng: "Thiệp ghi giúp: Chúc mừng sinh nhật! - Team Dev"; 15:22 Shop: "Dạ, giao sảnh Minh An sáng thứ 5 ạ." (giải oan Mai)
+- `seller_dienmay` (Điện Máy Nhà Mình), 13/10: 09:28 Hoàng: "Shop giao về quê giúp mình, gọi số người nhận trước khi tới nhé."; 09:35 Shop: "Dạ, bên em gọi bác Hòa trước 30 phút ạ." (giải oan thợ điện)
+- `seller_keyboard`, 09/10: 12:20 Hoàng: "Bản này ghép được hai máy không?"; 12:25 Shop: "Dạ được ạ."
+- `seller_polo`, 14/10: 18:20 Shop: "Màu xanh hết L, anh đổi màu không?"; 18:25 Hoàng: "Thôi hủy giúp mình."; 18:30 Shop: "Dạ shop xác nhận hoàn 89.000đ."
 
-| Người nhận | Định danh | Số điện thoại | Địa chỉ giao đầy đủ |
-|---|---|---|---|
-| Nguyễn Huy Hoàng | `husband_hoang` | `0901236789` | Nhà: Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội |
-| Nguyễn Huy Hoàng | `husband_hoang` | `0901236789` | Công ty (`order_03`): Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội |
-| Nguyễn Thị Thu Hương | `suspect_huong` | `0988886677` | `order_01`: Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội |
-| Nguyễn Bảo Ngọc | `suspect_ngoc` | `0922334455` | `order_02`: Phòng 305, nhà B2, KTX An Hòa, 16 ngõ 165 Xuân Thủy, Hà Nội |
+Thông báo đơn hàng (khớp đơn nguồn, không sau 23:45 D): D 11:36 "Đơn `order_01` đã giao thành công"; D 11:37 "Đơn `order_03` đã giao thành công"; D 14:00 "Đơn `order_heater` đang trên đường giao tới Nam Định"; 14/10 19:10 "Đơn `order_polo` đã hoàn 89.000đ"; D 09:00 "Đơn `order_bag` dự kiến giao 16/10".
 
-Tên gọi ngắn “Hoàng” trong hội thoại không thay tên đầy đủ trên thông tin giao nhận. Số của Ngọc và Hương phải khớp danh bạ trong máy; không dùng số của vợ hoặc lễ tân cho đơn đứng tên Hoàng.
+Tìm kiếm gần đây: "bình nóng lạnh 20l", "váy lụa be", "hoa sáp sinh nhật", "túi rác vừa", "bàn phím không dây".
 
-- `seller_satin`, 12/10 20:10 - Hoàng: “Mẫu be còn S không shop?”; 20:12 - Shop: “Còn anh nhé.”; 20:15 - Hoàng: “Gửi kèm thiệp ghi đúng dòng này giúp mình: 15/09 - 15/10. Vẫn chỗ cũ nhé. H.”; 20:17 - Shop: “Dạ, shop để thiệp trong hộp, không in ngoài kiện.”
-- `seller_keyboard`, 09/10 12:20 - Hoàng: “Bản này ghép được hai máy không?”; 12:25 - Shop: “Dạ được, chuyển bằng tổ hợp phím theo hướng dẫn.”; 12:28 - Hoàng: “Cho mình bản nâu nhé.”
-- `seller_polo`, 14/10 18:20 - Shop: “Màu xanh hết L, anh đổi màu không?”; 18:25 - Hoàng: “Thôi hủy giúp mình, mình cần đúng màu.”; 18:30 - Shop: “Dạ shop xác nhận hoàn 89.000đ.”
-- `seller_coffee`, 10/10 08:10 - Hoàng: “Shop để nguyên hạt giúp mình nhé.”; 08:15 - Shop: “Dạ bên em đóng túi 500g nguyên hạt, có van một chiều.”; 08:18 - Hoàng: “Đúng loại mình cần, cảm ơn shop.”
+Mỏ neo đối chiếu: vợ mặc size M ([husband-profile.md](husband-profile.md)); váy size S không phải cho vợ. Ba đơn có người nhận nữ (Hương, Mai, Hòa); chỉ đơn váy có SĐT trùng "Khoa BE".
 
-Chi tiết giao `order_01` hiển thị người nhận hàng “Nguyễn Thị Thu Hương”, số liên hệ `0988886677`. Cùng số đầy đủ với danh bạ thợ điện; tên pháp lý chỉ hiện trong chi tiết giao nhận, không đổi tên người gửi chat hoặc thêm nhãn Marketing trên đơn. `CLUE-POSH-05` gắn đơn và đoạn thiệp như một nhóm; chỉ đọc đơn có thể nhận ra khả nghi, cần mở chat người bán để hiểu mốc ngày.
-
-Tìm kiếm gần đây: “bàn phím không dây”, “cà phê hạt 500g”, “túi rác vừa”, “váy lụa be”, “đèn học”. Thông báo: đơn túi rác đang giao; đơn polo đã hoàn tiền; nhắc đánh giá bàn phím. Không đánh dấu riêng đơn manh mối.
-
-## 5. `phone` - 14 cuộc gọi, 13 liên hệ nòng cốt
+## 5. `phone` - 14 cuộc gọi, 15 liên hệ
 
 | ID | Ngày giờ | Liên hệ | Hướng | Giây kết nối |
 |---|---|---|---|---:|
 | `call_mom_1` | 12/10 18:05 | Mẹ Ở Quê | Đến | 320 |
-| `call_water` | 12/10 18:30 | Giao Nước | Đi | 42 |
 | `call_ngoc` | 13/10 09:15 | Bé Ngọc KTX | Đến | 186 |
+| `call_tuan_dien` | 13/10 08:40 | Anh Tuấn Thợ Điện | Đi | 132 |
 | `call_nam` | 13/10 11:40 | Nam Dev | Đi | 95 |
 | `call_thao` | 13/10 17:25 | Thảo PT California | Đến | 63 |
 | `call_friend` | 14/10 12:20 | Tuấn Đụt | Đi | 240 |
 | `call_lan_anh` | 14/10 15:00 | Lan Anh Kế Toán | Nhỡ | 0 |
-| `call_courier` | 14/10 17:50 | Giao Hàng | Đến | 28 |
 | `call_mai` | D 11:40 | Mai Lễ Tân | Nhỡ | 0 |
-| `call_wife` | D 17:30 | Vợ | Đến | 88 |
+| `call_wife` | D 12:30 | Vợ | Đến | 88 |
 | `call_mom_2` | D 18:00 | Mẹ Ở Quê | Đến | 144 |
-| `call_tuan_early` | D 19:22 | Anh Tuấn Thợ Điện | Đi | 26 |
+| `call_thao_miss` | D 18:30 | Thảo PT California | Nhỡ | 0 |
+| `call_khoa_early` | D 19:18 | Khoa BE | Đi | 26 |
 | `call_building` | D 21:05 | Ban Quản Lý | Đến | 51 |
-| `call_tuan_late` | D 23:30 | Anh Tuấn Thợ Điện | Đi | 96 |
+| `call_khoa_late` | D 23:20 | Khoa BE | Đi | 96 (`CLUE-PHONE-01`) |
 
-13 liên hệ: 12 tên riêng trong bảng và Bách Dev. “Anh Tuấn Thợ Điện” hiển thị `0988886677`, không kèm ảnh Hương, tên thật, ghi chú phòng Marketing hoặc nhãn quan hệ. Liên hệ khác dùng số hư cấu riêng khi triển khai, không trùng số này.
+Danh bạ 17 mục (số đầy đủ hiện trong thẻ liên hệ; thêm California Fitness `19006868` và Thông tin gói cước `191` để mỗi luồng SMS có liên hệ): Vợ `0900112233`; Mẹ Ở Quê `0915220011`; Bé Ngọc KTX `0922334455`; Nam Dev `0933445566`; Bách Dev `0933778899`; Thảo PT California `0944556677`; Tuấn Đụt `0977112233`; Lan Anh Kế Toán `0966778899`; Mai Lễ Tân `0988990011`; Khoa BE `0988886677`; Ban Quản Lý `0243556677`; Anh Tuấn Thợ Điện `0912345801`; Giao Nước `0904556677`; Giao Hàng `0905667788`; Tổng đài nhà mạng `18008098`. Không ghi chú, ảnh thật hay nhãn quan hệ trên "Khoa BE".
 
-Chỉ `call_tuan_late` mang `CLUE-PHONE-01`; cuộc 19:22 là ngữ cảnh. Cuộc gọi đêm không chứng minh ngoại tình. Căn cứ xác định người liên hệ là sự trùng khớp số đầy đủ ở đơn hàng, không phải trùng ba số cuối của tài khoản ngân hàng.
+## 6. `messages` - SMS (một luồng cho mỗi liên hệ Phone)
 
-## 6. `messages` - 6 luồng nòng cốt, hoàn toàn sinh hoạt
+Quy tắc danh bạ chung: mỗi liên hệ trong Phone mở được một luồng SMS có ít nhất 6 tin lịch sử (17 luồng). Bảng dưới là các tin mới quanh D; lịch sử cũ trước 10/10 nằm trong `level_01.json`. Luồng SMS của "Khoa BE" chỉ có việc văn phòng trung tính (cáp phòng họp, tài liệu, brief), không có tin tình cảm. California Fitness có thêm 5 tin xác nhận buổi PT, gồm buổi 18:00 ngày 15/10.
 
 | Luồng | Ngày giờ | Nội dung hiển thị |
 |---|---|---|
-| `sms_carrier` | D 21:15 | “Nap thanh cong 100.000d. Cam on quy khach.” |
-| `sms_delivery` | 13/10 10:05; 10:40 | “Don den hoc dang duoc giao.” / “Don hang da giao thanh cong.” |
-| `sms_building` | D 08:05 | “Nhac lich bao tri thang B sang thu bay, 09h-11h.” |
-| `sms_promo` | 14/10 09:00 | “Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau.” |
-| `sms_polo` | 14/10 19:10 | “Don ao polo da hoan 89.000d ve phuong thuc thanh toan ban dau.” |
-| `sms_mom` | 12/10 18:00; 18:04 | Mẹ: “Mẹ gọi không được, lát gọi lại nhé.” / Hoàng: “Con gọi lại ngay.” |
+| `sms_gym` | D 19:05 | "California Fitness: Quy khach vang mat buoi PT 18:00 ngay 15/10. Buoi tap da duoc tru khoi goi." (`CLUE-MSG-02`) |
+| `sms_carrier` | D 21:15 | "Nap thanh cong 100.000d. Cam on quy khach." |
+| `sms_delivery` | 13/10 10:05; 10:40 | "Don den hoc dang duoc giao." / "Don hang da giao thanh cong." |
+| `sms_building` | D 08:05 | "Nhac lich bao tri thang B sang thu bay, 09h-11h." |
+| `sms_promo` | 14/10 09:00 | "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau." |
+| `sms_mom` | 12/10 18:00; 18:04 | Mẹ: "Mẹ gọi không được, lát gọi lại nhé." / Hoàng: "Con gọi lại ngay." |
 
-Không có SMS ngân hàng, nhà hàng, đặt phòng hoặc người tình mở thêm đường tắt. Chỉ đọc; không sửa, gửi hay xóa tin.
+Không có SMS mang manh mối từ "Khoa BE".
 
 ## 7. Sinh hoạt trong các ứng dụng còn lại
 
-Mỗi mục dưới là một bản ghi có nội dung, không phải chỉ tên ứng dụng. Không gắn clue hoặc nghi phạm, không dùng khóa, không tự tạo bằng chứng kết tội trong những ứng dụng này.
+Không gắn clue hoặc nghi phạm, không khóa, không tạo bằng chứng kết tội.
 
 ### `ride-hailing` - 6 hoạt động
+Giữ nguyên bản trước: `ride_work` 10/10 08:00, `ride_home` 10/10 18:10, `food_lunch` 11/10 11:45, `ride_market` 12/10 16:30, `ride_cancel` 13/10 07:50 (0đ), `food_coffee` 14/10 08:20. Không có chuyến ngày D (Hoàng đi xe máy).
 
-| ID | Ngày giờ | Nội dung | Giá |
-|---|---|---|---:|
-| `ride_work` | 10/10 08:00 | Nhà -> Technosoft, xe máy, hoàn thành | 38.000đ |
-| `ride_home` | 10/10 18:10 | Technosoft -> Nhà, xe máy, hoàn thành | 41.000đ |
-| `food_lunch` | 11/10 11:45 | Cơm gà văn phòng, một phần, ít cay, giao Technosoft | 45.000đ |
-| `ride_market` | 12/10 16:30 | Nhà -> Siêu thị, xe máy, hoàn thành | 24.000đ |
-| `ride_cancel` | 13/10 07:50 | Nhà -> Technosoft, hủy trước khi có tài xế, không thu phí | 0đ |
-| `food_coffee` | 14/10 08:20 | Cà phê đen ít đá, giao Technosoft | 29.000đ |
+### `web-browser` - 8 lịch sử, 2 tab
+11/10 "React cập nhật trạng thái"; 11/10 "TypeScript kiểu dữ liệu tổng hợp"; 12/10 "Dự báo mưa cuối tuần"; 13/10 "Bình nóng lạnh 20 lít loại nào tốt"; 13/10 "Cách vệ sinh bàn phím cơ"; 14/10 "Bảo dưỡng xe máy định kỳ"; D 10:00 "CSS grid căn cột"; D 17:10 "Cách bảo quản bưởi". Tab mở: bài CSS grid, so sánh bình nóng lạnh.
 
-Không có chuyến xe ngày D định vị bữa tối. Các hoạt động thanh toán bằng số dư ví của ứng dụng; không tự thêm khoản trừ trực tiếp trùng vào bảng ngân hàng.
-
-### `web-browser` - 8 lịch sử, 2 tab mở
-
-Lịch sử: 11/10 09:10 “React cập nhật trạng thái”; 11/10 09:25 “TypeScript kiểu dữ liệu tổng hợp”; 12/10 08:20 “Dự báo mưa cuối tuần”; 12/10 12:15 “Lịch bóng đá chủ nhật”; 13/10 15:10 “Cách vệ sinh bàn phím cơ”; 14/10 07:30 “Bảo dưỡng xe máy định kỳ”; D 10:00 “CSS grid căn cột”; D 17:10 “Cách bảo quản bưởi”. Tab mở: bài CSS grid, lịch bóng đá. Khi mở lại hiển thị đoạn nội dung phù hợp truy vấn; không có tab riêng tư hoặc bài hướng dẫn che giấu hành vi.
-
-### `photos` - 11 ảnh (10 sinh hoạt + 1 manh mối phụ trợ)
-
-- **10 ảnh sinh hoạt**: 10/10: bàn phím mới, hộp bàn phím; 11/10: mâm cơm nhà, chậu húng quế ban công; 12/10: hai túi đồ siêu thị, ảnh gia đình ở quê; 13/10: ghi chú bảng họp, cáp sạc bị gãy; 14/10: bưởi mẹ gửi, giày đá bóng đang phơi.
-- **`photo_dinner_claypot` (`CLUE-PHOT-05`, manh mối phụ trợ ngoại phạm)**:
-  - **EXIF**: `D 19:45` (`15/10/2026 19:45`), địa điểm `Phố Cổ, Hoàn Kiếm, Hà Nội`.
-  - **Nội dung ảnh**: Ảnh chụp cận một niêu cơm cháy và bát canh nóng trên bàn gỗ; không lộ gương mặt, bàn tay phụ nữ, hay hộp quà.
-  - **Chi tiết phóng to (`hasForensicHotspot: true`)**: Góc trên khung hình lộ mép một chén trà và đôi đũa thứ hai đặt đối diện trên bàn gỗ nhỏ dành cho 2 người (đối lập lời khai họp nhóm ở công ty lúc 18:55 / 20:46 và ngụy biện "cả nhóm kéo ra quán ăn").
-  - **Ràng buộc**: Không dùng album khóa (Màn 1 có 0 khóa). Ghi nhận khoảng trống runtime: `photos` hiện chưa hỗ trợ ghim ảnh lên Bảng Điều tra, cần dev bổ sung long-press pinning trước khi nối vào đồ thị runtime.
+### `photos` - 10 ảnh sinh hoạt
+10/10 bàn phím mới; 10/10 hộp bàn phím; 11/10 mâm cơm nhà; 11/10 chậu húng quế ban công; 12/10 hai túi đồ siêu thị; 12/10 ảnh gia đình ở quê; 13/10 bảng ghi chú họp; 13/10 ảnh chụp bình nóng lạnh hỏng mẹ gửi; 14/10 bưởi mẹ gửi; 14/10 giày đá bóng đang phơi. Không có ảnh bữa tối ngày D.
 
 ### `personal-notes` - 6 ghi chú
-
-- 10/10 “Tiền nhà”: “Đã chuyển sinh hoạt tháng 10. Cuối tháng xem lại tiền điện.”
-- 11/10 “Đồ cần mua”: “Túi rác cỡ vừa; nước rửa bát; khăn lau bếp.”
-- 12/10 “Về quê chủ nhật”: “Mang áo khoác cho Ngọc; hỏi mẹ lịch khám.”
-- 13/10 “Lưng đỡ mỏi”: “Đứng dậy mỗi giờ; kê màn hình ngang mắt; tập nhẹ.”
-- 14/10 “Bảo dưỡng xe”: “Kiểm tra dầu máy, áp suất lốp, phanh trước.”
-- D 10:30 “Việc ngày mai”: “Xem lỗi hoàn tiền; trả sách cho Nam; tưới cây.”
+10/10 "Tiền nhà": "Đã chuyển sinh hoạt tháng 10."; 11/10 "Đồ cần mua": "Túi rác cỡ vừa; nước rửa bát."; 13/10 "Sinh nhật mẹ 18/10": "Bình nóng lạnh, nhờ anh Tuấn lắp thứ 6. Đừng để mẹ biết."; 13/10 "Lưng": "Đứng dậy mỗi giờ; tập nhẹ."; 14/10 "Bảo dưỡng xe": "Dầu máy, lốp, phanh trước."; D 10:30 "Việc tuần sau": "Họp sprint T2; xem lỗi hoàn tiền; trả sách cho Nam."
 
 ### `email` - 8 thư
+10/10 "Phiếu lương tháng 10"; 10/10 "Xác nhận thanh toán internet"; 11/10 "Bản tin công nghệ"; 12/10 "Ưu đãi cuối tuần"; 13/10 "Xác nhận gói PT tháng 10" (1.500.000đ); 13/10 "Xác nhận đơn bình nóng lạnh 20L"; 14/10 "Hoàn tiền đơn áo polo" (89.000đ); D 08:00 "Lịch bảo trì thang máy".
 
-- 10/10 08:00 “Phiếu lương tháng 10”: thông báo phiếu lương 35.000.000đ từ nhân sự.
-- 10/10 09:11 “Xác nhận thanh toán internet”: 280.000đ, kỳ tháng 10.
-- 11/10 07:00 “Bản tin công nghệ”: bài quản lý trạng thái và kiểm thử giao diện.
-- 11/10 16:30 “Chào mừng thành viên mới”: hướng dẫn gửi yêu cầu hỗ trợ IT.
-- 12/10 10:00 “Ưu đãi cuối tuần”: mã giảm phí giao hàng, thư quảng cáo.
-- 13/10 17:46 “Lịch tập tháng 10”: xác nhận gói trị liệu 1.500.000đ.
-- 14/10 19:11 “Hoàn tiền đơn áo polo”: xác nhận 89.000đ.
-- D 08:00 “Lịch bảo trì thang máy”: thang B, sáng thứ bảy 9h-11h.
+### `professional-network` - 5 bài
+Giữ nguyên bản trước (bài kiểm thử giao diện, tin tuyển frontend, Nam hoàn thành khóa TypeScript, buổi chia sẻ kỹ thuật, Bách cập nhật dự án).
 
-Mỗi thư có người gửi theo vai trò và đoạn thân thư như trên, không chỉ dòng chủ đề. Không có email catalogue hoặc xác nhận nhà hàng được dùng làm đường tắt.
+### `team-collaboration` - 5 mục
+11/10 `#frontend` quy ước đặt tên hook; 12/10 `#general` cập nhật người phụ thuộc; 13/10 `#support` máy in hết giấy; 14/10 `#frontend` Hoàng nhờ xem màn hình hoàn tiền; D 17:31 `#sprint` bot lịch: "Sprint Review 15/10 19:00 đã dời sang 19/10 19:00".
 
-### `professional-network` - 5 bài / cập nhật
+## 8. Kiểm tra nội dung trước triển khai
 
-- 10/10 Đồng nghiệp chia sẻ bài “Tách giao diện khỏi dữ liệu để dễ kiểm thử”, Hoàng lưu bài.
-- 11/10 Thông báo tuyển lập trình viên frontend, làm việc tại văn phòng, nộp hồ sơ qua nhân sự.
-- 12/10 Nam chia sẻ hoàn thành khóa TypeScript, Hoàng bình luận “Chúc mừng ông”.
-- 13/10 Trang công ty đăng buổi chia sẻ kỹ thuật tuần sau, chủ đề khả năng tiếp cận.
-- 14/10 Bách cập nhật dự án nội bộ, Hoàng bình luận “Cảm ơn cả nhóm”.
-
-### `team-collaboration` - 5 mục hội thoại
-
-- 11/10 `#frontend`: Nam hỏi quy ước đặt tên hook; Hoàng gửi quy ước camelCase và ví dụ `useCart`.
-- 12/10 `#general`: Nhân sự nhắc cập nhật thông tin người phụ thuộc trước cuối tháng.
-- 13/10 `#support`: Bách báo máy in hết giấy; văn phòng xác nhận đã bổ sung.
-- 14/10 `#frontend`: Hoàng nhờ xem màn hình hoàn tiền; Nam hẹn sáng mai xem.
-- D 09:15 `#general`: Ban quản lý nhắc lấy bình nước cá nhân trước khi vệ sinh phòng họp.
-
-## 8. Kiểm tra nội dung trước triển khai (các số đếm nòng cốt)
-
-1. Luồng chat, cuộc gọi và đơn hàng dùng cùng số `0988886677`; chỉ số đầy đủ nối liên hệ ngụy trang với người nhận hỗ trợ giao hàng.
-2. Không suy danh tính từ tiền chia bữa trưa: tên pháp lý và họ tên trong hồ sơ nghi phạm là cầu nối, chưa đủ chứng minh mối quan hệ.
-3. Bữa tối ngày D trái lời khai 18:55; giờ đặt bàn, cuộc gọi, thanh toán và mốc trên thiệp nhất quán. Kết luận cần toàn chuỗi, không chỉ việc hai đồng nghiệp ăn cùng nhau.
-4. Người chơi đọc được ngữ cảnh giải oan của Lan Anh, Thảo, Ngọc và Mai trước khi đối chất; thông tin không chỉ có trong kết thúc thua.
-5. Có ít nhất 8/10 luồng chat, 18/20 giao dịch, 7/8 đơn, 13/14 cuộc gọi và 10/11 ảnh không mang manh mối kết tội; dữ liệu giải oan được tính là sinh hoạt có ngữ cảnh.
-6. Mở vài ứng dụng bất kỳ thấy sở thích, gia đình, việc nhà và công việc thực tế. Không biến mọi bản ghi thành một bẫy nghi ngờ.
-7. Một clue xuất hiện nhiều bản ghi chỉ tạo một thẻ hợp lệ. Giữ cơ chế chấm sao hiện hành; chưa đề xuất thay đổi bộ máy đối chất.
+1. Số `0988886677` chỉ xuất hiện ở danh bạ "Khoa BE", hai cuộc gọi "Khoa BE" và người nhận `order_01`.
+2. Tên `Nguyễn Thị Thu Hương` chỉ xuất hiện ở tin ghim HR và người nhận `order_01`. Lời "Cảm ơn Hương nha" là gợi ý nối, không có họ tên đầy đủ.
+3. Hai thông báo khởi phát trùng nguyên văn và giờ với tin trong `thread_tuan_dien` (22:58) và `thread_khoa` (23:41).
+4. Mọi bẫy nghi ngờ có lời giải đọc được trước đối chất: Tuấn (luồng Mẹ, luồng Tuấn, `order_heater`, ghi chú), Ngọc (trọn luồng), Lan Anh (luồng Lan Anh), Thảo (luồng Thảo + `sms_gym`), Mai (luồng Lan Anh, `seller_hoa`, luồng Mai).
+5. Tỷ lệ: 10/12 luồng chat, 19/20 giao dịch, 8/9 đơn, 12/14 cuộc gọi, 17/17 luồng SMS không mang manh mối kết tội.
+6. Xưng hô đã kiểm: Hoàng - thợ điện `em - anh`; Hoàng - Mẹ `con - mẹ`; Hoàng - Ngọc, Lan Anh, Thảo, Mai, Khoa BE `a - e`; Hoàng - Nam, Tuấn Đụt `tôi - ông`.
 
 ## 9. Mạch sự kiện liên tục - chỉ dành cho tác giả
 
-Đọc cùng [level-01-storyboard.md](level-01-storyboard.md) và [level-01.md](level-01.md). Không hiển thị bảng kết nối hoàn chỉnh này trên điện thoại.
-
-- **Chuẩn bị**: Hoàng đặt váy ngày 12/10, nhờ ghi hai mốc 15/09 - 15/10. Cuộc trao đổi sửa file ngày 13/10 giữ quan hệ công việc có thật; không phải mọi tin với Hương đều là tán tỉnh.
-- **Lấy đồ**: Hai kiện đến sảnh D 11:35; Mai báo và giữ hộ. Tới 15:05 Hoàng đã lấy đủ. Tin 15:20 cho người liên hệ ngụy trang biết anh sẽ mang đồ tối nay, nhưng không gọi tên món đồ.
-- **Hẹn gặp**: Người liên hệ đặt bàn 19h30 như tháng trước. Lúc 18:55 Hoàng nói với vợ đang họp; 19:22 gọi 26 giây, 19:20 người kia báo đã tới quán. Đây là cùng một cuộc gặp, không phải các cuộc hẹn rời rạc.
-- **Che giấu**: Lúc 19:45 Hoàng chụp cận niêu cơm nóng (`photo_dinner_claypot`, EXIF `Phố Cổ, Hoàn Kiếm`, mép trên lộ chén trà và đôi đũa thứ hai của bàn 2 người); 20:46 Hoàng vẫn báo ở phòng họp; 20:48 có thanh toán tại Cơm Niêu Phố Cổ. Chỉ biên lai mới nêu tên quán; chat và ảnh không lặp nguyên tên quán để người chơi tự đối chiếu thời gian và vị trí.
-- **Dư âm**: Cuộc gọi 23:30 có cùng số liên hệ, nhưng nội dung không được biết. Tin 23:44 nói chiếc áo đang được người kia giữ, khép lại việc để quên đồ. Sự thật tác giả: Hoàng quên áo khi rời bữa tối, Hương cầm về; người chơi chỉ được suy rằng hai người đã trao đồ/ở cùng dịp, không được suy họ về chung nhà.
-
-Khoản hoàn tiền trưa D 12:40 là một nhánh nhận diện có thật trong sinh hoạt đồng nghiệp, không phải tiền trả váy hoặc tiền bữa tối. Không ép mọi giao dịch thành mắt xích tình cảm.
-
-## 10. Dữ liệu nòng cốt và danh bạ thống nhất
-
-Toàn bộ dữ liệu mở rộng chi tiết của Màn 1 đã được biên soạn và đồng bộ trực tiếp vào file cấu hình runtime `src/data/cases/hoang/level_01.json`. Từ Màn 2 trở đi tuân thủ Chuẩn gói 3 file (`husband-profile.md` dùng chung, kèm `level-XX-storyboard.md`, `level-XX.md`, `level-XX-phone-data.md`), tuyệt đối không tạo thêm file `level-XX-history.md` (dữ liệu nền do phía frontend nạp từ shared mock fixtures).
-
-- Ảnh Zola nằm trong luồng Mẹ Ở Quê và Tuấn Đụt, có chú thích, văn bản thay thế và tài sản đi kèm được đóng gói trong ứng dụng. Nhấn giữ vẫn áp dụng cho nội dung truyện; không tải ảnh từ máy chủ bên ngoài.
-- 16 liên hệ chuẩn nằm trong Phone, gồm 13 người/liên hệ ban đầu và ba đầu mối dịch vụ. Cả Phone và SMS đọc cùng nguồn; từng luồng SMS liên kết bằng ID và số đầy đủ. Tên giống nhau không đủ để nối khi số/ID khác.
-- Nút Nhắn tin của từng liên hệ Phone mở hội thoại SMS tương ứng có lịch sử đọc được. Không chuyển sang Zola, không gửi tin hoặc tạo hội thoại rỗng giả.
+- **Khởi đầu**: Hương vào công ty 08/09; Hoàng và Hương bắt đầu quen 15/09.
+- **Chuẩn bị quà**: 12/10 đặt váy size S, để tên và số Hương làm người nhận; nếu bị hỏi sẽ nói "đặt hộ". Shipper gọi Hương lúc giao; Hương dặn để ở lễ tân và đưa anh Hoàng.
+- **Lịch trùng**: 13/10 Thảo chốt PT 18:00 thứ Năm vì 19:00 có họp sprint. 14/10 Hương nhắc tròn 1 tháng; Hoàng từ chối vì họp.
+- **Biến cố**: 17:30 D họp bị hủy. 17:35 Hoàng chủ động hẹn Hương, quên buổi PT, và không báo vợ dù vợ đang chờ nói tin vui.
+- **Buổi tối**: 18:00 rời văn phòng (Lan Anh thấy). 18:00 - 19:20 không app nào ghi vị trí. 19:18 gọi Hương, 19:20 Hương báo đã tới, hai người ăn ở tầng 2 Cơm Niêu Phố Cổ; Hoàng trao hộp váy. Trong bữa, Hoàng chuyển tiền cho Ngọc và Lan Anh bằng điện thoại. 20:46 nói dối vợ lần 2; 20:48 trả tiền bằng thẻ.
+- **Kết thúc buổi tối**: Hoàng về tới hầm 22:10, quên áo khoác ở quán; Hương cầm về và mặc thử váy ("Vừa in luôn"). 23:20 Hoàng gọi Hương từ ban công hỏi áo; 23:41 Hương nhắn đã cất. 23:45 Hoàng vào tắm, máy 8% pin cắm sạc ngoài phòng.
+- **Hậu kết (sau đối chất)**: Hoàng chặn số "Khoa BE". Hương chuyển `+1.000 đ` kèm lời nhắn "Anh chan so em that a?" - mở đầu Màn 2.

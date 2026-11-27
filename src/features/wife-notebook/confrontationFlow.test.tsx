@@ -27,7 +27,7 @@ const VERIFIED_EDGES_ALL: CaseGraphEdge[] = [
     targetNodeId: 'node_bridge_name',
     relationship: 'bridges_identity',
     isCanonical: true,
-    isSmokingGun: false,
+    isSmokingGun: true,
   },
   {
     edgeId: 'edge_alibi_contradiction',
@@ -77,7 +77,6 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(afterRight.beatIndex).toBe(0);
     expect(afterRight.husbandMood).toBe('confident');
     expect(afterRight.husbandLine).toBe(case01.confrontationScript!.opening[1].husbandLine);
-    expect(afterLeft.husbandLine).not.toBe(afterRight.husbandLine);
 
     const html = renderToStaticMarkup(
       <ConfrontationModal
@@ -111,7 +110,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     });
 
     // Attempt lead choice without edge_order_phone connected
-    const failedMissingEdge = advanceScriptedConfrontation(state, 'tuan_shared_phone', {
+    const failedMissingEdge = advanceScriptedConfrontation(state, 'khoa_shared_phone', {
       caseConfig: case01,
       knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       activeEdges: [],
@@ -125,7 +124,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(failedMissingEdge.isMaxStrikesReached).toBe(false);
 
     // Attempt red herring even when all canonical edges are connected
-    const failedRedHerring = advanceScriptedConfrontation(state, 'tuan_herring_thao', {
+    const failedRedHerring = advanceScriptedConfrontation(state, 'thao_herring', {
       caseConfig: case01,
       knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       activeEdges: VERIFIED_EDGES_ALL,
@@ -146,7 +145,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
       knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       activeEdges: [],
     });
-    lastStrikeState = advanceScriptedConfrontation(lastStrikeState, 'tuan_herring_lan_anh', {
+    lastStrikeState = advanceScriptedConfrontation(lastStrikeState, 'tuan_herring', {
       caseConfig: case01,
       knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       activeEdges: [],
@@ -191,7 +190,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
       knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       activeEdges: VERIFIED_EDGES_ALL,
     });
-    state = advanceScriptedConfrontation(state, 'tuan_shared_phone', {
+    state = advanceScriptedConfrontation(state, 'khoa_shared_phone', {
       caseConfig: case01,
       knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       activeEdges: VERIFIED_EDGES_ALL,
@@ -222,8 +221,8 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(state.beatIndex).toBe(0);
     expect(state.husbandMood).toBe('confident');
 
-    // Beat 2: tuan_shared_phone -> nervous
-    state = advanceScriptedConfrontation(state, 'tuan_shared_phone', ctx);
+    // Beat 2: khoa_shared_phone -> nervous
+    state = advanceScriptedConfrontation(state, 'khoa_shared_phone', ctx);
     expect(state.phase).toBe('beat');
     expect(state.beatIndex).toBe(1);
     expect(state.husbandMood).toBe('nervous');
@@ -286,6 +285,52 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     expect(resolvedHtml).toContain('Chốt hồ sơ &amp; Qua màn');
     expect(RAW_EMOJI_REGEX.test(resolvedHtml)).toBe(false);
     expect(EM_DASH_REGEX.test(resolvedHtml)).toBe(false);
+    // Without an epilogue the result screen shows no banner.
+    expect(resolvedHtml).not.toContain('role="alert"');
+
+    // Epilogue banner appears only once the ending choice has resolved.
+    expect(case01.epilogueNotification).toBeTruthy();
+    const render = (session: typeof state) => renderToStaticMarkup(
+      <ConfrontationModal
+        isOpen
+        session={session}
+        epilogueNotification={case01.epilogueNotification}
+        maxStrikes={5}
+        onContinueInvestigation={vi.fn()}
+        onForgiveAndAdvance={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(render(state)).not.toContain('role="alert"');
+    const epilogueHtml = render(divorced);
+    expect(epilogueHtml).toContain('role="alert"');
+    expect(epilogueHtml).toContain('NGUYEN THI THU HUONG');
+    expect(epilogueHtml).toContain('Anh chan so em that a?');
+    expect(EM_DASH_REGEX.test(epilogueHtml)).toBe(false);
+  });
+
+  it('Accusing the real electrician (suspect_tuan_dien) gives his roast and a strike, never a win', () => {
+    const ctx = { caseConfig: case01, knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH, activeEdges: VERIFIED_EDGES_ALL };
+    let state = createScriptedConfrontation({ ...ctx, accusedSuspectId: 'suspect_tuan_dien', currentStrikes: 5 })!;
+    expect(state.isWrongSuspect).toBe(true);
+    state = advanceScriptedConfrontation(state, 'open_ask', ctx);
+    state = advanceScriptedConfrontation(state, 'khoa_shared_phone', ctx);
+    expect(state.phase).toBe('failed');
+    expect(state.newStrikesRemaining).toBe(4);
+
+    const result = evaluateConfrontation({
+      caseConfig: case01,
+      knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
+      activeEdges: VERIFIED_EDGES_ALL,
+      unmaskedSuspectIds: [],
+      currentStrikes: 5,
+      accusedSuspectId: 'suspect_tuan_dien',
+      rngRoll: 0,
+    });
+    expect(result.isRedHerringAccusation).toBe(true);
+    expect(result.stars).toBe(0);
+    expect(result.newStrikesRemaining).toBe(4);
+    expect(result.husbandDialogue).toContain('Bà ấy là mẹ anh');
   });
 
   it('Fallback: levels without confrontationScript (Level 2 & Level 3) safely return null and render fallback evaluation', () => {

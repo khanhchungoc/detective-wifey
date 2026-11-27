@@ -49,7 +49,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     await launchApp(page, 'phone');
     const row = page
       .locator('[data-app-instance]:not([hidden]) [data-evidence-target="true"]')
-      .filter({ hasText: 'Anh Tuấn' })
+      .filter({ hasText: 'Khoa BE' })
       .first();
     await longPressAndPin(page, row);
     await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
@@ -88,7 +88,7 @@ test.describe('Session & Case Runtime @smoke', () => {
         taggedSuspects: [
           {
             suspectId: 'tag_seed_1',
-            displayName: 'Anh Tuấn Thợ Điện',
+            displayName: 'Khoa BE',
             sourceApp: 'internet-messaging',
             timestamp: 1000,
           },

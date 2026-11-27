@@ -18,6 +18,12 @@
 | `CLUE-ZOLA-05` | **Innocent Red Herring:** Passionate voice messages discussing "bé cưng", "em này đầm tay lắm", "tối nay anh qua đón em"... which turns out to be discussing a second-hand vintage Vespa motorbike or fishing rod with a fellow enthusiast. | Audio / Red Herring | Innocent | Hard |
 | `CLUE-ZOLA-06` | **AI Companion Chat:** Chat history with an official account "Em Yêu Ảo - AI Girlfriend" with paid premium tier messages. | Bot Chat | Cheating (Non-Human / AI) | Medium |
 | `CLUE-ZOLA-07` | **Lịch hẹn trái lời khai:** Lịch hẹn bàn 19h30 "chỗ cũ tầng 2 Phố Cổ" với cớ mừng 1 tháng ngày sang sửa điện lần đầu trong luồng liên hệ ngụy trang; cùng tối người chồng báo vợ đang họp với cả nhóm. Chi tiết lấy đồ ở sảnh, dùng bữa tại Phố Cổ và nhắn trả áo khép thành cùng một buổi gặp; không tự đủ xác định người nếu thiếu đối chiếu số đầy đủ và tên pháp lý. | Timeline / Cross-App | Cheating | Easy |
+| `CLUE-ZOLA-08` | **Tên danh bạ lộ trong nhóm chat:** Trong nhóm toàn công ty, tin của người tình hiện theo tên chồng đã lưu (ví dụ 'Khoa BE') nhưng nội dung là việc phòng khác và người khác gọi bằng tên thật; tin ghim chào mừng ghi họ tên và chức danh. | Group Sender Mismatch | Cheating | Easy |
+| `CLUE-ZOLA-09` | **Họp bị hủy nhưng vẫn khai đang họp:** Nhóm công việc báo hủy họp và chồng đã trả lời xác nhận; sau đó chồng vẫn nhắn vợ là đang họp, rồi bị biên lai thẻ cùng tối bóc trần. | Alibi Contradiction | Cheating | Easy |
+| `CLUE-ZOLA-10` | **Bản xem trước bị cắt:** Bản xem trước luồng chat chỉ hiện câu cuối trông như che giấu ('a đừng kể gì nha'); đọc trọn luồng thấy lý do vô tội (em gái trượt môn, sợ mẹ biết). | Preview Truncation Red Herring | Innocent | Easy |
+| `CLUE-ZOLA-11` | **Thợ điện thật (bẫy meme):** Danh bạ 'Anh Tuấn Thợ Điện' gửi tin mập mờ 'không để bà ấy biết'; thực ra là thợ điện thật lắp bình nóng lạnh làm quà sinh nhật mẹ chồng, kiểm chứng qua luồng mẹ và đơn hàng. | Meme Bait Red Herring | Innocent | Easy |
+| `CLUE-MSG-02` | **SMS vắng mặt buổi tập:** SMS dịch vụ phòng gym báo khách vắng mặt buổi PT, giải oan cho huấn luyện viên nhắn 'e đợi a nãy giờ' và cho thấy chồng không ở gym. | Service SMS Exoneration | Innocent | Easy |
+
 
 ---
 
@@ -32,6 +38,8 @@
 | `CLUE-BANK-04` | **Quỹ Đen Secret Piggybank (Innocent):** Recurring monthly transfers into a hidden sub-vault named "Tiet Kiem Mua Nhan Kim Cuong Cho Vo" (Saving for wife's diamond ring). | Hidden Vault | Innocent (Anniversary) | Hard |
 | `CLUE-BANK-05` | **Bill Split on Dating App Dinner:** Transfer description: *"Campuchia tien an toi 50/50"* with a girl's personal bank account. | Expense Split | Cheating | Medium |
 | `CLUE-BANK-06` | **Thanh toán tối và danh tính chia tiền:** Khoản thanh toán nhà hàng cùng tối kiểm chứng lịch hẹn; một khoản hoàn tiền trưa riêng cung cấp tên tài khoản pháp lý. Không suy số người từ số tiền, không dùng memo tình cảm. | Timeline / Legal Identity | Cheating | Easy |
+| `CLUE-BANK-07` | **Quẹt thẻ nhà hàng trái lời khai:** Thanh toán thẻ tại quán ăn 2 phút sau tin nhắn khai đang họp ở công ty; chuyển khoản online cùng tối không chứng minh vị trí, chỉ thanh toán thẻ tại quán mới làm được. | Alibi Contradiction | Cheating | Easy |
+
 
 ---
 
@@ -125,3 +133,9 @@
 
 - **Universal App Grid Rule:** All 8 app icons are visible on the virtual smartphone home screen across **all levels** (L1, L2, L3) for every husband.
 - **Cognitive Purpose:** Prevents "process of elimination" spoilers. In Level 1, unneeded apps contain realistic, benign daily clutter (e.g. junk mail SMS, official bank salary deposit, news browsing history, ordinary photos of food or pets), requiring the player to genuinely inspect and deduce where real clues are hidden.
+
+### Ecommerce
+
+| Clue ID | Clue Description | Sub-Type | Intended Truth / Twist | Difficulty |
+|---|---|---|---|---|
+| `CLUE-POSH-06` | **Người nhận nữ vô tội:** Đơn quà có người nhận là phụ nữ lạ (lễ tân nhận hộ hoa sinh nhật sếp, mẹ chồng nhận bình nóng lạnh); SĐT người nhận khớp danh bạ vô tội và chat người bán ghi rõ thiệp. | Recipient Red Herring | Innocent | Easy |

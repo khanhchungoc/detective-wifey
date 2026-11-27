@@ -18,7 +18,7 @@ husband: hoang
 - **Số điện thoại Cá nhân**: `0901236789`
 - **Nhóm tuổi & Thế hệ (`generationTag`)**: Millennial (26-35) (29 tuổi, dân kỹ thuật IT / Tech Lead)
 - **Khẩu khí & Văn phong Chat (`chatTone`)**: Nửa đùa nửa thật, luôn miệng nịnh vợ để che giấu bí mật, dùng tiếng lóng công sở IT (*"sprint"*, *"OT"*, *"fix bug"*, *"deploy"*, *"chốt task"*, *"feedback"*, *"confirm"*). Nhắn tin có dấu chỉnh tề nhưng khéo léo lồng ghép thuật ngữ công việc khi viện cớ bận họp đột xuất. Viết tắt đời thường tự nhiên (`a/e`, `ko`, `vs`, `ms`, `đc`, `rùi`).
-- **Thói quen Ứng dụng & Lối sống (`lifestyleHabits`)**: Banking Techcombank kiểm tra lương thưởng và quỹ đen, Shopee áp mã Freeship Extra giao giờ hành chính, GrapCar đi làm, NetSurf đọc tin công nghệ/thể thao, ghi chú bảo dưỡng xe máy. Vỏ bọc ngụy trang bồ nhí là danh bạ kỹ thuật "Anh Tuấn Thợ Điện".
+- **Thói quen Ứng dụng & Lối sống (`lifestyleHabits`)**: Banking Techcombank kiểm tra lương thưởng và quỹ đen, Shopee áp mã Freeship Extra giao giờ hành chính, GrapCar đi làm, NetSurf đọc tin công nghệ/thể thao, ghi chú bảo dưỡng xe máy. Vỏ bọc ngụy trang bồ nhí ở Màn 1 là danh bạ đồng nghiệp nam "Khoa BE" (lập trình viên backend giả); "Anh Tuấn Thợ Điện" trong máy là thợ điện thật ở quê.
 - **Tính cách Đặc trưng**: Vẻ ngoài hiền lành, mẫu mực, luôn miệng khen cơm vợ nấu ngon nhất trần đời, tự nhận là người "sợ vợ số một thiên hạ", lương tháng nộp đủ 90% (31.500.000đ / 35.000.000đ). Tuy nhiên có tật xấu che giấu: hay úp màn hình điện thoại xuống mặt bàn mỗi khi ngồi cạnh vợ, hay mang máy vào phòng tắm "ngâm" hàng tiếng đồng hồ, và thường xuyên viện cớ "thức đêm ôm laptop fix bug giỏ hàng gấp cho kịp sprint".
 - **Ảnh Đại diện Chuẩn (`husbandAvatar`)**:
   - **Đường dẫn Asset**: `src/shell/assets/hoang-technosoft-selfie-wallpaper.jpg`
@@ -48,7 +48,7 @@ husband: hoang
 | Character ID | Họ tên & Tên lưu trong máy | Tuổi & Giới tính | Quan hệ với Chồng | Khẩu khí & Văn phong | Ánh xạ Avatar (`ContactAvatar` Sprite Sheet) |
 |---|---|---|---|---|---|
 | `char_wife` | Vợ (Trần Minh Thư) | 28 tuổi, Nữ | Vợ hợp pháp | Quan tâm gia đình, nhắc nhở việc nhà, xưng hô `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 6) |
-| `char_mom` | Mẹ Ở Quê | 56 tuổi, Nữ | Mẹ ruột Hoàng | Mẫu mực, chu đáo, chính tả chuẩn mực, không viết tắt; chồng xưng `con` gọi `mẹ` | `contact-avatar-persona-sheet.jpg` (Index 5) |
+| `char_mom` | Mẹ Ở Quê (Nguyễn Thị Hòa, SĐT `0915220011`, sinh nhật 18/10) | 56 tuổi, Nữ | Mẹ ruột Hoàng | Mẫu mực, chu đáo, chính tả chuẩn mực, không viết tắt; chồng xưng `con` gọi `mẹ` | `contact-avatar-persona-sheet.jpg` (Index 5) |
 | `char_best_friend` | Tuấn Đụt | 29 tuổi, Nam | Bạn thân chí cốt cùng tuổi | Suồng sã, thoải mái, xưng hô `tôi - ông`, hẹn đá bóng sân cỏ nhân tạo | `contact-avatar-persona-sheet.jpg` (Index 7) |
 | `char_boss` | Nam Dev | 30 tuổi, Nam | Đồng nghiệp / Tech Lead bạn cùng nhóm Technosoft | Lịch sự công việc, từ lóng dev, xưng hô `ông - tôi` / `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 8) |
 
@@ -58,6 +58,6 @@ husband: hoang
 
 | Màn chơi | Chủ đề Kịch bản | Cấp độ Tinh vi & Thay đổi Hành vi Che giấu | Kết luận (`verdict`) |
 |---|---|---|---|
-| **Màn 1** | Cơn ghen lúc nửa đêm | Ngụy trang danh bạ cơ bản ("Anh Tuấn Thợ Điện"), lộ sơ hở qua đơn hàng Shopee và biên lai ăn tối Cơm Niêu Phố Cổ; 0 khóa | `cheating` |
+| **Màn 1** | Cuộc gọi từ phòng tắm | Ngụy trang danh bạ cơ bản: lưu bồ thành đồng nghiệp nam "Khoa BE" (xưng `em` tự nhiên); lộ sơ hở qua số người nhận đơn váy size S, tên hiện trong nhóm chat công ty và biên lai ăn tối Cơm Niêu Phố Cổ trái lời khai họp; 0 khóa. Kết màn: Hương đổi kênh sang chuyển khoản 1.000đ kèm lời nhắn | `cheating` |
 | **Màn 2** | Quỹ đen & Tráo danh bạ | Rút kinh nghiệm màn 1: xóa/đổi cách liên lạc, đặt 1 mã khóa PIN ứng dụng ngân hàng/ghi chú, giấu qua kênh công việc/giao hàng | `cheating` |
 | **Màn 3** | Ngoại tình công sở đa tầng | Cảnh giác cao độ: 2 lớp khóa bảo mật, ảnh phản chiếu, hóa đơn ẩn, điều hướng qua nhiều ứng dụng | `cheating` |

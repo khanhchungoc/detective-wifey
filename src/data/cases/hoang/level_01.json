@@ -7,60 +7,62 @@
   "groundTruth": {
     "verdict": "cheating",
     "culpritSuspectId": "suspect_huong",
-    "narrativeRoast": "Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?",
-    "overJealousRoast": "Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?"
+    "narrativeRoast": "Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?",
+    "overJealousRoast": "Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?"
   },
   "confrontationScript": {
     "opening": [
       {
         "choiceId": "open_ask",
         "slot": "left",
-        "wifeLine": "Hoàng, anh có gì lừa dối tôi không?",
-        "husbandLine": "Lừa dối gì? Anh họp tới tối mịt mới về, giờ chỉ muốn đi ngủ. Em lại xem clip drama bắt ghen trên TikTok rồi đúng không?",
+        "wifeLine": "Hoàng, anh có gì giấu tôi không?",
+        "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
         "husbandMood": "confident"
       },
       {
         "choiceId": "open_offer",
         "slot": "right",
-        "wifeLine": "Tôi biết anh đang ngoại tình, và tôi muốn cho anh cơ hội thành thật.",
-        "husbandLine": "Ngoại tình? Cả ngày anh ngồi phòng họp với Team Dev. Thành thật thì anh nói luôn: anh buồn ngủ lắm rồi, đưa máy đây.",
+        "wifeLine": "Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật.",
+        "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
         "husbandMood": "confident"
       }
     ],
     "beats": [
       {
-        "beatId": "beat_tuan_identity",
-        "topic": "Anh Tuấn Thợ Điện là ai?",
+        "beatId": "beat_khoa_identity",
+        "topic": "Khoa BE là ai?",
         "choices": [
           {
-            "choiceId": "tuan_shared_phone",
+            "choiceId": "khoa_shared_phone",
             "slot": "up",
-            "wifeLine": "Thợ điện nào mà dùng chung số 0988886677 với người nhận đơn váy lụa trên Shopee?",
-            "requiredEdgeIds": ["edge_order_phone"],
+            "wifeLine": "Dev backend nào mà dùng chung số 0988886677 với người nhận váy lụa size S?",
+            "requiredEdgeIds": [
+              "edge_order_phone"
+            ],
             "onTrue": {
-              "husbandLine": "Ơ... chắc shop ghi nhầm số thôi. Số đó của thợ điện thật mà, hôm trước anh gọi nhờ sửa dây mạng văn phòng!",
+              "husbandLine": "Khoa... Khoa là dev mới bên anh. Nó nhờ anh đặt hộ váy cho người yêu nên để số nó thôi!",
               "husbandMood": "nervous"
             },
             "onFalse": {
-              "husbandLine": "Thợ điện thì gọi điện, nhắn hẹn giờ sửa là chuyện thường. Em có gì ngoài cái tên trong danh bạ không?",
+              "husbandLine": "Khoa là dev backend, nhắn việc với anh suốt. Em ghen cả với đàn ông à?",
               "husbandMood": "smug"
             }
           },
           {
-            "choiceId": "tuan_herring_thao",
+            "choiceId": "tuan_herring",
             "slot": "left",
-            "wifeLine": "Thảo PT California nhắn riêng cho anh là có ý gì?",
+            "wifeLine": "Thợ điện nào nửa đêm dặn \"không để bà ấy biết\"?",
             "onFalse": {
-              "husbandLine": "Người ta nhắc anh mang phiếu đánh giá cột sống. Em bắt được lưng đau, chưa bắt được người tình.",
+              "husbandLine": "Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?",
               "husbandMood": "smug"
             }
           },
           {
-            "choiceId": "tuan_herring_lan_anh",
+            "choiceId": "thao_herring",
             "slot": "right",
-            "wifeLine": "Lan Anh Kế Toán đòi anh chuyển tiền là sao?",
+            "wifeLine": "Thảo PT đợi anh tối nay là sao?",
             "onFalse": {
-              "husbandLine": "Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?",
+              "husbandLine": "Người ta đợi anh tập trị liệu cột sống rồi còn trừ buổi của anh. Em bắt được lưng đau, chưa bắt được người tình.",
               "husbandMood": "smug"
             }
           }
@@ -68,37 +70,39 @@
       },
       {
         "beatId": "beat_dress_recipient",
-        "topic": "Váy lụa và tấm thiệp gửi cho ai?",
+        "topic": "Váy size S gửi cho ai?",
         "choices": [
           {
             "choiceId": "dress_legal_name",
             "slot": "up",
-            "wifeLine": "Đơn váy lụa kèm thiệp \"15/09 - 15/10\" giao cho Nguyen Thi Thu Huong, đúng tên người chuyển khoản hoàn tiền cho anh.",
-            "requiredEdgeIds": ["edge_order_name"],
+            "wifeLine": "Người nhận váy là Nguyễn Thị Thu Hương. Nhóm công ty ghim rõ: Hương - Marketing. 'Khoa' của anh mặc váy size S à? Tôi mặc size M.",
+            "requiredEdgeIds": [
+              "edge_order_name"
+            ],
             "onTrue": {
-              "husbandLine": "À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi, nó chuyển trả anh tiền mà. Anh biết gì đâu!",
+              "husbandLine": "À... Hương bên Marketing nhờ anh áp mã Freeship Extra thôi. Anh với nó chỉ là đồng nghiệp!",
               "husbandMood": "nervous"
             },
             "onFalse": {
-              "husbandLine": "Váy với thiệp thì sao? Shop giao nhầm địa chỉ, em định bắt ghen cả bên giao hàng à?",
+              "husbandLine": "Váy với thiệp thì sao? Shop giao nhầm, em định bắt ghen cả shipper à?",
               "husbandMood": "smug"
             }
           },
           {
-            "choiceId": "dress_herring_mai",
+            "choiceId": "mai_herring",
             "slot": "left",
-            "wifeLine": "Mai Lễ Tân giữ gói đồ của anh dưới sảnh là thế nào?",
+            "wifeLine": "Lẵng hoa gửi Đỗ Thị Mai là sao?",
             "onFalse": {
-              "husbandLine": "Mai giữ cả hoa sinh nhật lẫn gói đồ, còn nhắc anh ký sổ. Sảnh lễ tân đâu phải danh sách người tình.",
+              "husbandLine": "Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.",
               "husbandMood": "smug"
             }
           },
           {
-            "choiceId": "dress_herring_ngoc",
+            "choiceId": "ngoc_herring",
             "slot": "right",
-            "wifeLine": "Bé Ngọc nhận tiền của anh rồi nhắn cảm ơn ngọt thế là sao?",
+            "wifeLine": "Bé Ngọc dặn anh \"đừng kể gì\" là chuyện gì?",
             "onFalse": {
-              "husbandLine": "Em gái nhắn cảm ơn anh trai còn chưa đủ rõ à? Chủ nhật về quê chắc phải giới thiệu lại gia phả.",
+              "husbandLine": "Em gái anh trượt môn Vĩ mô nhờ anh giấu mẹ. Em định bắt ghen hay đi méc mẹ?",
               "husbandMood": "smug"
             }
           }
@@ -111,23 +115,25 @@
           {
             "choiceId": "alibi_card_swipe",
             "slot": "up",
-            "wifeLine": "20:46 anh nhắn tôi vẫn ở phòng họp, 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Hai phút anh bay từ công ty ra quán à?",
-            "requiredEdgeIds": ["edge_alibi_contradiction"],
+            "wifeLine": "20:46 anh nhắn sếp Hùng đang chốt nốt. 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Mà sếp Hùng bay Đà Nẵng từ 6 giờ.",
+            "requiredEdgeIds": [
+              "edge_alibi_contradiction"
+            ],
             "onTrue": {
-              "husbandLine": "Anh xin lỗi vợ... Anh không họp gì cả. Tối nay anh đi ăn với Hương, kỷ niệm một tháng. Anh sai rồi, em cho anh giải thích...",
+              "husbandLine": "Anh xin lỗi... không có họp nào cả. Anh đi ăn với Hương. Mới một tháng thôi, anh sai rồi...",
               "husbandMood": "broken"
             },
             "onFalse": {
-              "husbandLine": "Anh ở phòng họp tới khuya, cả Team Dev làm chứng. Em định gọi hỏi từng người một à?",
+              "husbandLine": "Anh họp tới khuya, cả Team Dev làm chứng. Em định gọi hỏi từng người à?",
               "husbandMood": "smug"
             }
           },
           {
-            "choiceId": "alibi_herring_team_dev",
+            "choiceId": "lan_anh_herring",
             "slot": "down",
-            "wifeLine": "Team Dev họp gì mà tới 9 giờ tối còn chưa xong?",
+            "wifeLine": "8 giờ tối anh chuyển tiền cho Lan Anh làm gì?",
             "onFalse": {
-              "husbandLine": "Dự án chạy deadline, cả team ở lại. Em muốn xem biên bản họp không, mai anh in cho mà đọc.",
+              "husbandLine": "Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.",
               "husbandMood": "smug"
             }
           }
@@ -138,15 +144,15 @@
       {
         "choiceId": "end_divorce",
         "slot": "left",
-        "wifeLine": "Ký đơn đi. Tôi không sống với người nói dối thêm ngày nào nữa.",
-        "husbandLine": "Vợ ơi, anh van em... cho anh một cơ hội thôi mà!",
+        "wifeLine": "Chiều nay tôi đi khám. Tôi có thai 6 tuần. Con tôi không cần một người bố nói dối. Ký đơn đi.",
+        "husbandLine": "Vợ ơi... con mình? Anh van em, cho anh một cơ hội thôi!",
         "husbandMood": "broken"
       },
       {
         "choiceId": "end_forgive",
         "slot": "right",
-        "wifeLine": "Lần này tôi tha. Xóa số Anh Tuấn Thợ Điện ngay trước mặt tôi.",
-        "husbandLine": "Anh xóa ngay, anh hứa không bao giờ có lần sau nữa!",
+        "wifeLine": "Chiều nay tôi đi khám. Tôi có thai 6 tuần. Vì con, tôi cho anh một lần. Chặn số 'Khoa BE' ngay trước mặt tôi.",
+        "husbandLine": "Anh chặn ngay. Anh thề với em và con, không có lần sau.",
         "husbandMood": "broken"
       }
     ]
@@ -158,30 +164,35 @@
       "initialDiscoveredApp": "internet-messaging"
     },
     {
+      "suspectId": "suspect_tuan_dien",
+      "displayName": "Anh Tuấn Thợ Điện",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
+      "suspectId": "suspect_ngoc",
+      "displayName": "Bé Ngọc KTX",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
       "suspectId": "suspect_lan_anh",
       "displayName": "Lan Anh Kế Toán",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
       "suspectId": "suspect_thao",
-      "displayName": "Thảo PT Gym",
+      "displayName": "Thảo PT California",
       "initialDiscoveredApp": "internet-messaging"
-    },
-    {
-      "suspectId": "suspect_ngoc",
-      "displayName": "Bé Ngọc Sinh Viên",
-      "initialDiscoveredApp": "banking"
     },
     {
       "suspectId": "suspect_mai",
       "displayName": "Mai Lễ Tân",
-      "initialDiscoveredApp": "ecommerce"
+      "initialDiscoveredApp": "internet-messaging"
     }
   ],
   "lockChallenges": [],
   "deviceMetadata": {
     "narrativeTime": "23:45",
-    "batteryPercent": "42%",
+    "batteryPercent": "8%",
     "carrierTag": "5G",
     "pwaThemeColor": "#0f172a"
   },
@@ -211,11 +222,23 @@
     {
       "toastId": "toast_01",
       "sourceAppId": "internet-messaging",
-      "senderTitle": "Tin nhắn • 21:05",
-      "snippetBody": "Anh Tuấn Thợ Điện: Đồ anh để quên em cất rồi, mai em mang qua nhé.",
-      "triggerDelaySeconds": 4
+      "senderTitle": "Tin nhắn • 22:58",
+      "snippetBody": "Anh Tuấn Thợ Điện: Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu.",
+      "triggerDelaySeconds": 3
+    },
+    {
+      "toastId": "toast_02",
+      "sourceAppId": "internet-messaging",
+      "senderTitle": "Tin nhắn • 23:41",
+      "snippetBody": "Khoa BE: Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty.",
+      "triggerDelaySeconds": 5
     }
   ],
+  "epilogueNotification": {
+    "sourceAppId": "banking",
+    "senderTitle": "Ngân hàng • Vừa xong",
+    "snippetBody": "+1.000 đ từ NGUYEN THI THU HUONG: Anh chan so em that a?"
+  },
   "appsData": {
     "internet-messaging": {
       "currentUser": {
@@ -226,11 +249,160 @@
       },
       "threads": [
         {
+          "threadId": "thread_khoa",
+          "contactName": "Khoa BE",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 23:41",
+          "unreadCount": 0,
+          "historyPriority": "regular",
+          "messages": [
+            {
+              "id": "thread_khoa_0",
+              "sender": "them",
+              "text": "A ơi file banner e gửi a check giúp phần CTA nhé",
+              "time": "12/10/2026 09:40",
+              "timestamp": "12/10/2026 09:40"
+            },
+            {
+              "id": "thread_khoa_1",
+              "sender": "me",
+              "text": "Ok e, trưa a xem.",
+              "time": "12/10/2026 09:52",
+              "timestamp": "12/10/2026 09:52"
+            },
+            {
+              "id": "thread_khoa_2",
+              "sender": "them",
+              "text": "Trưa nay a ăn gì? E order cơm bên dưới luôn nha",
+              "time": "13/10/2026 12:10",
+              "timestamp": "13/10/2026 12:10"
+            },
+            {
+              "id": "thread_khoa_3",
+              "sender": "me",
+              "text": "Cho a 1 suất như hôm trc.",
+              "time": "13/10/2026 12:12",
+              "timestamp": "13/10/2026 12:12"
+            },
+            {
+              "id": "thread_khoa_4",
+              "sender": "them",
+              "text": "Thứ 5 tròn 1 tháng đó a 🥹",
+              "time": "14/10/2026 21:12",
+              "timestamp": "14/10/2026 21:12"
+            },
+            {
+              "id": "thread_khoa_5",
+              "sender": "me",
+              "text": "Tối đó a vướng họp sprint rồi e 😞",
+              "time": "14/10/2026 21:15",
+              "timestamp": "14/10/2026 21:15"
+            },
+            {
+              "id": "thread_khoa_6",
+              "sender": "them",
+              "text": "Vâng ạ 😔",
+              "time": "14/10/2026 21:16",
+              "timestamp": "14/10/2026 21:16"
+            },
+            {
+              "id": "thread_khoa_7",
+              "sender": "me",
+              "text": "Họp hủy rồi. Tối nay chỗ cũ nhé?",
+              "time": "15/10/2026 17:35",
+              "timestamp": "15/10/2026 17:35"
+            },
+            {
+              "id": "msg_khoa_booking",
+              "sender": "them",
+              "text": "E book bàn 7h30 rồi nhé a. Tầng 2 như lần trước.",
+              "time": "15/10/2026 17:40",
+              "clueRefId": "CLUE-ZOLA-01",
+              "timestamp": "15/10/2026 17:40"
+            },
+            {
+              "id": "thread_khoa_9",
+              "sender": "them",
+              "text": "E tới rồi, a lên thẳng tầng 2 nha",
+              "time": "15/10/2026 19:20",
+              "timestamp": "15/10/2026 19:20"
+            },
+            {
+              "id": "thread_khoa_10",
+              "sender": "them",
+              "text": "Vừa in luôn a ạ, khéo chọn ghê 🥹",
+              "time": "15/10/2026 21:30",
+              "timestamp": "15/10/2026 21:30"
+            },
+            {
+              "id": "thread_khoa_11",
+              "sender": "me",
+              "text": "Về cẩn thận nhé e.",
+              "time": "15/10/2026 21:32",
+              "timestamp": "15/10/2026 21:32"
+            },
+            {
+              "id": "thread_khoa_12",
+              "sender": "them",
+              "text": "Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty.",
+              "time": "15/10/2026 23:41",
+              "timestamp": "15/10/2026 23:41"
+            }
+          ]
+        },
+        {
+          "threadId": "thread_tuan_dien",
+          "contactName": "Anh Tuấn Thợ Điện",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 22:58",
+          "unreadCount": 0,
+          "historyPriority": "regular",
+          "messages": [
+            {
+              "id": "thread_tuan_dien_0",
+              "sender": "me",
+              "text": "Anh Tuấn ơi, em nhờ anh lắp bình nóng lạnh nhà mẹ em trước chủ nhật được không ạ? Em muốn làm bất ngờ cho mẹ dịp sinh nhật.",
+              "time": "13/10/2026 08:10",
+              "timestamp": "13/10/2026 08:10"
+            },
+            {
+              "id": "thread_tuan_dien_1",
+              "sender": "them",
+              "text": "Được em. Bình em đặt về thẳng nhà bà ấy à?",
+              "time": "13/10/2026 08:25",
+              "timestamp": "13/10/2026 08:25"
+            },
+            {
+              "id": "thread_tuan_dien_2",
+              "sender": "me",
+              "text": "Vâng, shop giao thứ 6. Anh lắp sáng thứ 6 lúc mẹ em đi chợ nhé.",
+              "time": "13/10/2026 08:30",
+              "timestamp": "13/10/2026 08:30"
+            },
+            {
+              "id": "thread_tuan_dien_3",
+              "sender": "them",
+              "text": "Anh nhận cọc rồi nhé.",
+              "time": "15/10/2026 15:35",
+              "timestamp": "15/10/2026 15:35"
+            },
+            {
+              "id": "thread_tuan_dien_4",
+              "sender": "them",
+              "text": "Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu.",
+              "time": "15/10/2026 22:58",
+              "clueRefId": "CLUE-ZOLA-11",
+              "timestamp": "15/10/2026 22:58"
+            }
+          ]
+        },
+        {
           "threadId": "thread_wife",
           "contactName": "Vợ",
           "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 22:32",
+          "timestamp": "15/10/2026 22:10",
           "unreadCount": 0,
+          "historyPriority": "high",
           "messages": [
             {
               "id": "thread_wife_close_0_0",
@@ -716,187 +888,114 @@
               "timestamp": "07/10/2026 12:18"
             },
             {
-              "id": "thread_wife_m2",
+              "id": "thread_wife_0",
+              "sender": "them",
+              "text": "Thứ 5 em đi khám, anh xin về sớm đi cùng em được không?",
+              "time": "13/10/2026 21:00",
+              "timestamp": "13/10/2026 21:00"
+            },
+            {
+              "id": "thread_wife_1",
+              "sender": "me",
+              "text": "Thứ 5 anh có họp sprint rồi vợ ơi. Em đi trước, có gì nhắn anh nhé.",
+              "time": "13/10/2026 21:05",
+              "timestamp": "13/10/2026 21:05"
+            },
+            {
+              "id": "thread_wife_2",
+              "sender": "them",
+              "text": "Vâng.",
+              "time": "13/10/2026 21:06",
+              "timestamp": "13/10/2026 21:06"
+            },
+            {
+              "id": "thread_wife_3",
               "sender": "them",
               "text": "Về mua giúp em túi rác loại vừa nhé.",
               "time": "14/10/2026 17:40",
               "timestamp": "14/10/2026 17:40"
             },
             {
-              "id": "thread_wife_m3",
+              "id": "thread_wife_4",
               "sender": "me",
-              "text": "Anh mua rồi, để cạnh cửa.",
+              "text": "Anh đặt rồi, mai giao.",
               "time": "14/10/2026 17:43",
               "timestamp": "14/10/2026 17:43"
             },
             {
-              "id": "thread_wife_m4",
+              "id": "thread_wife_5",
               "sender": "them",
-              "text": "Em để phần canh trong nồi. Mấy giờ anh về?",
+              "text": "Em khám xong rồi. Tối về em có chuyện muốn nói 🙂",
+              "time": "15/10/2026 16:05",
+              "timestamp": "15/10/2026 16:05"
+            },
+            {
+              "id": "thread_wife_6",
+              "sender": "me",
+              "text": "Chuyện gì thế vợ? Khám ổn không em?",
+              "time": "15/10/2026 16:20",
+              "timestamp": "15/10/2026 16:20"
+            },
+            {
+              "id": "thread_wife_7",
+              "sender": "them",
+              "text": "Ổn mà. Tối nói 😊",
+              "time": "15/10/2026 16:21",
+              "timestamp": "15/10/2026 16:21"
+            },
+            {
+              "id": "thread_wife_8",
+              "sender": "them",
+              "text": "Em nấu canh cua mồng tơi anh thích rồi. Mấy giờ anh về?",
               "time": "15/10/2026 18:52",
               "timestamp": "15/10/2026 18:52"
             },
             {
-              "id": "thread_wife_m5",
+              "id": "msg_wife_1855",
               "sender": "me",
-              "text": "Anh còn ở công ty, họp với cả nhóm. Em ăn trước nhé.",
+              "text": "Tối nay họp sprint với cả team, chắc 9h. Vợ ăn trước nhé ❤️",
               "time": "15/10/2026 18:55",
-              "clueRefId": "CLUE-ZOLA-07",
+              "clueRefId": "CLUE-ZOLA-09",
               "timestamp": "15/10/2026 18:55"
             },
             {
-              "id": "thread_wife_m6",
+              "id": "thread_wife_10",
               "sender": "them",
-              "text": "Vâng, về hâm lại rồi ăn.",
-              "time": "15/10/2026 18:57",
-              "timestamp": "15/10/2026 18:57"
+              "text": "Vâng. Em đợi anh.",
+              "time": "15/10/2026 18:56",
+              "timestamp": "15/10/2026 18:56"
             },
             {
-              "id": "thread_wife_m7",
+              "id": "thread_wife_11",
               "sender": "them",
-              "text": "Anh họp xong chưa?",
+              "text": "Họp xong chưa anh?",
               "time": "15/10/2026 20:45",
               "timestamp": "15/10/2026 20:45"
             },
             {
-              "id": "thread_wife_m8",
+              "id": "msg_wife_2046",
               "sender": "me",
-              "text": "Chưa em, cả nhóm vẫn ở phòng họp.",
+              "text": "Chưa em, sếp Hùng đang chốt nốt.",
               "time": "15/10/2026 20:46",
-              "clueRefId": "CLUE-ZOLA-07",
+              "clueRefId": "CLUE-ZOLA-09",
               "timestamp": "15/10/2026 20:46"
             },
             {
-              "id": "thread_wife_m9",
-              "sender": "them",
-              "text": "Anh xong chưa? Về sớm đi nhé.",
-              "time": "15/10/2026 22:30",
-              "timestamp": "15/10/2026 22:30"
-            },
-            {
-              "id": "thread_wife_m10",
+              "id": "thread_wife_13",
               "sender": "me",
-              "text": "Anh vừa ra bãi xe rồi, về ngay đây.",
-              "time": "15/10/2026 22:32",
-              "timestamp": "15/10/2026 22:32"
+              "text": "Anh về tới hầm rồi.",
+              "time": "15/10/2026 22:10",
+              "timestamp": "15/10/2026 22:10"
             }
-          ],
-          "historyPriority": "high"
-        },
-        {
-          "threadId": "thread_dev",
-          "contactName": "Team Dev Technosoft",
-          "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 21:58",
-          "unreadCount": 0,
-          "messages": [
-            {
-              "id": "thread_dev_history_0",
-              "time": "22/09/2026 09:10",
-              "sender": "them",
-              "text": "Nam: Nhờ mn check lại phần xử lý cart nhé.",
-              "timestamp": "22/09/2026 09:10"
-            },
-            {
-              "id": "thread_dev_history_1",
-              "time": "22/09/2026 09:20",
-              "sender": "me",
-              "text": "Tách riêng case out of stock rùi test lại nhé.",
-              "timestamp": "22/09/2026 09:20"
-            },
-            {
-              "id": "thread_dev_history_2",
-              "time": "26/09/2026 14:00",
-              "sender": "them",
-              "text": "Bách: Bản test đã có log lỗi chi tiết rùi a.",
-              "timestamp": "26/09/2026 14:00"
-            },
-            {
-              "id": "thread_dev_history_3",
-              "time": "26/09/2026 14:12",
-              "sender": "me",
-              "text": "Cảm ơn, chiều mik check phần timeout.",
-              "timestamp": "26/09/2026 14:12"
-            },
-            {
-              "id": "thread_dev_history_4",
-              "time": "01/10/2026 10:00",
-              "sender": "them",
-              "text": "Nam: Máy test đang update, tạm dùng máy còn lại nhé mn.",
-              "timestamp": "01/10/2026 10:00"
-            },
-            {
-              "id": "thread_dev_history_5",
-              "time": "01/10/2026 10:06",
-              "sender": "me",
-              "text": "Ừ, nhớ lưu config cũ nhé.",
-              "timestamp": "01/10/2026 10:06"
-            },
-            {
-              "id": "thread_dev_history_6",
-              "time": "07/10/2026 15:05",
-              "sender": "them",
-              "text": "Bách: Đã bổ sung case empty cart rùi a.",
-              "timestamp": "07/10/2026 15:05"
-            },
-            {
-              "id": "thread_dev_history_7",
-              "time": "07/10/2026 15:15",
-              "sender": "me",
-              "text": "Ổn rùi, thêm validate số lượng âm nữa e.",
-              "timestamp": "07/10/2026 15:15"
-            },
-            {
-              "id": "thread_dev_m2",
-              "sender": "them",
-              "text": "Bản fix cart lên môi trường staging rùi nhé.",
-              "time": "15/10/2026 09:05",
-              "timestamp": "15/10/2026 09:05"
-            },
-            {
-              "id": "thread_dev_m3",
-              "sender": "me",
-              "text": "Nhờ mn test thêm case update quantity nhé.",
-              "time": "15/10/2026 09:12",
-              "timestamp": "15/10/2026 09:12"
-            },
-            {
-              "id": "thread_dev_m4",
-              "sender": "them",
-              "text": "Mik confirm hết bug cũ rùi.",
-              "time": "15/10/2026 14:10",
-              "timestamp": "15/10/2026 14:10"
-            },
-            {
-              "id": "thread_dev_m5",
-              "sender": "me",
-              "text": "Cảm ơn, mai check tiếp flow refund nhé.",
-              "time": "15/10/2026 14:16",
-              "timestamp": "15/10/2026 14:16"
-            },
-            {
-              "id": "thread_dev_m6",
-              "sender": "them",
-              "text": "Nam: Server staging đã ổn định lại rồi nhé mn.",
-              "time": "15/10/2026 21:55",
-              "timestamp": "15/10/2026 21:55"
-            },
-            {
-              "id": "thread_dev_m7",
-              "sender": "me",
-              "text": "Ok, sáng mai họp rồi check lại flow nhé.",
-              "time": "15/10/2026 21:58",
-              "timestamp": "15/10/2026 21:58"
-            }
-          ],
-          "historyPriority": "regular"
+          ]
         },
         {
           "threadId": "thread_friend",
           "contactName": "Tuấn Đụt",
           "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 21:40",
+          "timestamp": "15/10/2026 21:34",
           "unreadCount": 0,
+          "historyPriority": "medium",
           "messages": [
             {
               "id": "thread_friend_close_0_0",
@@ -1049,136 +1148,492 @@
               "timestamp": "05/10/2026 09:15"
             },
             {
-              "id": "thread_friend_m2",
+              "id": "thread_friend_0",
               "sender": "them",
               "text": "Cn đủ ng đá chưa ông?",
               "time": "14/10/2026 12:02",
               "timestamp": "14/10/2026 12:02"
             },
             {
-              "id": "thread_friend_m3",
+              "id": "thread_friend_1",
               "sender": "me",
-              "text": "Tôi chỉ đá hiệp đầu thôi, chiều về quê.",
+              "text": "Cn tôi về quê sinh nhật mẹ, nghỉ 1 tuần nhé.",
               "time": "14/10/2026 12:10",
               "timestamp": "14/10/2026 12:10"
             },
             {
-              "id": "thread_friend_m4",
+              "id": "thread_friend_2",
               "sender": "them",
-              "text": "Mang áo xanh nhé, tuần trc lẫn đội suốt.",
+              "text": "Ok, cho tôi gửi lời chúc bác.",
+              "time": "14/10/2026 12:12",
+              "timestamp": "14/10/2026 12:12"
+            },
+            {
+              "id": "thread_friend_3",
+              "sender": "them",
+              "text": "Tuần sau nhớ mang áo xanh, tuần trc lẫn đội suốt.",
               "time": "15/10/2026 21:18",
               "timestamp": "15/10/2026 21:18"
             },
             {
-              "id": "thread_friend_m5",
+              "id": "thread_friend_4",
               "sender": "me",
               "text": "Rùi, giày còn đang phơi.",
               "time": "15/10/2026 21:34",
               "timestamp": "15/10/2026 21:34"
-            },
-            {
-              "id": "thread_friend_m6",
-              "sender": "them",
-              "text": "Ok ông, sáng CN 7h sân bóng nhé.",
-              "time": "15/10/2026 21:40",
-              "timestamp": "15/10/2026 21:40"
             }
-          ],
-          "historyPriority": "medium"
+          ]
         },
         {
-          "threadId": "thread_building",
-          "contactName": "Cư dân tầng 8",
+          "threadId": "thread_lan_anh",
+          "contactName": "Lan Anh Kế Toán",
           "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 21:15",
+          "timestamp": "15/10/2026 20:35",
           "unreadCount": 0,
+          "historyPriority": "regular",
           "messages": [
             {
-              "id": "thread_building_history_0",
-              "time": "21/09/2026 08:00",
+              "id": "thread_lan_anh_history_0",
+              "time": "23/09/2026 09:00",
               "sender": "them",
-              "text": "Ban quản lý: Tối nay vệ sinh bể nước, mọi người chủ động trữ một ít.",
-              "timestamp": "21/09/2026 08:00"
+              "text": "A gửi lại mã số thuế giúp e, file cũ bị thiếu 1 số ạ.",
+              "timestamp": "23/09/2026 09:00"
             },
             {
-              "id": "thread_building_history_1",
-              "time": "21/09/2026 08:08",
+              "id": "thread_lan_anh_history_1",
+              "time": "23/09/2026 09:12",
               "sender": "me",
-              "text": "Nhà em đã nhận thông tin, cảm ơn ban quản lý.",
-              "timestamp": "21/09/2026 08:08"
+              "text": "A check trên hồ sơ nhân sự rùi gửi e nhé.",
+              "timestamp": "23/09/2026 09:12"
             },
             {
-              "id": "thread_building_history_2",
-              "time": "25/09/2026 17:30",
+              "id": "thread_lan_anh_history_2",
+              "time": "25/09/2026 15:05",
               "sender": "them",
-              "text": "Căn 802: Ai để quên ô ở thang máy em gửi quầy bảo vệ nhé.",
-              "timestamp": "25/09/2026 17:30"
+              "text": "Hóa đơn mua cáp a để bản giấy ở đâu zạ?",
+              "timestamp": "25/09/2026 15:05"
             },
             {
-              "id": "thread_building_history_3",
-              "time": "25/09/2026 17:38",
-              "sender": "them",
-              "text": "Căn 806: Ô của nhà em, em xuống lấy ngay.",
-              "timestamp": "25/09/2026 17:38"
-            },
-            {
-              "id": "thread_building_history_4",
-              "time": "30/09/2026 09:10",
-              "sender": "them",
-              "text": "Ban quản lý: Đã mở đăng ký thẻ xe tháng tới.",
-              "timestamp": "30/09/2026 09:10"
-            },
-            {
-              "id": "thread_building_history_5",
-              "time": "30/09/2026 09:20",
+              "id": "thread_lan_anh_history_3",
+              "time": "25/09/2026 15:09",
               "sender": "me",
-              "text": "Em đăng ký lại một xe máy như cũ.",
-              "timestamp": "30/09/2026 09:20"
+              "text": "Trong ngăn khay chung, kẹp màu xanh e nhé.",
+              "timestamp": "25/09/2026 15:09"
             },
             {
-              "id": "thread_building_history_6",
-              "time": "06/10/2026 14:00",
+              "id": "thread_lan_anh_history_4",
+              "time": "25/09/2026 15:11",
               "sender": "them",
-              "text": "Ban quản lý: Hành lang đã thay bóng đèn, vui lòng báo nếu còn vị trí tối.",
-              "timestamp": "06/10/2026 14:00"
+              "text": "E thấy rùi, cảm ơn a nhé.",
+              "timestamp": "25/09/2026 15:11"
             },
             {
-              "id": "thread_building_history_7",
-              "time": "06/10/2026 14:08",
+              "id": "thread_lan_anh_history_5",
+              "time": "01/10/2026 10:20",
+              "sender": "them",
+              "text": "Bảng chấm công tháng trc a xem giúp e.",
+              "timestamp": "01/10/2026 10:20"
+            },
+            {
+              "id": "thread_lan_anh_history_6",
+              "time": "01/10/2026 10:28",
               "sender": "me",
-              "text": "Tầng 8 sáng bình thường rồi ạ.",
-              "timestamp": "06/10/2026 14:08"
+              "text": "A confirm đủ rùi, ko điều chỉnh j đâu e.",
+              "timestamp": "01/10/2026 10:28"
             },
             {
-              "id": "thread_building_m2",
+              "id": "thread_lan_anh_history_7",
+              "time": "08/10/2026 11:00",
               "sender": "them",
-              "text": "Sáng thứ bảy bảo trì thang B từ 9h đến 11h.",
-              "time": "15/10/2026 07:45",
-              "timestamp": "15/10/2026 07:45"
+              "text": "Chiều có shipper giao hồ sơ, a ký hộ nếu e ra ngoài nhé.",
+              "timestamp": "08/10/2026 11:00"
             },
             {
-              "id": "thread_building_m3",
+              "id": "thread_lan_anh_0",
               "sender": "them",
-              "text": "Thang A vẫn hoạt động chứ ạ?",
-              "time": "15/10/2026 07:52",
-              "timestamp": "15/10/2026 07:52"
+              "text": "A ơi a đặt giúp e lẵng hoa sáp sinh nhật anh Hùng nhé. Để tên Mai lễ tân nhận cho kín, anh Hùng hay xuống sảnh lắm 😅",
+              "time": "14/10/2026 15:02",
+              "timestamp": "14/10/2026 15:02"
             },
             {
-              "id": "thread_building_m4",
-              "sender": "them",
-              "text": "Vâng, thang A hoạt động bình thường.",
-              "time": "15/10/2026 08:00",
-              "timestamp": "15/10/2026 08:00"
+              "id": "thread_lan_anh_1",
+              "sender": "me",
+              "text": "Ok e, a đặt luôn.",
+              "time": "14/10/2026 15:06",
+              "timestamp": "14/10/2026 15:06"
             },
             {
-              "id": "thread_building_m5",
+              "id": "thread_lan_anh_2",
               "sender": "them",
-              "text": "Ban quản lý: Nhắc cư dân tầng 8 đóng kín cửa sổ tránh mưa đêm.",
-              "time": "15/10/2026 21:15",
-              "timestamp": "15/10/2026 21:15"
+              "text": "Quỹ nhóm mình mỗi người 100 nha a, e gom dần.",
+              "time": "14/10/2026 15:10",
+              "timestamp": "14/10/2026 15:10"
+            },
+            {
+              "id": "thread_lan_anh_3",
+              "sender": "them",
+              "text": "A ơi, 6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Hùng 😤 Sinh nhật dời sang T2 vì a ấy đi công tác rồi.",
+              "time": "15/10/2026 19:58",
+              "timestamp": "15/10/2026 19:58"
+            },
+            {
+              "id": "thread_lan_anh_4",
+              "sender": "me",
+              "text": "A ck rồi nhé, ứng luôn 500k cho cả nhóm, mọi người gửi lại a sau.",
+              "time": "15/10/2026 20:31",
+              "timestamp": "15/10/2026 20:31"
+            },
+            {
+              "id": "thread_lan_anh_5",
+              "sender": "them",
+              "text": "Nhận rồi ạ, e ghi sổ đủ 5 người nhé.",
+              "time": "15/10/2026 20:35",
+              "timestamp": "15/10/2026 20:35"
             }
-          ],
-          "historyPriority": "regular"
+          ]
+        },
+        {
+          "threadId": "thread_ngoc",
+          "contactName": "Bé Ngọc KTX",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 20:13",
+          "unreadCount": 0,
+          "historyPriority": "medium",
+          "messages": [
+            {
+              "id": "thread_ngoc_close_0_0",
+              "sender": "them",
+              "text": "A ơi e đang xem list đồ mang lên ktx.",
+              "time": "03/08/2026 08:10",
+              "timestamp": "03/08/2026 08:10"
+            },
+            {
+              "id": "thread_ngoc_close_0_1",
+              "sender": "me",
+              "text": "Mang ít đồ trc thôi, thiếu j a c gửi thêm.",
+              "time": "03/08/2026 08:13",
+              "timestamp": "03/08/2026 08:13"
+            },
+            {
+              "id": "thread_ngoc_close_0_2",
+              "sender": "them",
+              "text": "E định mang cả chăn dày, có cần ko a?",
+              "time": "03/08/2026 08:16",
+              "timestamp": "03/08/2026 08:16"
+            },
+            {
+              "id": "thread_ngoc_close_0_3",
+              "sender": "me",
+              "text": "Lấy chăn mỏng trc, mùa lạnh mang sau e.",
+              "time": "03/08/2026 08:19",
+              "timestamp": "03/08/2026 08:19"
+            },
+            {
+              "id": "thread_ngoc_close_1_0",
+              "sender": "them",
+              "text": "Sách cũ của a còn quyển nào về IT ko?",
+              "time": "17/08/2026 08:10",
+              "timestamp": "17/08/2026 08:10"
+            },
+            {
+              "id": "thread_ngoc_close_1_1",
+              "sender": "me",
+              "text": "Còn 2 quyển ở kệ, mà ví dụ hơi cũ rùi.",
+              "time": "17/08/2026 08:13",
+              "timestamp": "17/08/2026 08:13"
+            },
+            {
+              "id": "thread_ngoc_close_1_2",
+              "sender": "them",
+              "text": "E đọc phần basic trc cũng đc ạ.",
+              "time": "17/08/2026 08:16",
+              "timestamp": "17/08/2026 08:16"
+            },
+            {
+              "id": "thread_ngoc_close_1_3",
+              "sender": "me",
+              "text": "Ừa, cuối tuần a tìm rùi gửi e.",
+              "time": "17/08/2026 08:19",
+              "timestamp": "17/08/2026 08:19"
+            },
+            {
+              "id": "thread_ngoc_close_2_0",
+              "sender": "them",
+              "text": "Máy e vừa update xong, mở lag hơn trc á a.",
+              "time": "02/09/2026 08:10",
+              "timestamp": "02/09/2026 08:10"
+            },
+            {
+              "id": "thread_ngoc_close_2_1",
+              "sender": "me",
+              "text": "E restart lại rùi chờ nó load xong 1 lúc nhé.",
+              "time": "02/09/2026 08:13",
+              "timestamp": "02/09/2026 08:13"
+            },
+            {
+              "id": "thread_ngoc_close_2_2",
+              "sender": "them",
+              "text": "E restart lại rùi, h đỡ lag hơn rùi a.",
+              "time": "02/09/2026 08:16",
+              "timestamp": "02/09/2026 08:16"
+            },
+            {
+              "id": "thread_ngoc_close_2_3",
+              "sender": "me",
+              "text": "Nhớ backup tài liệu học vào folder riêng nhé e.",
+              "time": "02/09/2026 08:19",
+              "timestamp": "02/09/2026 08:19"
+            },
+            {
+              "id": "thread_ngoc_close_3_0",
+              "sender": "them",
+              "text": "A c có cần e gửi đồ j từ quê lên ko?",
+              "time": "14/09/2026 08:10",
+              "timestamp": "14/09/2026 08:10"
+            },
+            {
+              "id": "thread_ngoc_close_3_1",
+              "sender": "me",
+              "text": "E mang đồ cá nhân cho đủ trc đi, đừng ôm nhiều quá.",
+              "time": "14/09/2026 08:13",
+              "timestamp": "14/09/2026 08:13"
+            },
+            {
+              "id": "thread_ngoc_close_3_2",
+              "sender": "them",
+              "text": "Mẹ lại muốn gửi cả túi lạc cho 2 a c nè.",
+              "time": "14/09/2026 08:16",
+              "timestamp": "14/09/2026 08:16"
+            },
+            {
+              "id": "thread_ngoc_close_3_3",
+              "sender": "me",
+              "text": "Để a hỏi mẹ gửi xe quen, e đỡ xách nặng nha.",
+              "time": "14/09/2026 08:19",
+              "timestamp": "14/09/2026 08:19"
+            },
+            {
+              "id": "thread_ngoc_history_0",
+              "time": "22/09/2026 20:05",
+              "sender": "them",
+              "text": "A ơi e nhập học ổn áp rùi nha.",
+              "timestamp": "22/09/2026 20:05"
+            },
+            {
+              "id": "thread_ngoc_history_1",
+              "time": "22/09/2026 20:15",
+              "sender": "me",
+              "text": "Có cần a c gửi thêm đồ j ko?",
+              "timestamp": "22/09/2026 20:15"
+            },
+            {
+              "id": "thread_ngoc_history_2",
+              "time": "22/09/2026 20:18",
+              "sender": "them",
+              "text": "Chưa cần đâu a, e ở ghép vs 2 bạn nữa vibe cũng vui.",
+              "timestamp": "22/09/2026 20:18"
+            },
+            {
+              "id": "thread_ngoc_history_3",
+              "time": "28/09/2026 11:10",
+              "sender": "them",
+              "text": "Mẹ gửi áo khoác qua a chưa zạ?",
+              "timestamp": "28/09/2026 11:10"
+            },
+            {
+              "id": "thread_ngoc_history_4",
+              "time": "28/09/2026 11:18",
+              "sender": "me",
+              "text": "A chưa nhận đc, để a hỏi mẹ xem.",
+              "timestamp": "28/09/2026 11:18"
+            },
+            {
+              "id": "thread_ngoc_history_5",
+              "time": "04/10/2026 19:10",
+              "sender": "them",
+              "text": "Thư viện trg mở cả tối lun a ạ.",
+              "timestamp": "04/10/2026 19:10"
+            },
+            {
+              "id": "thread_ngoc_history_6",
+              "time": "04/10/2026 19:20",
+              "sender": "me",
+              "text": "Đi về nhớ ới bạn cùng phòng, đừng về 1 mik muộn nhé.",
+              "timestamp": "04/10/2026 19:20"
+            },
+            {
+              "id": "thread_ngoc_history_7",
+              "time": "09/10/2026 10:00",
+              "sender": "them",
+              "text": "Đèn bàn cũ của e chập chờn quá, e đang nghía mấy mẫu mới trên shopee.",
+              "timestamp": "09/10/2026 10:00"
+            },
+            {
+              "id": "thread_ngoc_0",
+              "sender": "them",
+              "text": "A ơi e nhận đc tiền phòng rùi nha.",
+              "time": "12/10/2026 09:10",
+              "timestamp": "12/10/2026 09:10"
+            },
+            {
+              "id": "thread_ngoc_1",
+              "sender": "me",
+              "text": "Ừa, nhớ báo mẹ là a chuyển rùi nhé.",
+              "time": "12/10/2026 09:12",
+              "timestamp": "12/10/2026 09:12"
+            },
+            {
+              "id": "thread_ngoc_2",
+              "sender": "them",
+              "text": "Đèn học về rùi, sáng đỉnh chóp lun a 😍",
+              "time": "13/10/2026 10:40",
+              "timestamp": "13/10/2026 10:40"
+            },
+            {
+              "id": "thread_ngoc_3",
+              "sender": "them",
+              "text": "A ơi cứu e 😭",
+              "time": "15/10/2026 19:50",
+              "timestamp": "15/10/2026 19:50"
+            },
+            {
+              "id": "thread_ngoc_4",
+              "sender": "them",
+              "text": "E trượt Vĩ mô rùi, mai hạn đóng tiền học lại 1tr2. Mẹ mà biết thì e toi.",
+              "time": "15/10/2026 19:51",
+              "timestamp": "15/10/2026 19:51"
+            },
+            {
+              "id": "thread_ngoc_5",
+              "sender": "me",
+              "text": "Học hành kiểu gì thế. A chuyển rồi đấy.",
+              "time": "15/10/2026 20:02",
+              "timestamp": "15/10/2026 20:02"
+            },
+            {
+              "id": "thread_ngoc_6",
+              "sender": "them",
+              "text": "E nhận đc rùi, cảm ơn a nhiều 😭",
+              "time": "15/10/2026 20:12",
+              "timestamp": "15/10/2026 20:12"
+            },
+            {
+              "id": "thread_ngoc_7",
+              "sender": "them",
+              "text": "Nhớ là a đừng kể gì nha 🙊",
+              "time": "15/10/2026 20:13",
+              "clueRefId": "CLUE-ZOLA-10",
+              "timestamp": "15/10/2026 20:13"
+            }
+          ]
+        },
+        {
+          "threadId": "thread_thao",
+          "contactName": "Thảo PT California",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 18:45",
+          "unreadCount": 0,
+          "historyPriority": "regular",
+          "messages": [
+            {
+              "id": "thread_thao_history_0",
+              "time": "24/09/2026 08:05",
+              "sender": "them",
+              "text": "A theo dõi lưng sau buổi hôm qua nhé.",
+              "timestamp": "24/09/2026 08:05"
+            },
+            {
+              "id": "thread_thao_history_1",
+              "time": "24/09/2026 08:22",
+              "sender": "me",
+              "text": "Đỡ căng hơn, mà ngồi lâu vẫn mỏi e.",
+              "timestamp": "24/09/2026 08:22"
+            },
+            {
+              "id": "thread_thao_history_2",
+              "time": "24/09/2026 08:25",
+              "sender": "them",
+              "text": "A kê lại màn hình vs đứng dậy đi lại ngắn sau mỗi giờ nhé.",
+              "timestamp": "24/09/2026 08:25"
+            },
+            {
+              "id": "thread_thao_history_3",
+              "time": "29/09/2026 16:10",
+              "sender": "me",
+              "text": "Hôm nay a đến muộn tầm 10p nhé.",
+              "timestamp": "29/09/2026 16:10"
+            },
+            {
+              "id": "thread_thao_history_4",
+              "time": "29/09/2026 16:15",
+              "sender": "them",
+              "text": "Vâng, a đến nơi khởi động trc giúp e.",
+              "timestamp": "29/09/2026 16:15"
+            },
+            {
+              "id": "thread_thao_history_5",
+              "time": "03/10/2026 09:20",
+              "sender": "them",
+              "text": "Tuần này mik chưa tăng tạ nhé a.",
+              "timestamp": "03/10/2026 09:20"
+            },
+            {
+              "id": "thread_thao_history_6",
+              "time": "03/10/2026 09:28",
+              "sender": "me",
+              "text": "A nhớ rùi, ưu tiên tập đều.",
+              "timestamp": "03/10/2026 09:28"
+            },
+            {
+              "id": "thread_thao_history_7",
+              "time": "08/10/2026 18:00",
+              "sender": "them",
+              "text": "A mang khăn cá nhân nha, quầy hôm nay hết khăn sạch rùi.",
+              "timestamp": "08/10/2026 18:00"
+            },
+            {
+              "id": "thread_thao_0",
+              "sender": "them",
+              "text": "Thứ 5 a có họp tối thì mình tập sớm 18h nhé, buổi đánh giá lại cột sống.",
+              "time": "13/10/2026 17:15",
+              "timestamp": "13/10/2026 17:15"
+            },
+            {
+              "id": "thread_thao_1",
+              "sender": "me",
+              "text": "Đc e, lưng a dạo này lại căng.",
+              "time": "13/10/2026 17:20",
+              "timestamp": "13/10/2026 17:20"
+            },
+            {
+              "id": "thread_thao_2",
+              "sender": "them",
+              "text": "A mang phiếu đánh giá buổi trước nha. Mình tập nhẹ thôi.",
+              "time": "13/10/2026 17:22",
+              "timestamp": "13/10/2026 17:22"
+            },
+            {
+              "id": "thread_thao_3",
+              "sender": "them",
+              "text": "Nhắc a đứng dậy đi lại sau mỗi tiếng ngồi làm việc nhé.",
+              "time": "15/10/2026 08:10",
+              "timestamp": "15/10/2026 08:10"
+            },
+            {
+              "id": "thread_thao_4",
+              "sender": "them",
+              "text": "A tới chưa? E đợi a nãy giờ 😤",
+              "time": "15/10/2026 18:20",
+              "timestamp": "15/10/2026 18:20"
+            },
+            {
+              "id": "thread_thao_5",
+              "sender": "them",
+              "text": "A ko tới thì e trừ buổi nha a. Lưng mà đau lại thì đừng kêu e đấy.",
+              "time": "15/10/2026 18:45",
+              "timestamp": "15/10/2026 18:45"
+            }
+          ]
         },
         {
           "threadId": "thread_family",
@@ -1186,6 +1641,7 @@
           "avatarGradient": "from-slate-400 to-slate-600",
           "timestamp": "15/10/2026 18:15",
           "unreadCount": 0,
+          "historyPriority": "high",
           "messages": [
             {
               "id": "thread_family_close_0_0",
@@ -1590,35 +2046,174 @@
               "timestamp": "05/10/2026 18:40"
             },
             {
-              "id": "thread_family_m2",
+              "id": "thread_family_0",
               "sender": "them",
-              "text": "Gà mẹ gửi lên rồi, hai đứa nhớ cất ngăn đá.",
+              "text": "Bình nóng lạnh nhà mình hỏng mấy hôm rồi con ạ. Mẹ đun nước tắm cũng được, con đừng lo.",
+              "time": "13/10/2026 07:15",
+              "timestamp": "13/10/2026 07:15"
+            },
+            {
+              "id": "thread_family_1",
+              "sender": "me",
+              "text": "Mẹ cứ để con tính.",
+              "time": "13/10/2026 07:30",
+              "timestamp": "13/10/2026 07:30"
+            },
+            {
+              "id": "thread_family_2",
+              "sender": "them",
+              "text": "Gà mẹ gửi xe lên rồi, hai đứa nhớ cất ngăn đá.",
               "time": "14/10/2026 07:20",
               "timestamp": "14/10/2026 07:20"
             },
             {
-              "id": "thread_family_m3",
+              "id": "thread_family_3",
               "sender": "me",
-              "text": "Con nhận rồi mẹ. Chủ nhật chúng con về.",
+              "text": "Con nhận rồi mẹ. Chủ nhật chúng con về mừng sinh nhật mẹ.",
               "time": "14/10/2026 07:35",
               "timestamp": "14/10/2026 07:35"
             },
             {
-              "id": "thread_family_m4",
+              "id": "thread_family_4",
+              "sender": "them",
+              "text": "Về là vui rồi, đừng mua gì tốn kém.",
+              "time": "14/10/2026 07:40",
+              "timestamp": "14/10/2026 07:40"
+            },
+            {
+              "id": "thread_family_5",
               "sender": "them",
               "text": "Bưởi để ngoài cho ráo, đừng bọc túi kín.",
               "time": "15/10/2026 18:12",
               "timestamp": "15/10/2026 18:12"
             },
             {
-              "id": "thread_family_m5",
+              "id": "thread_family_6",
               "sender": "me",
-              "text": "Vâng mẹ, tối con bảo vợ.",
+              "text": "Vâng mẹ.",
               "time": "15/10/2026 18:15",
               "timestamp": "15/10/2026 18:15"
             }
-          ],
-          "historyPriority": "high"
+          ]
+        },
+        {
+          "threadId": "thread_dev",
+          "contactName": "Team Dev Technosoft",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 17:33",
+          "unreadCount": 0,
+          "historyPriority": "regular",
+          "isGroup": true,
+          "memberCount": 3,
+          "messages": [
+            {
+              "id": "thread_dev_history_0",
+              "time": "22/09/2026 09:10",
+              "sender": "them",
+              "text": "Nhờ mn check lại phần xử lý cart nhé.",
+              "timestamp": "22/09/2026 09:10",
+              "senderName": "Nam"
+            },
+            {
+              "id": "thread_dev_history_1",
+              "time": "22/09/2026 09:20",
+              "sender": "me",
+              "text": "Tách riêng case out of stock rùi test lại nhé.",
+              "timestamp": "22/09/2026 09:20"
+            },
+            {
+              "id": "thread_dev_history_2",
+              "time": "26/09/2026 14:00",
+              "sender": "them",
+              "text": "Bản test đã có log lỗi chi tiết rùi a.",
+              "timestamp": "26/09/2026 14:00",
+              "senderName": "Bách"
+            },
+            {
+              "id": "thread_dev_history_3",
+              "time": "26/09/2026 14:12",
+              "sender": "me",
+              "text": "Cảm ơn, chiều mik check phần timeout.",
+              "timestamp": "26/09/2026 14:12"
+            },
+            {
+              "id": "thread_dev_history_4",
+              "time": "01/10/2026 10:00",
+              "sender": "them",
+              "text": "Máy test đang update, tạm dùng máy còn lại nhé mn.",
+              "timestamp": "01/10/2026 10:00",
+              "senderName": "Nam"
+            },
+            {
+              "id": "thread_dev_history_5",
+              "time": "01/10/2026 10:06",
+              "sender": "me",
+              "text": "Ừ, nhớ lưu config cũ nhé.",
+              "timestamp": "01/10/2026 10:06"
+            },
+            {
+              "id": "thread_dev_history_6",
+              "time": "07/10/2026 15:05",
+              "sender": "them",
+              "text": "Đã bổ sung case empty cart rùi a.",
+              "timestamp": "07/10/2026 15:05",
+              "senderName": "Bách"
+            },
+            {
+              "id": "thread_dev_history_7",
+              "time": "07/10/2026 15:15",
+              "sender": "me",
+              "text": "Ổn rùi, thêm validate số lượng âm nữa e.",
+              "timestamp": "07/10/2026 15:15"
+            },
+            {
+              "id": "thread_dev_0",
+              "sender": "them",
+              "text": "Bản fix cart lên staging rùi nhé ae.",
+              "time": "15/10/2026 09:05",
+              "senderName": "Nam",
+              "timestamp": "15/10/2026 09:05"
+            },
+            {
+              "id": "thread_dev_1",
+              "sender": "me",
+              "text": "Nhờ ae test thêm case update quantity nhé.",
+              "time": "15/10/2026 09:12",
+              "timestamp": "15/10/2026 09:12"
+            },
+            {
+              "id": "thread_dev_2",
+              "sender": "them",
+              "text": "E confirm hết bug cũ rùi a.",
+              "time": "15/10/2026 14:10",
+              "senderName": "Bách",
+              "timestamp": "15/10/2026 14:10"
+            },
+            {
+              "id": "msg_dev_cancel",
+              "sender": "them",
+              "text": "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae.",
+              "time": "15/10/2026 17:30",
+              "senderName": "Nam",
+              "clueRefId": "CLUE-ZOLA-09",
+              "timestamp": "15/10/2026 17:30"
+            },
+            {
+              "id": "thread_dev_4",
+              "sender": "me",
+              "text": "Ok ông 👍",
+              "time": "15/10/2026 17:32",
+              "timestamp": "15/10/2026 17:32"
+            },
+            {
+              "id": "thread_dev_5",
+              "sender": "them",
+              "text": "Ngon, về sớm 🎉",
+              "time": "15/10/2026 17:33",
+              "senderName": "Bách",
+              "timestamp": "15/10/2026 17:33"
+            }
+          ]
         },
         {
           "threadId": "thread_mai",
@@ -1626,6 +2221,7 @@
           "avatarGradient": "from-slate-400 to-slate-600",
           "timestamp": "15/10/2026 15:05",
           "unreadCount": 0,
+          "historyPriority": "regular",
           "messages": [
             {
               "id": "thread_mai_history_0",
@@ -1684,572 +2280,199 @@
               "timestamp": "07/10/2026 16:15"
             },
             {
-              "id": "thread_mai_m2",
+              "id": "thread_mai_0",
               "sender": "them",
-              "text": "Sảnh có 2 kiện của a, 1 hộp nhỏ vs 1 túi dài ạ.",
+              "text": "Sảnh có 2 kiện liên quan a ạ: 1 túi dài người nhận tên e (chị Lan Anh dặn rồi), 1 hộp nhỏ người nhận khác nhưng shipper bảo đưa a.",
               "time": "15/10/2026 11:38",
               "timestamp": "15/10/2026 11:38"
             },
             {
-              "id": "thread_mai_m3",
+              "id": "thread_mai_1",
               "sender": "me",
-              "text": "Nhờ e giữ giúp, chiều a xuống lấy nha.",
+              "text": "Ừ của a cả, chiều a xuống lấy hộp nhỏ nha.",
               "time": "15/10/2026 11:42",
               "timestamp": "15/10/2026 11:42"
             },
             {
-              "id": "thread_mai_m4",
+              "id": "thread_mai_2",
               "sender": "them",
-              "text": "Anh đã lấy đủ rồi nhé. Nhớ ký sổ lần sau giúp em.",
+              "text": "A lấy hộp nhỏ rồi nhé. Túi hoa e cất kho tới T2 như chị Lan Anh dặn ạ. Lần sau a nhớ ký sổ giúp e 🙏",
               "time": "15/10/2026 15:05",
               "timestamp": "15/10/2026 15:05"
             }
-          ],
-          "historyPriority": "regular"
+          ]
         },
         {
-          "threadId": "thread_lan_anh",
-          "contactName": "Lan Anh Kế Toán",
+          "threadId": "thread_company",
+          "contactName": "Technosoft - Toàn công ty",
           "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 09:20",
+          "timestamp": "15/10/2026 11:00",
           "unreadCount": 0,
+          "historyPriority": "low",
+          "isGroup": true,
+          "memberCount": 46,
+          "pinnedMessageId": "msg_company_pin",
           "messages": [
             {
-              "id": "thread_lan_anh_history_0",
-              "time": "23/09/2026 09:00",
+              "id": "msg_company_pin",
               "sender": "them",
-              "text": "A gửi lại mã số thuế giúp e, file cũ bị thiếu 1 số ạ.",
-              "timestamp": "23/09/2026 09:00"
+              "text": "Chào mừng bạn Nguyễn Thị Thu Hương - Marketing Executive gia nhập Technosoft từ hôm nay 🎉 Mọi người nhớ hỗ trợ bạn nhé!",
+              "time": "08/09/2026 09:00",
+              "senderName": "HR Technosoft",
+              "clueRefId": "CLUE-ZOLA-08",
+              "timestamp": "08/09/2026 09:00"
             },
             {
-              "id": "thread_lan_anh_history_1",
-              "time": "23/09/2026 09:12",
-              "sender": "me",
-              "text": "A check trên hồ sơ nhân sự rùi gửi e nhé.",
-              "timestamp": "23/09/2026 09:12"
-            },
-            {
-              "id": "thread_lan_anh_history_2",
-              "time": "25/09/2026 15:05",
+              "id": "thread_company_1",
               "sender": "them",
-              "text": "Hóa đơn mua cáp a để bản giấy ở đâu zạ?",
-              "timestamp": "25/09/2026 15:05"
+              "text": "Nhắc cả nhà cập nhật thông tin người phụ thuộc trước 31/10 ạ.",
+              "time": "13/10/2026 08:30",
+              "senderName": "HR Technosoft",
+              "timestamp": "13/10/2026 08:30"
             },
             {
-              "id": "thread_lan_anh_history_3",
-              "time": "25/09/2026 15:09",
-              "sender": "me",
-              "text": "Trong ngăn khay chung, kẹp màu xanh e nhé.",
-              "timestamp": "25/09/2026 15:09"
-            },
-            {
-              "id": "thread_lan_anh_history_4",
-              "time": "25/09/2026 15:11",
+              "id": "thread_company_2",
               "sender": "them",
-              "text": "E thấy rùi, cảm ơn a nhé.",
-              "timestamp": "25/09/2026 15:11"
+              "text": "Thứ 7 này vệ sinh điều hòa tầng 9, mọi người dọn bàn giúp nhé.",
+              "time": "14/10/2026 16:00",
+              "senderName": "Ban Hành chính",
+              "timestamp": "14/10/2026 16:00"
             },
             {
-              "id": "thread_lan_anh_history_5",
-              "time": "01/10/2026 10:20",
+              "id": "msg_company_khoa_post",
               "sender": "them",
-              "text": "Bảng chấm công tháng trc a xem giúp e.",
-              "timestamp": "01/10/2026 10:20"
+              "text": "Team MKT nhờ cả nhà share bài ra mắt app ShopNow giúp nha 🙏",
+              "time": "15/10/2026 10:05",
+              "senderContactId": "contact_10",
+              "clueRefId": "CLUE-ZOLA-08",
+              "timestamp": "15/10/2026 10:05"
             },
             {
-              "id": "thread_lan_anh_history_6",
-              "time": "01/10/2026 10:28",
-              "sender": "me",
-              "text": "A confirm đủ rùi, ko điều chỉnh j đâu e.",
-              "timestamp": "01/10/2026 10:28"
-            },
-            {
-              "id": "thread_lan_anh_history_7",
-              "time": "08/10/2026 11:00",
+              "id": "msg_company_hr_thanks",
               "sender": "them",
-              "text": "Chiều có shipper giao hồ sơ, a ký hộ nếu e ra ngoài nhé.",
-              "timestamp": "08/10/2026 11:00"
+              "text": "Cảm ơn Hương nha 🙌 Đã share!",
+              "time": "15/10/2026 10:20",
+              "senderName": "HR Technosoft",
+              "replyToId": "msg_company_khoa_post",
+              "timestamp": "15/10/2026 10:20"
             },
             {
-              "id": "thread_lan_anh_m2",
+              "id": "thread_company_5",
               "sender": "them",
-              "text": "A chuyển phần a trc nhé, e còn chốt vs bên hoa.",
-              "time": "14/10/2026 15:02",
-              "timestamp": "14/10/2026 15:02"
+              "text": "Đã share 👍",
+              "time": "15/10/2026 10:22",
+              "senderContactId": "contact_13",
+              "timestamp": "15/10/2026 10:22"
             },
             {
-              "id": "thread_lan_anh_m3",
-              "sender": "me",
-              "text": "A ứng cả nhóm, tổng 500k đúng ko e?",
-              "time": "14/10/2026 15:06",
-              "timestamp": "14/10/2026 15:06"
-            },
-            {
-              "id": "thread_lan_anh_m4",
+              "id": "thread_company_6",
               "sender": "them",
-              "text": "Đúng rùi ạ. Sinh nhật anh Hùng thứ sáu, nhóm mình mỗi người 100.",
-              "time": "14/10/2026 15:08",
-              "timestamp": "14/10/2026 15:08"
-            },
-            {
-              "id": "thread_lan_anh_m5",
-              "sender": "them",
-              "text": "E ghi nhận đủ 5 người rùi nhé a.",
-              "time": "15/10/2026 09:20",
-              "timestamp": "15/10/2026 09:20"
+              "text": "Bãi xe B1 sáng mai sơn lại vạch, mọi người gửi xe B2 nhé.",
+              "time": "15/10/2026 11:00",
+              "senderName": "Ban Hành chính",
+              "timestamp": "15/10/2026 11:00"
             }
-          ],
-          "historyPriority": "regular"
+          ]
         },
         {
-          "threadId": "thread_thao",
-          "contactName": "Thảo PT California",
+          "threadId": "thread_building",
+          "contactName": "Cư dân tầng 12 CT2",
           "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 08:10",
+          "timestamp": "15/10/2026 08:00",
           "unreadCount": 0,
+          "historyPriority": "regular",
+          "isGroup": true,
+          "memberCount": 64,
           "messages": [
             {
-              "id": "thread_thao_history_0",
-              "time": "24/09/2026 08:05",
+              "id": "thread_building_history_0",
+              "time": "21/09/2026 08:00",
               "sender": "them",
-              "text": "A theo dõi lưng sau buổi hôm qua nhé.",
-              "timestamp": "24/09/2026 08:05"
+              "text": "Tối nay vệ sinh bể nước, mọi người chủ động trữ một ít.",
+              "timestamp": "21/09/2026 08:00",
+              "senderName": "Ban quản lý"
             },
             {
-              "id": "thread_thao_history_1",
-              "time": "24/09/2026 08:22",
+              "id": "thread_building_history_1",
+              "time": "21/09/2026 08:08",
               "sender": "me",
-              "text": "Đỡ căng hơn, mà ngồi lâu vẫn mỏi e.",
-              "timestamp": "24/09/2026 08:22"
+              "text": "Nhà em đã nhận thông tin, cảm ơn ban quản lý.",
+              "timestamp": "21/09/2026 08:08"
             },
             {
-              "id": "thread_thao_history_2",
-              "time": "24/09/2026 08:25",
+              "id": "thread_building_history_2",
+              "time": "25/09/2026 17:30",
               "sender": "them",
-              "text": "A kê lại màn hình vs đứng dậy đi lại ngắn sau mỗi giờ nhé.",
-              "timestamp": "24/09/2026 08:25"
+              "text": "Ai để quên ô ở thang máy em gửi quầy bảo vệ nhé.",
+              "timestamp": "25/09/2026 17:30",
+              "senderName": "Căn 1202"
             },
             {
-              "id": "thread_thao_history_3",
-              "time": "29/09/2026 16:10",
+              "id": "thread_building_history_3",
+              "time": "25/09/2026 17:38",
+              "sender": "them",
+              "text": "Ô của nhà em, em xuống lấy ngay.",
+              "timestamp": "25/09/2026 17:38",
+              "senderName": "Căn 1208"
+            },
+            {
+              "id": "thread_building_history_4",
+              "time": "30/09/2026 09:10",
+              "sender": "them",
+              "text": "Đã mở đăng ký thẻ xe tháng tới.",
+              "timestamp": "30/09/2026 09:10",
+              "senderName": "Ban quản lý"
+            },
+            {
+              "id": "thread_building_history_5",
+              "time": "30/09/2026 09:20",
               "sender": "me",
-              "text": "Hôm nay a đến muộn tầm 10p nhé.",
-              "timestamp": "29/09/2026 16:10"
+              "text": "Em đăng ký lại một xe máy như cũ.",
+              "timestamp": "30/09/2026 09:20"
             },
             {
-              "id": "thread_thao_history_4",
-              "time": "29/09/2026 16:15",
+              "id": "thread_building_history_6",
+              "time": "06/10/2026 14:00",
               "sender": "them",
-              "text": "Vâng, a đến nơi khởi động trc giúp e.",
-              "timestamp": "29/09/2026 16:15"
+              "text": "Hành lang đã thay bóng đèn, vui lòng báo nếu còn vị trí tối.",
+              "timestamp": "06/10/2026 14:00",
+              "senderName": "Ban quản lý"
             },
             {
-              "id": "thread_thao_history_5",
-              "time": "03/10/2026 09:20",
-              "sender": "them",
-              "text": "Tuần này mik chưa tăng tạ nhé a.",
-              "timestamp": "03/10/2026 09:20"
-            },
-            {
-              "id": "thread_thao_history_6",
-              "time": "03/10/2026 09:28",
+              "id": "thread_building_history_7",
+              "time": "06/10/2026 14:08",
               "sender": "me",
-              "text": "A nhớ rùi, ưu tiên tập đều.",
-              "timestamp": "03/10/2026 09:28"
+              "text": "Tầng 12 sáng bình thường rồi ạ.",
+              "timestamp": "06/10/2026 14:08"
             },
             {
-              "id": "thread_thao_history_7",
-              "time": "08/10/2026 18:00",
+              "id": "thread_building_0",
               "sender": "them",
-              "text": "A mang khăn cá nhân nha, quầy hôm nay hết khăn sạch rùi.",
-              "timestamp": "08/10/2026 18:00"
+              "text": "Sáng thứ bảy bảo trì thang B từ 9h đến 11h.",
+              "time": "15/10/2026 07:45",
+              "senderName": "Ban quản lý",
+              "timestamp": "15/10/2026 07:45"
             },
             {
-              "id": "thread_thao_m2",
+              "id": "thread_building_1",
               "sender": "them",
-              "text": "Buổi 20h30 e chuyển sang 18h30 đc ko a?",
-              "time": "13/10/2026 17:15",
-              "timestamp": "13/10/2026 17:15"
+              "text": "Thang A vẫn hoạt động chứ ạ?",
+              "time": "15/10/2026 07:52",
+              "senderName": "Căn 1204",
+              "timestamp": "15/10/2026 07:52"
             },
             {
-              "id": "thread_thao_m3",
-              "sender": "me",
-              "text": "Đc e, lưng a hôm nay lại hơi căng.",
-              "time": "13/10/2026 17:20",
-              "timestamp": "13/10/2026 17:20"
-            },
-            {
-              "id": "thread_thao_m4",
+              "id": "thread_building_2",
               "sender": "them",
-              "text": "Anh mang phiếu đánh giá cột sống buổi trước. Mình tập nhẹ thôi.",
-              "time": "13/10/2026 17:22",
-              "timestamp": "13/10/2026 17:22"
-            },
-            {
-              "id": "thread_thao_m5",
-              "sender": "them",
-              "text": "Nhắc a đứng dậy đi lại sau mỗi tiếng ngồi làm việc nhé.",
-              "time": "15/10/2026 08:10",
-              "timestamp": "15/10/2026 08:10"
+              "text": "Vâng, thang A hoạt động bình thường.",
+              "time": "15/10/2026 08:00",
+              "senderName": "Ban quản lý",
+              "timestamp": "15/10/2026 08:00"
             }
-          ],
-          "historyPriority": "regular"
-        },
-        {
-          "threadId": "thread_ngoc",
-          "contactName": "Bé Ngọc KTX",
-          "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "14/10/2026 20:05",
-          "unreadCount": 0,
-          "messages": [
-            {
-              "id": "thread_ngoc_close_0_0",
-              "sender": "them",
-              "text": "A ơi e đang xem list đồ mang lên ktx.",
-              "time": "03/08/2026 08:10",
-              "timestamp": "03/08/2026 08:10"
-            },
-            {
-              "id": "thread_ngoc_close_0_1",
-              "sender": "me",
-              "text": "Mang ít đồ trc thôi, thiếu j a c gửi thêm.",
-              "time": "03/08/2026 08:13",
-              "timestamp": "03/08/2026 08:13"
-            },
-            {
-              "id": "thread_ngoc_close_0_2",
-              "sender": "them",
-              "text": "E định mang cả chăn dày, có cần ko a?",
-              "time": "03/08/2026 08:16",
-              "timestamp": "03/08/2026 08:16"
-            },
-            {
-              "id": "thread_ngoc_close_0_3",
-              "sender": "me",
-              "text": "Lấy chăn mỏng trc, mùa lạnh mang sau e.",
-              "time": "03/08/2026 08:19",
-              "timestamp": "03/08/2026 08:19"
-            },
-            {
-              "id": "thread_ngoc_close_1_0",
-              "sender": "them",
-              "text": "Sách cũ của a còn quyển nào về IT ko?",
-              "time": "17/08/2026 08:10",
-              "timestamp": "17/08/2026 08:10"
-            },
-            {
-              "id": "thread_ngoc_close_1_1",
-              "sender": "me",
-              "text": "Còn 2 quyển ở kệ, mà ví dụ hơi cũ rùi.",
-              "time": "17/08/2026 08:13",
-              "timestamp": "17/08/2026 08:13"
-            },
-            {
-              "id": "thread_ngoc_close_1_2",
-              "sender": "them",
-              "text": "E đọc phần basic trc cũng đc ạ.",
-              "time": "17/08/2026 08:16",
-              "timestamp": "17/08/2026 08:16"
-            },
-            {
-              "id": "thread_ngoc_close_1_3",
-              "sender": "me",
-              "text": "Ừa, cuối tuần a tìm rùi gửi e.",
-              "time": "17/08/2026 08:19",
-              "timestamp": "17/08/2026 08:19"
-            },
-            {
-              "id": "thread_ngoc_close_2_0",
-              "sender": "them",
-              "text": "Máy e vừa update xong, mở lag hơn trc á a.",
-              "time": "02/09/2026 08:10",
-              "timestamp": "02/09/2026 08:10"
-            },
-            {
-              "id": "thread_ngoc_close_2_1",
-              "sender": "me",
-              "text": "E restart lại rùi chờ nó load xong 1 lúc nhé.",
-              "time": "02/09/2026 08:13",
-              "timestamp": "02/09/2026 08:13"
-            },
-            {
-              "id": "thread_ngoc_close_2_2",
-              "sender": "them",
-              "text": "E restart lại rùi, h đỡ lag hơn rùi a.",
-              "time": "02/09/2026 08:16",
-              "timestamp": "02/09/2026 08:16"
-            },
-            {
-              "id": "thread_ngoc_close_2_3",
-              "sender": "me",
-              "text": "Nhớ backup tài liệu học vào folder riêng nhé e.",
-              "time": "02/09/2026 08:19",
-              "timestamp": "02/09/2026 08:19"
-            },
-            {
-              "id": "thread_ngoc_close_3_0",
-              "sender": "them",
-              "text": "A c có cần e gửi đồ j từ quê lên ko?",
-              "time": "14/09/2026 08:10",
-              "timestamp": "14/09/2026 08:10"
-            },
-            {
-              "id": "thread_ngoc_close_3_1",
-              "sender": "me",
-              "text": "E mang đồ cá nhân cho đủ trc đi, đừng ôm nhiều quá.",
-              "time": "14/09/2026 08:13",
-              "timestamp": "14/09/2026 08:13"
-            },
-            {
-              "id": "thread_ngoc_close_3_2",
-              "sender": "them",
-              "text": "Mẹ lại muốn gửi cả túi lạc cho 2 a c nè.",
-              "time": "14/09/2026 08:16",
-              "timestamp": "14/09/2026 08:16"
-            },
-            {
-              "id": "thread_ngoc_close_3_3",
-              "sender": "me",
-              "text": "Để a hỏi mẹ gửi xe quen, e đỡ xách nặng nha.",
-              "time": "14/09/2026 08:19",
-              "timestamp": "14/09/2026 08:19"
-            },
-            {
-              "id": "thread_ngoc_history_0",
-              "time": "22/09/2026 20:05",
-              "sender": "them",
-              "text": "A ơi e nhập học ổn áp rùi nha.",
-              "timestamp": "22/09/2026 20:05"
-            },
-            {
-              "id": "thread_ngoc_history_1",
-              "time": "22/09/2026 20:15",
-              "sender": "me",
-              "text": "Có cần a c gửi thêm đồ j ko?",
-              "timestamp": "22/09/2026 20:15"
-            },
-            {
-              "id": "thread_ngoc_history_2",
-              "time": "22/09/2026 20:18",
-              "sender": "them",
-              "text": "Chưa cần đâu a, e ở ghép vs 2 bạn nữa vibe cũng vui.",
-              "timestamp": "22/09/2026 20:18"
-            },
-            {
-              "id": "thread_ngoc_history_3",
-              "time": "28/09/2026 11:10",
-              "sender": "them",
-              "text": "Mẹ gửi áo khoác qua a chưa zạ?",
-              "timestamp": "28/09/2026 11:10"
-            },
-            {
-              "id": "thread_ngoc_history_4",
-              "time": "28/09/2026 11:18",
-              "sender": "me",
-              "text": "A chưa nhận đc, để a hỏi mẹ xem.",
-              "timestamp": "28/09/2026 11:18"
-            },
-            {
-              "id": "thread_ngoc_history_5",
-              "time": "04/10/2026 19:10",
-              "sender": "them",
-              "text": "Thư viện trg mở cả tối lun a ạ.",
-              "timestamp": "04/10/2026 19:10"
-            },
-            {
-              "id": "thread_ngoc_history_6",
-              "time": "04/10/2026 19:20",
-              "sender": "me",
-              "text": "Đi về nhớ ới bạn cùng phòng, đừng về 1 mik muộn nhé.",
-              "timestamp": "04/10/2026 19:20"
-            },
-            {
-              "id": "thread_ngoc_history_7",
-              "time": "09/10/2026 10:00",
-              "sender": "them",
-              "text": "Đèn bàn cũ của e chập chờn quá, e đang nghía mấy mẫu mới trên shopee.",
-              "timestamp": "09/10/2026 10:00"
-            },
-            {
-              "id": "thread_ngoc_m2",
-              "sender": "them",
-              "text": "A ơi e nhận đc tiền phòng rùi nha.",
-              "time": "12/10/2026 09:10",
-              "timestamp": "12/10/2026 09:10"
-            },
-            {
-              "id": "thread_ngoc_m3",
-              "sender": "me",
-              "text": "Ừa, nhớ báo mẹ là a chuyển rùi nhé.",
-              "time": "12/10/2026 09:12",
-              "timestamp": "12/10/2026 09:12"
-            },
-            {
-              "id": "thread_ngoc_m4",
-              "sender": "them",
-              "text": "Mẹ bảo cn 2 a c về thì mang hộ e áo khoác nhé.",
-              "time": "12/10/2026 09:14",
-              "timestamp": "12/10/2026 09:14"
-            },
-            {
-              "id": "thread_ngoc_m5",
-              "sender": "them",
-              "text": "Đèn học sáng đỉnh chóp lun a, cảm ơn anh trai iu quý nha.",
-              "time": "14/10/2026 20:05",
-              "timestamp": "14/10/2026 20:05"
-            }
-          ],
-          "historyPriority": "medium"
+          ]
         }
       ],
       "otherThreads": [
-        {
-          "threadId": "thread_tuan",
-          "contactName": "Anh Tuấn Thợ Điện",
-          "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 21:05",
-          "unreadCount": 0,
-          "messages": [
-            {
-              "id": "thread_tuan_history_0",
-              "time": "24/09/2026 10:05",
-              "sender": "them",
-              "text": "Dạ a Hoàng, hôm nay đường dây điện bên a chạy ổn định chưa ạ?",
-              "timestamp": "24/09/2026 10:05"
-            },
-            {
-              "id": "thread_tuan_history_1",
-              "time": "24/09/2026 10:12",
-              "sender": "me",
-              "text": "Chạy êm rùi e, nhưng thỉnh thoảng điện áp hơi cao, ng cứ thấy nóng ran.",
-              "timestamp": "24/09/2026 10:12"
-            },
-            {
-              "id": "thread_tuan_history_2",
-              "time": "24/09/2026 10:18",
-              "sender": "them",
-              "text": "Thế để chiều nào e qua đo lại tải cho a nhé, thợ điện này bảo hành tận nơi mà.",
-              "timestamp": "24/09/2026 10:18"
-            },
-            {
-              "id": "thread_tuan_history_3",
-              "time": "29/09/2026 14:20",
-              "sender": "them",
-              "text": "Bóng đèn ngủ ánh sáng vàng hôm trc e lắp cho a nhìn ưng ý ko?",
-              "timestamp": "29/09/2026 14:20"
-            },
-            {
-              "id": "thread_tuan_history_4",
-              "time": "29/09/2026 14:24",
-              "sender": "me",
-              "text": "Rất hợp gu a. Phòng ấm áp hẳn, thấy thợ điện có tâm ghê.",
-              "timestamp": "29/09/2026 14:24"
-            },
-            {
-              "id": "thread_tuan_history_5",
-              "time": "29/09/2026 14:26",
-              "sender": "them",
-              "text": "Thợ điện có tâm thế này hôm nào a phải khao bữa cơm niêu cảm ơn đấy nhé.",
-              "timestamp": "29/09/2026 14:26"
-            },
-            {
-              "id": "thread_tuan_history_6",
-              "time": "06/10/2026 09:40",
-              "sender": "them",
-              "text": "A kiểm tra lại cái công tơ xem, hôm qua e bảo dưỡng xong số nhảy êm lắm rùi.",
-              "timestamp": "06/10/2026 09:40"
-            },
-            {
-              "id": "thread_tuan_history_7",
-              "time": "06/10/2026 09:46",
-              "sender": "me",
-              "text": "Công nhận tay nghề thợ điện khéo thật. Hôm nào rảnh a mời cf giải nhiệt.",
-              "timestamp": "06/10/2026 09:46"
-            },
-            {
-              "id": "thread_tuan_m4",
-              "sender": "me",
-              "text": "Anh Tuấn ơi, tối mai qua kiểm tra lại cái đường dây điện giúp a đc ko?",
-              "time": "13/10/2026 10:10",
-              "timestamp": "13/10/2026 10:10"
-            },
-            {
-              "id": "thread_tuan_m5",
-              "sender": "them",
-              "text": "Mai e kín lịch rùi a. Để tối thứ Năm (15/10) e ghé kiểm tra toàn bộ nhé.",
-              "time": "13/10/2026 10:14",
-              "timestamp": "13/10/2026 10:14"
-            },
-            {
-              "id": "thread_tuan_m6",
-              "sender": "them",
-              "text": "Kiểm tra xong nhớ khao thợ điện bữa cơm niêu như a hứa đấy.",
-              "time": "13/10/2026 10:18",
-              "timestamp": "13/10/2026 10:18"
-            },
-            {
-              "id": "thread_tuan_m6_1",
-              "sender": "them",
-              "text": "E gửi lại a 160k tiền thừa hôm trc a đưa mua cuộn băng dính vs cầu chì nhé.",
-              "time": "14/10/2026 12:45",
-              "timestamp": "14/10/2026 12:45"
-            },
-            {
-              "id": "thread_tuan_m6_2",
-              "sender": "me",
-              "text": "Có mấy đồng mà cũng gửi lại. Để mai a bù vào bữa tối khao thợ điện nhé.",
-              "time": "14/10/2026 12:50",
-              "timestamp": "14/10/2026 12:50"
-            },
-            {
-              "id": "thread_tuan_m7",
-              "sender": "me",
-              "text": "Tối nay thợ điện nhớ mang đủ đồ nghề nhé. Đúng hẹn chứ?",
-              "time": "15/10/2026 15:20",
-              "timestamp": "15/10/2026 15:20"
-            },
-            {
-              "id": "thread_tuan_m8",
-              "sender": "them",
-              "text": "Vâng anh, em đặt bàn bên Phố Cổ rồi nhé, 19h30. Chỗ cũ trên tầng 2 cho yên tĩnh.",
-              "time": "15/10/2026 16:42",
-              "clueRefId": "CLUE-ZOLA-07",
-              "timestamp": "15/10/2026 16:42"
-            },
-            {
-              "id": "thread_tuan_m9",
-              "sender": "me",
-              "text": "Nay tròn 1 tháng ngày em nhận sửa điện cho anh lần đầu đấy, tối nay để anh khao.",
-              "time": "15/10/2026 16:45",
-              "clueRefId": "CLUE-ZOLA-07",
-              "timestamp": "15/10/2026 16:45"
-            },
-            {
-              "id": "thread_tuan_m10",
-              "sender": "them",
-              "text": "Khách hàng gì mà nhớ dai thế. Ăn cơm niêu xong nhớ về bảo dưỡng đường dây tiếp cho em đấy.",
-              "time": "15/10/2026 16:48",
-              "timestamp": "15/10/2026 16:48"
-            },
-            {
-              "id": "thread_tuan_m11",
-              "sender": "them",
-              "text": "Em đang gửi xe dưới quán Cơm Niêu rồi, anh tới chưa?",
-              "time": "15/10/2026 19:20",
-              "clueRefId": "CLUE-ZOLA-07",
-              "timestamp": "15/10/2026 19:20"
-            },
-            {
-              "id": "thread_tuan_m12",
-              "sender": "them",
-              "text": "Đồ anh để quên em cất rồi, mai em mang qua nhé.",
-              "time": "15/10/2026 21:05",
-              "timestamp": "15/10/2026 21:05"
-            }
-          ],
-          "suspectId": "suspect_huong",
-          "historyPriority": "regular"
-        },
         {
           "threadId": "thread_carrier",
           "contactName": "Chăm sóc thuê bao",
@@ -2326,7 +2549,7 @@
         {
           "id": "contact_0",
           "name": "Mẹ Ở Quê",
-          "phone": "0998877665",
+          "phone": "0915220011",
           "section": "M",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "high"
@@ -2334,7 +2557,7 @@
         {
           "id": "contact_1",
           "name": "Giao Nước",
-          "phone": "0911223344",
+          "phone": "0904556677",
           "section": "G",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "low"
@@ -2366,7 +2589,7 @@
         {
           "id": "contact_5",
           "name": "Tuấn Đụt",
-          "phone": "0955667788",
+          "phone": "0977112233",
           "section": "T",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "medium"
@@ -2382,7 +2605,7 @@
         {
           "id": "contact_7",
           "name": "Giao Hàng",
-          "phone": "0977889900",
+          "phone": "0905667788",
           "section": "G",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "low"
@@ -2405,24 +2628,32 @@
         },
         {
           "id": "contact_10",
-          "name": "Anh Tuấn Thợ Điện",
+          "name": "Khoa BE",
           "phone": "0988886677",
-          "section": "A",
+          "section": "K",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "regular"
         },
         {
           "id": "contact_11",
           "name": "Ban Quản Lý",
-          "phone": "0911335577",
+          "phone": "0243556677",
           "section": "B",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "low"
         },
         {
           "id": "contact_12",
+          "name": "Anh Tuấn Thợ Điện",
+          "phone": "0912345801",
+          "section": "A",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "historyPriority": "regular"
+        },
+        {
+          "id": "contact_13",
           "name": "Bách Dev",
-          "phone": "0922446688",
+          "phone": "0933778899",
           "section": "B",
           "avatarGradient": "from-slate-400 to-slate-600",
           "historyPriority": "regular"
@@ -2440,7 +2671,7 @@
           "date": "15/10/2026",
           "time": "22:05",
           "amount": "-28.000 đ",
-          "beneficiary": "Cua hang tien loi",
+          "beneficiary": "CUA HANG TIEN LOI",
           "memo": "Thanh toan QR",
           "status": "Thành công",
           "timestamp": "15/10/2026 22:05"
@@ -2450,7 +2681,7 @@
           "date": "15/10/2026",
           "time": "21:15",
           "amount": "-100.000 đ",
-          "beneficiary": "Nha mang",
+          "beneficiary": "NHA MANG",
           "memo": "Nap tien dien thoai",
           "status": "Thành công",
           "timestamp": "15/10/2026 21:15"
@@ -2460,43 +2691,58 @@
           "date": "15/10/2026",
           "time": "20:48",
           "amount": "-640.000 đ",
-          "beneficiary": "Com Nieu Pho Co",
+          "beneficiary": "COM NIEU PHO CO",
           "memo": "Thanh toan the",
           "status": "Thành công",
-          "clueRefId": "CLUE-BANK-06",
-          "suspectId": "suspect_huong",
-          "suspectName": "Com Nieu Pho Co",
+          "clueRefId": "CLUE-BANK-07",
           "timestamp": "15/10/2026 20:48"
+        },
+        {
+          "id": "tx_lan_anh",
+          "date": "15/10/2026",
+          "time": "20:30",
+          "amount": "-500.000 đ",
+          "beneficiary": "NGUYEN LAN ANH",
+          "memo": "CK",
+          "status": "Thành công",
+          "timestamp": "15/10/2026 20:30"
+        },
+        {
+          "id": "tx_ngoc",
+          "date": "15/10/2026",
+          "time": "20:10",
+          "amount": "-1.200.000 đ",
+          "beneficiary": "NGUYEN BAO NGOC",
+          "memo": "CK",
+          "status": "Thành công",
+          "timestamp": "15/10/2026 20:10"
+        },
+        {
+          "id": "tx_tuan_coc",
+          "date": "15/10/2026",
+          "time": "15:30",
+          "amount": "-1.500.000 đ",
+          "beneficiary": "TRAN VAN TUAN",
+          "memo": "Coc",
+          "status": "Thành công",
+          "timestamp": "15/10/2026 15:30"
         },
         {
           "id": "tx_nam",
           "date": "15/10/2026",
           "time": "13:05",
           "amount": "+55.000 đ",
-          "beneficiary": "Tran Van Nam",
+          "beneficiary": "TRAN VAN NAM",
           "memo": "Com hom qua",
           "status": "Thành công",
           "timestamp": "15/10/2026 13:05"
-        },
-        {
-          "id": "tx_02",
-          "date": "15/10/2026",
-          "time": "12:40",
-          "amount": "+160.000 đ",
-          "beneficiary": "Nguyen Thi Thu Huong",
-          "memo": "Hoan phan trua 14/10",
-          "status": "Thành công",
-          "clueRefId": "CLUE-BANK-06",
-          "suspectId": "suspect_huong",
-          "suspectName": "Nguyen Thi Thu Huong",
-          "timestamp": "15/10/2026 12:40"
         },
         {
           "id": "tx_breakfast",
           "date": "15/10/2026",
           "time": "07:35",
           "amount": "-30.000 đ",
-          "beneficiary": "Banh mi",
+          "beneficiary": "BANH MI",
           "memo": "Thanh toan QR",
           "status": "Thành công",
           "timestamp": "15/10/2026 07:35"
@@ -2506,7 +2752,7 @@
           "date": "14/10/2026",
           "time": "19:10",
           "amount": "+89.000 đ",
-          "beneficiary": "San mua sam",
+          "beneficiary": "SAN MUA SAM",
           "memo": "Hoan don huy",
           "status": "Thành công",
           "timestamp": "14/10/2026 19:10"
@@ -2516,38 +2762,28 @@
           "date": "14/10/2026",
           "time": "18:20",
           "amount": "-60.000 đ",
-          "beneficiary": "Nuoc uong",
+          "beneficiary": "NUOC UONG",
           "memo": "Thanh toan QR",
           "status": "Thành công",
           "timestamp": "14/10/2026 18:20"
-        },
-        {
-          "id": "tx_04",
-          "date": "14/10/2026",
-          "time": "15:10",
-          "amount": "-500.000 đ",
-          "beneficiary": "Nguyen Lan Anh",
-          "memo": "Ung nhom qua SN Hung",
-          "status": "Thành công",
-          "timestamp": "14/10/2026 15:10"
         },
         {
           "id": "tx_parking",
           "date": "13/10/2026",
           "time": "18:55",
           "amount": "-5.000 đ",
-          "beneficiary": "Bai xe",
+          "beneficiary": "BAI XE MINH AN",
           "memo": "Thanh toan QR",
           "status": "Thành công",
           "timestamp": "13/10/2026 18:55"
         },
         {
-          "id": "tx_06",
+          "id": "tx_gym",
           "date": "13/10/2026",
           "time": "17:45",
           "amount": "-1.500.000 đ",
-          "beneficiary": "California Fitness",
-          "memo": "Goi tap thang 10",
+          "beneficiary": "CALIFORNIA FITNESS",
+          "memo": "Goi PT thang 10",
           "status": "Thành công",
           "timestamp": "13/10/2026 17:45"
         },
@@ -2556,7 +2792,7 @@
           "date": "13/10/2026",
           "time": "12:15",
           "amount": "-45.000 đ",
-          "beneficiary": "Com van phong",
+          "beneficiary": "COM VAN PHONG",
           "memo": "Thanh toan QR",
           "status": "Thành công",
           "timestamp": "13/10/2026 12:15"
@@ -2566,37 +2802,27 @@
           "date": "12/10/2026",
           "time": "17:30",
           "amount": "-326.000 đ",
-          "beneficiary": "Sieu thi",
+          "beneficiary": "SIEU THI",
           "memo": "Thanh toan the",
           "status": "Thành công",
           "timestamp": "12/10/2026 17:30"
         },
         {
-          "id": "tx_05",
+          "id": "tx_ngoc_room",
           "date": "12/10/2026",
           "time": "08:50",
           "amount": "-2.500.000 đ",
-          "beneficiary": "Nguyen Bao Ngoc",
+          "beneficiary": "NGUYEN BAO NGOC",
           "memo": "Tien phong thang 10",
           "status": "Thành công",
           "timestamp": "12/10/2026 08:50"
-        },
-        {
-          "id": "tx_coffee",
-          "date": "11/10/2026",
-          "time": "08:05",
-          "amount": "-35.000 đ",
-          "beneficiary": "Ca phe dau ngo",
-          "memo": "Thanh toan QR",
-          "status": "Thành công",
-          "timestamp": "11/10/2026 08:05"
         },
         {
           "id": "tx_fuel",
           "date": "11/10/2026",
           "time": "07:40",
           "amount": "-70.000 đ",
-          "beneficiary": "Cua hang xang dau",
+          "beneficiary": "CUA HANG XANG DAU",
           "memo": "Thanh toan QR",
           "status": "Thành công",
           "timestamp": "11/10/2026 07:40"
@@ -2606,7 +2832,7 @@
           "date": "10/10/2026",
           "time": "09:12",
           "amount": "-1.450.000 đ",
-          "beneficiary": "EVN Ha Noi",
+          "beneficiary": "EVN HA NOI",
           "memo": "Thanh toan tien dien",
           "status": "Thành công",
           "timestamp": "10/10/2026 09:12"
@@ -2626,17 +2852,17 @@
           "date": "10/10/2026",
           "time": "08:45",
           "amount": "-31.500.000 đ",
-          "beneficiary": "Vo",
+          "beneficiary": "TRAN MINH THU",
           "memo": "Sinh hoat thang 10",
           "status": "Thành công",
           "timestamp": "10/10/2026 08:45"
         },
         {
-          "id": "tx_07",
+          "id": "tx_salary",
           "date": "10/10/2026",
           "time": "08:30",
           "amount": "+35.000.000 đ",
-          "beneficiary": "Cong Ty CP Cong Nghe Technosoft",
+          "beneficiary": "CONG TY CP CONG NGHE TECHNOSOFT",
           "memo": "Luong thang 10 Nguyen Huy Hoang",
           "status": "Thành công",
           "timestamp": "10/10/2026 08:30"
@@ -3081,26 +3307,48 @@
       "recentSearches": [
         {
           "id": "search_0",
-          "text": "bàn phím không dây"
+          "text": "bình nóng lạnh 20l"
         },
         {
           "id": "search_1",
-          "text": "cà phê hạt 500g"
-        },
-        {
-          "id": "search_2",
-          "text": "túi rác vừa"
-        },
-        {
-          "id": "search_3",
           "text": "váy lụa be"
         },
         {
+          "id": "search_2",
+          "text": "hoa sáp sinh nhật"
+        },
+        {
+          "id": "search_3",
+          "text": "túi rác vừa"
+        },
+        {
           "id": "search_4",
-          "text": "đèn học"
+          "text": "bàn phím không dây"
         }
       ],
       "orders": [
+        {
+          "orderId": "order_bag",
+          "suspectId": "husband_hoang",
+          "suspectName": "Nguyễn Huy Hoàng",
+          "shopName": "Đồ Gia Dụng",
+          "orderDate": "14/10/2026 17:42",
+          "recipientName": "Nguyễn Huy Hoàng",
+          "recipientPhone": "0901236789",
+          "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+          "status": "in_transit",
+          "totalAmount": "39.000đ",
+          "paymentMethod": "Thanh toán trực tuyến",
+          "items": [
+            {
+              "productTitle": "Túi rác",
+              "variantName": "cỡ vừa",
+              "price": "39.000đ",
+              "quantity": 1
+            }
+          ],
+          "timestamp": "14/10/2026 17:42"
+        },
         {
           "orderId": "order_polo",
           "suspectId": "husband_hoang",
@@ -3124,29 +3372,53 @@
           "timestamp": "14/10/2026 18:00"
         },
         {
-          "orderId": "order_bag",
-          "suspectId": "husband_hoang",
-          "suspectName": "Nguyễn Huy Hoàng",
-          "shopName": "Đồ Gia Dụng",
-          "orderDate": "14/10/2026 17:00",
-          "recipientName": "Nguyễn Huy Hoàng",
-          "recipientPhone": "0901236789",
-          "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
-          "status": "in_transit",
-          "totalAmount": "39.000đ",
+          "orderId": "order_03",
+          "suspectId": "suspect_mai",
+          "suspectName": "Đỗ Thị Mai",
+          "shopName": "Hoa Sáp Xinh",
+          "orderDate": "14/10/2026 15:20",
+          "recipientName": "Đỗ Thị Mai",
+          "recipientPhone": "0988990011",
+          "shippingAddress": "Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội",
+          "status": "completed",
+          "totalAmount": "350.000đ",
           "paymentMethod": "Thanh toán trực tuyến",
           "items": [
             {
-              "productTitle": "Túi rác",
-              "variantName": "cỡ vừa",
-              "price": "39.000đ",
+              "productTitle": "Lẵng hoa sáp",
+              "variantName": "mẫu vàng",
+              "price": "350.000đ",
               "quantity": 1
             }
           ],
-          "timestamp": "14/10/2026 17:00"
+          "clueRefId": "CLUE-POSH-06",
+          "timestamp": "14/10/2026 15:20"
+        },
+        {
+          "orderId": "order_heater",
+          "shopName": "Điện Máy Nhà Mình",
+          "orderDate": "13/10/2026 09:30",
+          "recipientName": "Nguyễn Thị Hòa",
+          "recipientPhone": "0915220011",
+          "shippingAddress": "Xóm 3, xã Yên Phong, huyện Ý Yên, Nam Định",
+          "status": "in_transit",
+          "totalAmount": "2.390.000đ",
+          "paymentMethod": "Thanh toán trực tuyến",
+          "items": [
+            {
+              "productTitle": "Bình nóng lạnh 20L",
+              "variantName": "trắng",
+              "price": "2.390.000đ",
+              "quantity": 1
+            }
+          ],
+          "clueRefId": "CLUE-POSH-06",
+          "timestamp": "13/10/2026 09:30"
         },
         {
           "orderId": "order_01",
+          "suspectId": "suspect_huong",
+          "suspectName": "Nguyễn Thị Thu Hương",
           "shopName": "Lụa Satin",
           "orderDate": "12/10/2026 20:10",
           "recipientName": "Nguyễn Thị Thu Hương",
@@ -3164,31 +3436,7 @@
             }
           ],
           "clueRefId": "CLUE-POSH-05",
-          "suspectId": "suspect_huong",
-          "suspectName": "Nguyễn Thị Thu Hương",
           "timestamp": "12/10/2026 20:10"
-        },
-        {
-          "orderId": "order_03",
-          "suspectId": "husband_hoang",
-          "suspectName": "Nguyễn Huy Hoàng",
-          "shopName": "Hoa Sáp",
-          "orderDate": "11/10",
-          "recipientName": "Nguyễn Huy Hoàng",
-          "recipientPhone": "0901236789",
-          "shippingAddress": "Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội",
-          "status": "completed",
-          "totalAmount": "350.000đ",
-          "paymentMethod": "Thanh toán trực tuyến",
-          "items": [
-            {
-              "productTitle": "Lẵng hoa sáp",
-              "variantName": "mẫu vàng",
-              "price": "350.000đ",
-              "quantity": 1
-            }
-          ],
-          "timestamp": "11/10"
         },
         {
           "orderId": "order_02",
@@ -3648,7 +3896,7 @@
             {
               "id": "seller_polo_m1",
               "sender": "user",
-              "text": "Thôi hủy giúp mình, mình cần đúng màu.",
+              "text": "Thôi hủy giúp mình.",
               "time": "18:25",
               "date": "14/10"
             },
@@ -3658,6 +3906,54 @@
               "text": "Dạ shop xác nhận hoàn 89.000đ.",
               "time": "18:30",
               "date": "14/10"
+            }
+          ]
+        },
+        {
+          "shopId": "seller_hoa",
+          "shopName": "Hoa Sáp Xinh",
+          "date": "14/10",
+          "timestamp": "14/10/2026 15:22",
+          "lastMessage": "Dạ, giao sảnh Minh An sáng thứ 5 ạ.",
+          "unreadCount": 0,
+          "messages": [
+            {
+              "id": "seller_hoa_m0",
+              "sender": "user",
+              "text": "Thiệp ghi giúp: Chúc mừng sinh nhật! - Team Dev",
+              "time": "15:18",
+              "date": "14/10"
+            },
+            {
+              "id": "seller_hoa_m1",
+              "sender": "shop",
+              "text": "Dạ, giao sảnh Minh An sáng thứ 5 ạ.",
+              "time": "15:22",
+              "date": "14/10"
+            }
+          ]
+        },
+        {
+          "shopId": "seller_dienmay",
+          "shopName": "Điện Máy Nhà Mình",
+          "date": "13/10",
+          "timestamp": "13/10/2026 09:35",
+          "lastMessage": "Dạ, bên em gọi bác Hòa trước 30 phút ạ.",
+          "unreadCount": 0,
+          "messages": [
+            {
+              "id": "seller_dienmay_m0",
+              "sender": "user",
+              "text": "Shop giao về quê giúp mình, gọi số người nhận trước khi tới nhé.",
+              "time": "09:28",
+              "date": "13/10"
+            },
+            {
+              "id": "seller_dienmay_m1",
+              "sender": "shop",
+              "text": "Dạ, bên em gọi bác Hòa trước 30 phút ạ.",
+              "time": "09:35",
+              "date": "13/10"
             }
           ]
         },
@@ -3728,12 +4024,10 @@
             {
               "id": "seller_satin_m2",
               "sender": "user",
-              "text": "Gửi kèm thiệp ghi đúng dòng này giúp mình: 15/09 - 15/10. Vẫn chỗ cũ nhé. H.",
+              "text": "Gửi kèm thiệp ghi giúp mình: 15/09 - 15/10 ♡",
               "time": "20:15",
               "date": "12/10",
-              "clueRefId": "CLUE-POSH-05",
-              "suspectId": "suspect_huong",
-              "suspectName": "Nguyễn Thị Thu Hương"
+              "clueRefId": "CLUE-POSH-05"
             },
             {
               "id": "seller_satin_m3",
@@ -3741,82 +4035,7 @@
               "text": "Dạ, shop để thiệp trong hộp, không in ngoài kiện.",
               "time": "20:17",
               "date": "12/10",
-              "clueRefId": "CLUE-POSH-05",
-              "suspectId": "suspect_huong",
-              "suspectName": "Nguyễn Thị Thu Hương"
-            }
-          ]
-        },
-        {
-          "shopId": "seller_coffee",
-          "shopName": "Cà Phê",
-          "date": "10/10",
-          "timestamp": "10/10/2026 08:18",
-          "lastMessage": "Đúng loại mình cần, cảm ơn shop.",
-          "unreadCount": 0,
-          "messages": [
-            {
-              "id": "seller_coffee_history_0",
-              "text": "Hạt bên mình rang mức nào vậy shop?",
-              "sender": "user",
-              "date": "18/09",
-              "time": "10:00"
-            },
-            {
-              "id": "seller_coffee_history_1",
-              "text": "Mẻ này rang vừa, dùng pha phin hoặc máy đều được.",
-              "sender": "shop",
-              "date": "18/09",
-              "time": "10:03"
-            },
-            {
-              "id": "seller_coffee_history_2",
-              "text": "Mình thường pha phin, có cần xay sẵn không?",
-              "sender": "user",
-              "date": "18/09",
-              "time": "10:06"
-            },
-            {
-              "id": "seller_coffee_history_3",
-              "text": "Nếu anh có máy xay thì giữ nguyên hạt sẽ thơm hơn.",
-              "sender": "shop",
-              "date": "18/09",
-              "time": "10:09"
-            },
-            {
-              "id": "seller_coffee_history_4",
-              "text": "Mình chọn nguyên hạt, lần trước xay đủ cho từng lần uống.",
-              "sender": "user",
-              "date": "18/09",
-              "time": "10:12"
-            },
-            {
-              "id": "seller_coffee_history_5",
-              "text": "Dạ shop ghi nhận ạ.",
-              "sender": "shop",
-              "date": "18/09",
-              "time": "10:15"
-            },
-            {
-              "id": "seller_coffee_m0",
-              "sender": "user",
-              "text": "Shop để nguyên hạt giúp mình nhé.",
-              "time": "08:10",
-              "date": "10/10"
-            },
-            {
-              "id": "seller_coffee_m1",
-              "sender": "shop",
-              "text": "Dạ bên em đóng túi 500g nguyên hạt, có van một chiều.",
-              "time": "08:15",
-              "date": "10/10"
-            },
-            {
-              "id": "seller_coffee_m2",
-              "sender": "user",
-              "text": "Đúng loại mình cần, cảm ơn shop.",
-              "time": "08:18",
-              "date": "10/10"
+              "clueRefId": "CLUE-POSH-05"
             }
           ]
         },
@@ -3824,8 +4043,8 @@
           "shopId": "seller_keyboard",
           "shopName": "Bàn Phím",
           "date": "09/10",
-          "timestamp": "09/10/2026 12:28",
-          "lastMessage": "Cho mình bản nâu nhé.",
+          "timestamp": "09/10/2026 12:25",
+          "lastMessage": "Dạ được ạ.",
           "unreadCount": 0,
           "messages": [
             {
@@ -3880,15 +4099,8 @@
             {
               "id": "seller_keyboard_m1",
               "sender": "shop",
-              "text": "Dạ được, chuyển bằng tổ hợp phím theo hướng dẫn.",
+              "text": "Dạ được ạ.",
               "time": "12:25",
-              "date": "09/10"
-            },
-            {
-              "id": "seller_keyboard_m2",
-              "sender": "user",
-              "text": "Cho mình bản nâu nhé.",
-              "time": "12:28",
               "date": "09/10"
             }
           ]
@@ -4104,10 +4316,34 @@
       ],
       "notifications": [
         {
+          "id": "notice_heater",
+          "type": "order",
+          "title": "Đơn hàng đang giao",
+          "snippet": "Đơn order_heater đang trên đường giao tới Nam Định.",
+          "timestamp": "15/10/2026 14:00",
+          "orderId": "order_heater"
+        },
+        {
+          "id": "notice_order_03",
+          "type": "order",
+          "title": "Đơn hàng đã giao",
+          "snippet": "Đơn order_03 đã giao thành công.",
+          "timestamp": "15/10/2026 11:37",
+          "orderId": "order_03"
+        },
+        {
+          "id": "notice_order_01",
+          "type": "order",
+          "title": "Đơn hàng đã giao",
+          "snippet": "Đơn order_01 đã giao thành công.",
+          "timestamp": "15/10/2026 11:36",
+          "orderId": "order_01"
+        },
+        {
           "id": "notice_bag",
           "type": "order",
           "title": "Đơn túi rác đang giao",
-          "snippet": "Túi rác cỡ vừa đang trên đường giao đến nhà.",
+          "snippet": "Túi rác cỡ vừa dự kiến giao 16/10.",
           "timestamp": "15/10/2026 09:00",
           "orderId": "order_bag"
         },
@@ -4115,7 +4351,7 @@
           "id": "notice_polo",
           "type": "order",
           "title": "Đã hoàn tiền áo polo",
-          "snippet": "89.000đ đã hoàn về phương thức thanh toán ban đầu.",
+          "snippet": "Đơn order_polo đã hoàn 89.000đ về phương thức thanh toán ban đầu.",
           "timestamp": "14/10/2026 19:10",
           "orderId": "order_polo"
         },
@@ -4291,39 +4527,47 @@
       "unreadBadge": 0,
       "calls": [
         {
-          "callId": "call_tuan_late",
-          "contactName": "Anh Tuấn Thợ Điện",
+          "callId": "call_khoa_late",
+          "contactName": "Khoa BE",
           "contactId": "contact_10",
           "phoneNumber": "0988886677",
-          "timestamp": "15/10/2026 23:30",
+          "timestamp": "15/10/2026 23:20",
           "direction": "outgoing",
           "durationSeconds": 96,
-          "clueRefId": "CLUE-PHONE-01",
-          "suspectName": "Anh Tuấn Thợ Điện"
+          "clueRefId": "CLUE-PHONE-01"
         },
         {
           "callId": "call_building",
           "contactName": "Ban Quản Lý",
           "contactId": "contact_11",
-          "phoneNumber": "0911335577",
+          "phoneNumber": "0243556677",
           "timestamp": "15/10/2026 21:05",
           "direction": "incoming",
           "durationSeconds": 51
         },
         {
-          "callId": "call_tuan_early",
-          "contactName": "Anh Tuấn Thợ Điện",
+          "callId": "call_khoa_early",
+          "contactName": "Khoa BE",
           "contactId": "contact_10",
           "phoneNumber": "0988886677",
-          "timestamp": "15/10/2026 19:22",
+          "timestamp": "15/10/2026 19:18",
           "direction": "outgoing",
           "durationSeconds": 26
+        },
+        {
+          "callId": "call_thao_miss",
+          "contactName": "Thảo PT California",
+          "contactId": "contact_4",
+          "phoneNumber": "0944556677",
+          "timestamp": "15/10/2026 18:30",
+          "direction": "missed",
+          "durationSeconds": 0
         },
         {
           "callId": "call_mom_2",
           "contactName": "Mẹ Ở Quê",
           "contactId": "contact_0",
-          "phoneNumber": "0998877665",
+          "phoneNumber": "0915220011",
           "timestamp": "15/10/2026 18:00",
           "direction": "incoming",
           "durationSeconds": 144
@@ -4333,7 +4577,7 @@
           "contactName": "Vợ",
           "contactId": "contact_9",
           "phoneNumber": "0900112233",
-          "timestamp": "15/10/2026 17:30",
+          "timestamp": "15/10/2026 12:30",
           "direction": "incoming",
           "durationSeconds": 88
         },
@@ -4345,15 +4589,6 @@
           "timestamp": "15/10/2026 11:40",
           "direction": "missed",
           "durationSeconds": 0
-        },
-        {
-          "callId": "call_courier",
-          "contactName": "Giao Hàng",
-          "contactId": "contact_7",
-          "phoneNumber": "0977889900",
-          "timestamp": "14/10/2026 17:50",
-          "direction": "incoming",
-          "durationSeconds": 28
         },
         {
           "callId": "call_lan_anh",
@@ -4368,7 +4603,7 @@
           "callId": "call_friend",
           "contactName": "Tuấn Đụt",
           "contactId": "contact_5",
-          "phoneNumber": "0955667788",
+          "phoneNumber": "0977112233",
           "timestamp": "14/10/2026 12:20",
           "direction": "outgoing",
           "durationSeconds": 240
@@ -4401,19 +4636,19 @@
           "durationSeconds": 186
         },
         {
-          "callId": "call_water",
-          "contactName": "Giao Nước",
-          "contactId": "contact_1",
-          "phoneNumber": "0911223344",
-          "timestamp": "12/10/2026 18:30",
+          "callId": "call_tuan_dien",
+          "contactName": "Anh Tuấn Thợ Điện",
+          "contactId": "contact_12",
+          "phoneNumber": "0912345801",
+          "timestamp": "13/10/2026 08:40",
           "direction": "outgoing",
-          "durationSeconds": 42
+          "durationSeconds": 132
         },
         {
           "callId": "call_mom_1",
           "contactName": "Mẹ Ở Quê",
           "contactId": "contact_0",
-          "phoneNumber": "0998877665",
+          "phoneNumber": "0915220011",
           "timestamp": "12/10/2026 18:05",
           "direction": "incoming",
           "durationSeconds": 320
@@ -4422,7 +4657,7 @@
           "callId": "call_history_31",
           "contactId": "contact_1",
           "contactName": "Giao Nước",
-          "phoneNumber": "0911223344",
+          "phoneNumber": "0904556677",
           "timestamp": "11/10/2026 09:00",
           "direction": "outgoing",
           "durationSeconds": 43
@@ -4467,7 +4702,7 @@
           "callId": "call_history_26",
           "contactId": "contact_7",
           "contactName": "Giao Hàng",
-          "phoneNumber": "0977889900",
+          "phoneNumber": "0905667788",
           "timestamp": "06/10/2026 17:35",
           "direction": "incoming",
           "durationSeconds": 35
@@ -4476,7 +4711,7 @@
           "callId": "call_history_25",
           "contactId": "contact_5",
           "contactName": "Tuấn Đụt",
-          "phoneNumber": "0955667788",
+          "phoneNumber": "0977112233",
           "timestamp": "05/10/2026 09:20",
           "direction": "outgoing",
           "durationSeconds": 96
@@ -4485,16 +4720,16 @@
           "callId": "call_history_24",
           "contactId": "contact_0",
           "contactName": "Mẹ Ở Quê",
-          "phoneNumber": "0998877665",
+          "phoneNumber": "0915220011",
           "timestamp": "04/10/2026 16:05",
           "direction": "incoming",
           "durationSeconds": 301
         },
         {
           "callId": "call_history_23",
-          "contactId": "contact_12",
+          "contactId": "contact_13",
           "contactName": "Bách Dev",
-          "phoneNumber": "0922446688",
+          "phoneNumber": "0933778899",
           "timestamp": "03/10/2026 12:10",
           "direction": "outgoing",
           "durationSeconds": 83
@@ -4521,7 +4756,7 @@
           "callId": "call_history_20",
           "contactId": "contact_11",
           "contactName": "Ban Quản Lý",
-          "phoneNumber": "0911335577",
+          "phoneNumber": "0243556677",
           "timestamp": "30/09/2026 08:00",
           "direction": "outgoing",
           "durationSeconds": 58
@@ -4548,7 +4783,7 @@
           "callId": "call_history_17",
           "contactId": "contact_5",
           "contactName": "Tuấn Đụt",
-          "phoneNumber": "0955667788",
+          "phoneNumber": "0977112233",
           "timestamp": "28/09/2026 18:05",
           "direction": "missed",
           "durationSeconds": 0
@@ -4566,16 +4801,16 @@
           "callId": "call_history_15",
           "contactId": "contact_0",
           "contactName": "Mẹ Ở Quê",
-          "phoneNumber": "0998877665",
+          "phoneNumber": "0915220011",
           "timestamp": "27/09/2026 18:10",
           "direction": "incoming",
           "durationSeconds": 325
         },
         {
           "callId": "call_history_14",
-          "contactId": "contact_12",
+          "contactId": "contact_13",
           "contactName": "Bách Dev",
-          "phoneNumber": "0922446688",
+          "phoneNumber": "0933778899",
           "timestamp": "27/09/2026 10:05",
           "direction": "outgoing",
           "durationSeconds": 142
@@ -4593,7 +4828,7 @@
           "callId": "call_history_12",
           "contactId": "contact_7",
           "contactName": "Giao Hàng",
-          "phoneNumber": "0977889900",
+          "phoneNumber": "0905667788",
           "timestamp": "26/09/2026 11:10",
           "direction": "incoming",
           "durationSeconds": 31
@@ -4620,7 +4855,7 @@
           "callId": "call_history_9",
           "contactId": "contact_0",
           "contactName": "Mẹ Ở Quê",
-          "phoneNumber": "0998877665",
+          "phoneNumber": "0915220011",
           "timestamp": "24/09/2026 18:20",
           "direction": "outgoing",
           "durationSeconds": 286
@@ -4638,7 +4873,7 @@
           "callId": "call_history_7",
           "contactId": "contact_1",
           "contactName": "Giao Nước",
-          "phoneNumber": "0911223344",
+          "phoneNumber": "0904556677",
           "timestamp": "23/09/2026 17:00",
           "direction": "incoming",
           "durationSeconds": 39
@@ -4674,7 +4909,7 @@
           "callId": "call_history_3",
           "contactId": "contact_5",
           "contactName": "Tuấn Đụt",
-          "phoneNumber": "0955667788",
+          "phoneNumber": "0977112233",
           "timestamp": "21/09/2026 18:15",
           "direction": "outgoing",
           "durationSeconds": 130
@@ -4683,7 +4918,7 @@
           "callId": "call_history_2",
           "contactId": "contact_11",
           "contactName": "Ban Quản Lý",
-          "phoneNumber": "0911335577",
+          "phoneNumber": "0243556677",
           "timestamp": "21/09/2026 09:30",
           "direction": "incoming",
           "durationSeconds": 48
@@ -4701,7 +4936,7 @@
           "callId": "call_history_0",
           "contactId": "contact_0",
           "contactName": "Mẹ Ở Quê",
-          "phoneNumber": "0998877665",
+          "phoneNumber": "0915220011",
           "timestamp": "20/09/2026 08:35",
           "direction": "incoming",
           "durationSeconds": 220
@@ -4711,12 +4946,12 @@
         {
           "contactId": "contact_0",
           "displayName": "Mẹ Ở Quê",
-          "primaryPhone": "0998877665"
+          "primaryPhone": "0915220011"
         },
         {
           "contactId": "contact_1",
           "displayName": "Giao Nước",
-          "primaryPhone": "0911223344"
+          "primaryPhone": "0904556677"
         },
         {
           "contactId": "contact_2",
@@ -4736,7 +4971,7 @@
         {
           "contactId": "contact_5",
           "displayName": "Tuấn Đụt",
-          "primaryPhone": "0955667788"
+          "primaryPhone": "0977112233"
         },
         {
           "contactId": "contact_6",
@@ -4746,7 +4981,7 @@
         {
           "contactId": "contact_7",
           "displayName": "Giao Hàng",
-          "primaryPhone": "0977889900"
+          "primaryPhone": "0905667788"
         },
         {
           "contactId": "contact_8",
@@ -4760,28 +4995,33 @@
         },
         {
           "contactId": "contact_10",
-          "displayName": "Anh Tuấn Thợ Điện",
+          "displayName": "Khoa BE",
           "primaryPhone": "0988886677"
         },
         {
           "contactId": "contact_11",
           "displayName": "Ban Quản Lý",
-          "primaryPhone": "0911335577"
+          "primaryPhone": "0243556677"
         },
         {
           "contactId": "contact_12",
+          "displayName": "Anh Tuấn Thợ Điện",
+          "primaryPhone": "0912345801"
+        },
+        {
+          "contactId": "contact_13",
           "displayName": "Bách Dev",
-          "primaryPhone": "0922446688"
+          "primaryPhone": "0933778899"
         },
         {
           "contactId": "service_carrier",
-          "displayName": "Nhà mạng",
-          "primaryPhone": "900"
+          "displayName": "Tổng đài nhà mạng",
+          "primaryPhone": "18008098"
         },
         {
-          "contactId": "service_shop",
-          "displayName": "Mua sắm",
-          "primaryPhone": "18001234"
+          "contactId": "service_gym",
+          "displayName": "California Fitness",
+          "primaryPhone": "19006868"
         },
         {
           "contactId": "service_plan",
@@ -4794,62 +5034,13 @@
       "unreadBadge": 0,
       "threads": [
         {
-          "threadId": "sms_contact_9",
-          "messages": [
-            {
-              "messageId": "contact_9_history_0",
-              "timestamp": "20/09/2026 09:10",
-              "sender": "incoming",
-              "bodyText": "Em đang trong siêu thị, anh cần mua gì không?"
-            },
-            {
-              "messageId": "contact_9_history_1",
-              "timestamp": "20/09/2026 09:15",
-              "sender": "outgoing",
-              "bodyText": "Mua thêm hộ anh túi cà phê nếu còn loại cũ nhé."
-            },
-            {
-              "messageId": "contact_9_history_2",
-              "timestamp": "24/09/2026 17:10",
-              "sender": "incoming",
-              "bodyText": "Em lấy một túi rồi, tối về anh cất giúp em."
-            },
-            {
-              "messageId": "contact_9_history_3",
-              "timestamp": "24/09/2026 17:15",
-              "sender": "outgoing",
-              "bodyText": "Ừ, anh rửa cốc sẵn rồi."
-            },
-            {
-              "messageId": "contact_9_history_4",
-              "timestamp": "28/09/2026 12:10",
-              "sender": "incoming",
-              "bodyText": "Anh để chìa khóa xe ở đâu nhỉ?"
-            },
-            {
-              "messageId": "contact_9_history_5",
-              "timestamp": "28/09/2026 12:15",
-              "sender": "outgoing",
-              "bodyText": "Trong khay cạnh cửa, bên dưới tờ hóa đơn điện."
-            },
-            {
-              "messageId": "sms_contact_9_new",
-              "timestamp": "15/10/2026 17:45",
-              "sender": "incoming",
-              "bodyText": "Tiện đường anh ghé mua giúp em túi hoa quả nhé."
-            }
-          ],
-          "senderTitle": "Vợ",
-          "contactId": "contact_9",
-          "phoneNumber": "0900112233",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "15/10 17:45"
-        },
-        {
           "threadId": "sms_carrier",
           "senderTitle": "Nhà mạng",
-          "lastMessageTimestamp": "15/10 12:30",
+          "lastMessageTimestamp": "15/10 21:15",
+          "contactId": "service_carrier",
+          "phoneNumber": "18008098",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
               "messageId": "service_carrier_history_0",
@@ -4889,73 +5080,174 @@
             },
             {
               "messageId": "sms_carrier_0",
-              "timestamp": "15/10/2026 12:30",
+              "timestamp": "15/10/2026 21:15",
               "sender": "incoming",
               "bodyText": "Nap thanh cong 100.000d. Cam on quy khach."
             }
-          ],
-          "contactId": "service_carrier",
-          "phoneNumber": "900",
+          ]
+        },
+        {
+          "threadId": "sms_gym",
+          "senderTitle": "California Fitness",
+          "lastMessageTimestamp": "15/10 19:05",
+          "contactId": "service_gym",
+          "phoneNumber": "19006868",
           "isPinned": false,
-          "unreadCount": 0
+          "unreadCount": 0,
+          "messages": [
+            {
+              "messageId": "sms_gym_h0",
+              "timestamp": "29/09/2026 17:00",
+              "sender": "incoming",
+              "bodyText": "California Fitness: Xac nhan buoi PT 18:00 ngay 01/10 voi HLV Thao."
+            },
+            {
+              "messageId": "sms_gym_h1",
+              "timestamp": "01/10/2026 19:05",
+              "sender": "incoming",
+              "bodyText": "California Fitness: Cam on quy khach da tham gia buoi PT 18:00 ngay 01/10."
+            },
+            {
+              "messageId": "sms_gym_h2",
+              "timestamp": "06/10/2026 17:00",
+              "sender": "incoming",
+              "bodyText": "California Fitness: Xac nhan buoi PT 18:00 ngay 08/10 voi HLV Thao."
+            },
+            {
+              "messageId": "sms_gym_h3",
+              "timestamp": "08/10/2026 19:05",
+              "sender": "incoming",
+              "bodyText": "California Fitness: Cam on quy khach da tham gia buoi PT 18:00 ngay 08/10."
+            },
+            {
+              "messageId": "sms_gym_h4",
+              "timestamp": "13/10/2026 17:30",
+              "sender": "incoming",
+              "bodyText": "California Fitness: Xac nhan buoi PT 18:00 ngay 15/10 voi HLV Thao."
+            },
+            {
+              "messageId": "sms_gym_0",
+              "timestamp": "15/10/2026 19:05",
+              "sender": "incoming",
+              "bodyText": "California Fitness: Quy khach vang mat buoi PT 18:00 ngay 15/10. Buoi tap da duoc tru khoi goi.",
+              "clueRefId": "CLUE-MSG-02"
+            }
+          ]
+        },
+        {
+          "threadId": "sms_contact_9",
+          "senderTitle": "Vợ",
+          "lastMessageTimestamp": "15/10 17:45",
+          "contactId": "contact_9",
+          "phoneNumber": "0900112233",
+          "isPinned": false,
+          "unreadCount": 0,
+          "messages": [
+            {
+              "messageId": "sms_contact_9_0",
+              "timestamp": "20/09/2026 09:10",
+              "sender": "incoming",
+              "bodyText": "Em đang trong siêu thị, anh cần mua gì không?"
+            },
+            {
+              "messageId": "sms_contact_9_1",
+              "timestamp": "20/09/2026 09:15",
+              "sender": "outgoing",
+              "bodyText": "Mua thêm hộ anh túi cà phê nếu còn loại cũ nhé."
+            },
+            {
+              "messageId": "sms_contact_9_2",
+              "timestamp": "24/09/2026 17:10",
+              "sender": "incoming",
+              "bodyText": "Em lấy một túi rồi, tối về anh cất giúp em."
+            },
+            {
+              "messageId": "sms_contact_9_3",
+              "timestamp": "24/09/2026 17:15",
+              "sender": "outgoing",
+              "bodyText": "Ừ, anh rửa cốc sẵn rồi."
+            },
+            {
+              "messageId": "sms_contact_9_4",
+              "timestamp": "28/09/2026 12:10",
+              "sender": "incoming",
+              "bodyText": "Anh để chìa khóa xe ở đâu nhỉ?"
+            },
+            {
+              "messageId": "sms_contact_9_5",
+              "timestamp": "28/09/2026 12:15",
+              "sender": "outgoing",
+              "bodyText": "Trong khay cạnh cửa, bên dưới tờ hóa đơn điện."
+            },
+            {
+              "messageId": "sms_contact_9_6",
+              "timestamp": "15/10/2026 17:45",
+              "sender": "incoming",
+              "bodyText": "Tiện đường anh ghé mua giúp em túi hoa quả nhé."
+            }
+          ]
         },
         {
           "threadId": "sms_contact_5",
+          "senderTitle": "Tuấn Đụt",
+          "lastMessageTimestamp": "15/10 09:15",
+          "contactId": "contact_5",
+          "phoneNumber": "0977112233",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_5_history_0",
+              "messageId": "sms_contact_5_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Ông mang áo xanh hay áo trắng?"
             },
             {
-              "messageId": "contact_5_history_1",
+              "messageId": "sms_contact_5_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Áo xanh, đừng lại nhầm đội nhé."
             },
             {
-              "messageId": "contact_5_history_2",
+              "messageId": "sms_contact_5_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Tôi giữ chỗ để xe cho ông rồi."
             },
             {
-              "messageId": "contact_5_history_3",
+              "messageId": "sms_contact_5_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Cảm ơn, tôi đang ra khỏi nhà."
             },
             {
-              "messageId": "contact_5_history_4",
+              "messageId": "sms_contact_5_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Sau trận uống nước đầu ngõ nhé?"
             },
             {
-              "messageId": "contact_5_history_5",
+              "messageId": "sms_contact_5_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Tôi uống nhanh rồi về ăn cơm."
             },
             {
-              "messageId": "sms_contact_5_new",
+              "messageId": "sms_contact_5_6",
               "timestamp": "15/10/2026 09:15",
               "sender": "incoming",
               "bodyText": "Chủ nhật ông nhớ mang đôi tất dài nhé."
             }
-          ],
-          "senderTitle": "Tuấn Đụt",
-          "contactId": "contact_5",
-          "phoneNumber": "0955667788",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "15/10 09:15"
+          ]
         },
         {
           "threadId": "sms_building",
           "senderTitle": "Ban Quản Lý",
-          "lastMessageTimestamp": "14/10 16:20",
+          "lastMessageTimestamp": "15/10 08:05",
+          "contactId": "contact_11",
+          "phoneNumber": "0243556677",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
               "messageId": "contact_11_history_0",
@@ -4995,179 +5287,185 @@
             },
             {
               "messageId": "sms_building_0",
-              "timestamp": "14/10/2026 16:20",
+              "timestamp": "15/10/2026 08:05",
               "sender": "incoming",
               "bodyText": "Nhac lich bao tri thang B sang thu bay, 09h-11h."
             }
-          ],
-          "contactId": "contact_11",
-          "phoneNumber": "0911335577",
-          "isPinned": false,
-          "unreadCount": 0
+          ]
         },
         {
           "threadId": "sms_contact_1",
+          "senderTitle": "Giao Nước",
+          "lastMessageTimestamp": "14/10 14:15",
+          "contactId": "contact_1",
+          "phoneNumber": "0904556677",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_1_history_0",
+              "messageId": "sms_contact_1_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Nhà anh còn bình nước dự phòng không?"
             },
             {
-              "messageId": "contact_1_history_1",
+              "messageId": "sms_contact_1_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Còn một bình, chiều anh giao thêm giúp em một bình nhé."
             },
             {
-              "messageId": "contact_1_history_2",
+              "messageId": "sms_contact_1_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Khoảng 17h tôi tới."
             },
             {
-              "messageId": "contact_1_history_3",
+              "messageId": "sms_contact_1_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Em gửi bình rỗng ở quầy bảo vệ rồi."
             },
             {
-              "messageId": "contact_1_history_4",
+              "messageId": "sms_contact_1_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Tôi đã đổi bình, anh kiểm tra giúp."
             },
             {
-              "messageId": "contact_1_history_5",
+              "messageId": "sms_contact_1_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Em nhận được rồi, cảm ơn anh."
             },
             {
-              "messageId": "sms_contact_1_new",
+              "messageId": "sms_contact_1_6",
               "timestamp": "14/10/2026 14:15",
               "sender": "incoming",
               "bodyText": "Chiều em giao bình nước qua, gửi lễ tân anh nhé."
             }
-          ],
-          "senderTitle": "Giao Nước",
-          "contactId": "contact_1",
-          "phoneNumber": "0911223344",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "14/10 14:15"
+          ]
         },
         {
-          "threadId": "sms_polo",
-          "senderTitle": "Mua sắm",
-          "lastMessageTimestamp": "14/10 09:40",
+          "threadId": "sms_promo",
+          "senderTitle": "Thông tin gói cước",
+          "lastMessageTimestamp": "14/10 09:00",
+          "contactId": "service_plan",
+          "phoneNumber": "191",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "service_shop_history_0",
+              "messageId": "service_plan_history_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
-              "bodyText": "Đơn hàng đã được xác nhận."
+              "bodyText": "Thông tin ưu đãi data cuối tuần dành cho thuê bao."
             },
             {
-              "messageId": "service_shop_history_1",
+              "messageId": "service_plan_history_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "incoming",
-              "bodyText": "Đơn hàng đang vận chuyển đến địa chỉ đã chọn."
+              "bodyText": "Bỏ qua tin này nếu không có nhu cầu thay đổi gói cước."
             },
             {
-              "messageId": "service_shop_history_2",
+              "messageId": "service_plan_history_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
-              "bodyText": "Đơn hàng đã giao thành công."
+              "bodyText": "Thông báo gói dữ liệu mới trong tháng."
             },
             {
-              "messageId": "service_shop_history_3",
+              "messageId": "service_plan_history_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "incoming",
-              "bodyText": "Khoản hoàn tiền đã được xử lý về phương thức thanh toán cũ."
+              "bodyText": "Chi tiết xem trong ứng dụng, không yêu cầu cung cấp mã xác thực."
             },
             {
-              "messageId": "service_shop_history_4",
+              "messageId": "service_plan_history_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
-              "bodyText": "Đơn dây rút đã được xác nhận."
+              "bodyText": "Quý khách có thể kiểm tra gói đang sử dụng."
             },
             {
-              "messageId": "service_shop_history_5",
+              "messageId": "service_plan_history_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "incoming",
-              "bodyText": "Đơn dây rút đã được giao thành công."
+              "bodyText": "Thông tin ưu đãi tháng 10 đã cập nhật."
             },
             {
-              "messageId": "sms_polo_0",
-              "timestamp": "14/10/2026 09:40",
+              "messageId": "sms_promo_0",
+              "timestamp": "11/10/2026 09:00",
               "sender": "incoming",
-              "bodyText": "Don ao polo da hoan 89.000d ve phuong thuc thanh toan ban dau."
+              "bodyText": "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau."
+            },
+            {
+              "messageId": "sms_promo_0",
+              "timestamp": "14/10/2026 09:00",
+              "sender": "incoming",
+              "bodyText": "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau."
             }
-          ],
-          "contactId": "service_shop",
-          "phoneNumber": "18001234",
-          "isPinned": false,
-          "unreadCount": 0
+          ]
         },
         {
           "threadId": "sms_contact_3",
+          "senderTitle": "Nam Dev",
+          "lastMessageTimestamp": "13/10 18:30",
+          "contactId": "contact_3",
+          "phoneNumber": "0933445566",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_3_history_0",
+              "messageId": "sms_contact_3_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Ông đến nơi chưa, tôi đang giữ cửa phòng họp."
             },
             {
-              "messageId": "contact_3_history_1",
+              "messageId": "sms_contact_3_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Tôi lên thang máy rồi."
             },
             {
-              "messageId": "contact_3_history_2",
+              "messageId": "sms_contact_3_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Mang giúp tôi dây HDMI trong ngăn kéo nhé."
             },
             {
-              "messageId": "contact_3_history_3",
+              "messageId": "sms_contact_3_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Tôi cầm theo rồi."
             },
             {
-              "messageId": "contact_3_history_4",
+              "messageId": "sms_contact_3_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Chiều trả lại dây vào khay chung giúp tôi."
             },
             {
-              "messageId": "contact_3_history_5",
+              "messageId": "sms_contact_3_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Đã để lại, ông kiểm tra nhé."
             },
             {
-              "messageId": "sms_contact_3_new",
+              "messageId": "sms_contact_3_6",
               "timestamp": "13/10/2026 18:30",
               "sender": "incoming",
-              "bodyText": "Em vừa gửi lại file tài liệu qua mail rồi anh."
+              "bodyText": "Tôi vừa gửi lại file tài liệu qua mail rồi nhé ông."
             }
-          ],
-          "senderTitle": "Nam Dev",
-          "contactId": "contact_3",
-          "phoneNumber": "0933445566",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "13/10 18:30"
+          ]
         },
         {
           "threadId": "sms_delivery",
           "senderTitle": "Giao Hàng",
           "lastMessageTimestamp": "13/10 10:40",
+          "contactId": "contact_7",
+          "phoneNumber": "0905667788",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
               "messageId": "contact_7_history_0",
@@ -5217,16 +5515,63 @@
               "sender": "incoming",
               "bodyText": "Don hang da giao thanh cong."
             }
-          ],
-          "contactId": "contact_7",
-          "phoneNumber": "0977889900",
+          ]
+        },
+        {
+          "threadId": "sms_contact_12",
+          "senderTitle": "Anh Tuấn Thợ Điện",
+          "lastMessageTimestamp": "13/10 09:00",
+          "contactId": "contact_12",
+          "phoneNumber": "0912345801",
           "isPinned": false,
-          "unreadCount": 0
+          "unreadCount": 0,
+          "messages": [
+            {
+              "messageId": "sms_contact_12_0",
+              "timestamp": "25/09/2026 10:00",
+              "sender": "incoming",
+              "bodyText": "Anh Tuấn đây. Chiều nay anh qua xem lại đường điện nhà bà ấy nhé."
+            },
+            {
+              "messageId": "sms_contact_12_1",
+              "timestamp": "25/09/2026 10:05",
+              "sender": "outgoing",
+              "bodyText": "Em cảm ơn anh, mẹ em kêu điện bếp chập chờn mấy hôm nay."
+            },
+            {
+              "messageId": "sms_contact_12_2",
+              "timestamp": "25/09/2026 17:30",
+              "sender": "incoming",
+              "bodyText": "Anh thay cái ổ cắm bếp rồi, giờ ổn rồi em."
+            },
+            {
+              "messageId": "sms_contact_12_3",
+              "timestamp": "25/09/2026 17:32",
+              "sender": "outgoing",
+              "bodyText": "Hết bao nhiêu anh cứ bảo mẹ em nhé."
+            },
+            {
+              "messageId": "sms_contact_12_4",
+              "timestamp": "25/09/2026 17:35",
+              "sender": "incoming",
+              "bodyText": "Bà ấy trả rồi, em yên tâm."
+            },
+            {
+              "messageId": "sms_contact_12_5",
+              "timestamp": "13/10/2026 09:00",
+              "sender": "incoming",
+              "bodyText": "Anh xem lịch rồi, sáng thứ 6 anh rảnh."
+            }
+          ]
         },
         {
           "threadId": "sms_mom",
           "senderTitle": "Mẹ Ở Quê",
           "lastMessageTimestamp": "12/10 18:04",
+          "contactId": "contact_0",
+          "phoneNumber": "0915220011",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
               "messageId": "contact_0_history_0",
@@ -5276,376 +5621,319 @@
               "sender": "outgoing",
               "bodyText": "Con gọi lại ngay."
             }
-          ],
-          "contactId": "contact_0",
-          "phoneNumber": "0998877665",
-          "isPinned": false,
-          "unreadCount": 0
-        },
-        {
-          "threadId": "sms_promo",
-          "senderTitle": "Thông tin gói cước",
-          "lastMessageTimestamp": "11/10 09:00",
-          "messages": [
-            {
-              "messageId": "service_plan_history_0",
-              "timestamp": "20/09/2026 09:10",
-              "sender": "incoming",
-              "bodyText": "Thông tin ưu đãi data cuối tuần dành cho thuê bao."
-            },
-            {
-              "messageId": "service_plan_history_1",
-              "timestamp": "20/09/2026 09:15",
-              "sender": "incoming",
-              "bodyText": "Bỏ qua tin này nếu không có nhu cầu thay đổi gói cước."
-            },
-            {
-              "messageId": "service_plan_history_2",
-              "timestamp": "24/09/2026 17:10",
-              "sender": "incoming",
-              "bodyText": "Thông báo gói dữ liệu mới trong tháng."
-            },
-            {
-              "messageId": "service_plan_history_3",
-              "timestamp": "24/09/2026 17:15",
-              "sender": "incoming",
-              "bodyText": "Chi tiết xem trong ứng dụng, không yêu cầu cung cấp mã xác thực."
-            },
-            {
-              "messageId": "service_plan_history_4",
-              "timestamp": "28/09/2026 12:10",
-              "sender": "incoming",
-              "bodyText": "Quý khách có thể kiểm tra gói đang sử dụng."
-            },
-            {
-              "messageId": "service_plan_history_5",
-              "timestamp": "28/09/2026 12:15",
-              "sender": "incoming",
-              "bodyText": "Thông tin ưu đãi tháng 10 đã cập nhật."
-            },
-            {
-              "messageId": "sms_promo_0",
-              "timestamp": "11/10/2026 09:00",
-              "sender": "incoming",
-              "bodyText": "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau."
-            }
-          ],
-          "contactId": "service_plan",
-          "phoneNumber": "191",
-          "isPinned": false,
-          "unreadCount": 0
+          ]
         },
         {
           "threadId": "sms_contact_10",
+          "senderTitle": "Khoa BE",
+          "lastMessageTimestamp": "10/10 15:25",
+          "contactId": "contact_10",
+          "phoneNumber": "0988886677",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_10_history_0",
+              "messageId": "sms_contact_10_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Anh ơi màn hình phòng họp không nhận cáp."
             },
             {
-              "messageId": "contact_10_history_1",
+              "messageId": "sms_contact_10_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
-              "bodyText": "Em đổi sang cổng bên trái thử nhé."
+              "bodyText": "E đổi sang cổng bên trái thử nhé."
             },
             {
-              "messageId": "contact_10_history_2",
+              "messageId": "sms_contact_10_2",
               "timestamp": "20/09/2026 09:20",
               "sender": "incoming",
               "bodyText": "Được rồi, cảm ơn anh."
             },
             {
-              "messageId": "contact_10_history_3",
+              "messageId": "sms_contact_10_3",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Buổi hướng dẫn tuần sau vẫn dùng phòng cũ ạ?"
             },
             {
-              "messageId": "contact_10_history_4",
+              "messageId": "sms_contact_10_4",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Đúng rồi, tài liệu em để trong thư mục chung nhé."
             },
             {
-              "messageId": "contact_10_history_5",
+              "messageId": "sms_contact_10_5",
               "timestamp": "28/09/2026 12:20",
               "sender": "incoming",
               "bodyText": "Vâng, em đã tải lên rồi."
             },
             {
-              "messageId": "sms_contact_10_new",
+              "messageId": "sms_contact_10_6",
               "timestamp": "10/10/2026 15:25",
               "sender": "incoming",
-              "bodyText": "Hôm trước em để quên cái bút thử điện ở phòng khách, lúc nào tiện anh tìm giúp em nhé."
+              "bodyText": "Mai e gửi lại a bản brief mới nhé."
             }
-          ],
-          "senderTitle": "Anh Tuấn Thợ Điện",
-          "contactId": "contact_10",
-          "phoneNumber": "0988886677",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "10/10 15:25"
+          ]
         },
         {
           "threadId": "sms_contact_8",
+          "senderTitle": "Mai Lễ Tân",
+          "lastMessageTimestamp": "08/10 11:30",
+          "contactId": "contact_8",
+          "phoneNumber": "0988990011",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_8_history_0",
+              "messageId": "sms_contact_8_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Anh để quên thẻ khách ở quầy nhé."
             },
             {
-              "messageId": "contact_8_history_1",
+              "messageId": "sms_contact_8_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Anh xuống lấy lúc nghỉ trưa."
             },
             {
-              "messageId": "contact_8_history_2",
+              "messageId": "sms_contact_8_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Em cất trong ngăn bên phải quầy."
             },
             {
-              "messageId": "contact_8_history_3",
+              "messageId": "sms_contact_8_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Anh nhận lại rồi, cảm ơn em."
             },
             {
-              "messageId": "contact_8_history_4",
+              "messageId": "sms_contact_8_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Bưu phẩm giấy cần ký nhận trực tiếp anh nhé."
             },
             {
-              "messageId": "contact_8_history_5",
+              "messageId": "sms_contact_8_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Chiều anh xuống ký."
             },
             {
-              "messageId": "sms_contact_8_new",
+              "messageId": "sms_contact_8_6",
               "timestamp": "08/10/2026 11:30",
               "sender": "incoming",
               "bodyText": "Anh để quên thẻ thang máy ở quầy lễ tân nhé."
             }
-          ],
-          "senderTitle": "Mai Lễ Tân",
-          "contactId": "contact_8",
-          "phoneNumber": "0988990011",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "08/10 11:30"
+          ]
         },
         {
           "threadId": "sms_contact_4",
+          "senderTitle": "Thảo PT California",
+          "lastMessageTimestamp": "05/10 14:10",
+          "contactId": "contact_4",
+          "phoneNumber": "0944556677",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_4_history_0",
+              "messageId": "sms_contact_4_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Anh nhớ mang khăn và nước cho buổi tập nhé."
             },
             {
-              "messageId": "contact_4_history_1",
+              "messageId": "sms_contact_4_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Vâng, hôm nay mình vẫn tập nhẹ đúng không?"
             },
             {
-              "messageId": "contact_4_history_2",
+              "messageId": "sms_contact_4_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Đúng rồi, ưu tiên giãn cơ và tư thế ngồi."
             },
             {
-              "messageId": "contact_4_history_3",
+              "messageId": "sms_contact_4_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
-              "bodyText": "Tôi đến sớm mười phút để khởi động."
+              "bodyText": "A đến sớm mười phút để khởi động."
             },
             {
-              "messageId": "contact_4_history_4",
+              "messageId": "sms_contact_4_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Vâng, anh báo quầy lấy phiếu theo dõi."
             },
             {
-              "messageId": "contact_4_history_5",
+              "messageId": "sms_contact_4_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
-              "bodyText": "Tôi lấy được rồi, cảm ơn em."
+              "bodyText": "A lấy được rồi, cảm ơn em."
             },
             {
-              "messageId": "sms_contact_4_new",
+              "messageId": "sms_contact_4_6",
               "timestamp": "05/10/2026 14:10",
               "sender": "incoming",
               "bodyText": "Lịch tập tuần này của anh vào thứ Ba và thứ Năm nhé."
             }
-          ],
-          "senderTitle": "Thảo PT California",
-          "contactId": "contact_4",
-          "phoneNumber": "0944556677",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "05/10 14:10"
+          ]
         },
         {
           "threadId": "sms_contact_6",
+          "senderTitle": "Lan Anh Kế Toán",
+          "lastMessageTimestamp": "02/10 16:00",
+          "contactId": "contact_6",
+          "phoneNumber": "0966778899",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_6_history_0",
+              "messageId": "sms_contact_6_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Anh kiểm tra lại số hóa đơn trong mail giúp em nhé."
             },
             {
-              "messageId": "contact_6_history_1",
+              "messageId": "sms_contact_6_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Anh kiểm tra xong rồi, số tiền đúng với biên nhận."
             },
             {
-              "messageId": "contact_6_history_2",
+              "messageId": "sms_contact_6_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Em nhận được rồi, chiều gửi bản giấy cho anh."
             },
             {
-              "messageId": "contact_6_history_3",
+              "messageId": "sms_contact_6_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Anh để bản ký ở khay hồ sơ nhé."
             },
             {
-              "messageId": "contact_6_history_4",
+              "messageId": "sms_contact_6_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Vâng, em lấy được rồi."
             },
             {
-              "messageId": "contact_6_history_5",
+              "messageId": "sms_contact_6_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Cảm ơn em."
             },
             {
-              "messageId": "sms_contact_6_new",
+              "messageId": "sms_contact_6_6",
               "timestamp": "02/10/2026 16:00",
               "sender": "incoming",
               "bodyText": "Anh ký bảng kê công tác phí tháng trước giúp em nhé."
             }
-          ],
-          "senderTitle": "Lan Anh Kế Toán",
-          "contactId": "contact_6",
-          "phoneNumber": "0966778899",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "02/10 16:00"
+          ]
         },
         {
-          "threadId": "sms_contact_12",
+          "threadId": "sms_contact_13",
+          "senderTitle": "Bách Dev",
+          "lastMessageTimestamp": "29/09 10:20",
+          "contactId": "contact_13",
+          "phoneNumber": "0933778899",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_12_history_0",
+              "messageId": "sms_contact_13_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
-              "bodyText": "Nhờ ông giữ giúp tôi chỗ trong buổi chia sẻ kỹ thuật."
+              "bodyText": "A giữ giúp e chỗ trong buổi chia sẻ kỹ thuật nhé."
             },
             {
-              "messageId": "contact_12_history_1",
+              "messageId": "sms_contact_13_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
-              "bodyText": "Tôi ngồi hàng thứ hai, ông lên nhé."
+              "bodyText": "A ngồi hàng thứ hai, e lên nhé."
             },
             {
-              "messageId": "contact_12_history_2",
+              "messageId": "sms_contact_13_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
-              "bodyText": "Tài liệu có gửi lại sau buổi không?"
+              "bodyText": "Tài liệu có gửi lại sau buổi ko a?"
             },
             {
-              "messageId": "contact_12_history_3",
+              "messageId": "sms_contact_13_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Có, trong thư mục của nhóm."
             },
             {
-              "messageId": "contact_12_history_4",
+              "messageId": "sms_contact_13_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
-              "bodyText": "Tôi thấy file rồi, cảm ơn ông."
+              "bodyText": "E thấy file rồi, cảm ơn a."
             },
             {
-              "messageId": "contact_12_history_5",
+              "messageId": "sms_contact_13_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Nhớ để lại ý kiến phần hoàn tiền nhé."
             },
             {
-              "messageId": "sms_contact_12_new",
+              "messageId": "sms_contact_13_6",
               "timestamp": "29/09/2026 10:20",
               "sender": "incoming",
-              "bodyText": "Bản build mới em đẩy lên git rồi nhé anh."
+              "bodyText": "Bản build mới e đẩy lên git rồi nhé a."
             }
-          ],
-          "senderTitle": "Bách Dev",
-          "contactId": "contact_12",
-          "phoneNumber": "0922446688",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "29/09 10:20"
+          ]
         },
         {
           "threadId": "sms_contact_2",
+          "senderTitle": "Bé Ngọc KTX",
+          "lastMessageTimestamp": "28/09 12:15",
+          "contactId": "contact_2",
+          "phoneNumber": "0922334455",
+          "isPinned": false,
+          "unreadCount": 0,
           "messages": [
             {
-              "messageId": "contact_2_history_0",
+              "messageId": "sms_contact_2_0",
               "timestamp": "20/09/2026 09:10",
               "sender": "incoming",
               "bodyText": "Anh ơi em đổi phòng học sang dãy B rồi."
             },
             {
-              "messageId": "contact_2_history_1",
+              "messageId": "sms_contact_2_1",
               "timestamp": "20/09/2026 09:15",
               "sender": "outgoing",
               "bodyText": "Em lưu lại lịch để khỏi đi nhầm nhé."
             },
             {
-              "messageId": "contact_2_history_2",
+              "messageId": "sms_contact_2_2",
               "timestamp": "24/09/2026 17:10",
               "sender": "incoming",
               "bodyText": "Vâng, em chụp lịch lại rồi."
             },
             {
-              "messageId": "contact_2_history_3",
+              "messageId": "sms_contact_2_3",
               "timestamp": "24/09/2026 17:15",
               "sender": "outgoing",
               "bodyText": "Anh gửi mẹ số phòng ký túc của em nhé."
             },
             {
-              "messageId": "contact_2_history_4",
+              "messageId": "sms_contact_2_4",
               "timestamp": "28/09/2026 12:10",
               "sender": "incoming",
               "bodyText": "Phòng em vẫn như cũ anh ạ."
             },
             {
-              "messageId": "contact_2_history_5",
+              "messageId": "sms_contact_2_5",
               "timestamp": "28/09/2026 12:15",
               "sender": "outgoing",
               "bodyText": "Ừ, anh nhắn lại mẹ rồi."
             }
-          ],
-          "senderTitle": "Bé Ngọc KTX",
-          "contactId": "contact_2",
-          "phoneNumber": "0922334455",
-          "isPinned": false,
-          "unreadCount": 0,
-          "lastMessageTimestamp": "28/09 12:15"
+          ]
         }
       ]
     },
@@ -5869,11 +6157,11 @@
         },
         {
           "id": "history_3",
-          "title": "Lịch bóng đá chủ nhật",
-          "time": "12/10/2026 12:15",
+          "title": "Bình nóng lạnh 20 lít loại nào tốt",
+          "time": "13/10/2026 09:10",
           "url": "noidung.local/bai/3",
-          "content": "Lịch thi đấu sân cuối tuần; kiểm tra giờ bắt đầu trước khi đến.",
-          "timestamp": "12/10/2026 12:15"
+          "content": "So sánh dung tích 20 lít, công suất và chống giật khi chọn bình nóng lạnh.",
+          "timestamp": "13/10/2026 09:10"
         },
         {
           "id": "history_2",
@@ -6045,8 +6333,8 @@
         },
         {
           "id": "tab_3",
-          "title": "Lịch bóng đá chủ nhật",
-          "content": "Lịch thi đấu sân cuối tuần; kiểm tra giờ bắt đầu trước khi đến.",
+          "title": "So sánh bình nóng lạnh",
+          "content": "So sánh dung tích 20 lít, công suất và chống giật khi chọn bình nóng lạnh.",
           "url": "noidung.local/bai/3"
         }
       ]
@@ -6057,15 +6345,6 @@
           "id": "album_everyday",
           "title": "Ảnh gần đây",
           "photos": [
-            {
-              "id": "photo_dinner_claypot",
-              "title": "Bữa tối cơm niêu",
-              "date": "15/10/2026 19:45",
-              "timestamp": "15/10/2026 19:45",
-              "description": "15/10 19:45 - Niêu cơm cháy, cá kho và bát canh nóng trên bàn gỗ.",
-              "locationTag": "Phố Cổ, Hoàn Kiếm, Hà Nội",
-              "clueRefId": "CLUE-PHOT-05"
-            },
             {
               "id": "photo_9",
               "title": "Giày đá bóng",
@@ -6080,9 +6359,9 @@
             },
             {
               "id": "photo_7",
-              "title": "Cáp sạc bị gãy",
+              "title": "Bình nóng lạnh hỏng",
               "date": "13/10",
-              "description": "13/10 - Đầu cáp sạc bị gãy, cần thay dây mới."
+              "description": "13/10 - Ảnh chụp bình nóng lạnh hỏng, mẹ gửi."
             },
             {
               "id": "photo_6",
@@ -6170,33 +6449,33 @@
       "notes": [
         {
           "id": "note_5",
-          "title": "Việc ngày mai",
-          "content": "15/10 10:30\nXem lỗi hoàn tiền; trả sách cho Nam; tưới cây."
+          "title": "Việc tuần sau",
+          "content": "15/10 10:30\nHọp sprint T2; xem lỗi hoàn tiền; trả sách cho Nam."
         },
         {
           "id": "note_4",
           "title": "Bảo dưỡng xe",
-          "content": "14/10\nKiểm tra dầu máy, áp suất lốp, phanh trước."
+          "content": "14/10\nDầu máy, lốp, phanh trước."
         },
         {
           "id": "note_3",
-          "title": "Lưng đỡ mỏi",
-          "content": "13/10\nĐứng dậy mỗi giờ; kê màn hình ngang mắt; tập nhẹ."
+          "title": "Lưng",
+          "content": "13/10\nĐứng dậy mỗi giờ; tập nhẹ."
         },
         {
           "id": "note_2",
-          "title": "Về quê chủ nhật",
-          "content": "12/10\nMang áo khoác cho Ngọc; hỏi mẹ lịch khám."
+          "title": "Sinh nhật mẹ 18/10",
+          "content": "13/10\nBình nóng lạnh, nhờ anh Tuấn lắp thứ 6. Đừng để mẹ biết."
         },
         {
           "id": "note_1",
           "title": "Đồ cần mua",
-          "content": "11/10\nTúi rác cỡ vừa; nước rửa bát; khăn lau bếp."
+          "content": "11/10\nTúi rác cỡ vừa; nước rửa bát."
         },
         {
           "id": "note_0",
           "title": "Tiền nhà",
-          "content": "10/10\nĐã chuyển sinh hoạt tháng 10. Cuối tháng xem lại tiền điện."
+          "content": "10/10\nĐã chuyển sinh hoạt tháng 10."
         },
         {
           "id": "note_history_0",
@@ -6268,27 +6547,27 @@
         },
         {
           "id": "email_5",
-          "subject": "Lịch tập tháng 10",
+          "subject": "Xác nhận gói PT tháng 10",
           "sender": "California Fitness",
           "time": "13/10/2026 17:46",
-          "snippet": "xác nhận gói trị liệu 1.500.000đ.",
+          "snippet": "xác nhận gói PT 1.500.000đ.",
           "timestamp": "13/10/2026 17:46"
         },
         {
           "id": "email_4",
+          "subject": "Xác nhận đơn bình nóng lạnh 20L",
+          "sender": "Mua sắm",
+          "time": "13/10/2026 09:31",
+          "snippet": "2.390.000đ, giao tới Nam Định, dự kiến 16/10.",
+          "timestamp": "13/10/2026 09:31"
+        },
+        {
+          "id": "email_3",
           "subject": "Ưu đãi cuối tuần",
           "sender": "Mua sắm",
           "time": "12/10/2026 10:00",
           "snippet": "mã giảm phí giao hàng, thư quảng cáo.",
           "timestamp": "12/10/2026 10:00"
-        },
-        {
-          "id": "email_3",
-          "subject": "Chào mừng thành viên mới",
-          "sender": "Hỗ trợ IT",
-          "time": "11/10/2026 16:30",
-          "snippet": "hướng dẫn gửi yêu cầu hỗ trợ IT.",
-          "timestamp": "11/10/2026 16:30"
         },
         {
           "id": "email_2",
@@ -6532,8 +6811,8 @@
       "channels": [
         {
           "id": "channel_4",
-          "name": "#general",
-          "lastMessage": "15/10 09:15\nBan quản lý: Mọi người lấy bình nước cá nhân trước khi vệ sinh phòng họp nhé."
+          "name": "#sprint",
+          "lastMessage": "15/10 17:31\nBot lịch: Sprint Review 15/10 19:00 đã dời sang 19/10 19:00."
         },
         {
           "id": "channel_3",

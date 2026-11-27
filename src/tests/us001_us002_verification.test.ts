@@ -29,7 +29,7 @@ assert.equal(c1.levelNumber, 1);
 assert.equal(c1.allowedStrikes, 5, 'Level 1 must allow exactly 5 strikes');
 assert.ok(c1.suspectPool.length >= 1, 'Must have at least 1 initial suspect');
 assert.equal(c1.deviceMetadata.narrativeTime, '23:45');
-assert.equal(c1.deviceMetadata.batteryPercent, '42%');
+assert.equal(c1.deviceMetadata.batteryPercent, '8%');
 assert.equal(c1.deviceMetadata.carrierTag, '5G');
 assert.equal(c1.deviceMetadata.pwaThemeColor, '#0f172a');
 console.log('  -> PASS: Level 1 case initialized with correct strikes and telemetry.\n');

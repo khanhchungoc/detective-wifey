@@ -102,6 +102,12 @@ export interface ConfrontationScript {
   ending: ConfrontationEndingChoice[];
 }
 
+export interface EpilogueNotification {
+  sourceAppId: string;
+  senderTitle: string;
+  snippetBody: string;
+}
+
 export interface CaseConfig {
   caseId: string;
   husbandId: string;
@@ -116,6 +122,8 @@ export interface CaseConfig {
   grayedOutAppIds?: string[];
   appsData: Record<string, unknown>;
   notifications?: NotificationToast[];
+  /** Notification shown once after the confrontation ending (hook into the next level). */
+  epilogueNotification?: EpilogueNotification;
   knowledgeGraph?: import('./knowledge-graph').CaseKnowledgeGraph;
   confrontationScript?: ConfrontationScript;
 }

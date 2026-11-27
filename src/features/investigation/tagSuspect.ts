@@ -1,5 +1,8 @@
 import type { AppId } from '../../shared/contracts/app-contracts';
 import type { EvidenceSource, PinnedMessageEntry } from '../../shared/contracts/evidence';
+import { cleanDisplayName, resolveConversationId } from '../../shared/contracts/conversationId';
+
+export { cleanDisplayName, resolveConversationId };
 
 export type PinnedMessageItem = PinnedMessageEntry;
 
@@ -12,53 +15,6 @@ export interface TaggedSuspect {
   conversationId?: string;
   isExplicitConversationPin?: boolean;
   messages?: PinnedMessageItem[];
-}
-
-/**
- * Strips legacy "Tin nhắn: " prefix from display names.
- */
-export function cleanDisplayName(name: string): string {
-  if (!name) return '';
-  return name.replace(/^Tin nhắn:\s*/i, '').trim();
-}
-
-/**
- * Resolves the conversation ID for any evidence or record ID.
- * Examples:
- * - thread_tuan_m4 -> thread_tuan
- * - thread_tuan -> thread_tuan
- * - chat:shop_lingerie:message:1 -> shop_lingerie
- * - chat:shop_lingerie -> shop_lingerie
- */
-export function resolveConversationId(
-  sourceApp?: AppId,
-  recordId?: string,
-  conversationId?: string,
-  displayName?: string,
-): string | undefined {
-  if (conversationId && conversationId.trim()) return conversationId.trim();
-  if (!recordId) {
-    if (sourceApp === 'internet-messaging' && displayName) {
-      const clean = cleanDisplayName(displayName);
-      if (clean === 'Anh Tuấn Thợ Điện') return 'thread_tuan';
-    }
-    return undefined;
-  }
-  const id = recordId.trim();
-  // Zola/messaging threads: thread_tuan_m4 -> thread_tuan
-  if (id.startsWith('thread_')) {
-    const parts = id.split('_');
-    if (parts.length >= 3 && (parts[2].startsWith('m') || parts[2] === 'history' || parts[2] === 'banner')) {
-      return `${parts[0]}_${parts[1]}`;
-    }
-    return id;
-  }
-  // Ecommerce chats: chat:shop_lingerie:message:msg_1 -> shop_lingerie
-  if (id.startsWith('chat:')) {
-    const parts = id.split(':');
-    if (parts.length >= 2) return parts[1];
-  }
-  return undefined;
 }
 
 function contactConversationId(suspects: readonly TaggedSuspect[], name: string, appId: AppId): string | undefined {

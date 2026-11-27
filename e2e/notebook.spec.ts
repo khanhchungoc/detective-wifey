@@ -11,7 +11,7 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
   test('shows a pinned clue on the corkboard and opens the confrontation flow', async ({ page }) => {
     const errors = await startCleanPhone(page);
 
-    // Pin the Shopee order: it points at suspect Thu Hương, so she appears on the suspect list.
+    // Pin the Shopee order (size S dress, recipient phone matches "Khoa BE").
     await launchApp(page, 'ecommerce');
     await page.getByRole('button', { name: 'Tôi', exact: true }).click();
     await page.getByRole('button', { name: 'Tất cả đơn' }).click();
@@ -72,8 +72,8 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await confirm.getByRole('button', { name: /!/ }).click();
     const interrogation = page.getByRole('dialog', { name: /Đối chất · / });
     await expect(interrogation).toBeVisible();
-    await expect(interrogation.locator('[data-choice-id="open_ask"]')).toContainText('Hoàng, anh có gì lừa dối tôi không');
-    await expect(interrogation.locator('[data-choice-id="open_offer"]')).toContainText('Tôi biết anh đang ngoại tình');
+    await expect(interrogation.locator('[data-choice-id="open_ask"]')).toContainText('Hoàng, anh có gì giấu tôi không');
+    await expect(interrogation.locator('[data-choice-id="open_offer"]')).toContainText('Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật');
 
     // The interrogation can be closed without picking a line.
     await interrogation.getByRole('button', { name: 'Đóng đối chất' }).click();

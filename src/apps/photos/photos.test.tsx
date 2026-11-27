@@ -5,7 +5,7 @@ import { buildPhotoEvidenceItem, readPhotosData } from './data';
 import { PhotosApp, appDefinition } from './PhotosApp';
 import { deriveNodesFromTaggedEvidence } from '../../features/wife-notebook/WifeNotebookModal';
 import { LEVEL_01_KNOWLEDGE_GRAPH } from '../../features/wife-notebook/level01Fixture';
-import { createEdgeBetweenNodes } from '../../features/wife-notebook/graphEngine';
+import { loadCase } from '../../features/case-runtime';
 import { CorkboardCanvas } from '../../features/wife-notebook/components/CorkboardCanvas';
 
 describe('case-supplied photo library', () => {
@@ -42,24 +42,19 @@ describe('case-supplied photo library', () => {
     expect(appDefinition.dataKeys).toContain('photos');
   });
 
-  it('pins photo_dinner_claypot with imageSrc onto the Corkboard and links canonical alibi edge', () => {
-    const state = readPhotosData({
-      photos: [{
-        id: 'photo_dinner_claypot',
-        title: 'Bữa tối cơm niêu',
-        date: '15/10/2026 19:45',
-        timestamp: '15/10/2026 19:45',
-        locationTag: 'Phố Cổ, Hoàn Kiếm, Hà Nội',
-        clueRefId: 'CLUE-PHOT-05',
-      }],
-    });
-    const dinnerPhoto = state.photos[0];
-    const lightboxEvidence = buildPhotoEvidenceItem(dinnerPhoto, 'case_01', 'Hoàng', 'lightbox');
-    expect(lightboxEvidence.snippet).toBe('');
-    expect(lightboxEvidence.title).toBe('IMG_9518.HEIC');
+  it('ships Level 1 photos as everyday content only, with no dinner clue', () => {
+    const photos = readPhotosData(loadCase('case_01').appsData.photos).photos;
+    expect(photos).toHaveLength(16);
+    expect(photos.some(photo => photo.id === 'photo_dinner_claypot')).toBe(false);
+    expect(photos.some(photo => photo.clueRefId || photo.locationTag)).toBe(false);
+    expect(photos.find(photo => photo.id === 'photo_7')?.title).toBe('Bình nóng lạnh hỏng');
+    expect(photos.every(photo => !/15\/10.*(19|2[0-3]):/.test(photo.timestamp ?? ''))).toBe(true);
+  });
 
-    const evidence = buildPhotoEvidenceItem(dinnerPhoto, 'case_01', 'Hoàng', 'exif');
-    expect(evidence.source?.recordId).toBe('photo_dinner_claypot');
+  it('pins an everyday photo with imageSrc onto the Corkboard', () => {
+    const photo = readPhotosData(loadCase('case_01').appsData.photos).photos.find(item => item.id === 'photo_0')!;
+    const evidence = buildPhotoEvidenceItem(photo, 'case_01', 'Hoàng', 'exif');
+    expect(evidence.source?.recordId).toBe('photo_0');
     expect(evidence.source?.imageSrc).toBeTruthy();
 
     const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [{
@@ -70,17 +65,7 @@ describe('case-supplied photo library', () => {
       evidence: evidence.source,
     }]);
     expect(nodes).toHaveLength(1);
-    expect(nodes[0].nodeId).toBe('node_record_photo_dinner');
     expect(nodes[0].imageSrc).toBe(evidence.source?.imageSrc);
-
-    const { newEdge } = createEdgeBetweenNodes(
-      LEVEL_01_KNOWLEDGE_GRAPH,
-      [],
-      'node_record_photo_dinner',
-      'node_record_wife_alibi',
-    );
-    expect(newEdge?.edgeId).toBe('edge_photo_dinner_alibi');
-    expect(newEdge?.relationship).toBe('contradicts_alibi');
 
     const boardHtml = renderToStaticMarkup(createElement(CorkboardCanvas, {
       viewport: { x: 0, y: 0, zoom: 1 },
@@ -97,11 +82,7 @@ describe('case-supplied photo library', () => {
       onNavigateToSource: vi.fn(),
       onCancelPairing: vi.fn(),
     }));
-    expect(boardHtml).toContain('data-pinned-photo="node_record_photo_dinner"');
-    expect(boardHtml).toContain('data-pinned-photo-meta="node_record_photo_dinner"');
-    expect(boardHtml).toContain('15/10/2026 19:45');
-    expect(boardHtml).toContain('Phố Cổ, Hoàn Kiếm, Hà Nội');
+    expect(boardHtml).toContain(`data-pinned-photo="${nodes[0].nodeId}"`);
     expect(boardHtml).toContain('<img ');
   });
 });
-

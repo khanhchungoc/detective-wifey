@@ -123,7 +123,7 @@ describe('play lifecycle', () => {
     const { repository } = setup();
     const session: ActiveSessionState = {
       schemaVersion: 1, gameId: 'jealous_wife', caseId: 'case_01', levelNumber: 1, activeApp: 'home',
-      suspicionStrikes: 3, taggedSuspects: [{ suspectId: 'tag_1', displayName: 'Anh Tuấn Thợ Điện',
+      suspicionStrikes: 3, taggedSuspects: [{ suspectId: 'tag_1', displayName: 'Khoa BE',
         sourceApp: 'internet-messaging', timestamp: 1 }], unlockedChallenges: [], elapsedSeconds: 0, lastSavedAt: 1,
     };
     repository.getActiveSession = vi.fn(async () => session);
@@ -199,10 +199,10 @@ describe('save compatibility and ordering', () => {
     });
     const repository = new LocalStorageAdapter();
     const { game } = setup(undefined, { repository });
-    game.tag('Anh Tuấn Thợ Điện', 'internet-messaging');
+    game.tag('Khoa BE', 'internet-messaging');
     await new Promise(resolve => setTimeout(resolve, 0));
     storage.set('detective:v1:case_01:corkboard_state', JSON.stringify({
-      placedNodes: [{ nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', x: 0, y: 0 }],
+      placedNodes: [{ nodeId: 'node_alias_khoa', label: 'Khoa BE', x: 0, y: 0 }],
       edges: [{ edgeId: 'edge_order_name', sourceNodeId: 'a', targetNodeId: 'b', isCanonical: true, isSmokingGun: true }],
     }));
 

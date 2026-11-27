@@ -7,7 +7,7 @@ import { detectDeviceMode, detectFullscreen, isMobileDevice, shouldShowStatusBar
 import { systemForeground } from './systemChrome';
 import { StatusBar } from './components/StatusBar';
 import { AppIconSquircle } from './components/AppIconSquircle';
-import { NotificationBanner } from './components/NotificationBanner';
+import { NotificationBanner } from '../shared/ui/NotificationBanner';
 import { NotebookTab } from './components/NotebookTab';
 import { ControlCenter, isControlSwipe, setNotificationHintSeen } from './components/ControlCenter';
 import { PwaGuideSheet } from './components/PwaGuideSheet';

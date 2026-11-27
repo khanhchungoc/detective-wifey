@@ -123,7 +123,7 @@ export function getSuspectsOnBoard({
   edges?: CaseGraphEdge[];
   unmaskedSuspectIds?: string[];
 }): SuspectOnBoard[] {
-  const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? 'suspect_huong';
+  const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? DEFAULT_CULPRIT_SUSPECT_ID;
   const suspectsMap = new Map<string, SuspectOnBoard>();
 
   // Helper to determine if a node represents "Vợ" (the player) - must never be an accusation suspect
@@ -145,9 +145,10 @@ export function getSuspectsOnBoard({
         edge.edgeId.startsWith('shared_phone_');
       if (!isBridge) return false;
 
-      // In Level 1, edge_order_phone and shared_phone link the phone to the order of Thu Huong
-      if (edge.edgeId === 'edge_order_phone' || edge.edgeId.startsWith('shared_phone_') || edge.edgeId === 'edge_order_name') {
-        return suspectId === culpritId || suspectId === 'suspect_huong';
+      // The order/phone/name bridges identify the culprit behind the alias; only they lift the mask.
+      if (edge.edgeId === 'edge_order_phone' || edge.edgeId.startsWith('shared_phone_') || edge.edgeId === 'edge_order_name' ||
+          edge.edgeId === 'edge_name_suspect') {
+        return suspectId === culpritId;
       }
 
       const sourceNode = placedNodes.find(n => n.nodeId === edge.sourceNodeId);
@@ -197,7 +198,7 @@ export function getSuspectsOnBoard({
 
       let alias: string | undefined;
 
-      // 1. Check knowledge graph for canonical disguise alias (e.g. node_alias_tuan for suspect_huong)
+      // 1. Check knowledge graph for canonical disguise alias (e.g. node_alias_khoa for suspect_huong)
       const canonicalAliasNode = knowledgeGraph?.nodes.find(kn =>
         kn.type === 'alias' &&
         (kn.unmasksToSuspectId === poolItem.suspectId ||
@@ -220,17 +221,10 @@ export function getSuspectsOnBoard({
               kn.unmasksToSuspectId?.includes(poolItem.suspectId)
             ));
 
-          const isCulpritElectrician = (poolItem.suspectId === 'suspect_huong' || isCulprit) && (
-            (n.label || '').toLowerCase().includes('thợ điện') ||
-            (n.label || '').toLowerCase().includes('tuan') ||
-            n.nodeId.includes('tuan')
-          );
-
-          if (!belongsToPoolItem && !isCulpritElectrician) return false;
+          if (!belongsToPoolItem) return false;
 
           if (n.type === 'alias' && !isSameAsRealName(n.label)) return true;
           if (n.visibleAlias && !isSameAsRealName(n.visibleAlias)) return true;
-          if (isCulpritElectrician) return true;
           return false;
         });
 
@@ -243,12 +237,7 @@ export function getSuspectsOnBoard({
         }
       }
 
-      // 3. Explicit fallback for suspect_huong / culprit
-      if (!alias && (poolItem.suspectId === 'suspect_huong' || isCulprit)) {
-        alias = 'Anh Tuấn Thợ Điện';
-      }
-
-      // 4. Fallback for mock test fixtures (e.g. orderAttribution.test.ts where placed order visibleAlias is expected)
+      // 3. Fallback for mock test fixtures (e.g. orderAttribution.test.ts where placed order visibleAlias is expected)
       if (!alias) {
         const fallbackNode = placedNodes.find(n => n.subjectSuspectId === poolItem.suspectId || n.suspectId === poolItem.suspectId);
         alias = fallbackNode?.visibleAlias || tagged?.visibleAlias;
@@ -261,11 +250,13 @@ export function getSuspectsOnBoard({
       const isUnmaskedByEdge = hasIdentityBridgingEdge(poolItem.suspectId);
       const isUnmasked = isUnmaskedByState || isUnmaskedByEdge;
 
-      // Has any node with the real suspect's name actually been placed or tagged?
+      // Has any identity card with the real suspect's name actually been placed or tagged?
+      // Evidence cards (orders, receipts, bridges) may print the real name but must not unmask the alias.
       const hasRealNameOnBoard = Boolean(
         tagged ||
         placedNodes.some(n => {
           if (isWifeNode(n.label, n.nodeId)) return false;
+          if (n.type === 'record_clue' || n.type === 'bridge_id' || n.type === 'timeline_slot') return false;
           const cleanLabel = (n.label || '').toLowerCase();
           return cleanLabel.includes(cleanRealName.toLowerCase()) || n.nodeId === `node_${poolItem.suspectId}`;
         })
@@ -288,8 +279,9 @@ export function getSuspectsOnBoard({
       let unmaskedEvidenceHint: string | undefined;
       if (isUnmasked) {
         const hasPhoneBridge = edges.some(e => e.edgeId === 'edge_order_phone' || e.edgeId.startsWith('shared_phone_') || e.edgeId === 'edge_alias_phone');
-        if (hasPhoneBridge || poolItem.suspectId === 'suspect_huong') {
-          unmaskedEvidenceHint = 'Trùng SĐT: 0988886677';
+        const phoneLabel = knowledgeGraph?.nodes.find(n => n.type === 'bridge_id' && /^SĐT/i.test(n.label))?.label;
+        if (hasPhoneBridge && phoneLabel) {
+          unmaskedEvidenceHint = `Trùng ${phoneLabel}`;
         } else {
           unmaskedEvidenceHint = 'Khớp dữ liệu nhận diện';
         }
@@ -315,20 +307,19 @@ export function getSuspectsOnBoard({
         (node.visibleAlias && (node.sourceAppId === 'phone' || node.sourceAppId === 'messages' || node.sourceAppId === 'internet-messaging'))) {
       const suspectId = node.subjectSuspectId || node.suspectId || node.nodeId.replace(/^node_suspect_/, '').replace(/^node_/, '');
 
-      // Check if this contact alias belongs to an existing suspect in suspectsMap (e.g. Anh Tuấn Thợ Điện belongs to suspect_huong)
+      // Evidence-only cards (phone bridge, group post, alibi record) are not suspects themselves.
+      const canonicalKind = knowledgeGraph?.nodes.find(k => k.nodeId === node.nodeId)?.type;
+      if (!node.subjectSuspectId && (canonicalKind === 'bridge_id' || canonicalKind === 'record_clue' || canonicalKind === 'timeline_slot')) {
+        continue;
+      }
+
+      // Check if this contact alias belongs to an existing suspect in suspectsMap (e.g. the "Khoa BE" alias belongs to suspect_huong)
       const existingEntry = Array.from(suspectsMap.values()).find(suspect => {
         if (suspect.id === suspectId) return true;
         if (suspect.displayName === node.label) return true;
         if (node.visibleAlias && suspect.displayName === node.visibleAlias) return true;
         if (suspect.alias && suspect.alias === node.label) return true;
         if (suspect.alias && node.visibleAlias && suspect.alias === node.visibleAlias) return true;
-
-        // Level 1 electrician check: any node with 'Anh Tuấn Thợ Điện' belongs to suspect_huong / culprit
-        const cleanNodeLabel = (node.label || '').toLowerCase();
-        const isElectricianNode = cleanNodeLabel.includes('thợ điện') || cleanNodeLabel.includes('anh tuấn') || node.nodeId.includes('tuan');
-        if (isElectricianNode && (suspect.id === 'suspect_huong' || suspect.id === culpritId || suspect.isCulprit)) {
-          return true;
-        }
 
         // Check canonical knowledge graph mapping by nodeId or recordRefId
         if (knowledgeGraph) {
@@ -374,15 +365,19 @@ export function getSuspectsOnBoard({
  * Standard red-herring over-jealous roast dialogues for Level 1 suspects.
  */
 const RED_HERRING_ROASTS_L1: Record<string, string> = {
+  suspect_tuan_dien:
+    'Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?',
   suspect_lan_anh:
-    'Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?',
+    'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
   suspect_thao:
-    'Người ta nhắc anh mang phiếu đánh giá cột sống. Em bắt được lưng đau, chưa bắt được người tình.',
+    'Người ta đợi anh tập trị liệu cột sống rồi còn trừ buổi của anh. Em bắt được lưng đau, chưa bắt được người tình.',
   suspect_ngoc:
-    'Em gái nhắn cảm ơn anh trai còn chưa đủ rõ à? Chủ nhật về quê chắc phải giới thiệu lại gia phả.',
+    'Em gái anh trượt môn Vĩ mô nhờ anh giấu mẹ. Em định bắt ghen hay đi méc mẹ?',
   suspect_mai:
-    'Em kiểm tra điện thoại hay kiểm kê cả khu phố đấy? Mai anh còn đi làm!',
+    'Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.',
 };
+
+const DEFAULT_CULPRIT_SUSPECT_ID = 'suspect_huong';
 
 const DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS = [
   'edge_order_phone',
@@ -476,17 +471,10 @@ export function calculateConfrontationPreflight({
   explicitCluesFound?: number;
   unmaskedSuspectIds?: string[];
 }): ConfrontationPreflightInfo {
-  const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? 'suspect_huong';
+  const culpritId = caseConfig?.groundTruth?.culpritSuspectId ?? DEFAULT_CULPRIT_SUSPECT_ID;
 
   // If accusedSuspectId is not provided, default to culpritId for backward compatibility
-  let effectiveSuspectId = accusedSuspectId || culpritId;
-  if (
-    effectiveSuspectId.includes('tuan') ||
-    effectiveSuspectId.includes('thodien') ||
-    effectiveSuspectId.includes('tho_dien')
-  ) {
-    effectiveSuspectId = culpritId;
-  }
+  const effectiveSuspectId = accusedSuspectId || culpritId;
   const isWrongSuspect = Boolean(
     accusedSuspectId &&
     effectiveSuspectId !== culpritId &&
@@ -522,10 +510,8 @@ export function calculateConfrontationPreflight({
     }
   }
   if (!accusedSuspectAlias && effectiveSuspectId === culpritId) {
-    const aliasNode = placedNodes.find(n => n.type === 'alias' || n.visibleAlias);
-    if (aliasNode) {
-      accusedSuspectAlias = aliasNode.visibleAlias || aliasNode.label;
-    }
+    accusedSuspectAlias = knowledgeGraph?.nodes.find(n =>
+      n.type === 'alias' && n.unmasksToSuspectId?.includes(culpritId))?.label;
   }
 
   const requiredEdgeIds = knowledgeGraph?.requiredSmokingGunEdgeIds ?? [...DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS];
@@ -536,11 +522,13 @@ export function calculateConfrontationPreflight({
   ));
 
   const placedNodeIds = new Set(placedNodes.map(node => node.nodeId));
+  const unmasksToAccused = (nodeId: string) =>
+    knowledgeGraph?.nodes.find(n => n.nodeId === nodeId)?.unmasksToSuspectId?.includes(effectiveSuspectId) ?? false;
   const connectedNodeIds = new Set(placedNodes.filter(node =>
     (node.type === 'suspect' || node.type === 'alias' || node.isExplicitConversationPin) && (
       node.suspectId === effectiveSuspectId || node.nodeId === effectiveSuspectId ||
-      node.nodeId === `node_${effectiveSuspectId}` ||
-      ((node.type === 'suspect' || node.type === 'alias') && (node.label === accusedSuspectName || (!isWrongSuspect && node.label.includes('Tuấn'))))),
+      node.nodeId === `node_${effectiveSuspectId}` || unmasksToAccused(node.nodeId) ||
+      ((node.type === 'suspect' || node.type === 'alias') && node.label === accusedSuspectName)),
   ).map(node => node.nodeId));
   const pending = [...connectedNodeIds];
   for (const nodeId of pending) {
@@ -850,21 +838,21 @@ export function evaluateConfrontation({
       // 3 Stars: Watertight victory (Bắt quả tang trọn vẹn)
       husbandMood = 'broken';
       husbandDialogue =
-        'Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu... Em đừng giận nữa mà!';
+        'Anh xin lỗi... không có họp nào cả. Anh đi ăn với Hương. Mới một tháng thôi, anh sai rồi...';
       wifeTitle = 'Nữ thám tử ghen tuông';
       narrativeRoast =
         groundTruth.narrativeRoast ||
-        'Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?';
+        'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?';
     } else if (stars === 2) {
       // 2 Stars: Partial victory (Đã vạch trần một phần)
       husbandMood = 'nervous';
       husbandDialogue =
-        'Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi mà em! Anh có biết gì đâu...';
+        'À... Hương bên Marketing nhờ anh áp mã Freeship Extra thôi. Anh với nó chỉ là đồng nghiệp!';
     } else {
       // 1 Star: Partial victory (Thắng non)
       husbandMood = 'surprised';
       husbandDialogue =
-        'Số thợ điện hôm trước anh gọi nhờ sửa dây mạng văn phòng mà... chứ có gì đâu!';
+        'Khoa... Khoa là dev mới bên anh. Nó nhờ anh đặt hộ váy cho người yêu nên để số nó thôi!';
     }
   } else {
     // 0 Stars: Premature confrontation failure, wrong suspect, or RNG roll failed
@@ -970,13 +958,7 @@ function resolveIsWrongSuspect(
   if (!accusedSuspectId) return false;
   const culpritId = caseConfig.groundTruth.culpritSuspectId;
   let effectiveId = accusedSuspectId;
-  if (
-    effectiveId.includes('tuan') ||
-    effectiveId.includes('thodien') ||
-    effectiveId.includes('tho_dien')
-  ) {
-    effectiveId = culpritId;
-  } else if (knowledgeGraph) {
+  if (knowledgeGraph) {
     const aliasNode = knowledgeGraph.nodes.find(
       n => n.nodeId === effectiveId || n.nodeId === `node_${effectiveId}`,
     );
