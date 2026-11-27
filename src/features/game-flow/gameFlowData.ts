@@ -4,6 +4,7 @@ import type {
   HusbandProfile,
   Level0Status,
   LevelCardItem,
+  LockscreenNotificationItem,
   PhoneLockscreenConfig,
   WifeProfile,
 } from '../../shared/contracts/game-flow';
@@ -169,6 +170,7 @@ export function buildCaseBriefing(
 }
 
 export interface LockscreenAppIconMeta {
+  appName?: string;
   iconAsset?: string;
   themeGradient?: string;
 }
@@ -179,34 +181,28 @@ export function buildLockscreenConfig(
   resolveAppIcon?: (appId: string) => LockscreenAppIconMeta | undefined,
 ): PhoneLockscreenConfig {
   const isHarderLevel = caseConfig.levelNumber >= 2;
-  const zolaMeta = resolveAppIcon?.('internet-messaging');
-  const bankMeta = resolveAppIcon?.('banking');
+  // Lock screen mirrors the case's own notification hooks, privacy-masked (no sender, no body).
+  const notifications: LockscreenNotificationItem[] = (caseConfig.notifications ?? []).map((toast) => {
+    const meta = resolveAppIcon?.(toast.sourceAppId);
+    const time = toast.senderTitle.match(/\b\d{1,2}:\d{2}\b/)?.[0];
+    const isMessage = toast.sourceAppId === 'internet-messaging' || toast.sourceAppId === 'messages';
+    return {
+      id: `lock_${toast.toastId}`,
+      appId: toast.sourceAppId,
+      appName: meta?.appName ?? toast.sourceAppId,
+      iconAsset: meta?.iconAsset,
+      themeGradient: meta?.themeGradient,
+      maskedBody: isMessage ? 'Bạn có 1 tin nhắn mới' : 'Có 1 thông báo mới',
+      timeLabel: time ?? 'Vừa xong',
+    };
+  });
 
   return {
     narrativeDate: 'Th 5, 15 thg 10',
     narrativeTime: caseConfig.deviceMetadata.narrativeTime || '23:45',
     batteryPercent: caseConfig.deviceMetadata.batteryPercent || '42%',
     wallpaperUrl,
-    notifications: [
-      {
-        id: 'lock_notif_zola',
-        appId: 'internet-messaging',
-        appName: 'Zola',
-        iconAsset: zolaMeta?.iconAsset,
-        themeGradient: zolaMeta?.themeGradient,
-        maskedBody: 'Bạn có 3 tin nhắn mới',
-        timeLabel: 'Vừa xong',
-      },
-      {
-        id: 'lock_notif_bank',
-        appId: 'banking',
-        appName: 'Techcornbank',
-        iconAsset: bankMeta?.iconAsset,
-        themeGradient: bankMeta?.themeGradient,
-        maskedBody: 'Có 1 thông báo mới',
-        timeLabel: '20:48',
-      },
-    ],
+    notifications,
     ...(isHarderLevel
       ? {
           passcode: caseConfig.lockChallenges[0]?.expectedAnswer || '1510',

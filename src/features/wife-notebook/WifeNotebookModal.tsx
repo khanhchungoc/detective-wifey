@@ -9,7 +9,7 @@ import {
   IoScaleOutline,
 } from 'react-icons/io5';
 import { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
-import { resolveConversationId } from '../investigation/tagSuspect';
+import { resolveConversationId } from '../../shared/contracts/conversationId';
 import {
   createEdgeBetweenNodes,
   evaluateUnmaskedSuspects,

@@ -40,7 +40,7 @@ describe('Messaging image inspection', () => {
     const data = readMessagingData(loadCase('case_01').appsData['internet-messaging']);
     const wife = data.threads!.find(t => t.threadId === 'thread_wife')!;
     const mother = data.threads!.find(t => t.threadId === 'thread_family')!;
-    const culprit = data.otherThreads!.find(t => t.threadId === 'thread_tuan')!;
+    const culprit = data.threads!.find(t => t.threadId === 'thread_khoa')!;
     expect(wife.historyPriority).toBe('high');
     expect(mother.historyPriority).toBe('high');
     expect(wife.messages.length).toBeGreaterThanOrEqual(70);
@@ -48,7 +48,7 @@ describe('Messaging image inspection', () => {
     expect(mother.messages.length).toBeGreaterThan(culprit.messages.length * 3);
     expect(wife.messages[0].time).toContain('/08');
     expect(data.contacts!.every(c => c.historyPriority)).toBe(true);
-    expect(culprit.isPinned).toBe(false);
+    expect(culprit.isPinned ?? false).toBe(false);
   });
 
   it('renders chat message container targeting latest message on thread opening', () => {

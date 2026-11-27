@@ -230,9 +230,11 @@ Mỏ neo đối chiếu: vợ mặc size M ([husband-profile.md](husband-profile
 | `call_building` | D 21:05 | Ban Quản Lý | Đến | 51 |
 | `call_khoa_late` | D 23:20 | Khoa BE | Đi | 96 (`CLUE-PHONE-01`) |
 
-Danh bạ (số đầy đủ hiện trong thẻ liên hệ): Vợ `0900112233`; Mẹ Ở Quê `0915220011`; Bé Ngọc KTX `0922334455`; Nam Dev `0933445566`; Bách Dev `0933778899`; Thảo PT California `0944556677`; Tuấn Đụt `0977112233`; Lan Anh Kế Toán `0966778899`; Mai Lễ Tân `0988990011`; Khoa BE `0988886677`; Ban Quản Lý `0243556677`; Anh Tuấn Thợ Điện `0912345801`; Giao Nước `0904556677`; Giao Hàng `0905667788`; Tổng đài nhà mạng `18008098`. Không ghi chú, ảnh thật hay nhãn quan hệ trên "Khoa BE".
+Danh bạ 17 mục (số đầy đủ hiện trong thẻ liên hệ; thêm California Fitness `19006868` và Thông tin gói cước `191` để mỗi luồng SMS có liên hệ): Vợ `0900112233`; Mẹ Ở Quê `0915220011`; Bé Ngọc KTX `0922334455`; Nam Dev `0933445566`; Bách Dev `0933778899`; Thảo PT California `0944556677`; Tuấn Đụt `0977112233`; Lan Anh Kế Toán `0966778899`; Mai Lễ Tân `0988990011`; Khoa BE `0988886677`; Ban Quản Lý `0243556677`; Anh Tuấn Thợ Điện `0912345801`; Giao Nước `0904556677`; Giao Hàng `0905667788`; Tổng đài nhà mạng `18008098`. Không ghi chú, ảnh thật hay nhãn quan hệ trên "Khoa BE".
 
-## 6. `messages` - 6 luồng SMS
+## 6. `messages` - SMS (một luồng cho mỗi liên hệ Phone)
+
+Quy tắc danh bạ chung: mỗi liên hệ trong Phone mở được một luồng SMS có ít nhất 6 tin lịch sử (17 luồng). Bảng dưới là các tin mới quanh D; lịch sử cũ trước 10/10 nằm trong `level_01.json`. Luồng SMS của "Khoa BE" chỉ có việc văn phòng trung tính (cáp phòng họp, tài liệu, brief), không có tin tình cảm. California Fitness có thêm 5 tin xác nhận buổi PT, gồm buổi 18:00 ngày 15/10.
 
 | Luồng | Ngày giờ | Nội dung hiển thị |
 |---|---|---|
@@ -243,7 +245,7 @@ Danh bạ (số đầy đủ hiện trong thẻ liên hệ): Vợ `0900112233`; 
 | `sms_promo` | 14/10 09:00 | "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau." |
 | `sms_mom` | 12/10 18:00; 18:04 | Mẹ: "Mẹ gọi không được, lát gọi lại nhé." / Hoàng: "Con gọi lại ngay." |
 
-Không có SMS từ "Khoa BE" (bỏ luồng SMS liên hệ ngụy trang của bản cũ).
+Không có SMS mang manh mối từ "Khoa BE".
 
 ## 7. Sinh hoạt trong các ứng dụng còn lại
 
@@ -276,7 +278,7 @@ Giữ nguyên bản trước (bài kiểm thử giao diện, tin tuyển fronten
 2. Tên `Nguyễn Thị Thu Hương` chỉ xuất hiện ở tin ghim HR và người nhận `order_01`. Lời "Cảm ơn Hương nha" là gợi ý nối, không có họ tên đầy đủ.
 3. Hai thông báo khởi phát trùng nguyên văn và giờ với tin trong `thread_tuan_dien` (22:58) và `thread_khoa` (23:41).
 4. Mọi bẫy nghi ngờ có lời giải đọc được trước đối chất: Tuấn (luồng Mẹ, luồng Tuấn, `order_heater`, ghi chú), Ngọc (trọn luồng), Lan Anh (luồng Lan Anh), Thảo (luồng Thảo + `sms_gym`), Mai (luồng Lan Anh, `seller_hoa`, luồng Mai).
-5. Tỷ lệ: 10/12 luồng chat, 19/20 giao dịch, 8/9 đơn, 12/14 cuộc gọi, 6/6 SMS không mang manh mối kết tội.
+5. Tỷ lệ: 10/12 luồng chat, 19/20 giao dịch, 8/9 đơn, 12/14 cuộc gọi, 17/17 luồng SMS không mang manh mối kết tội.
 6. Xưng hô đã kiểm: Hoàng - thợ điện `em - anh`; Hoàng - Mẹ `con - mẹ`; Hoàng - Ngọc, Lan Anh, Thảo, Mai, Khoa BE `a - e`; Hoàng - Nam, Tuấn Đụt `tôi - ông`.
 
 ## 9. Mạch sự kiện liên tục - chỉ dành cho tác giả

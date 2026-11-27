@@ -36,7 +36,7 @@ const sampleSession: ActiveSessionState = {
   taggedSuspects: [
     {
       suspectId: 'tag_1',
-      displayName: 'Anh Tuấn Thợ Điện',
+      displayName: 'Khoa BE',
       sourceApp: 'internet-messaging',
       timestamp: 1000,
     },

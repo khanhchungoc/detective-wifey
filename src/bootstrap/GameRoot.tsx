@@ -94,7 +94,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
   const lockscreenConfig = useMemo(
     () => buildLockscreenConfig(caseConfig, hoangPortraitUrl, (appId) => {
       const def = APP_REGISTRY[appId];
-      return def ? { iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
+      return def ? { appName: def.displayName, iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
     }),
     [caseConfig],
   );

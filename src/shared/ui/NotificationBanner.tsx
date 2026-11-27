@@ -13,8 +13,8 @@ import {
   IoNotifications,
   IoClose,
 } from 'react-icons/io5';
-import type { NotificationToast } from '../../shared/contracts/case-schema';
-import { getAppDisplayName } from '../../shared/branding';
+import type { NotificationToast } from '../contracts/case-schema';
+import { getAppDisplayName } from '../branding';
 
 interface NotificationBannerProps {
   toast: NotificationToast | null;

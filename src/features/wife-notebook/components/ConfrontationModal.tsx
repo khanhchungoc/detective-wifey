@@ -16,7 +16,7 @@ import {
   IoChevronForwardOutline,
 } from 'react-icons/io5';
 import type { ConfrontationSlot, EpilogueNotification, VerdictType } from '../../../shared/contracts/case-schema';
-import { NotificationBanner } from '../../../shell/components/NotificationBanner';
+import { NotificationBanner } from '../../../shared/ui/NotificationBanner';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import {
   CHOICE_STAGGER_S,

@@ -26,6 +26,20 @@ describe('caseRuntime', () => {
     expect(byLevel.allowedStrikes).toBe(5);
   });
 
+  it('describes Level 1 as the phone left outside the bathroom with an epilogue hook', () => {
+    const level = LEVEL_CATALOG.find((l) => l.levelNumber === 1)!;
+    expect(level.levelTitle).toBe('MÀN 1: Điện thoại ngoài phòng tắm');
+    expect(level.storySnippet).toContain('23:45, chồng đang tắm, điện thoại 8% pin cắm sạc ngoài phòng.');
+    const config = loadCase('case_01');
+    expect(config.groundTruth.culpritSuspectId).toBe('suspect_huong');
+    expect(config.suspectPool.map((s) => s.suspectId)).toContain('suspect_tuan_dien');
+    expect(config.notifications?.map((n) => n.toastId)).toEqual(['toast_01', 'toast_02']);
+    expect(config.epilogueNotification).toMatchObject({ sourceAppId: 'banking', senderTitle: 'Ngân hàng • Vừa xong' });
+    expect(config.confrontationScript?.beats.map((b) => b.beatId)).toEqual([
+      'beat_khoa_identity', 'beat_dress_recipient', 'beat_meeting_alibi',
+    ]);
+  });
+
   it('throws localized Vietnamese errors for missing caseId or out-of-range levelNumber', () => {
     expect(() => loadCase('nonexistent_case')).toThrow('Không thể tải dữ liệu vụ án');
     expect(() => loadCaseByLevel(0)).toThrow('Không tìm thấy màn chơi yêu cầu.');
