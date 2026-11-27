@@ -112,7 +112,7 @@ export const MessagingTimelineView: React.FC<MessagingTimelineViewProps> = ({
                 </div>
                 <div>
                   <h4 className="text-ios-subheadline font-bold text-[#0F172A]">{post.author}</h4>
-                  <span className="text-ios-caption-2 text-[#94A3B8]">{post.timestamp}</span>
+                  <span className="text-ios-caption-2 text-[#64748B]">{post.timestamp}</span>
                 </div>
               </div>
 

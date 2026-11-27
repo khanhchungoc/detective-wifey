@@ -40,6 +40,9 @@ export interface CaseGraphNode {
   rawTimestamp?: string | number;
   direction?: 'incoming' | 'outgoing' | 'inflow' | 'outflow';
   sender?: string;
+  imageSrc?: string;
+  imagePosition?: string;
+  imageAspect?: '3:4' | '4:3';
 }
 
 export interface CaseGraphEdge {

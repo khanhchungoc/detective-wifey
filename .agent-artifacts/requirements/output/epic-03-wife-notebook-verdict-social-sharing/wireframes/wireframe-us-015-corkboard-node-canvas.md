@@ -3,8 +3,8 @@
 **App ID**: `wife_notebook`  
 **Parent Epic**: [`epic-03-wife-notebook-verdict-social-sharing`](../epic.md)  
 **Related User Story**: [`us-015-wife-split-section-investigation-notebook-suspect-evidence-linkage-hub.md`](../us-015-wife-split-section-investigation-notebook-suspect-evidence-linkage-hub.md)  
-**Parent Specification**: [wife-notebook/app-design.md](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md)  
-**Functional Features**: [wife-notebook/features.md](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md)  
+**Parent Specification**: [evidence-board/app-design.md](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md)  
+**Functional Features**: [evidence-board/features.md](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md)  
 **Viewport Target**: Mobile Portrait Viewport (393px × 852px base container)  
 **Interaction Paradigm**: 2A Mobile-Optimized Detective Corkboard (Tap-to-Connect Red-String Graph Canvas)  
 **Design Standard**: Strict Zero-Emoji Invariant, Canonical Ionicons (`react-icons/io5`), Parchment Corkboard Texture, High-Contrast Node Cards  

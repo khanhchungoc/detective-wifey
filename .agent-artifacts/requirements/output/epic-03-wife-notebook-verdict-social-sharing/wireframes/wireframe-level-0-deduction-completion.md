@@ -15,7 +15,7 @@ Người mới học sổ tay rồi tự tìm mối liên hệ cuối. US-033; w
 
 ## Nguồn đối chiếu
 
-[Khám phá](../../elicitation/2026-10-21-level-0-tutorial-sixth-sense.md) · [Thiết kế sổ tay](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md) · [Bảng nối dây](wireframe-us-015-corkboard-node-canvas.md) · [Đối chất tự động](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md).
+[Khám phá](../../elicitation/2026-10-21-level-0-tutorial-sixth-sense.md) · [Thiết kế sổ tay](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md) · [Bảng nối dây](wireframe-us-015-corkboard-node-canvas.md) · [Đối chất tự động](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md).
 
 ## Danh sách màn hình
 

@@ -1,4 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { handoffLift } from '../motion/transition';
+
+/** Lifted app card corner; motion.css owns the value so the close snapshot matches. */
+const LIFT_RADIUS = 'var(--app-card-radius)';
 
 type GestureSurfaceEvent = {
   currentTarget?: EventTarget | null;
@@ -97,25 +101,81 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
   let startCoords: { x: number; y: number; time: number; containerBottom?: number } | null = null;
   let lastCoords: { x: number; y: number; time: number } | null = null;
   let lastTriggered = 0;
+  let surface: HTMLElement | null = null;
+  let settling: Animation | undefined;
+  let frame: number | undefined;
+  let tx = 0;
+  let ty = 0;
+  let scale = 1;
+  let lifted = false;
+  let reducedMotion = false;
 
-  const cancel = () => {
+  const stopFrame = () => {
+    if (frame !== undefined) cancelAnimationFrame(frame);
+    frame = undefined;
+  };
+
+  const paint = () => {
+    frame = undefined;
+    if (surface && lifted) {
+      surface.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+    }
+  };
+
+  const resetVisual = (animate = true) => {
+    stopFrame();
+    if (!surface) {
+      tx = 0;
+      ty = 0;
+      scale = 1;
+      lifted = false;
+      return;
+    }
+    const element = surface;
+    const wasLifted = lifted;
+    const from = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+    surface = null;
+    tx = 0;
+    ty = 0;
+    scale = 1;
+    lifted = false;
+    element.style.transform = '';
+    element.style.willChange = '';
+    element.style.borderRadius = '';
+    if (animate && wasLifted && element.animate && !reducedMotion) {
+      settling?.cancel();
+      const anim = element.animate(
+        [{ transform: from }, { transform: 'translate3d(0, 0, 0) scale(1)' }],
+        { duration: 280, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' },
+      );
+      settling = anim;
+      void anim.finished?.then(() => { if (settling === anim) settling = undefined; }, () => {});
+    }
+  };
+
+  const cancel = (animate = true) => {
     startCoords = null;
     lastCoords = null;
+    resetVisual(animate);
+  };
+
+  const resolveContainer = (element?: EventTarget | null): HTMLElement | null => {
+    if (options.getContainer) {
+      const container = options.getContainer();
+      if (container) return container;
+    }
+    if (typeof HTMLElement !== 'undefined' && element instanceof HTMLElement) {
+      return element;
+    }
+    return null;
   };
 
   const resolveBottom = (element?: EventTarget | null): number | undefined => {
-    if (options.getContainer) {
-      const container = options.getContainer();
-      if (container && typeof container.getBoundingClientRect === 'function') {
-        const rect = container.getBoundingClientRect();
-        if (rect.bottom > 0) return rect.bottom;
-        if (container.clientHeight > 0) return container.clientHeight;
-      }
-    }
-    if (typeof HTMLElement !== 'undefined' && element instanceof HTMLElement) {
-      const rect = element.getBoundingClientRect();
+    const container = resolveContainer(element);
+    if (container && typeof container.getBoundingClientRect === 'function') {
+      const rect = container.getBoundingClientRect();
       if (rect.bottom > 0) return rect.bottom;
-      if (element.clientHeight > 0) return element.clientHeight;
+      if (container.clientHeight > 0) return container.clientHeight;
     }
     if (typeof window !== 'undefined' && window.innerHeight > 0) {
       return window.innerHeight;
@@ -132,6 +192,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
       }
     }
 
+    const container = resolveContainer(event.currentTarget);
     const containerBottom = resolveBottom(event.currentTarget);
     const triggerAreaHeight = options.triggerAreaHeight ?? 72;
 
@@ -142,8 +203,38 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
       }
     }
 
+    settling?.cancel();
+    settling = undefined;
+    reducedMotion = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    surface = container?.querySelector?.<HTMLElement>('[data-app-surface]') ?? null;
+    tx = 0;
+    ty = 0;
+    scale = 1;
+    lifted = false;
     startCoords = { x: clientX, y: clientY, time: Date.now(), containerBottom };
     lastCoords = null;
+  };
+
+  const trackMove = (clientX: number, clientY: number) => {
+    if (!startCoords) return;
+    lastCoords = { x: clientX, y: clientY, time: Date.now() };
+    if (!surface || reducedMotion) return;
+    const upward = Math.max(0, startCoords.y - clientY);
+    if (!lifted && upward <= 4) return;
+    if (!lifted) {
+      lifted = true;
+      surface.style.willChange = 'transform';
+      surface.style.borderRadius = LIFT_RADIUS;
+    }
+    const progress = Math.min(1, upward / 260);
+    scale = Number((1 - progress * 0.28).toFixed(4));
+    tx = Number(((clientX - startCoords.x) * 0.45).toFixed(1));
+    ty = Number((-upward * 0.55).toFixed(1));
+    if (frame === undefined && typeof requestAnimationFrame === 'function') {
+      frame = requestAnimationFrame(paint);
+    } else if (typeof requestAnimationFrame !== 'function') {
+      paint();
+    }
   };
 
   const triggerHome = (endX: number, endY: number, endTime: number, stopProp?: () => void): boolean => {
@@ -169,11 +260,33 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
 
     if (isGesture && endTime - lastTriggered > 350) {
       lastTriggered = endTime;
-      cancel();
+      const draggedSurface = surface;
+      const wasLifted = lifted;
+      const pose = { x: tx, y: ty, scale };
+      stopFrame();
+      startCoords = null;
+      lastCoords = null;
+      surface = null;
+      tx = 0;
+      ty = 0;
+      scale = 1;
+      lifted = false;
       if (stopProp) {
         stopProp();
       }
-      options.onHome();
+      const release = () => {
+        if (!draggedSurface) return;
+        draggedSurface.style.transform = '';
+        draggedSurface.style.willChange = '';
+        draggedSurface.style.borderRadius = '';
+      };
+      if (draggedSurface && wasLifted) {
+        // Close keyframe replays the finger pose, then flies the card into its icon.
+        handoffLift(pose, release, () => options.onHome());
+      } else {
+        release();
+        options.onHome();
+      }
       return true;
     }
 
@@ -183,13 +296,15 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
   const handleEnd = (clientX: number, clientY: number, stopProp?: () => void) => {
     const success = triggerHome(clientX, clientY, Date.now(), stopProp);
     if (!success) {
-      cancel();
+      cancel(true);
     }
   };
 
   return {
     dispose: () => {
-      cancel();
+      settling?.cancel();
+      settling = undefined;
+      cancel(false);
     },
     onTouchStart: (e) => {
       if (e.touches && e.touches.length === 1) {
@@ -200,10 +315,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     },
     onTouchMove: (e) => {
       if (!startCoords || !e.touches || e.touches.length !== 1) return;
-      const clientX = e.touches[0].clientX;
-      const clientY = e.touches[0].clientY;
-      const now = Date.now();
-      lastCoords = { x: clientX, y: clientY, time: now };
+      trackMove(e.touches[0].clientX, e.touches[0].clientY);
     },
     onTouchCancel: () => {
       if (startCoords && lastCoords) {
@@ -232,7 +344,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     },
     onPointerMove: (e) => {
       if (e.pointerType === 'mouse' && startCoords) {
-        lastCoords = { x: e.clientX, y: e.clientY, time: Date.now() };
+        trackMove(e.clientX, e.clientY);
       }
     },
     onPointerCancel: (e?: { pointerType?: string }) => {

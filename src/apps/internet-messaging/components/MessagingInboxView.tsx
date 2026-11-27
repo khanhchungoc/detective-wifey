@@ -1,6 +1,6 @@
 import { useMotionState } from '../../../shared/motion/useMotionState';
 import React, { useState } from 'react';
-import { IoAdd, IoChevronBack, IoCloudOutline, IoNotificationsOffOutline, IoQrCodeOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoAdd, IoCloudOutline, IoNotificationsOffOutline, IoQrCodeOutline, IoSearchOutline } from 'react-icons/io5';
 import { MessagingThread, MessagingCloudDocument, MessagingContact } from '../types';
 import { contactEvidence } from '../contactEvidence';
 import { MessagingEvidenceSheet } from './MessagingEvidenceSheet';
@@ -29,7 +29,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
   cloudDocuments = [],
   onSelectThread,
   onTagSuspect,
-  onReturnHome,
+  onReturnHome: _onReturnHome,
   onOpenMyDocuments,
 }) => {
   const [activeTab, setActiveTab] = useMotionState<'priority' | 'other'>('priority', 'fade');
@@ -68,22 +68,14 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
     <div className="flex flex-col h-full w-full bg-[#FFFFFF] text-[#0F172A] select-none font-sans overflow-hidden">
       {/* 1. Header (Electric Blue #0088FF) */}
       <header className="h-14 px-3 bg-[#0088FF] text-white flex items-center gap-2 shrink-0 shadow-sm z-10">
-        <button
-          type="button"
-          onClick={onReturnHome}
-          className="w-11 h-11 -ml-2 flex items-center justify-center text-white hover:bg-white/10 active:scale-95 transition-all rounded-lg shrink-0"
-          aria-label="Quay lại màn hình chính"
-        >
-          <IoChevronBack className="w-6 h-6" />
-        </button>
-        <div className="flex-1 h-9 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
-          <IoSearchOutline className="w-4 h-4 text-white/80 shrink-0" />
+        <div className="flex-1 h-11 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
+          <IoSearchOutline className="w-4 h-4 text-white/85 shrink-0" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm"
-            className="w-full bg-transparent text-ios-subheadline text-white placeholder-white/80 outline-hidden"
+            className="w-full h-full bg-transparent text-ios-subheadline text-white placeholder-white/85 outline-hidden"
           />
         </div>
         <button

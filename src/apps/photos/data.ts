@@ -1,31 +1,40 @@
 import { record, records, text, textFields } from '../../shared/data/read';
+import type { UniversalEvidenceItem } from '../../shared/contracts/evidence';
 import type { NormalizedPhotosState, PhotoAlbum, PhotoExif, PhotoItem } from './types';
 import photosAnniversary from './assets/photos-anniversary.jpg';
+import photosDinnerClaypot from './assets/photos-dinner-claypot.jpg';
 import photosEveryday01 from './assets/photos-everyday-01.jpg';
 import photosEveryday02 from './assets/photos-everyday-02.jpg';
 import photosEveryday03 from './assets/photos-everyday-03.jpg';
 import photosEveryday04 from './assets/photos-everyday-04.jpg';
 import photosForensic from './assets/photos-forensic.jpg';
 
-export type PhotoArtwork = Readonly<{ src: string; position: string }>;
+export type PhotoArtwork = Readonly<{
+  src: string;
+  position: string;
+  tileWidth?: number;
+  tileHeight?: number;
+}>;
 
 type SpriteQuadrant = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 
-function spriteArtwork(src: string): Record<SpriteQuadrant, PhotoArtwork> {
+function spriteArtwork(src: string, aspect: '3:4' | '4:3' = '3:4'): Record<SpriteQuadrant, PhotoArtwork> {
+  const tileWidth = aspect === '4:3' ? 400 : 300;
+  const tileHeight = aspect === '4:3' ? 300 : 400;
   return {
-    topLeft: { src, position: '0% 0%' },
-    topRight: { src, position: '100% 0%' },
-    bottomLeft: { src, position: '0% 100%' },
-    bottomRight: { src, position: '100% 100%' },
+    topLeft: { src, position: '0% 0%', tileWidth, tileHeight },
+    topRight: { src, position: '100% 0%', tileWidth, tileHeight },
+    bottomLeft: { src, position: '0% 100%', tileWidth, tileHeight },
+    bottomRight: { src, position: '100% 100%', tileWidth, tileHeight },
   };
 }
 
-const everyday01 = spriteArtwork(photosEveryday01);
-const everyday02 = spriteArtwork(photosEveryday02);
-const everyday03 = spriteArtwork(photosEveryday03);
-const everyday04 = spriteArtwork(photosEveryday04);
-const anniversary = spriteArtwork(photosAnniversary);
-const forensic = spriteArtwork(photosForensic);
+const everyday01 = spriteArtwork(photosEveryday01, '4:3');
+const everyday02 = spriteArtwork(photosEveryday02, '3:4');
+const everyday03 = spriteArtwork(photosEveryday03, '3:4');
+const everyday04 = spriteArtwork(photosEveryday04, '4:3');
+const anniversary = spriteArtwork(photosAnniversary, '3:4');
+const forensic = spriteArtwork(photosForensic, '3:4');
 
 const photoArtworkById: Readonly<Record<string, PhotoArtwork>> = {
   photo_0: everyday01.topLeft,
@@ -61,14 +70,28 @@ const photoArtworkByClue: Readonly<Record<string, PhotoArtwork>> = {
   'CLUE-PHOT-04': forensic.bottomRight,
 };
 
+const standalonePhotoUrlById: Readonly<Record<string, string>> = {
+  photo_dinner_claypot: photosDinnerClaypot,
+};
+
+const standalonePhotoUrlByClue: Readonly<Record<string, string>> = {
+  'CLUE-PHOT-05': photosDinnerClaypot,
+};
+
+function getStandalonePhotoUrl(photo: Record<string, unknown>): string | undefined {
+  return standalonePhotoUrlByClue[text(photo.clueRefId)]
+    || standalonePhotoUrlById[text(photo.id)]
+    || standalonePhotoUrlById[text(photo.photoId)];
+}
+
 function getPhotoArtwork(photo: Record<string, unknown>): PhotoArtwork | undefined {
+  if (getStandalonePhotoUrl(photo)) return undefined;
   const clueArtwork = photoArtworkByClue[text(photo.clueRefId)];
   return clueArtwork || photoArtworkById[text(photo.id)] || photoArtworkById[text(photo.photoId)];
 }
 
 const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
   'CLUE-PHOT-01': {
-    hasForensicHotspot: false,
     isHiddenAlbum: true,
     locationTag: 'Khách sạn La Vela Saigon',
     exif: {
@@ -87,9 +110,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-02': {
-    hasForensicHotspot: true,
-    hotspotCoordinates: { x: 45, y: 65, zoomLevel: 3 },
-    hotspotClueDescription: 'Bóng ly rượu vang: Phản chiếu bàn tay phụ nữ làm móng đỏ và hình bóng bí mật.',
     locationTag: 'Nhà hàng The Deck Saigon - Thảo Điền',
     exif: {
       device: 'Apple iPhone 15 Pro',
@@ -107,9 +127,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-03': {
-    hasForensicHotspot: true,
-    hotspotCoordinates: { x: 74, y: 55, zoomLevel: 2.5 },
-    hotspotClueDescription: 'Ghế phụ ô tô: Túi xách nữ hàng hiệu lạ lẫm đặt trên ghế.',
     locationTag: 'Hầm xe Landmark 81',
     exif: {
       device: 'Apple iPhone 15 Pro',
@@ -127,7 +144,6 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
     },
   },
   'CLUE-PHOT-04': {
-    hasForensicHotspot: false,
     isHiddenAlbum: true,
     locationTag: 'Cửa hàng PNJ Vincom',
     exif: {
@@ -143,6 +159,23 @@ const CLUE_FORENSIC_SPECS: Readonly<Record<string, Partial<PhotoItem>>> = {
       locationName: 'P. Bến Nghé, Quận 1',
       streetLabels: ['LÊ THÁNH TÔN', 'ĐỒNG KHỞI', 'LÝ TỰ TRỌNG'],
       filename: 'IMG_9711.HEIC',
+    },
+  },
+  'CLUE-PHOT-05': {
+    locationTag: 'Phố Cổ, Hoàn Kiếm, Hà Nội',
+    exif: {
+      device: 'Apple iPhone 15 Pro',
+      format: 'HEIF',
+      lens: 'Camera chính - 24 mm ƒ1,78',
+      resolution: '24 MP • 4284 × 5712 • 2,3 MB',
+      iso: 400,
+      focalLength: 24,
+      ev: 0,
+      aperture: 'ƒ1,78',
+      shutterSpeed: '1/50 s',
+      locationName: 'Phố Cổ, Hoàn Kiếm, Hà Nội',
+      streetLabels: ['P. Hàng Trống', 'HÀNG GAI', 'LƯƠNG VĂN CAN'],
+      filename: 'IMG_9518.HEIC',
     },
   },
 };
@@ -185,19 +218,10 @@ function normalizeSinglePhoto(photo: Record<string, unknown>, isFromLockedAlbum 
   const title = text(photo.title) || text(photo.caption) || 'Ảnh';
   const description = text(photo.description) || title;
   const isHiddenAlbum = photo.isHiddenAlbum === true || isFromLockedAlbum || clueDefaults?.isHiddenAlbum === true;
-  const rawCoords = record(photo.hotspotCoordinates);
-
-  const hasForensicHotspot = photo.hasForensicHotspot === true || clueDefaults?.hasForensicHotspot === true;
-  const hotspotCoordinates = (rawCoords.x !== undefined && rawCoords.y !== undefined)
-    ? {
-      x: Number(rawCoords.x),
-      y: Number(rawCoords.y),
-      zoomLevel: rawCoords.zoomLevel !== undefined ? Number(rawCoords.zoomLevel) : 2.5,
-    }
-    : clueDefaults?.hotspotCoordinates;
-
   const isVideo = photo.isVideo === true || Boolean(photo.duration);
   const duration = text(photo.duration) || (isVideo ? '0:13' : undefined);
+
+  const standaloneUrl = getStandalonePhotoUrl(photo);
 
   return {
     id,
@@ -210,13 +234,10 @@ function normalizeSinglePhoto(photo: Record<string, unknown>, isFromLockedAlbum 
     suspectName: text(photo.suspectName) || undefined,
     clueRefId,
     artwork: getPhotoArtwork(photo),
-    thumbnailUrl: text(photo.thumbnailUrl) || undefined,
-    highResUrl: text(photo.highResUrl) || undefined,
+    thumbnailUrl: text(photo.thumbnailUrl) || standaloneUrl || undefined,
+    highResUrl: text(photo.highResUrl) || standaloneUrl || undefined,
     locationTag: text(photo.locationTag) || clueDefaults?.locationTag || undefined,
     isHiddenAlbum,
-    hasForensicHotspot,
-    hotspotCoordinates,
-    hotspotClueDescription: text(photo.hotspotClueDescription) || clueDefaults?.hotspotClueDescription || undefined,
     isVideo,
     duration,
     exif: buildDefaultExif(photo, id, clueRefId),
@@ -282,5 +303,60 @@ export function readPhotosData(value: unknown): NormalizedPhotosState {
     hiddenAlbumLocked,
     lockChallengeId,
     hasHiddenPhotos,
+  };
+}
+
+export function buildPhotoEvidenceItem(
+  photo: PhotoItem,
+  caseId: string,
+  husbandName: string,
+  mode: 'grid' | 'lightbox' | 'exif' = 'lightbox',
+  formattedDate?: string,
+): UniversalEvidenceItem {
+  const imageSrc = photo.highResUrl || photo.thumbnailUrl || photo.artwork?.src;
+  const imagePosition = (photo.highResUrl || photo.thumbnailUrl) ? undefined : photo.artwork?.position;
+  const imageAspect: '3:4' | '4:3' | undefined = imagePosition
+    ? (photo.artwork?.tileWidth === 400 ? '4:3' : '3:4')
+    : undefined;
+  const location = photo.locationTag || photo.exif.locationName;
+  const rawTimestamp = photo.timestamp || photo.date;
+  const dateMatch = rawTimestamp.match(/(\d{1,2}\/\d{1,2}(?:\/\d{4})?)/);
+  const timeMatch = rawTimestamp.match(/(\d{1,2}:\d{2})/);
+  const eventDate = dateMatch ? dateMatch[1] : undefined;
+  const eventTime = timeMatch ? timeMatch[1] : undefined;
+
+  const displayDateTime = rawTimestamp || photo.date;
+  let subtitle = location ? (displayDateTime ? `${displayDateTime} • ${location}` : location) : displayDateTime;
+  let snippet = '';
+  if (mode === 'exif') {
+    const dateLabel = formattedDate || displayDateTime;
+    subtitle = `${dateLabel} • ${photo.exif.locationName}`;
+    snippet = `EXIF [${photo.exif.device}] ${dateLabel} tại ${photo.exif.locationName}. Thông số: ISO ${photo.exif.iso}, tiêu cự ${photo.exif.focalLength}mm, ${photo.exif.aperture}, ${photo.exif.shutterSpeed}.`;
+  }
+
+  return {
+    title: photo.exif.filename || photo.title,
+    subtitle,
+    snippet,
+    suspectToTag: photo.suspectName || husbandName,
+    kind: 'photo',
+    eventDate,
+    eventTime,
+    rawTimestamp,
+    source: {
+      caseId,
+      recordId: photo.id,
+      clueRefId: photo.clueRefId,
+      title: photo.exif.filename || photo.title,
+      subtitle,
+      snippet,
+      kind: 'photo',
+      eventDate,
+      eventTime,
+      rawTimestamp,
+      imageSrc,
+      imagePosition,
+      imageAspect,
+    },
   };
 }

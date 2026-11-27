@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PhoneShell } from '../shell';
+import hoangPortraitUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
@@ -7,15 +9,36 @@ import { LocalStorageAdapter, ResumeSessionModal, type GameStateRepository } fro
 import { PlaySession } from '../features/play-session';
 import { SharedPinLockpad } from '../features/locks';
 import { WifeNotebookModal } from '../features/wife-notebook';
+import {
+  GameStartupScreen,
+  LevelSelectorHub,
+  LevelContextBriefing,
+  LevelSwitchConfirmModal,
+  buildHusbandProfiles,
+  buildLevelCards,
+  buildCaseBriefing,
+  buildLockscreenConfig,
+  getLevel0Status,
+  setLevel0Status,
+} from '../features/game-flow';
 import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { AppDefinition, AppId } from '../shared/contracts/app-contracts';
+import type { GameFlowStage, Level0Status, LevelCardItem } from '../shared/contracts/game-flow';
 import { appTransition, transition } from '../shared/motion/transition';
 import { AnchoredOverlay } from '../shared/ui/AnchoredOverlay';
 import { RetainedAppView } from './RetainedAppView';
 
-export function GameRoot({ repository, initialCaseConfig }: {
-  repository?: GameStateRepository; initialCaseConfig?: CaseConfig;
+export function GameRoot({ repository, initialCaseConfig, initialStage = 'startup' }: {
+  repository?: GameStateRepository;
+  initialCaseConfig?: CaseConfig;
+  initialStage?: GameFlowStage;
 }) {
+  const prefersReducedMotion = useReducedMotion();
+  const [flowStage, setFlowStage] = useState<GameFlowStage>(initialStage);
+  const [level0Status, setLevel0StatusState] = useState<Level0Status>(() => getLevel0Status());
+  const [isMuted, setIsMuted] = useState(false);
+  const [briefingRecallOpen, setBriefingRecallOpen] = useState(false);
+  const [switchLevelConfirmOpen, setSwitchLevelConfirmOpen] = useState(false);
   const [openNotebookCase, setOpenNotebookCase] = useState<string | null>(null);
   const [messageRoute, setMessageRoute] = useState<{ sessionId: number; threadId: string; request: number } | null>(null);
   const [game] = useState(() => new PlaySession({
@@ -54,6 +77,28 @@ export function GameRoot({ repository, initialCaseConfig }: {
     DOCK_APP_IDS.map(getAppDefinition).filter((app): app is AppDefinition => Boolean(app))
   ), []);
 
+  const husbands = useMemo(() => buildHusbandProfiles(hoangPortraitUrl), []);
+  const levelCards = useMemo(
+    () => buildLevelCards(
+      game.availableLevels(),
+      state.playerProgress.unlockedLevel,
+      state.playerProgress.bestStarRatings,
+      level0Status,
+    ),
+    [game, state.playerProgress.unlockedLevel, state.playerProgress.bestStarRatings, level0Status],
+  );
+  const activeBriefing = useMemo(
+    () => buildCaseBriefing(caseConfig, caseTitle, hoangPortraitUrl),
+    [caseConfig, caseTitle],
+  );
+  const lockscreenConfig = useMemo(
+    () => buildLockscreenConfig(caseConfig, hoangPortraitUrl, (appId) => {
+      const def = APP_REGISTRY[appId];
+      return def ? { iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
+    }),
+    [caseConfig],
+  );
+
   const returnHome = () => {
     if (activeAppId !== 'home') appTransition('close', activeAppId, game.returnHome);
   };
@@ -67,75 +112,198 @@ export function GameRoot({ repository, initialCaseConfig }: {
     appTransition('open', id, () => game.launch(id));
   };
 
-  return <PhoneShell
-    key={`${caseConfig.caseId}:${state.appSessionId}`}
-    deviceMetadata={caseConfig.deviceMetadata}
-    activeAppId={activeAppId} activeAppDefinition={activeApp}
-    activeUpperApps={upper} activeDockApps={dock}
-    grayedOutAppIds={disabledAppIds}
-    systemAlertToast={state.systemAlertToast}
-    onLaunchApp={launch} onReturnHome={returnHome} onRestartLevel={game.restart}
-    onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
-    onCloseNotebook={() => setOpenNotebookCase(null)}
-    notebookOpen={notebookOpen}
-    notebookEvidenceCount={state.taggedSuspects.length}
-    notebookCaseNumber={caseConfig.levelNumber}
-    onNotify={game.notify}
-    renderLevelSelector={onClose => <LevelSelectorSheet levels={game.availableLevels()}
-      activeLevelNumber={caseConfig.levelNumber} unlockedMaxLevel={state.playerProgress.unlockedLevel}
-      starRatings={state.playerProgress.bestStarRatings}
-      onSelectLevel={level => { if (game.selectLevel(level)) onClose(); }} onClose={onClose} />}
-    overlays={<>
-      <AnchoredOverlay key={caseConfig.caseId} open={notebookOpen} anchorSelector="[data-notebook-tab]"
-        label="Sổ tay của vợ" onClose={() => setOpenNotebookCase(null)}>
-      <WifeNotebookModal
-        caseId={caseConfig.caseId}
-        caseTitle={caseTitle}
-        caseConfig={caseConfig}
-        knowledgeGraph={caseConfig.knowledgeGraph}
-        currentStrikes={state.strikes}
-        maxStrikes={caseConfig.allowedStrikes}
-        getSourceApp={id => APP_REGISTRY[id]}
-        taggedSuspects={state.taggedSuspects}
-        isOpen={notebookOpen}
-        onClose={() => setOpenNotebookCase(null)}
-        onReturnHome={() => {
-          setOpenNotebookCase(null);
-          returnHome();
-        }}
-        onNavigateToSource={(appId) => {
-          setOpenNotebookCase(null);
-          launch(appId);
-        }}
-        onUpdateTaggedSuspects={game.updateTaggedSuspects}
-        onApplyConfrontationStrike={game.applyConfrontationPenalty}
-        onConfrontationVictory={game.recordConfrontationVerdict}
-        onNextLevel={game.forgiveAndAdvanceLevel}
-      />
-      </AnchoredOverlay>
-      {pendingChallenge && <SharedPinLockpad key={`${caseConfig.caseId}:${pendingChallenge.challenge.challengeId}`}
-        appName={pendingChallenge.appName} targetChallengeId={pendingChallenge.challenge.challengeId}
-        expectedPin={pendingChallenge.challenge.expectedAnswer} currentStrikes={state.strikes}
-        maxStrikes={caseConfig.allowedStrikes} onSuccess={id => transition('sheet-out', () => game.solveChallenge(id))}
-        onFailStrike={game.failChallenge} onCancel={() => transition('sheet-out', game.cancelChallenge)} />}
-      {state.resumableSession && <ResumeSessionModal session={state.resumableSession}
-        onResume={() => transition('fade', game.resume)} onRestart={() => transition('fade', game.restart)} />}
-    </>}
-  >
-    {Object.values(APP_REGISTRY).map(({ appId, component: AppComponent }) => <RetainedAppView
-      key={appId} active={activeAppId === appId}>
-      <AppComponent key={appId === 'messages' ? currentMessageRoute?.request : undefined} caseData={contexts[appId]}
-      onTagSuspect={game.tag} onReturnHome={returnHome} onRequestUnlock={id => transition('sheet-in', () => game.requestUnlock(id))}
-      unlockedChallenges={state.unlockedChallenges}
-      initialThreadId={appId === 'messages' ? currentMessageRoute?.threadId : undefined}
-      onOpenMessages={threadId => {
-        if (!enabledAppIds.has('messages')) return false;
-        transition('push', () => {
-          setMessageRoute(route => ({ sessionId: state.appSessionId, threadId, request: (route?.request ?? 0) + 1 }));
-          game.launch('messages');
-        });
-        return true;
-      }} />
-    </RetainedAppView>)}
-  </PhoneShell>;
+  const handleSelectLevelCard = (card: LevelCardItem) => {
+    if (card.isPractice) {
+      if (level0Status === 'not_started') {
+        setLevel0Status('completed');
+        setLevel0StatusState('completed');
+      }
+      game.selectLevel(1);
+      setFlowStage('level-context');
+      return;
+    }
+    if (card.levelNumber === 1 && level0Status === 'not_started') {
+      setLevel0Status('skipped');
+      setLevel0StatusState('skipped');
+    }
+    if (game.selectLevel(card.levelNumber)) {
+      setFlowStage('level-context');
+    }
+  };
+
+  const stageTransition = prefersReducedMotion
+    ? { duration: 0.12 }
+    : { duration: 0.22, ease: [0.16, 1, 0.3, 1] as const };
+
+  const stageKey =
+    flowStage === 'phone-lockscreen' || flowStage === 'phone-home'
+      ? 'phone-stage'
+      : flowStage;
+
+  return (
+    <div className="w-full h-[100dvh] flex justify-center items-center overflow-hidden bg-game-backdrop">
+      <AnimatePresence mode="wait">
+        {flowStage === 'startup' ? (
+          <motion.div
+            key="startup"
+            className="w-full h-full flex justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={stageTransition}
+          >
+            <GameStartupScreen
+              preloadAssets={[hoangPortraitUrl]}
+              onStart={() => setFlowStage('level-selector')}
+            />
+          </motion.div>
+        ) : flowStage === 'level-selector' ? (
+          <motion.div
+            key="level-selector"
+            className="w-full h-full flex justify-center"
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={stageTransition}
+          >
+            <LevelSelectorHub
+              husbands={husbands}
+              levels={levelCards}
+              initialHusbandId={caseConfig.husbandId}
+              isMuted={isMuted}
+              onToggleMute={() => setIsMuted(prev => !prev)}
+              onSelectLevel={handleSelectLevelCard}
+            />
+          </motion.div>
+        ) : flowStage === 'level-context' ? (
+          <motion.div
+            key="level-context"
+            className="w-full h-full flex justify-center"
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={stageTransition}
+          >
+            <LevelContextBriefing
+              briefing={activeBriefing}
+              mode="entry"
+              onBack={() => setFlowStage('level-selector')}
+              onStartInvestigation={() => setFlowStage('phone-lockscreen')}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={stageKey}
+            className="w-full h-full flex justify-center"
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={stageTransition}
+          >
+            <PhoneShell
+              key={`${caseConfig.caseId}:${state.appSessionId}`}
+              deviceMetadata={caseConfig.deviceMetadata}
+              activeAppId={activeAppId} activeAppDefinition={activeApp}
+              activeUpperApps={upper} activeDockApps={dock}
+              grayedOutAppIds={disabledAppIds}
+              systemAlertToast={state.systemAlertToast}
+              onLaunchApp={launch} onReturnHome={returnHome} onRestartLevel={game.restart}
+              onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
+              onCloseNotebook={() => setOpenNotebookCase(null)}
+              notebookOpen={notebookOpen}
+              notebookEvidenceCount={state.taggedSuspects.length}
+              notebookCaseNumber={caseConfig.levelNumber}
+              onNotify={game.notify}
+              isLocked={flowStage === 'phone-lockscreen'}
+              lockscreenConfig={lockscreenConfig}
+              currentStrikes={state.strikes}
+              maxStrikes={caseConfig.allowedStrikes}
+              onUnlockPhone={(targetAppId) => {
+                setFlowStage('phone-home');
+                if (targetAppId && enabledAppIds.has(targetAppId as AppId)) {
+                  launch(targetAppId as AppId);
+                }
+              }}
+              onLockscreenPasscodeFail={game.failChallenge}
+              onOpenBriefing={() => setBriefingRecallOpen(true)}
+              onRequestLevelSelector={() => setSwitchLevelConfirmOpen(true)}
+              renderLevelSelector={onClose => <LevelSelectorSheet levels={game.availableLevels()}
+                activeLevelNumber={caseConfig.levelNumber} unlockedMaxLevel={state.playerProgress.unlockedLevel}
+                starRatings={state.playerProgress.bestStarRatings}
+                onSelectLevel={level => { if (game.selectLevel(level)) onClose(); }} onClose={onClose} />}
+              overlays={<>
+                <AnchoredOverlay key={caseConfig.caseId} open={notebookOpen} anchorSelector="[data-notebook-tab]"
+                  label="Bảng bằng chứng" onClose={() => setOpenNotebookCase(null)}>
+                <WifeNotebookModal
+                  caseId={caseConfig.caseId}
+                  caseTitle={caseTitle}
+                  caseConfig={caseConfig}
+                  knowledgeGraph={caseConfig.knowledgeGraph}
+                  currentStrikes={state.strikes}
+                  maxStrikes={caseConfig.allowedStrikes}
+                  getSourceApp={id => APP_REGISTRY[id]}
+                  taggedSuspects={state.taggedSuspects}
+                  isOpen={notebookOpen}
+                  onClose={() => setOpenNotebookCase(null)}
+                  onReturnHome={() => {
+                    setOpenNotebookCase(null);
+                    returnHome();
+                  }}
+                  onNavigateToSource={(appId) => {
+                    setOpenNotebookCase(null);
+                    launch(appId);
+                  }}
+                  onUpdateTaggedSuspects={game.updateTaggedSuspects}
+                  onApplyConfrontationStrike={game.applyConfrontationPenalty}
+                  onConfrontationVictory={game.recordConfrontationVerdict}
+                  onNextLevel={game.forgiveAndAdvanceLevel}
+                />
+                </AnchoredOverlay>
+                {briefingRecallOpen && (
+                  <LevelContextBriefing
+                    briefing={activeBriefing}
+                    mode="recall"
+                    onClose={() => setBriefingRecallOpen(false)}
+                  />
+                )}
+                <LevelSwitchConfirmModal
+                  isOpen={switchLevelConfirmOpen}
+                  onStay={() => setSwitchLevelConfirmOpen(false)}
+                  onConfirm={() => {
+                    setSwitchLevelConfirmOpen(false);
+                    setOpenNotebookCase(null);
+                    void game.restart();
+                    setFlowStage('level-selector');
+                  }}
+                />
+                {pendingChallenge && <SharedPinLockpad key={`${caseConfig.caseId}:${pendingChallenge.challenge.challengeId}`}
+                  appName={pendingChallenge.appName} targetChallengeId={pendingChallenge.challenge.challengeId}
+                  expectedPin={pendingChallenge.challenge.expectedAnswer} currentStrikes={state.strikes}
+                  maxStrikes={caseConfig.allowedStrikes} onSuccess={id => transition('sheet-out', () => game.solveChallenge(id))}
+                  onFailStrike={game.failChallenge} onCancel={() => transition('sheet-out', game.cancelChallenge)} />}
+                {state.resumableSession && <ResumeSessionModal session={state.resumableSession}
+                  onResume={() => transition('fade', game.resume)} onRestart={() => transition('fade', game.restart)} />}
+              </>}
+            >
+              {Object.values(APP_REGISTRY).map(({ appId, component: AppComponent }) => <RetainedAppView
+                key={appId} active={activeAppId === appId}>
+                <AppComponent key={appId === 'messages' ? currentMessageRoute?.request : undefined} caseData={contexts[appId]}
+                onTagSuspect={game.tag} onReturnHome={returnHome} onRequestUnlock={id => transition('sheet-in', () => game.requestUnlock(id))}
+                unlockedChallenges={state.unlockedChallenges}
+                initialThreadId={appId === 'messages' ? currentMessageRoute?.threadId : undefined}
+                onOpenMessages={threadId => {
+                  if (!enabledAppIds.has('messages')) return false;
+                  transition('push', () => {
+                    setMessageRoute(route => ({ sessionId: state.appSessionId, threadId, request: (route?.request ?? 0) + 1 }));
+                    game.launch('messages');
+                  });
+                  return true;
+                }} />
+              </RetainedAppView>)}
+            </PhoneShell>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }

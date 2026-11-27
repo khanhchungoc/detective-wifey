@@ -21,8 +21,8 @@ tags: [requirement, wireframe, evidence, long-press, context-menu, bookmark, us-
 - [Thiết kế Hệ thống Chung](../../../../project-knowledge-base/solution-context/design-system/design.md): Mục 2.7 (nguyên tắc Zero-Spoiler trước khi ghim & ngoại lệ dấu đỏ sau khi ghim), Mục 3.1.1 (`text-ios-*`), Mục 4 (Ionicons), Mục 5 (nhấn giữ `380ms`).
 - [Design Tokens](../../../../project-knowledge-base/solution-context/design-system/tokens.md): `.glass-elevated`, `--sys-surface-elevated`, `--sys-badge-red` (`#EF4444`).
 - [Hành vi & Chuyển động](../../../../project-knowledge-base/solution-context/design-system/behaviors-motion.md): Mục 1.2 (ngoại lệ đóng context menu qua chạm nền mờ hoặc phím `Escape`).
-- [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md): Mục 3.1 giao diện context menu nền tối.
-- [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md): Mục 2.2 cơ chế ghim, dấu đỏ đồng bộ và bỏ ghim tại nguồn.
+- [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md): Mục 3.1 giao diện context menu nền tối.
+- [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md): Mục 2.2 cơ chế ghim, dấu đỏ đồng bộ và bỏ ghim tại nguồn.
 - [Thẻ manh mối dùng chung](../../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md): Quy chuẩn gom nhóm manh mối theo liên hệ/cuộc trò chuyện.
 - [Biên bản khám phá](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md): Xác nhận ngưỡng `380ms`, context menu nền tối 1 nút tiếng Việt, huy hiệu đỏ trên mọi mục đã ghim và thao tác bỏ ghim tại chỗ.
 

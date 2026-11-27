@@ -87,13 +87,13 @@ export const MessagingDiscoverView: React.FC<MessagingDiscoverViewProps> = ({
     <div className="flex flex-col h-full w-full bg-[#F0F2F5] text-[#0F172A] select-none font-sans overflow-y-auto pb-24">
       {/* Search Header */}
       <header className="h-14 px-3 bg-[#0088FF] text-white flex items-center gap-2 shrink-0 shadow-sm">
-        <div className="flex-1 h-9 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
-          <IoSearchOutline className="w-4 h-4 text-white/80 shrink-0" />
+        <div className="flex-1 h-11 bg-white/20 rounded-lg flex items-center px-2.5 gap-2 text-white">
+          <IoSearchOutline className="w-4 h-4 text-white/85 shrink-0" />
           <input
             type="text"
             readOnly
             placeholder="Tìm kiếm mini app, tiện ích..."
-            className="w-full bg-transparent text-ios-subheadline text-white placeholder-white/80 outline-hidden"
+            className="w-full h-full bg-transparent text-ios-subheadline text-white placeholder-white/85 outline-hidden"
           />
         </div>
       </header>

@@ -13,7 +13,14 @@ interface MotionRequest {
   prepare?: () => void;
   restoreGesture?: () => void;
   swipeDistance?: number;
+  lift?: LiftHandoff;
 }
+/** Pose of an app card dragged up by the home gesture; the close keyframe starts from it. */
+export interface LiftPose { x: number; y: number; scale: number }
+interface LiftHandoff { pose: LiftPose; restore: () => void; consumed: boolean }
+let lift: LiftHandoff | undefined;
+const LIFT_VARS = ['--lift-tx', '--lift-ty', '--lift-scale'] as const;
+const clearLift = () => { for (const name of LIFT_VARS) document.documentElement?.style?.removeProperty(name); };
 let pending: MotionRequest | undefined;
 let committing = false;
 const regionOwners = new WeakMap<HTMLElement, { owner: symbol; name: string }>();
@@ -32,6 +39,20 @@ export function handoffSwipe(distance: number, restore: () => void, navigate: ()
   swipe = current;
   try { navigate(); } finally {
     swipe = undefined;
+    if (!current.consumed) restore();
+  }
+}
+
+/**
+ * Swipe-home handoff: unlike handoffSwipe, the dragged transform is reset BEFORE capture
+ * and replayed as CSS variables, so the close keyframe flies from the finger pose to the icon
+ * instead of compounding the drag transform with the icon transform.
+ */
+export function handoffLift(pose: LiftPose, restore: () => void, navigate: () => void): void {
+  const current: LiftHandoff = { pose, restore, consumed: false };
+  lift = current;
+  try { navigate(); } finally {
+    lift = undefined;
     if (!current.consumed) restore();
   }
 }
@@ -89,6 +110,7 @@ export function transition(kind: MotionKind, update: () => void, prepare?: () =>
       document.documentElement?.style?.removeProperty('--swipe-distance');
     }
     if (swipe) { swipe.consumed = true; swipe.restore(); }
+    if (lift) { lift.consumed = true; lift.restore(); }
     update();
     return;
   }
@@ -105,6 +127,10 @@ export function transition(kind: MotionKind, update: () => void, prepare?: () =>
     swipe.consumed = true;
     pending.restoreGesture = swipe.restore;
     pending.swipeDistance = swipe.distance;
+  }
+  if (lift && !lift.consumed) {
+    lift.consumed = true;
+    pending.lift = lift;
   }
 }
 
@@ -158,8 +184,17 @@ function flushPending(): void {
       if (canAnimate()) { settleEntrances(); nameContent(); markLayered(); }
     } finally { committing = false; }
   };
-  if (!canAnimate()) { commit(); return; }
+  if (!canAnimate()) { request.lift?.restore(); commit(); return; }
   request.prepare?.();
+  clearLift();
+  if (request.lift) {
+    const { pose, restore } = request.lift;
+    const style = document.documentElement.style;
+    style?.setProperty('--lift-tx', `${pose.x}px`);
+    style?.setProperty('--lift-ty', `${pose.y}px`);
+    style?.setProperty('--lift-scale', `${pose.scale}`);
+    restore();
+  }
   document.documentElement.dataset.motion = request.kind;
   delete document.documentElement.dataset.layered;
   markLayered();
@@ -172,6 +207,7 @@ function flushPending(): void {
   try { handle = document.startViewTransition(commit); } catch {
     commit();
     restoreRegions();
+    clearLift();
     delete document.documentElement.dataset.motion;
     delete document.documentElement.dataset.swipeMotion;
     delete document.documentElement.dataset.layered;
@@ -190,6 +226,7 @@ function flushPending(): void {
     delete document.documentElement.dataset.swipeMotion;
     delete document.documentElement.dataset.layered;
     document.documentElement.style?.removeProperty('--swipe-distance');
+    clearLift();
   };
   void handle.finished.then(cleanup, cleanup);
 }

@@ -1,18 +1,19 @@
 /* Canonical project iOS curves. Snapshot layers never intercept gestures. */
 :root {
-  --ease-ios-spring: cubic-bezier(.16, 1, .3, 1);
+  --ease-ios-spring: cubic-bezier(.32, .72, 0, 1);
   --ease-ios-default: cubic-bezier(.4, 0, .2, 1);
   --ease-ios-in-out: cubic-bezier(.42, 0, .58, 1);
-  --ios-app-open-duration: .45s;
-  --ios-app-close-duration: .38s;
+  --ios-app-open-duration: .48s;
+  --ios-app-close-duration: .40s;
   --ios-app-duration: var(--ios-app-open-duration);
-  --ios-app-fade-duration: .08s;
+  --ios-app-fade-duration: .10s;
   --ios-app-close-fade-duration: .18s;
   --ios-motion-blur-radius: 0px;
   --app-origin-x: 50%;
   --app-origin-y: 70%;
   --app-scale-x: .16;
   --app-scale-y: .08;
+  --app-card-radius: 44px;
   view-transition-name: none;
 }
 /* Keep launcher icons visible beneath the dimmed scrim so swiping back to home reveals the home screen */
@@ -51,6 +52,8 @@ html:is([data-motion='open'], [data-motion='close'])::view-transition-new(root) 
 ::view-transition-group(phone-app-grid),
 ::view-transition-group(phone-dock-apps) { z-index: 5; }
 ::view-transition-group(phone-app) { z-index: 10; }
+/* Static radius (not animated) so the app card reads as a rounded card while flying. */
+::view-transition-old(phone-app), ::view-transition-new(phone-app) { border-radius: var(--app-card-radius); overflow: hidden; }
 ::view-transition-group(system-status), ::view-transition-group(system-home) { z-index: 40; }
 ::view-transition-group(notification-banner),
 ::view-transition-group(phone-sheet), ::view-transition-group(evidence-modal),
@@ -82,13 +85,14 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-pop { to { transform: translateX(calc(100% - var(--swipe-distance, 0px))); } }
 @keyframes ios-reveal { from { transform: translateX(-25%); opacity: .6; } }
 @keyframes ios-app-in {
-  /* Round with the launcher icon, then settle to the square full-screen app. */
-  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: 90px; }
-  to { transform: none; border-radius: 0; }
+  /* Compositor-only transform avoids per-frame rounded-mask rasterization on mobile 120Hz displays. */
+  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
+  to { transform: translate3d(0, 0, 0) scale(1); }
 }
 @keyframes ios-app-out {
-  from { transform: none; border-radius: 0; }
-  to { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: 90px; }
+  /* Swipe-home replays the lifted finger pose (--lift-*); a tap-close starts at rest. */
+  from { transform: translate3d(var(--lift-tx, 0px), var(--lift-ty, 0px), 0) scale(var(--lift-scale, 1)); }
+  to { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
 }
 @keyframes ios-app-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ios-app-fade-out { from { opacity: 1; } to { opacity: 0; } }
@@ -139,34 +143,32 @@ html[data-layered][data-motion='pop']::view-transition-new(phone-content) { anim
 html[data-motion='open']::view-transition-new(phone-app) {
   animation-name: ios-app-in, ios-app-fade-in;
   animation-duration: var(--ios-app-open-duration), var(--ios-app-fade-duration);
-  animation-timing-function: var(--ease-ios-default), var(--ease-ios-default);
+  animation-timing-function: var(--ease-ios-spring), var(--ease-ios-default);
   animation-fill-mode: both;
   animation-delay: 0s, 0s;
-  overflow: clip;
 }
 html[data-motion='open']::view-transition-old(phone-app-grid) {
-  animation: ios-icons-out var(--ios-app-open-duration) var(--ease-ios-default) both;
+  animation: ios-icons-out var(--ios-app-open-duration) var(--ease-ios-spring) both;
 }
 html[data-motion='open']::view-transition-new(phone-app-grid) { animation: none; opacity: 0; }
 html[data-motion='open']::view-transition-old(phone-dock-apps) {
-  animation: ios-dock-out var(--ios-app-open-duration) var(--ease-ios-default) both;
+  animation: ios-dock-out var(--ios-app-open-duration) var(--ease-ios-spring) both;
 }
 html[data-motion='open']::view-transition-new(phone-dock-apps) { animation: none; opacity: 0; }
 html[data-motion='close']::view-transition-old(phone-app) {
   animation-name: ios-app-out, ios-app-fade-out;
   animation-duration: var(--ios-app-close-duration), var(--ios-app-close-fade-duration);
-  animation-timing-function: var(--ease-ios-default), var(--ease-ios-default);
+  animation-timing-function: var(--ease-ios-spring), var(--ease-ios-default);
   animation-fill-mode: both;
   animation-delay: 0s, calc(var(--ios-app-close-duration) - var(--ios-app-close-fade-duration));
-  overflow: clip;
   z-index: 2;
 }
 html[data-motion='close']::view-transition-new(phone-app-grid) {
-  animation: ios-icons-in var(--ios-app-close-duration) var(--ease-ios-default) both;
+  animation: ios-icons-in var(--ios-app-close-duration) var(--ease-ios-spring) both;
 }
 html[data-motion='close']::view-transition-old(phone-app-grid) { animation: none; opacity: 0; }
 html[data-motion='close']::view-transition-new(phone-dock-apps) {
-  animation: ios-dock-in var(--ios-app-close-duration) var(--ease-ios-default) both;
+  animation: ios-dock-in var(--ios-app-close-duration) var(--ease-ios-spring) both;
 }
 html[data-motion='close']::view-transition-old(phone-dock-apps) { animation: none; opacity: 0; }
 html[data-swipe-motion][data-motion='close']::view-transition-new(phone-app-grid),
@@ -198,30 +200,17 @@ html[data-swipe-motion][data-motion='close']::view-transition-old(phone-app) {
   animation: ios-pop .28s var(--ease-ios-default) both;
 }
 
-/* 3D Phone Screen Recede Motion when Notebook Opens */
+/* 3D Phone Screen Recede Motion when Notebook Opens (compositor-only transform, zero radius/shadow repaint) */
 [data-phone-screen] {
   transform-origin: center center;
   transform: translate3d(0, 0, 0) scale(1);
-  border-radius: 0px;
-  outline: none;
-  box-shadow: none;
-  transition: transform 320ms cubic-bezier(0.4, 0, 0.2, 1), border-radius 320ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 380ms cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
   backface-visibility: hidden;
 }
 [data-phone-screen][data-notebook-open='true'] {
   transform: translate3d(0, 0, 0) scale(0.94);
-  border-radius: 28px;
-  outline: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55);
-  transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1), border-radius 380ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 380ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-[data-phone-screen] [data-app-surface] {
-  transition: border-radius 320ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-[data-phone-screen][data-notebook-open='true'] [data-app-surface] {
-  border-radius: 28px;
-  transition: border-radius 380ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 440ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 /* CSS entrances cover unsupported browsers and local UI state. Captured nodes

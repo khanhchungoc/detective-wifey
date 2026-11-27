@@ -89,9 +89,39 @@ export const UniversalEvidenceModal = ({
             <h3 id="universal-evidence-title" className="text-[17px] font-semibold text-black leading-snug break-words">
               {item.title}
             </h3>
-            {subtitle && <p className="text-[13px] text-[#8E8E93] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
+            {subtitle && <p className="text-[13px] text-[#52525B] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
           </div>
         </div>
+
+        {/* Photo Evidence Preview */}
+        {item.source?.imageSrc && (
+          <div className="h-32 w-full rounded-xl overflow-hidden bg-[#1C1C1E] border border-black/10 shrink-0">
+            {item.source.imagePosition ? (
+              <svg
+                viewBox="0 0 627 627"
+                preserveAspectRatio="xMidYMid slice"
+                className="w-full h-full pointer-events-none"
+                aria-label={item.title}
+              >
+                <image
+                  href={item.source.imageSrc}
+                  xlinkHref={item.source.imageSrc}
+                  x={item.source.imagePosition.startsWith('100%') ? -627 : 0}
+                  y={item.source.imagePosition.endsWith('100%') ? -627 : 0}
+                  width="1254"
+                  height="1254"
+                />
+              </svg>
+            ) : (
+              <img
+                src={item.source.imageSrc}
+                alt={item.title}
+                draggable={false}
+                className="w-full h-full object-cover select-none"
+              />
+            )}
+          </div>
+        )}
 
         {/* Evidence Snippet - direct on alert surface without nested box */}
         {item.snippet && (

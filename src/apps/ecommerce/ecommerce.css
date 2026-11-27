@@ -137,12 +137,12 @@
 .ecommerce-pipeline .ecommerce-profile-order-shortcut.is-all-orders svg { color: #FFFFFF; }
 .ecommerce-profile-order-queues { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
 .ecommerce-profile-order-queues > button { min-height: 44px; padding: 8px 0; text-align: left; }
-.ecommerce-profile-order-queues > .ecommerce-disabled { padding: 8px; border-radius: 6px; background: #F5F5F5; color: #B0B0B0; }
+.ecommerce-profile-order-queues > .ecommerce-disabled { padding: 8px; border-radius: 6px; background: #F5F5F5; color: #616161; }
 .ecommerce-utilities { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); }
 .ecommerce-utilities h2 { grid-column: 1 / -1; font-weight: 400; }
 .ecommerce-utilities button { flex-direction: column; justify-content: flex-start; font-size: var(--ios-font-caption-2); }
 .ecommerce-utilities svg { width: 30px; height: 30px; }
-.ecommerce-tabs button { padding: 7px 2px; color: #757575; }
+.ecommerce-tabs button { padding: 7px 2px; color: #616161; }
 .ecommerce-tabs svg { width: 27px; height: 27px; }
 .ecommerce-tabs button[aria-current=page] { color: #EE4D2D; }
 .ecommerce-view-inbox .ecommerce-content { padding: 10px 0; background: white; }
@@ -153,14 +153,14 @@
 .ecommerce-chat-header { flex-wrap: nowrap; gap: 12px; }
 .ecommerce-chat-header strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ecommerce-shop-avatar { display: inline-flex; width: 44px; height: 44px; flex-shrink: 0; justify-content: center; align-items: center; background: #FFF3E0; border-radius: 50%; color: #EE4D2D; border: 1px solid #FFD166; }
-.ecommerce-chat-row .ecommerce-preview { padding-left: 56px; color: #757575; font-size: var(--ios-font-subheadline); }
+.ecommerce-chat-row .ecommerce-preview { padding-left: 56px; color: #616161; font-size: var(--ios-font-subheadline); }
 .ecommerce-chat-row > .ecommerce-meta { margin-left: 56px; color: #EE4D2D; }
 .ecommerce-view-orders .ecommerce-filters, .ecommerce-view-notifications .ecommerce-filters { background: white; gap: 0; border-bottom: 1px solid #EEEEEE; }
 .ecommerce-view-orders .ecommerce-filters button, .ecommerce-view-notifications .ecommerce-filters button { border-radius: 0; background: white; box-shadow: none; }
 .ecommerce-view-orders .ecommerce-filters button[aria-pressed=true], .ecommerce-view-notifications .ecommerce-filters button[aria-pressed=true] { color: #EE4D2D; border-bottom: 2px solid #EE4D2D; }
 .ecommerce-order .ecommerce-thumbnail { width: 76px; height: 76px; }
 .ecommerce-order-item strong { font-weight: 400; }
-.ecommerce-order-item p { color: #757575; font-size: var(--ios-font-subheadline); }
+.ecommerce-order-item p { color: #616161; font-size: var(--ios-font-subheadline); }
 .ecommerce-order-item .ecommerce-price { text-align: right; color: #212121; }
 .ecommerce-order-status { color: #EE4D2D; }
 .ecommerce-order-total { text-align: right; padding: 12px 0; }
@@ -192,8 +192,8 @@
 .ecommerce-product-image { position: relative; overflow: hidden; }
 .ecommerce-product-image .ecommerce-thumbnail { display: block; margin-bottom: 0; }
 .ecommerce-discount { position: absolute; right: 0; top: 0; color: #EE4D2D; background: #FFF0EB; padding: 2px 5px; font-weight: 600; }
-.ecommerce-voucher-strip { display: flex; align-items: center; gap: 4px; padding: 3px 5px; background: #FFD600; font-size: var(--ios-font-caption2); color: #1645AB; font-weight: 800; }
-.ecommerce-voucher-strip b { color: #EE4D2D; border: 1px solid #EE4D2D; padding: 0 4px; font-size: var(--ios-font-caption2); }
+.ecommerce-voucher-strip { display: flex; align-items: center; gap: 4px; padding: 3px 5px; background: #FFD600; font-size: var(--ios-font-caption-2); color: #1645AB; font-weight: 800; }
+.ecommerce-voucher-strip b { color: #EE4D2D; border: 1px solid #EE4D2D; padding: 0 4px; font-size: var(--ios-font-caption-2); }
 .ecommerce-product-rating { padding: 4px 7px 0; }
 .ecommerce-product-rating > span { display: inline-flex; gap: 3px; align-items: center; border: 1px solid #FFD166; border-radius: 2px; padding: 0 4px; font-size: var(--ios-font-caption1); }
 .ecommerce-product-rating svg { width: 13px; height: 13px; color: #FFB300; }
@@ -211,10 +211,10 @@
 .ecommerce-shop-logo-lab { background: #FFDF00; color: #15509E; border: 7px solid #F9FAFC; border-radius: 3px; }
 .ecommerce-shop-logo-lab > span { font-size: 11px; }
 .ecommerce-chat-header .ecommerce-badge { position: absolute; right: 12px; top: 46px; display: inline-flex; align-items: center; justify-content: center; height: 22px; min-width: 22px; padding: 0 5px; border: 0; border-radius: 999px; background: #EE4D2D; color: white; font-size: 12px; font-weight: 500; line-height: 22px; white-space: nowrap; }
-.ecommerce-chat-header .ecommerce-meta { white-space: nowrap; font-size: var(--ios-font-caption1); }
-.ecommerce-favorite { background: #EE4D2D; color: white; font-size: var(--ios-font-caption1); padding: 1px 4px; margin-right: 5px; border-radius: 2px; }
+.ecommerce-chat-header .ecommerce-meta { white-space: nowrap; font-size: var(--ios-font-caption-1); }
+.ecommerce-favorite { background: #EE4D2D; color: white; font-size: var(--ios-font-caption-1); padding: 1px 4px; margin-right: 5px; border-radius: 2px; }
 .ecommerce-promos button:first-child, .ecommerce-promos button:last-child { background: linear-gradient(160deg,#1676CA,#003476 65%,#052755); border: 2px solid #35AEF1; color: white; box-shadow: inset 0 0 0 2px #06316D; }
-.ecommerce-promos button small { background: #FFD600; color: #0A3A76; font-weight: 800; padding: 3px; border-radius: 3px; font-size: 8px; }
+.ecommerce-promos button small { background: #FFD600; color: #0A3A76; font-weight: 800; padding: 3px; border-radius: 3px; font-size: var(--ios-font-caption-2); }
 .ecommerce-promos button strong { font-size: var(--ios-font-subheadline); font-weight: 900; line-height: 1.15; }
 .ecommerce-promos button:last-child strong { color: #FFF000; font-size: var(--ios-font-title2); }
 .ecommerce-promos button > span { font-size: var(--ios-font-caption2); font-weight: 800; margin-top: auto; }

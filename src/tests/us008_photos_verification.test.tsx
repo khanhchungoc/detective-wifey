@@ -93,13 +93,19 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
     expect(html).toContain('Bên trong xe ô tô');
     expect(html).toContain('Mèo ngủ trên yên xe máy');
 
+    // Date separators in album grid view
+    expect(html).toContain('data-photo-date-group="13/10/2026"');
+    expect(html).toContain('13 thg 10, 2026');
+    expect(html).toContain('data-photo-date-group="14/10/2026"');
+    expect(html).toContain('14 thg 10, 2026');
+
     // Video duration overlay badge
     expect(html).toContain('0:26');
 
     // Smart Collections section
     expect(html).toContain('BỘ SƯU TẬP THÔNG MINH');
     expect(html).toContain('Gương mặt &amp; Đối tượng');
-    expect(html).toContain('Chuyến đi đáng ngờ');
+    expect(html).not.toContain('Chuyến đi đáng ngờ');
     expect(html).toContain('Ngày kỷ niệm &amp; Sự kiện');
     expect(html).toContain('Mục bị ẩn');
   });
@@ -139,9 +145,17 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
     expect(html).toContain('Thư viện');
     expect(html).toContain('13/10/2026 21:30');
     expect(html).toContain('aria-label="Thông tin ảnh"');
+    expect(html).toContain('min-w-[52px] min-h-[52px]');
+    expect(html).toContain('after:-inset-2');
 
-    // Forensic Magnifier tool for reflection clue
-    expect(html).toContain('Bật kính lúp');
+    // Lightbox fits full image preserving original aspect ratio instead of cropping
+    expect(html).not.toContain('object-cover');
+    expect(html).not.toContain('xMidYMid slice');
+    expect(html).toMatch(/object-contain|xMidYMid meet/);
+
+    // Zero-spoiler lightbox: no magnifier button or forensic callout box
+    expect(html).not.toContain('Bật kính lúp');
+    expect(html).not.toContain('Phát hiện chi tiết pháp y');
 
     // Unnecessary bottom toolbar features removed
     expect(html).not.toContain('aria-label="Chia sẻ"');

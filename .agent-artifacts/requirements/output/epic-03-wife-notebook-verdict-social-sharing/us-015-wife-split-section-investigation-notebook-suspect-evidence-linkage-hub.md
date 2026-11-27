@@ -22,7 +22,7 @@ As a jealous wife investigating suspicious traces across parody phone apps, I wa
 ### Wireframe & UI Reference
 
 - **Authoritative ASCII Wireframe SSOT**: [`wireframes/wireframe-us-015-corkboard-node-canvas.md`](./wireframes/wireframe-us-015-corkboard-node-canvas.md)
-- **Parent App Design Specification**: [`wife-notebook/app-design.md`](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md)
+- **Parent App Design Specification**: [`wife-notebook/app-design.md`](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md)
 - **Master OS Design System**: [`phone-os/app-design.md`](../../../project-knowledge-base/solution-context/apps/phone-os/app-design.md)
 
 ---

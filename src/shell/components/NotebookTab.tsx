@@ -1,6 +1,10 @@
 import { useLayoutEffect, useRef } from 'react';
 import { IoJournalOutline } from 'react-icons/io5';
-import { NOTEBOOK_SLIDE_EASING } from '../../shared/motion/anchoredOverlay';
+import {
+  NOTEBOOK_CLOSE_DURATION_MS,
+  NOTEBOOK_OPEN_DURATION_MS,
+  NOTEBOOK_SLIDE_EASING,
+} from '../../shared/motion/anchoredOverlay';
 import {
   clampFloatingPoint, floatingDockPosition, floatingVelocity, isFloatingDrag, projectFloatingDock,
   FLOATING_SAMPLE_MS, FLOATING_SETTLE_MS,
@@ -38,6 +42,10 @@ export function NotebookTab({
     samples: FloatingSample[];
   } | null>(null);
   const suppressClick = useRef(false);
+  const wasOpen = useRef(open);
+  const openRef = useRef(open);
+  openRef.current = open;
+  const boardSlide = useRef<Animation | null>(null);
 
   useLayoutEffect(() => {
     const element = ref.current;
@@ -49,6 +57,7 @@ export function NotebookTab({
       if (gesture.current) suppressClick.current = true;
       gesture.current = null;
       settling.current?.cancel();
+      boardSlide.current?.cancel();
       const style = getComputedStyle(parent);
       const scaleY = parent.getBoundingClientRect().height / parent.offsetHeight || 1;
       const statusHeight = (parent.querySelector('.phone-system-status')?.getBoundingClientRect().height ?? 0) / scaleY;
@@ -57,7 +66,9 @@ export function NotebookTab({
       const right = Math.max(left, parent.clientWidth - NOTEBOOK_TAB_WIDTH - (parseFloat(style.paddingRight) || 0));
       const bottom = Math.max(top, parent.clientHeight - NOTEBOOK_TAB_HEIGHT - Math.max(34, parseFloat(style.paddingBottom) || 0) - OVERLAY_BOTTOM_CLEARANCE);
       bounds.current = { left, right, top, bottom };
-      element.style.transform = transform(floatingDockPosition('right', position.current.fraction, bounds.current));
+      const docked = floatingDockPosition('right', position.current.fraction, bounds.current);
+      element.dataset.dockY = String(docked.y);
+      element.style.transform = transform(openRef.current ? { x: -NOTEBOOK_TAB_WIDTH, y: docked.y } : docked);
       element.dataset.edge = 'right';
       element.dataset.floating = 'false';
     };
@@ -67,9 +78,53 @@ export function NotebookTab({
     return () => {
       observer.disconnect();
       settling.current?.cancel();
+      boardSlide.current?.cancel();
       if (frame.current !== null) cancelAnimationFrame(frame.current);
     };
   }, []);
+
+  // Glide the pull tab in lockstep with the board's leading edge when opening or closing
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    if (wasOpen.current === open) return;
+    wasOpen.current = open;
+
+    const docked = floatingDockPosition('right', position.current.fraction, bounds.current);
+    element.dataset.dockY = String(docked.y);
+    const closedTransform = transform(docked);
+    const openTransform = transform({ x: -NOTEBOOK_TAB_WIDTH, y: docked.y });
+    const toTransform = open ? openTransform : closedTransform;
+
+    const isSliding = Boolean(boardSlide.current && boardSlide.current.playState === 'running');
+    const styleTransform = !isSliding ? element.style.transform : '';
+    const computed = styleTransform && styleTransform !== 'none' ? styleTransform : getComputedStyle(element).transform;
+    const fromTransform = computed && computed !== 'none'
+      ? computed
+      : (open ? closedTransform : openTransform);
+
+    boardSlide.current?.cancel();
+    element.style.removeProperty('transition');
+    element.style.transform = toTransform;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !element.animate) return;
+
+    const anim = element.animate(
+      [
+        { transform: fromTransform, opacity: 1 },
+        { transform: toTransform, opacity: 1 },
+      ],
+      {
+        duration: open ? NOTEBOOK_OPEN_DURATION_MS : NOTEBOOK_CLOSE_DURATION_MS,
+        easing: NOTEBOOK_SLIDE_EASING,
+      },
+    );
+    boardSlide.current = anim;
+    anim.onfinish = () => {
+      if (boardSlide.current === anim) boardSlide.current = null;
+    };
+  }, [open]);
 
   const finish = (event: React.PointerEvent<HTMLButtonElement>) => {
     const active = gesture.current;
@@ -82,7 +137,17 @@ export function NotebookTab({
     const cancelled = event.type !== 'pointerup';
     active.moved ||= isFloatingDrag(dx, dy);
     suppressClick.current = active.moved || cancelled;
-    if (!active.moved && !cancelled) return;
+    if (!active.moved && !cancelled) {
+      if (event.pointerType === 'touch') {
+        suppressClick.current = true;
+        settling.current?.cancel();
+        event.currentTarget.dataset.edge = 'right';
+        event.currentTarget.dataset.floating = 'false';
+        if (open) onClose?.();
+        else onOpen();
+      }
+      return;
+    }
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const velocity = floatingVelocity(active.samples, { x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
     const button = event.currentTarget;
@@ -93,7 +158,9 @@ export function NotebookTab({
     const point = cancelled ? active.point : clampFloatingPoint({ x: bounds.current.right, y: active.origin.y + dy }, bounds.current);
     const dock = projectFloatingDock(point, velocity, bounds.current, !cancelled && !reduced);
     position.current = { fraction: dock.fraction };
-    const to = transform(floatingDockPosition('right', dock.fraction, bounds.current));
+    const dockedPoint = floatingDockPosition('right', dock.fraction, bounds.current);
+    const to = transform(dockedPoint);
+    button.dataset.dockY = String(dockedPoint.y);
     button.dataset.edge = 'right';
     button.style.transform = to;
     if (!reduced && button.animate) {

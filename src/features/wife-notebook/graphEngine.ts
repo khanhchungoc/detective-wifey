@@ -50,11 +50,12 @@ export function getRowColumnPositions(count: number, clusterCenterX: number): nu
  * Computes an estimated card height to prevent row overlap.
  */
 export function getEstimatedCardHeight(node: CaseGraphNode): number {
+  const photoExtra = node.imageSrc ? 104 : 0;
   const msgCount = node.messages?.length ?? 0;
   if (msgCount > 0) {
-    return Math.max(100, 75 + Math.min(msgCount, 4) * 25);
+    return Math.max(100, 75 + Math.min(msgCount, 4) * 25) + photoExtra;
   }
-  return node.subtitle ? 120 : 80;
+  return (node.subtitle ? 120 : 80) + photoExtra;
 }
 
 /**

@@ -90,7 +90,7 @@ level: 1
 ### 4.1. Phân cấp Độ khó
 - **Phân bậc Màn chơi**: Màn 1 (Khởi động)
 - **Số lượt nghi ngờ tối đa (`allowedStrikes`)**: 5 lượt (`allowedStrikes: 5`)
-- **Số app có manh mối**: 4 app (`internet-messaging`, `banking`, `ecommerce`, `phone`)
+- **Số app có manh mối**: 5 app (`internet-messaging`, `banking`, `ecommerce`, `phone`, `photos`)
 - **Số câu đố mã khóa (`lockChallenges`)**: 0 câu đố (`lockChallenges: []`)
 
 ### 4.2. Bảng Phân bổ Trạng thái Ứng dụng
@@ -104,7 +104,7 @@ level: 1
 | `messages` | Chỉ sinh hoạt | `EVT-02`, `ACT-04` | 16 luồng SMS nạp tiền, giao hàng, bảo trì, thông tin gói cước | Không |
 | `ride-hailing` | Chỉ sinh hoạt | `ACT-01`, `ACT-02` | 20 chuyến đi làm, về nhà, siêu thị, giao đồ ăn | Không |
 | `web-browser` | Chỉ sinh hoạt | `ACT-01` | 25 lịch sử tra cứu công nghệ, thể thao và 2 tab mở | Không |
-| `photos` | Chỉ sinh hoạt | `ACT-07` | 1 album gồm 16 ảnh gia đình, đồ ăn, công việc; không ảnh nhạy cảm | Không |
+| `photos` | Manh mối + Sinh hoạt | `EVT-10B`, `ACT-07` | 1 album gồm 11 ảnh nòng cốt (10 ảnh sinh hoạt + 1 ảnh manh mối phụ `photo_dinner_claypot` chụp mâm cơm niêu có EXIF 19:45 Phố Cổ & góc trên lộ chén trà/đôi đũa thứ hai); không khóa ẩn | Runtime Photos hiện chưa hỗ trợ ghim ảnh lên Bảng Điều tra (`StoryEvidenceTarget` long-press pinning); cần bổ sung ở runtime trước khi nối `node_record_photo_dinner` lên Corkboard |
 | `personal-notes` | Chỉ sinh hoạt | `ACT-02` | 14 ghi chú việc nhà, bảo dưỡng xe, công việc IT | Không |
 | `email` | Chỉ sinh hoạt | `ACT-01` | 25 thư công việc, sao kê, thông báo nội bộ Technosoft | Không |
 | `professional-network`| Chỉ sinh hoạt | `ACT-01` | 12 bài đăng nghề nghiệp, cập nhật công nghệ | Không |
@@ -133,7 +133,7 @@ level: 1
 ### 5.2. Bảng Dữ Liệu Nodes & Edges (Compiler & Tooling SSOT)
 *Đặc tả mạng lưới Node-Edge đồng bộ 100% với `LEVEL_01_KNOWLEDGE_GRAPH` trong `src/features/wife-notebook/level01Fixture.ts`.*
 
-#### Danh sách Nodes (12 nodes)
+#### Danh sách Nodes (13 nodes)
 | Node ID | Loại (`type`) | Tên hiển thị (`label`) | App nguồn / Record ID | Clue ID (nếu có) | Vỏ bọc ban đầu (`isInitialDisguise`) |
 |---|---|---|---|---|---|
 | `node_suspect_huong` | `suspect` | Nguyễn Thị Thu Hương · Marketing | - | - | `false` |
@@ -147,9 +147,10 @@ level: 1
 | `node_record_bank_receipt` | `record_clue` | Cơm Niêu Phố Cổ 640k (20:48) | `banking` / `tx_01` | `CLUE-BANK-06` | `false` |
 | `node_record_ecommerce_order` | `record_clue` | Váy Satin + Thiệp "15/09 - 15/10" | `ecommerce` / `order_01` | `CLUE-POSH-05` | `false` |
 | `node_record_phone_call` | `record_clue` | Cuộc gọi đêm 23:30 (96s) | `phone` / `call_tuan_late` | `CLUE-PHONE-01` | `false` |
+| `node_record_photo_dinner` | `record_clue` | Ảnh cơm niêu 19:45 (EXIF Phố Cổ, bàn 2 người) | `photos` / `photo_dinner_claypot` | `CLUE-PHOT-05` | `false` |
 | `node_timeline_dinner` | `timeline_slot` | Tối 15/10 (20:46 - 20:48) | - | - | `false` |
 
-#### Danh sách Edges & Smoking Guns (8 edges)
+#### Danh sách Edges & Smoking Guns (10 edges)
 | Edge ID | Nút Nguồn (`source`) | Nút Đích (`target`) | Loại quan hệ (`relationship`) | Bằng chứng chốt (`isSmokingGun`) | Record ID nguồn / đích | Trường / nội dung nhìn thấy khớp nhau | Lời ngụy biện / bóc trần của Chồng |
 |---|---|---|---|---|---|---|---|
 | `edge_alias_phone` | `node_alias_tuan` | `node_bridge_phone` | `bridges_identity` | `false` | `thread_tuan` / `call_tuan_late` | Khớp số điện thoại danh bạ `0988886677` | *"Số đó của thợ điện thật mà, hôm trước anh gọi nhờ sửa dây mạng văn phòng!"* |
@@ -160,6 +161,8 @@ level: 1
 | `edge_name_suspect` | `node_bridge_name` | `node_suspect_huong` | `bridges_identity` | `false` | `tx_02` / `suspect_huong` | Tên pháp lý `Nguyen Thi Thu Huong` khớp nhân sự Marketing | *"À... cái đơn đó con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra..."* |
 | `edge_alibi_contradiction` | `node_record_wife_alibi` | `node_record_bank_receipt` | `contradicts_alibi` | `true` | `thread_wife` / `tx_01` | Khai với vợ 20:46 họp ở công ty vs quẹt thẻ 20:48 Cơm Niêu Phố Cổ | *"Anh... lúc đó cả nhóm kéo nhau ra quán ăn đêm làm việc tiếp mà..."* |
 | `edge_zola_dinner_receipt` | `node_record_zola_chat` | `node_record_bank_receipt` | `occurred_at` | `false` | `thread_tuan` / `tx_01` | Hẹn ăn bàn 19h30 Phố Cổ khớp giao dịch quán Cơm Niêu Phố Cổ | *"Tin nhắn hẹn ăn tại Cơm Niêu Phố Cổ trùng với giao dịch thanh toán tại quán tối 15/10."* |
+| `edge_photo_dinner_alibi` | `node_record_photo_dinner` | `node_record_wife_alibi` | `contradicts_alibi` | `false` | `photo_dinner_claypot` / `thread_wife` | EXIF ảnh chụp 19:45 tại Phố Cổ & góc bàn 2 người (chén trà + đôi đũa thứ hai) trái lời khai họp cả nhóm ở công ty | *"Ảnh cơm niêu chụp lúc 19:45 tại Phố Cổ, bàn chỉ có 2 người chứ không phải cả nhóm ở phòng họp!"* |
+| `edge_photo_dinner_receipt` | `node_record_photo_dinner` | `node_record_bank_receipt` | `occurred_at` | `false` | `photo_dinner_claypot` / `tx_01` | Ảnh mâm cơm niêu chụp lúc 19:45 Phố Cổ khớp giao dịch Cơm Niêu Phố Cổ lúc 20:48 | *"Ảnh mâm cơm niêu lúc 19:45 khớp đúng quán và khung giờ giao dịch 640k tối 15/10."* |
 
 - **Danh sách Cạnh Bắt buộc để Thắng 3 Sao (`requiredSmokingGunEdgeIds`)**:
   `['edge_order_phone', 'edge_alibi_contradiction']`
@@ -199,5 +202,6 @@ level: 1
    python -B .agents/skills/level-designer/scripts/sync_clues.py verify-spec ".agent-artifacts/requirements/stories/husband-hoang/level-01.md"
    python -B .agents/skills/level-designer/scripts/sync_clues.py validate --file ".agent-artifacts/requirements/stories/husband-hoang/level-01.md"
    ```
-2. Đảm bảo toàn bộ 4 Clue IDs tồn tại trong danh mục SSOT (`CLUE-ZOLA-07`, `CLUE-BANK-06`, `CLUE-POSH-05`, `CLUE-PHONE-01`).
-3. Chạy toàn bộ test hồi quy của dự án (`npm test`) để xác nhận tính toàn vẹn runtime.
+2. Đảm bảo toàn bộ 5 Clue IDs tồn tại trong danh mục SSOT (`CLUE-ZOLA-07`, `CLUE-BANK-06`, `CLUE-POSH-05`, `CLUE-PHONE-01`, `CLUE-PHOT-05`).
+3. **Khoảng trống Runtime cần xử lý trước khi lên mã (`photos`)**: Ứng dụng `photos` hiện chưa hỗ trợ ghim ảnh lên Bảng Điều tra (`StoryEvidenceTarget` long-press pinning trên `PhotoLightboxView` / ngăn EXIF). `@frontend-game-developer` cần triển khai tính năng ghim ảnh từ `photos` trước khi ánh xạ `photo_dinner_claypot` (`node_record_photo_dinner`) vào `level_01.json` và `level01Fixture.ts`.
+4. Chạy toàn bộ test hồi quy của dự án (`npm test`) để xác nhận tính toàn vẹn runtime.

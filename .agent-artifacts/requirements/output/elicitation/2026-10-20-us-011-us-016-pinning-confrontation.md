@@ -80,8 +80,8 @@ React, TypeScript, Tailwind CSS, Lucide-free canonical Ionicons (`react-icons/io
 - [Universal Design System](../../../project-knowledge-base/solution-context/design-system/design.md)
 - [Design Tokens](../../../project-knowledge-base/solution-context/design-system/tokens.md)
 - [Systemic Behaviors & Motion](../../../project-knowledge-base/solution-context/design-system/behaviors-motion.md)
-- [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md)
-- [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md)
+- [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md)
+- [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md)
 - [Canonical Clue Card Wireframe](../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md)
 - [US-015 Detective Corkboard Canvas](../epic-03-wife-notebook-verdict-social-sharing/us-015-wife-split-section-investigation-notebook-suspect-evidence-linkage-hub.md)
 - Runtime components: `StoryEvidenceTarget.tsx`, `UniversalEvidenceModal.tsx`, `WifeNotebookModal.tsx`, `evidence.ts`

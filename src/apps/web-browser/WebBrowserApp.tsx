@@ -4,7 +4,7 @@ import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contr
 import { getAppBrand } from '../../shared/branding';
 
 const BRAND = getAppBrand('web-browser');
-import { IoChevronBack, IoCompassOutline, IoGlobeOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoCompassOutline, IoGlobeOutline, IoSearchOutline } from 'react-icons/io5';
 import { IoCompass } from 'react-icons/io5';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { StoryEvidenceTarget } from '../../features/investigation';
@@ -27,15 +27,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
       className="flex flex-col h-full w-full bg-[#F2F2F7] text-[#111827] select-none font-sans"
     >
       <header className="flex items-center justify-between px-3 h-14 bg-[#3F51B5] text-white shadow-md shrink-0">
-        <button
-          type="button"
-          onClick={onReturnHome}
-          className="flex items-center gap-1 min-w-[44px] min-h-[44px] px-2 text-sm font-semibold rounded-lg hover:bg-white/10 active:scale-95 transition-all"
-          aria-label="Trang chủ"
-        >
-          <IoChevronBack className="w-5 h-5" />
-          <span>Trang chủ</span>
-        </button>
+        <div className="w-11" />
         <div className="flex items-center gap-2">
           <IoCompassOutline className="w-5 h-5 text-white" />
           <h1 className="text-ios-headline font-bold tracking-tight">{BRAND.brandName}</h1>
