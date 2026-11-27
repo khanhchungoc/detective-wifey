@@ -15,7 +15,7 @@ const SESSION_KEY = 'detective:v1:jealous_wife:session';
  * retried because a tap right after the intro mounts can be ignored.
  */
 async function replayStartFlow(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Chạm để bắt đầu' }).click();
+  await page.getByRole('button', { name: 'Bắt đầu' }).click();
   await page.locator('[data-case-id="case_01"]').click();
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
   const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
@@ -58,17 +58,12 @@ test.describe('Session & Case Runtime @smoke', () => {
     await expect.poll(async () => (await readSavedSession(page))?.taggedSuspects.length).toBe(1);
     expect((await readSavedSession(page))?.caseId).toBe('case_01');
 
-    // Reload keeps storage (cleared only on the first load of the test) and replays the start flow.
+    // Reload keeps storage (cleared only on the first load of the test) and shows Tiếp tục on the start screen.
     await page.reload();
-    await replayStartFlow(page);
+    await page.getByRole('button', { name: /Tiếp tục/ }).click();
 
-    // The app offers to resume the saved Level 1 session.
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeVisible();
-    await expect(page.getByText(/Màn 1 với 1 manh mối đã ghim/)).toBeVisible();
-    await page.getByRole('button', { name: 'Tiếp tục điều tra' }).click();
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeHidden();
-
-    // Same level, clue still pinned.
+    // Lands directly in the ongoing game without an in-phone resume modal, with the clue still pinned.
+    await expect(page.getByText('Tiếp Tục Điều Tra?')).toHaveCount(0);
     await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
     await page.locator('[data-notebook-tab]').click();
     await expect(page.locator('[aria-label^="Định vị bảng"]')).toHaveAttribute('aria-label', /1 manh mối/);
@@ -76,7 +71,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('offers Resume on a seeded session and supports restarting the level', async ({ page }) => {
+  test('offers Tiếp tục on a seeded session and starts fresh via Bắt đầu without an in-phone modal', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
@@ -106,15 +101,12 @@ test.describe('Session & Case Runtime @smoke', () => {
     }, SESSION_KEY);
     await page.reload();
 
+    await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
     await replayStartFlow(page);
 
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeVisible();
-    await expect(page.getByText(/1 manh mối đã ghim/)).toBeVisible();
-    await page.getByRole('button', { name: 'Bắt đầu lại màn này' }).click();
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeHidden();
+    // No in-phone resume modal appears; picking Level 1 starts fresh and clears the saved session.
+    await expect(page.getByText('Tiếp Tục Điều Tra?')).toHaveCount(0);
     await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /0 manh mối/);
-
-    // Restart clears the saved session.
     await expect.poll(() => readSavedSession(page)).toBeNull();
 
     expect(errors).toEqual([]);
@@ -125,7 +117,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     await clearStorageOnFirstLoad(page);
 
     await page.goto('/');
-    await page.getByRole('button', { name: 'Chạm để bắt đầu' }).click();
+    await page.getByRole('button', { name: 'Bắt đầu' }).click();
 
     const locked = page.locator('[data-level-unlocked="false"]').first();
     await expect(locked).toBeVisible();
