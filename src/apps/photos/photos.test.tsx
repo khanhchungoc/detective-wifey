@@ -54,6 +54,10 @@ describe('case-supplied photo library', () => {
       }],
     });
     const dinnerPhoto = state.photos[0];
+    const lightboxEvidence = buildPhotoEvidenceItem(dinnerPhoto, 'case_01', 'Hoàng', 'lightbox');
+    expect(lightboxEvidence.snippet).toBe('');
+    expect(lightboxEvidence.title).toBe('IMG_9518.HEIC');
+
     const evidence = buildPhotoEvidenceItem(dinnerPhoto, 'case_01', 'Hoàng', 'exif');
     expect(evidence.source?.recordId).toBe('photo_dinner_claypot');
     expect(evidence.source?.imageSrc).toBeTruthy();
