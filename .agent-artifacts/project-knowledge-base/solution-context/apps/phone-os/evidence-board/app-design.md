@@ -1,18 +1,18 @@
 ---
 type: App Design Specification
-app_id: wife_notebook
-app_name: Wife's Detective Notebook & Final Decision Hub
-vietnamese_name: Sổ Tay Bắt Ghen Của Vợ
+app_id: evidence_board
+app_name: Detective Evidence Board & Confrontation Hub
+vietnamese_name: Bảng Bằng Chứng (formerly Sổ Tay Bắt Ghen)
 status: approved
-description: "Branding, UI/UX visual design system, color tokens, typography, and wireframe layouts for the Wife's Detective Notebook & Final Decision Hub."
-tags: [app-design, wife-notebook, suspect-board, evidence-locker, verdict-hub, ui-ux, design-system, branding]
-timestamp: "2026-10-14T13:00:00+07:00"
+description: "UI/UX layouts for the Cold War darkroom Detective Evidence Board (corkboard), universal evidence pinning menu, and Confrontation Room, inheriting tokens from Game App Design System."
+tags: [app-design, evidence-board, wife-notebook, suspect-board, evidence-locker, verdict-hub, ui-ux, design-system, branding]
+timestamp: "2026-11-27"
 ---
 
-# Sổ Tay Bắt Ghen Của Vợ - App Design & UI/UX Specification
+# Bảng Bằng Chứng (Detective Evidence Board) - App Design & UI/UX Specification
 
 > **Design System Reuse & Inheritance**:
-> Sổ Tay Bắt Ghen Của Vợ inherits the global [Phone OS Master Design System](../app-design.md) for its physical container dimensions, `.glass-elevated` modal sheet backdrop blur, AssistiveTouch integration, and touch target standards ($\ge 44 \times 44\text{px}$). This document defines the domain-specific Cold War darkroom evidence board visual overlay.
+> Bảng Bằng Chứng consumes its Cold War Darkroom color palette (`--game-*`), aged paper/Polaroid/sticky-note materials, overhead fluorescent spotlight lighting, and `SNAP`/`POP` motion vocabulary directly from the canonical [Game App Design System](../../../design-system/game-design-system.md), while inheriting container dimensions, `.glass-elevated` modal backdrops, and `>= 44x44px` touch target standards from [Phone OS Master Design](../app-design.md). This document defines the corkboard, evidence pinning menu, and confrontation layouts.
 
 ---
 
@@ -24,7 +24,7 @@ timestamp: "2026-10-14T13:00:00+07:00"
 | **Slogan / Tagline** | *"Lưới trời lồng lộng - Tay vợ khó thoát"* |
 | **Real-World Parody** | Detective Case Dossier / Marital Journal |
 | **Visual Persona** | Cold War Darkroom Evidence Board (inspired by *COD: Black Ops Cold War*). Styled like a darkroom slate chalkboard under overhead fluorescent light with dusty eraser wipes, wife-detective chalk doodles, cool-gray physical paper evidence cards pinned with yellow masking tape and steel/crimson pins, and red/yellow yarn connections. |
-| **Architectural Role** | Omnipresent compact right-edge-docked forensic tab on the virtual phone shell container, inheriting Phone OS floating button tokens. Accessible from any screen via `NotebookTab` (`46×52px` flush to the right edge, `rounded-l-[12px] rounded-r-none`, `#0B1017` single-surface with subtle `border-white/15` hairline, `IoJournalOutline`, and top-left circular evidence counter badge; case number exposed via `aria-label`) or the AssistiveTouch menu (`../app-design.md`). |
+| **Architectural Role** | Omnipresent compact right-edge-docked forensic tab on the virtual phone shell container, inheriting Phone OS floating button tokens. Accessible from any screen via `NotebookTab` (`46×52px` flush to the right edge, `rounded-l-[12px] rounded-r-none`, `#0B1017` single-surface with subtle `border-white/15` hairline, `IoJournalOutline`, and top-left circular evidence counter badge; case number exposed via `aria-label`) or the phone shell Notification Dropdown (`US-038`). |
 
 ---
 

@@ -15,7 +15,7 @@ Người chơi cần định hướng tiếp theo. US-022; web, công cụ trong
 
 ## Nguồn đối chiếu
 
-[Khám phá](../../elicitation/2026-10-21-level-0-tutorial-sixth-sense.md) · [Thiết kế sổ tay](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md) · [Thiết kế hệ điều hành](../../../../project-knowledge-base/solution-context/apps/phone-os/app-design.md) · [Chuyển động](../../../../project-knowledge-base/solution-context/design-system/behaviors-motion.md).
+[Khám phá](../../elicitation/2026-10-21-level-0-tutorial-sixth-sense.md) · [Thiết kế sổ tay](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md) · [Thiết kế hệ điều hành](../../../../project-knowledge-base/solution-context/apps/phone-os/app-design.md) · [Chuyển động](../../../../project-knowledge-base/solution-context/design-system/behaviors-motion.md).
 
 ## Danh sách màn hình
 

@@ -68,7 +68,7 @@ None. Revision 2 ASCII wireframe signed off on 2026-11-10.
 - [Universal Design System](../../../project-knowledge-base/solution-context/design-system/design.md)
 - [Design Tokens](../../../project-knowledge-base/solution-context/design-system/tokens.md)
 - [Systemic Behaviors & Motion](../../../project-knowledge-base/solution-context/design-system/behaviors-motion.md)
-- [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md)
-- [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md)
+- [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md)
+- [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md)
 - [Canonical Clue Card Wireframe](../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-clue-card.md)
 - Implemented runtime contracts: `src/features/investigation/components/StoryEvidenceTarget.tsx`, `src/features/investigation/components/UniversalEvidenceModal.tsx`, `src/features/investigation/tagSuspect.ts`, `src/bootstrap/GameRoot.tsx`

@@ -17,11 +17,12 @@ timestamp: "2026-10-15T09:25:00+07:00"
 
 Detailed standards are decoupled into dedicated child specifications to preserve progressive disclosure:
 
-### 1.1. Universal System Specifications (Shared by All Apps)
+### 1.1. Universal System Specifications (Shared by All Apps & Game Screens)
 
 | Specification Topic | Canonical Document | Core Governance Scope |
 |---|---|---|
-| **Core Design Tokens & Colors** | [tokens.md](tokens.md) | Universal semantic colors, 3-tier frosted glass hierarchy, spacing, z-index ladder, and radii. |
+| **Game App Design System (Outer Game UI)** | [game-design-system.md](game-design-system.md) | Cold War Darkroom & Detective Dossier tokens (`--game-*`), paper/Polaroid/sticky-note materials, spotlight lighting, and motion vocabulary for Startup, Level Selector Hub, Case Context/Intro Briefing, Wife's Notebook, Confrontation Room, and Roast Cards. |
+| **Core Design Tokens & Colors** | [tokens.md](tokens.md) | Universal semantic colors (`--sys-*`), 3-tier frosted glass hierarchy, spacing, z-index ladder, radii, and Apple HIG 12-tier typography scale. |
 | **Accessibility, Layout & Ergonomics** | [accessibility-layout.md](accessibility-layout.md) | WCAG accessibility, typography bounds, dynamic zoom, touch targets, gutters, safe areas, and viewport geometry. |
 | **Systemic Behaviors & Motion** | [behaviors-motion.md](behaviors-motion.md) | Navigation gestures, sheet drawers, toast physics, active button states, spring curves, and audio-haptics. |
 
@@ -35,7 +36,7 @@ Detailed standards are decoupled into dedicated child specifications to preserve
 | **Status Bar System Chrome** | [../apps/phone-os/status-bar.md](../apps/phone-os/status-bar.md) | 3-zone layout, zero-carrier invariant, dynamic capsule battery indicator. |
 | **Home SpringBoard Launcher** | [../apps/phone-os/home-launcher.md](../apps/phone-os/home-launcher.md) | SpringBoard grid ($4 \times 4$), $2 \times 2$ Detective Smart Stack widget, continuous squircles, frosted dock. |
 | **Shared PIN Lockpad** | [../apps/phone-os/pin-lockpad.md](../apps/phone-os/pin-lockpad.md) | Passcode modal barrier, dual-tier dialer typography, PIN dots, error shake physics. |
-| **Wife's Investigation Notebook HUD** | [../apps/phone-os/wife-notebook/app-design.md](../apps/phone-os/wife-notebook/app-design.md) | Detective dossier drawer, evidence matrix, suspect tagging, confrontation HUD. |
+| **Detective Evidence Board HUD** | [../apps/phone-os/evidence-board/app-design.md](../apps/phone-os/evidence-board/app-design.md) | Cold War darkroom corkboard, evidence pinning, suspect tagging, confrontation HUD. |
 
 ---
 
@@ -61,7 +62,7 @@ The user interface follows Brad Frost's **Atomic Design** methodology, adapted a
 4. **Templates (Blueprints)**: Content-agnostic structural wireframes defining safe areas, sticky headers, and layout slots without binding to narrative data.
 5. **Pages (Hydrated Views)**: Concrete runtime instances where declarative case schemas (messages, banking rows, photos) hydrate templates and connect to detective game state.
 6. **Component Reuse-First Mandate**: Audit existing components (`src/components/`, `src/shell/`) before creating new ones. Parallel primitives, ad-hoc styling, and redundant component copies are strictly prohibited.
-7. **Authentic App Fidelity Principle (Zero-Spoiler UI Invariant)**: Virtual parody apps must strictly preserve real-world mobile UI fidelity without artificial clue indicators, glowing outlines, or hint badges on unpinned or default states. A subtle red bookmark indicator (`--sys-badge-red` with Ionicons `IoBookmark`) is permitted exclusively on story narrative items **already pinned by the player** in the active session to reflect player-collected state. Gameplay mechanics (long-press affordances, contextual pinning menus, suspects board, evidence locker) are application features authoritatively specified in [wife-notebook/features.md](../apps/phone-os/wife-notebook/features.md).
+7. **Authentic App Fidelity Principle (Zero-Spoiler UI Invariant)**: Virtual parody apps must strictly preserve real-world mobile UI fidelity without artificial clue indicators, glowing outlines, or hint badges on unpinned or default states. A subtle red bookmark indicator (`--sys-badge-red` with Ionicons `IoBookmark`) is permitted exclusively on story narrative items **already pinned by the player** in the active session to reflect player-collected state. Gameplay mechanics (long-press affordances, contextual pinning menus, suspects board, evidence locker) are application features authoritatively specified in [evidence-board/features.md](../apps/phone-os/evidence-board/features.md).
 
 ---
 
@@ -103,7 +104,7 @@ Each virtual application authoritatively owns its brand identity in its dedicate
 | **Tim** (`tim`) | MS Teams | [../apps/team-collaboration/app-design.md](../apps/team-collaboration/app-design.md) |
 | **NetSurf** (`netsurf`) | Safari / Chrome | [../apps/web-browser/app-design.md](../apps/web-browser/app-design.md) |
 | **Husband's Notes** (`notes`) | Apple Notes | [../apps/personal-notes/app-design.md](../apps/personal-notes/app-design.md) |
-| **Wife's Notebook HUD** (`wife_notebook`) | Detective Dossier HUD | [../apps/phone-os/wife-notebook/app-design.md](../apps/phone-os/wife-notebook/app-design.md) |
+| **Wife's Notebook HUD** (`wife_notebook`) | Detective Dossier HUD | [../apps/phone-os/evidence-board/app-design.md](../apps/phone-os/evidence-board/app-design.md) |
 
 ---
 
