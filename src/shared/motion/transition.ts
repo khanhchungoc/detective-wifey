@@ -13,14 +13,20 @@ interface MotionRequest {
   prepare?: () => void;
   restoreGesture?: () => void;
   swipeDistance?: number;
-  lift?: LiftHandoff;
+  lift?: LiftPose;
 }
-/** Pose of an app card dragged up by the home gesture; the close keyframe starts from it. */
-export interface LiftPose { x: number; y: number; scale: number }
+/** Pose of an app card dragged up by the home gesture; the close sling starts from it. */
+export interface LiftPose { x: number; y: number; scale: number; radius: number }
 interface LiftHandoff { pose: LiftPose; restore: () => void; consumed: boolean }
 let lift: LiftHandoff | undefined;
-const LIFT_VARS = ['--lift-tx', '--lift-ty', '--lift-scale'] as const;
-const clearLift = () => { for (const name of LIFT_VARS) document.documentElement?.style?.removeProperty(name); };
+const LIFT_VARS = ['--lift-tx', '--lift-ty', '--lift-scale', '--lift-radius'] as const;
+const clearLift = () => {
+  for (const name of LIFT_VARS) document.documentElement?.style?.removeProperty(name);
+  if (document.documentElement?.dataset) delete document.documentElement.dataset.lift;
+};
+/** Target launcher icon gets its own snapshot on close so it can crossfade with the app card. */
+let namedIcon: HTMLElement | undefined;
+const releaseIcon = () => { if (namedIcon) namedIcon.style.viewTransitionName = ''; namedIcon = undefined; };
 let pending: MotionRequest | undefined;
 let committing = false;
 const regionOwners = new WeakMap<HTMLElement, { owner: symbol; name: string }>();
@@ -44,9 +50,9 @@ export function handoffSwipe(distance: number, restore: () => void, navigate: ()
 }
 
 /**
- * Swipe-home handoff: unlike handoffSwipe, the dragged transform is reset BEFORE capture
- * and replayed as CSS variables, so the close keyframe flies from the finger pose to the icon
- * instead of compounding the drag transform with the icon transform.
+ * Swipe-home handoff: the lifted card stays in the outgoing snapshot (no full-size flash) and
+ * its pose is replayed as CSS variables, so the close sling animates the whole card group from
+ * the finger pose to the icon.
  */
 export function handoffLift(pose: LiftPose, restore: () => void, navigate: () => void): void {
   const current: LiftHandoff = { pose, restore, consumed: false };
@@ -68,17 +74,17 @@ export function launcherFlight(x: number, y: number, originX: number, originY: n
 
 /** Measure in viewport coordinates so compact and desktop shells share the same motion. */
 export function appTransition(kind: 'open' | 'close', appId: string, update: () => void): void {
-  transition(kind, update, () => prepareAppTransition(appId));
+  transition(kind, update, () => prepareAppTransition(appId, kind));
 }
 
-function prepareAppTransition(appId: string): void {
+function prepareAppTransition(appId: string, kind: 'open' | 'close'): void {
   if (typeof document !== 'undefined') {
     const viewport = document.querySelector('[data-app-transition-bounds]')?.getBoundingClientRect();
     const grid = document.querySelector<HTMLElement>('.phone-app-grid')?.getBoundingClientRect();
     const dock = document.querySelector<HTMLElement>('.phone-dock-grid')?.getBoundingClientRect();
     const buttons = Array.from(document.querySelectorAll<HTMLElement>('[data-launch-app]'));
-    const icon = buttons.find(element => element.dataset.launchApp === appId)
-      ?.querySelector('.phone-app-icon')?.getBoundingClientRect();
+    const launcher = buttons.find(element => element.dataset.launchApp === appId);
+    const icon = launcher?.querySelector('.phone-app-icon')?.getBoundingClientRect();
     const style = document.documentElement.style;
     const measured = viewport && icon && viewport.width > 0 && viewport.height > 0;
     const gridBounds = grid && grid.width > 0 && grid.height > 0 ? grid : viewport;
@@ -93,6 +99,16 @@ function prepareAppTransition(appId: string): void {
     style.setProperty('--app-origin-x', `${originX.toFixed(2)}%`);
     style.setProperty('--app-origin-y', `${originY.toFixed(2)}%`);
     style.setProperty('--dock-origin-x', `${dockOriginX.toFixed(2)}%`);
+    style.setProperty('--app-x0', `${viewport?.x ?? 0}px`);
+    style.setProperty('--app-y0', `${viewport?.y ?? 0}px`);
+    // Launcher squircle corner (22.5% of icon width) so the card corners land on the icon's shape.
+    style.setProperty('--icon-radius', `${measured ? icon.width * 0.225 : 14}px`);
+    releaseIcon();
+    // Whole launcher button (icon, badge, label) so nothing of it floats while the card flies in.
+    if (kind === 'close' && measured && launcher?.style) {
+      launcher.style.viewTransitionName = 'phone-app-icon';
+      namedIcon = launcher;
+    }
   }
 }
 
@@ -130,7 +146,8 @@ export function transition(kind: MotionKind, update: () => void, prepare?: () =>
   }
   if (lift && !lift.consumed) {
     lift.consumed = true;
-    pending.lift = lift;
+    pending.lift = lift.pose;
+    pending.restoreGesture = lift.restore;
   }
 }
 
@@ -184,16 +201,17 @@ function flushPending(): void {
       if (canAnimate()) { settleEntrances(); nameContent(); markLayered(); }
     } finally { committing = false; }
   };
-  if (!canAnimate()) { request.lift?.restore(); commit(); return; }
+  if (!canAnimate()) { commit(); return; }
   request.prepare?.();
   clearLift();
   if (request.lift) {
-    const { pose, restore } = request.lift;
+    const pose = request.lift;
     const style = document.documentElement.style;
     style?.setProperty('--lift-tx', `${pose.x}px`);
     style?.setProperty('--lift-ty', `${pose.y}px`);
     style?.setProperty('--lift-scale', `${pose.scale}`);
-    restore();
+    style?.setProperty('--lift-radius', `${pose.radius}px`);
+    document.documentElement.dataset.lift = '';
   }
   document.documentElement.dataset.motion = request.kind;
   delete document.documentElement.dataset.layered;
@@ -208,6 +226,7 @@ function flushPending(): void {
     commit();
     restoreRegions();
     clearLift();
+    releaseIcon();
     delete document.documentElement.dataset.motion;
     delete document.documentElement.dataset.swipeMotion;
     delete document.documentElement.dataset.layered;
@@ -222,6 +241,7 @@ function flushPending(): void {
     restoreRegions();
     if (active !== current) return;
     active = undefined;
+    releaseIcon();
     delete document.documentElement.dataset.motion;
     delete document.documentElement.dataset.swipeMotion;
     delete document.documentElement.dataset.layered;

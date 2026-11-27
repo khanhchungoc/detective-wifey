@@ -19,7 +19,7 @@ export const TeamCollaborationApp: React.FC<VirtualAppProps> = ({
   const channels = teamData.channels || [];
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const swipeHandlers = useSwipeBack({ onBack: onReturnHome });
+  const swipeHandlers = useSwipeBack({ onBack: onReturnHome, exitsApp: true });
 
   return (
     <div

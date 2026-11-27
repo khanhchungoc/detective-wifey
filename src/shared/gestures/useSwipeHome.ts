@@ -1,8 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { handoffLift } from '../motion/transition';
 
-/** Lifted app card corner; motion.css owns the value so the close snapshot matches. */
-const LIFT_RADIUS = 'var(--app-card-radius)';
+/** Lifted card corner radius in px; motion.css `--app-card-radius` owns the value. */
+function liftRadius(): number {
+  if (typeof document === 'undefined' || typeof getComputedStyle !== 'function') return 44;
+  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--app-card-radius')) || 44;
+}
 
 type GestureSurfaceEvent = {
   currentTarget?: EventTarget | null;
@@ -107,6 +110,8 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
   let tx = 0;
   let ty = 0;
   let scale = 1;
+  let radius = 0;
+  let maxRadius = 44;
   let lifted = false;
   let reducedMotion = false;
 
@@ -119,6 +124,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     frame = undefined;
     if (surface && lifted) {
       surface.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+      surface.style.borderRadius = `${radius}px`;
     }
   };
 
@@ -134,6 +140,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     const element = surface;
     const wasLifted = lifted;
     const from = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+    const fromRadius = `${radius}px`;
     surface = null;
     tx = 0;
     ty = 0;
@@ -145,7 +152,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     if (animate && wasLifted && element.animate && !reducedMotion) {
       settling?.cancel();
       const anim = element.animate(
-        [{ transform: from }, { transform: 'translate3d(0, 0, 0) scale(1)' }],
+        [{ transform: from, borderRadius: fromRadius }, { transform: 'translate3d(0, 0, 0) scale(1)', borderRadius: '0px' }],
         { duration: 280, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' },
       );
       settling = anim;
@@ -210,6 +217,8 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     tx = 0;
     ty = 0;
     scale = 1;
+    radius = 0;
+    maxRadius = liftRadius();
     lifted = false;
     startCoords = { x: clientX, y: clientY, time: Date.now(), containerBottom };
     lastCoords = null;
@@ -224,9 +233,10 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     if (!lifted) {
       lifted = true;
       surface.style.willChange = 'transform';
-      surface.style.borderRadius = LIFT_RADIUS;
     }
     const progress = Math.min(1, upward / 260);
+    // Corners go from the screen's sharp edge to a rounded card early in the lift.
+    radius = Number((Math.min(1, progress * 3) * maxRadius).toFixed(1));
     scale = Number((1 - progress * 0.28).toFixed(4));
     tx = Number(((clientX - startCoords.x) * 0.45).toFixed(1));
     ty = Number((-upward * 0.55).toFixed(1));
@@ -262,8 +272,10 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
       lastTriggered = endTime;
       const draggedSurface = surface;
       const wasLifted = lifted;
-      const pose = { x: tx, y: ty, scale };
+      const pose = { x: tx, y: ty, scale, radius };
       stopFrame();
+      // The outgoing snapshot must hold the last finger pose.
+      if (draggedSurface && wasLifted) paint();
       startCoords = null;
       lastCoords = null;
       surface = null;

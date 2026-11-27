@@ -19,7 +19,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
   const history = browserData.history || [];
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const swipeHandlers = useSwipeBack({ onBack: onReturnHome });
+  const swipeHandlers = useSwipeBack({ onBack: onReturnHome, exitsApp: true });
 
   return (
     <div
