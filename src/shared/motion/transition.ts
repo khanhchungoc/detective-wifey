@@ -105,7 +105,7 @@ function prepareAppTransition(appId: string, kind: 'open' | 'close'): void {
     style.setProperty('--icon-radius', `${measured ? icon.width * 0.225 : 14}px`);
     releaseIcon();
     // Whole launcher button (icon, badge, label) so nothing of it floats while the card flies in.
-    if (kind === 'close' && measured && launcher) {
+    if (kind === 'close' && measured && launcher?.style) {
       launcher.style.viewTransitionName = 'phone-app-icon';
       namedIcon = launcher;
     }
