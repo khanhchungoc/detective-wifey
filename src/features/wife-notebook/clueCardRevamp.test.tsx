@@ -488,8 +488,9 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       );
       const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={32} shape="square" />);
       expect(html.includes(avatar)).toBe(hasAvatar);
-      expect(html.includes('absolute -right-1 -top-1 h-3 w-3')).toBe(false);
-      expect(html.includes('flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-[5px]')).toBe(Boolean(node.sourceAppId));
+      // App icon is a small badge on the picture's top-right corner, or stands alone without a picture.
+      expect(html.includes('absolute -right-1.5 -top-1.5 z-10 h-4 w-4')).toBe(Boolean(node.sourceAppId) && hasAvatar);
+      expect(html.includes('h-6 w-6 rounded-[5px]')).toBe(Boolean(node.sourceAppId) && !hasAvatar);
       expect(html.includes('aria-label="Source app"')).toBe(Boolean(node.sourceAppId));
     });
 

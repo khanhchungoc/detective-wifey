@@ -20,8 +20,9 @@ test.describe('App switch animation', () => {
     await launchApp(page, 'internet-messaging');
 
     // The closing card is a view-transition group (not a DOM node). Its animated transform places
-    // and scales the whole card around its centre, so the card centre on screen is the matrix
-    // translation plus half the group's size. Sampled every frame.
+    // and scales the whole card around its centre, and the separate `translate` property carries the
+    // vertical arc, so the card centre on screen is both translations plus half the group's size.
+    // Sampled every frame.
     await page.evaluate(() => {
       const w = window as SampleWindow;
       w.__cardSamples = [];
@@ -32,7 +33,8 @@ test.describe('App switch animation', () => {
         const height = parseFloat(cs.height);
         if (m && width > 0 && height > 0) {
           const v = m[1].split(',').map(Number);
-          w.__cardSamples?.push({ cx: v[4] + width / 2, cy: v[5] + height / 2, scale: v[0] });
+          const [tx = 0, ty = 0] = cs.translate === 'none' ? [] : cs.translate.split(' ').map(parseFloat);
+          w.__cardSamples?.push({ cx: v[4] + tx + width / 2, cy: v[5] + ty + height / 2, scale: v[0] });
         }
         requestAnimationFrame(tick);
       };

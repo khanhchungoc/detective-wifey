@@ -16,17 +16,17 @@ interface MotionRequest {
   lift?: LiftPose;
 }
 /** Pose of an app card dragged up by the home gesture; the close sling starts from it. */
-export interface LiftPose { x: number; y: number; scale: number; radius: number }
+export interface LiftPose { x: number; y: number; scale: number }
 interface LiftHandoff { pose: LiftPose; restore: () => void; consumed: boolean }
 let lift: LiftHandoff | undefined;
-const LIFT_VARS = ['--lift-tx', '--lift-ty', '--lift-scale', '--lift-radius'] as const;
+const LIFT_VARS = ['--lift-tx', '--lift-ty', '--lift-scale'] as const;
 const clearLift = () => {
   for (const name of LIFT_VARS) document.documentElement?.style?.removeProperty(name);
   if (document.documentElement?.dataset) delete document.documentElement.dataset.lift;
 };
-/** Target launcher icon gets its own snapshot on close so it can crossfade with the app card. */
-let namedIcon: HTMLElement | undefined;
-const releaseIcon = () => { if (namedIcon) namedIcon.style.viewTransitionName = ''; namedIcon = undefined; };
+/** Target launcher icon and badge get their own snapshots on close so the card can morph into them. */
+let namedIcon: HTMLElement[] = [];
+const releaseIcon = () => { for (const element of namedIcon) element.style.viewTransitionName = ''; namedIcon = []; };
 let pending: MotionRequest | undefined;
 let committing = false;
 const regionOwners = new WeakMap<HTMLElement, { owner: symbol; name: string }>();
@@ -84,7 +84,9 @@ function prepareAppTransition(appId: string, kind: 'open' | 'close'): void {
     const dock = document.querySelector<HTMLElement>('.phone-dock-grid')?.getBoundingClientRect();
     const buttons = Array.from(document.querySelectorAll<HTMLElement>('[data-launch-app]'));
     const launcher = buttons.find(element => element.dataset.launchApp === appId);
-    const icon = launcher?.querySelector('.phone-app-icon')?.getBoundingClientRect();
+    const iconElement = launcher?.querySelector<HTMLElement>('.phone-app-icon');
+    const badge = launcher?.querySelector<HTMLElement>('.phone-app-badge');
+    const icon = iconElement?.getBoundingClientRect();
     const style = document.documentElement.style;
     const measured = viewport && icon && viewport.width > 0 && viewport.height > 0;
     const gridBounds = grid && grid.width > 0 && grid.height > 0 ? grid : viewport;
@@ -101,13 +103,15 @@ function prepareAppTransition(appId: string, kind: 'open' | 'close'): void {
     style.setProperty('--dock-origin-x', `${dockOriginX.toFixed(2)}%`);
     style.setProperty('--app-x0', `${viewport?.x ?? 0}px`);
     style.setProperty('--app-y0', `${viewport?.y ?? 0}px`);
-    // Launcher squircle corner (22.5% of icon width) so the card corners land on the icon's shape.
-    style.setProperty('--icon-radius', `${measured ? icon.width * 0.225 : 14}px`);
+    style.setProperty('--icon-x0', `${icon?.x ?? 0}px`);
+    style.setProperty('--icon-y0', `${icon?.y ?? 0}px`);
     releaseIcon();
-    // Whole launcher button (icon, badge, label) so nothing of it floats while the card flies in.
-    if (kind === 'close' && measured && launcher?.style) {
-      launcher.style.viewTransitionName = 'phone-app-icon';
-      namedIcon = launcher;
+    if (kind === 'close' && measured) {
+      for (const [element, name] of [[iconElement, 'phone-app-icon'], [badge, 'phone-app-badge']] as const) {
+        if (!element?.style) continue;
+        element.style.viewTransitionName = name;
+        namedIcon.push(element);
+      }
     }
   }
 }
@@ -210,7 +214,6 @@ function flushPending(): void {
     style?.setProperty('--lift-tx', `${pose.x}px`);
     style?.setProperty('--lift-ty', `${pose.y}px`);
     style?.setProperty('--lift-scale', `${pose.scale}`);
-    style?.setProperty('--lift-radius', `${pose.radius}px`);
     document.documentElement.dataset.lift = '';
   }
   document.documentElement.dataset.motion = request.kind;

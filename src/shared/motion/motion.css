@@ -4,12 +4,11 @@
   --ease-ios-default: cubic-bezier(.4, 0, .2, 1);
   --ease-ios-in-out: cubic-bezier(.42, 0, .58, 1);
   --ios-app-open-duration: .48s;
-  --ios-app-close-duration: .56s;
+  --ios-app-close-duration: .5s;
   --ios-app-duration: var(--ios-app-open-duration);
   --ios-app-fade-duration: .10s;
-  --ios-app-close-fade-duration: .2s;
-  /* Upward overshoot of the close arc; swipe-home lifts it further so the card is slung. */
-  --app-sling-arc: -36px;
+  /* Upward overshoot of the close arc (vertical only); swipe-home lifts it further. */
+  --app-sling-arc: -24px;
   --ios-motion-blur-radius: 0px;
   --app-origin-x: 50%;
   --app-origin-y: 70%;
@@ -54,14 +53,22 @@ html:is([data-motion='open'], [data-motion='close'])::view-transition-new(root) 
 ::view-transition-group(phone-app-grid),
 ::view-transition-group(phone-dock-apps) { z-index: 5; }
 ::view-transition-group(phone-app) { z-index: 10; }
-/* Card corners: sharp at full screen, then the icon's squircle corner un-scaled per axis so
-   it lands exactly on the icon shape. */
-:root { --app-icon-corner: calc(var(--icon-radius, 14px) / var(--app-scale-x)) / calc(var(--icon-radius, 14px) / var(--app-scale-y)); }
-::view-transition-group(phone-app-icon) { z-index: 6; animation: none; }
-html[data-motion='close']::view-transition-old(phone-app-icon) { animation: none; opacity: 0; }
+/* Static corner clip (compositor-only; an animated radius repaints on the busy main thread and
+   stutters). It scales with the card: ~display radius at full size, small at icon size. */
+::view-transition-old(phone-app), ::view-transition-new(phone-app) { border-radius: var(--app-card-radius); }
+/* Close morph: the real launcher icon rides the card's path at the card's size and crossfades in,
+   so the screen visibly becomes the icon. The badge pops in last. */
+::view-transition-group(phone-app-icon) { z-index: 11; animation: none; }
+::view-transition-group(phone-app-badge) { z-index: 12; animation: none; }
+html[data-motion='close']::view-transition-old(phone-app-icon),
+html[data-motion='close']::view-transition-old(phone-app-badge) { animation: none; opacity: 0; }
 html[data-motion='close']::view-transition-new(phone-app-icon) {
-  animation: ios-app-fade-in var(--ios-app-close-fade-duration) var(--ease-ios-default) both;
-  animation-delay: calc(var(--ios-app-close-duration) - var(--ios-app-close-fade-duration) - .04s);
+  animation: ios-app-fade-in calc(var(--ios-app-close-duration) * .45) linear both;
+  animation-delay: calc(var(--ios-app-close-duration) * .35);
+}
+html[data-motion='close']::view-transition-new(phone-app-badge) {
+  animation: ios-app-fade-in .12s linear both;
+  animation-delay: calc(var(--ios-app-close-duration) - .12s);
 }
 ::view-transition-group(system-status), ::view-transition-group(system-home) { z-index: 40; }
 ::view-transition-group(notification-banner),
@@ -94,27 +101,31 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-pop { to { transform: translateX(calc(100% - var(--swipe-distance, 0px))); } }
 @keyframes ios-reveal { from { transform: translateX(-25%); opacity: .6; } }
 @keyframes ios-app-in {
-  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); border-radius: var(--app-icon-corner); }
-  to { transform: translate3d(0, 0, 0) scale(1); border-radius: 0; }
+  /* Compositor-only transform avoids per-frame rounded-mask rasterization on mobile 120Hz displays. */
+  from { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
+  to { transform: translate3d(0, 0, 0) scale(1); }
 }
-/* Close sling on the whole card group (the outgoing snapshot keeps any finger pose): it starts at the
-   lifted pose, arcs up past the straight line, then settles into the icon. --app-x0/y0 place the group. */
-@keyframes ios-app-sling {
-  0% {
-    transform: translate(var(--app-x0, 0px), var(--app-y0, 0px)) translate(var(--lift-tx, 0px), var(--lift-ty, 0px)) scale(var(--lift-scale, 1));
-    animation-timing-function: cubic-bezier(.3, .55, .45, 1);
-  }
-  40% {
-    transform: translate(var(--app-x0, 0px), var(--app-y0, 0px))
-      translate(calc(var(--lift-tx, 0px) * .6 + var(--app-dx, 0px) * .4), calc(var(--lift-ty, 0px) * .6 + var(--app-dy, 0px) * .4 + var(--app-sling-arc)))
-      scale(calc(var(--lift-scale, 1) * .6 + var(--app-scale-x) * .4), calc(var(--lift-scale, 1) * .6 + var(--app-scale-y) * .4));
-    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
-  }
-  100% { transform: translate(var(--app-x0, 0px), var(--app-y0, 0px)) translate(var(--app-dx, 0px), var(--app-dy, 0px)) scale(var(--app-scale-x), var(--app-scale-y)); }
+/* Close sling, split so only the vertical part arcs: `translate` carries Y (up past the straight line,
+   then down into the icon) while `transform` carries X and scale on one smooth curve. Everything else
+   keeps moving through the top of the arc, so there is no pause. --app-x0/y0 place the card group;
+   the icon group uses the same curves offset to its own box so both stay locked together. */
+@keyframes ios-app-sling-y {
+  0% { translate: 0 var(--lift-ty, 0px); animation-timing-function: cubic-bezier(.25, .6, .45, 1); }
+  35% { translate: 0 calc(var(--lift-ty, 0px) * .65 + var(--app-dy, 0px) * .35 + var(--app-sling-arc)); animation-timing-function: cubic-bezier(.45, 0, .25, 1); }
+  100% { translate: 0 var(--app-dy, 0px); }
 }
-@keyframes ios-app-corner-out {
-  from { border-radius: var(--lift-radius, 0px); }
-  to { border-radius: var(--app-icon-corner); }
+@keyframes ios-app-sling-xs {
+  from { transform: translate(calc(var(--app-x0, 0px) + var(--lift-tx, 0px)), var(--app-y0, 0px)) scale(var(--lift-scale, 1)); }
+  to { transform: translate(calc(var(--app-x0, 0px) + var(--app-dx, 0px)), var(--app-y0, 0px)) scale(var(--app-scale-x), var(--app-scale-y)); }
+}
+@keyframes ios-icon-sling-y {
+  0% { translate: 0 calc(var(--lift-ty, 0px) - var(--app-dy, 0px)); animation-timing-function: cubic-bezier(.25, .6, .45, 1); }
+  35% { translate: 0 calc((var(--lift-ty, 0px) - var(--app-dy, 0px)) * .65 + var(--app-sling-arc)); animation-timing-function: cubic-bezier(.45, 0, .25, 1); }
+  100% { translate: 0 0; }
+}
+@keyframes ios-icon-sling-xs {
+  from { transform: translate(calc(var(--icon-x0, 0px) + var(--lift-tx, 0px) - var(--app-dx, 0px)), var(--icon-y0, 0px)) scale(calc(var(--lift-scale, 1) / var(--app-scale-x)), calc(var(--lift-scale, 1) / var(--app-scale-y))); }
+  to { transform: translate(var(--icon-x0, 0px), var(--icon-y0, 0px)) scale(1); }
 }
 @keyframes ios-app-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ios-app-fade-out { from { opacity: 1; } to { opacity: 0; } }
@@ -179,16 +190,17 @@ html[data-motion='open']::view-transition-old(phone-dock-apps) {
 html[data-motion='open']::view-transition-new(phone-dock-apps) { animation: none; opacity: 0; }
 html[data-motion='close']:not([data-swipe-motion])::view-transition-group(phone-app) {
   transform-origin: 50% 50%;
-  animation: ios-app-sling var(--ios-app-close-duration) linear both;
+  animation: ios-app-sling-y var(--ios-app-close-duration) both, ios-app-sling-xs var(--ios-app-close-duration) cubic-bezier(.3, .6, .2, 1) both;
 }
-html[data-lift] { --app-sling-arc: -90px; }
+html[data-motion='close']:not([data-swipe-motion])::view-transition-group(phone-app-icon) {
+  transform-origin: 50% 50%;
+  animation: ios-icon-sling-y var(--ios-app-close-duration) both, ios-icon-sling-xs var(--ios-app-close-duration) cubic-bezier(.3, .6, .2, 1) both;
+}
+html[data-lift] { --app-sling-arc: -60px; }
 html[data-motion='close']::view-transition-old(phone-app) {
-  /* Crossfades with the icon snapshot near the end of the flight. */
-  animation-name: ios-app-corner-out, ios-app-fade-out;
-  animation-duration: var(--ios-app-close-duration), var(--ios-app-close-fade-duration);
-  animation-timing-function: var(--ease-ios-default), var(--ease-ios-default);
-  animation-fill-mode: both;
-  animation-delay: 0s, calc(var(--ios-app-close-duration) - var(--ios-app-close-fade-duration));
+  /* Crossfades with the travelling icon over the middle of the flight. */
+  animation: ios-app-fade-out calc(var(--ios-app-close-duration) * .45) linear both;
+  animation-delay: calc(var(--ios-app-close-duration) * .35);
   z-index: 2;
 }
 /* The home screen is already visible behind a lifted card: no icon zoom-in (it flashed on release). */

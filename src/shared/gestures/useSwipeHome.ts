@@ -272,7 +272,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
       lastTriggered = endTime;
       const draggedSurface = surface;
       const wasLifted = lifted;
-      const pose = { x: tx, y: ty, scale, radius };
+      const pose = { x: tx, y: ty, scale };
       stopFrame();
       // The outgoing snapshot must hold the last finger pose.
       if (draggedSurface && wasLifted) paint();
