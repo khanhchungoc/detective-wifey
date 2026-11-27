@@ -7,6 +7,7 @@ import {
   IoReceiptOutline,
   IoCallOutline,
   IoTimeOutline,
+  IoLocationOutline,
   IoFlashOutline,
   IoCutOutline,
   IoCloseOutline,
@@ -16,6 +17,7 @@ import {
 import type { AppDefinition } from '../../../shared/contracts/app-contracts';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
 import { CANVAS_SIZE, calculateYarnStringCurve } from '../graphEngine';
+import { formatCorkboardTransform } from '../useCorkboardGestures';
 import type { CorkboardViewport, PlacedNode, PairingState } from '../types';
 import type { CaseGraphEdge } from '../../../shared/contracts/knowledge-graph';
 import {
@@ -35,7 +37,7 @@ function getCardTiltDeg(nodeId: string): number {
   return ((Math.abs(hash) % 29) - 14) / 10;
 }
 
-const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
+const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active = true }: { active?: boolean }) {
   const prefersReducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<'ignition' | 'ambient'>('ignition');
 
@@ -51,7 +53,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
     <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
   );
 
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || !active) {
     return (
       <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
@@ -83,7 +85,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
       {/* Single overhead light wash across the entire board, synced 1:1 with lamp flicker */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 will-change-[opacity]"
+        className="pointer-events-none absolute inset-0 z-0"
         initial={phase === 'ignition' ? { opacity: 0.12 } : false}
         animate={
           phase === 'ignition'
@@ -98,7 +100,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
       {/* Global board & card dimming veil inversely synced to the single overhead lamp */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[25] will-change-[opacity]"
+        className="pointer-events-none absolute inset-0 z-[25]"
         initial={phase === 'ignition' ? { opacity: 0.65 } : false}
         animate={
           phase === 'ignition'
@@ -113,7 +115,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
       {/* Overhead fluorescent tube */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center will-change-[opacity]"
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center"
         initial={phase === 'ignition' ? { opacity: 0.12 } : false}
         animate={
           phase === 'ignition'
@@ -136,6 +138,9 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
 interface CorkboardCanvasProps {
   getSourceApp?: (id: string) => Pick<AppDefinition, 'displayName' | 'icon' | 'iconAsset' | 'themeGradient'> | undefined;
   viewport: CorkboardViewport;
+  viewportRef?: React.RefObject<CorkboardViewport>;
+  planeRef?: React.RefObject<HTMLDivElement | null>;
+  isOpen?: boolean;
   isPinching?: boolean;
   placedNodes: PlacedNode[];
   edges: CaseGraphEdge[];
@@ -159,7 +164,7 @@ interface CorkboardCanvasProps {
 
 export { calculateYarnStringCurve } from '../graphEngine';
 
-type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport'> & {
+type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'isOpen'> & {
   zoomRef: React.RefObject<number>;
 };
 
@@ -271,7 +276,22 @@ const CorkboardContents = memo(function CorkboardContents({
             ? node.visibleAlias || node.label : undefined;
           const isDraggingThis = activeDragId === node.nodeId;
           const tiltDeg = getCardTiltDeg(node.nodeId);
-          const timelineEntries = parseNodeToTimelineEntries(node);
+          const photoMeta = (() => {
+            if (!node.imageSrc) return null;
+            const rawSub = (node.subtitle || '').trim();
+            const parts = rawSub ? rawSub.split(/\s*•\s*/).filter(Boolean) : [];
+            const fallbackDateTime = [node.eventDate, node.eventTime].filter(Boolean).join(' · ')
+              || (node.rawTimestamp ? String(node.rawTimestamp) : '');
+            const dateTimeText = parts.length >= 2
+              ? parts[0]
+              : (fallbackDateTime || parts[0] || '');
+            const locationText = parts.length >= 2 ? parts.slice(1).join(' • ') : '';
+            if (!dateTimeText && !locationText) return null;
+            return { dateTimeText, locationText };
+          })();
+          const timelineEntries = node.imageSrc && (!node.messages || node.messages.length === 0)
+            ? []
+            : parseNodeToTimelineEntries(node);
           const hasBody = timelineEntries.length > 0 || Boolean(node.imageSrc);
 
           return (
@@ -346,7 +366,11 @@ const CorkboardContents = memo(function CorkboardContents({
                 cardDragRef.current = null;
                 setActiveDragId(null);
               }}
-              className={`corkboard-node-card corkboard-paper-card absolute rounded-[3px] border p-2.5 pt-[16px] cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
+              className={`corkboard-node-card absolute cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
+                node.imageSrc
+                  ? 'rounded-[2px] border bg-[#FBF9F4] p-2 pt-3 pb-2.5'
+                  : 'corkboard-paper-card rounded-[3px] border p-2.5 pt-[16px]'
+              } ${
                 isDraggingThis
                   ? 'z-30 border-[#DC2626] shadow-[0_24px_42px_rgba(0,0,0,0.72),0_10px_18px_rgba(0,0,0,0.45)] ring-2 ring-[#EF4444]/75'
                   : isSelected
@@ -355,6 +379,8 @@ const CorkboardContents = memo(function CorkboardContents({
                   ? 'z-20 border-[#E11D48] ring-1 ring-[#FB7185] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
                   : hasContradiction
                   ? 'z-20 border-[#EAB308] ring-1 ring-[#FACC15] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
+                  : node.imageSrc
+                  ? 'z-20 border-[#DDD5C7] shadow-[0_10px_24px_rgba(0,0,0,0.6),0_2px_6px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.7)]'
                   : 'z-20 border-[#C9BFAE] shadow-[0_8px_18px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.65)]'
               }`}
               style={{
@@ -386,118 +412,181 @@ const CorkboardContents = memo(function CorkboardContents({
                 }`} />
               </div>
 
-              {/* Top Bar: Yellow Sticky Note Title on Left, Separated Film-Framed Avatar + App Icon on Right, and Action Buttons */}
-              <div className={`relative min-h-[36px] ${hasBody ? 'pb-1.5' : 'pb-0.5'}`}>
-                <div
-                  className="relative -ml-3.5 -mt-1 flex min-w-0 items-center justify-between gap-2 w-[calc(100%+14px)]"
-                  style={isSelected ? {
-                    WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
-                    maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
-                  } : undefined}
-                >
-                  <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1.5 py-1 pl-2.5 pr-2.5 -rotate-[1.5deg]">
-                    {!avatarName && !sourceApp && (
-                      <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
+              {node.imageSrc ? (
+                /* Direct Polaroid Photo Pin (no aged-paper note background, full original aspect ratio) */
+                <div data-pinned-photo={node.nodeId} className="relative">
+                  {/* Floating Action Buttons when Polaroid is selected */}
+                  <div
+                    className={`absolute right-1.5 top-1.5 h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
+                    inert={!isSelected}
+                  >
+                    {node.sourceAppId && (
+                      <button
+                        type="button"
+                        aria-label="Đến chat"
+                        title="Đến nguồn ảnh"
+                        onClick={e => {
+                          e.stopPropagation();
+                          onNavigateToSource(node.sourceAppId, node.conversationId || node.recordRefId);
+                        }}
+                        className="relative flex h-6 w-6 items-center justify-center rounded-[4px] bg-black/75 hover:bg-[#DC2626] text-white transition-colors active:scale-90 shadow cursor-pointer before:absolute before:-inset-2"
+                      >
+                        <IoNavigateOutline className="text-xs" />
+                      </button>
                     )}
-                    <h4 className="font-handwriting text-note-title text-slate-900 line-clamp-2">
-                      {isAlias && isUnmasked
-                        ? `[BÓC TRẦN] ${node.label}`
-                        : node.label}
-                    </h4>
-                  </div>
-
-                  {(avatarName || sourceApp) && (
-                    <div className="flex shrink-0 items-center gap-1.5">
-                      {avatarName && (
-                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
-                          <ContactAvatar name={avatarName} size={32} shape="square" />
-                        </span>
-                      )}
-                      {sourceApp && (
-                        <span
-                          className={`flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-[5px] text-white shadow-xs ring-1 ring-black/10 ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
-                          title={sourceApp.displayName}
-                          role="img"
-                          aria-label={sourceApp.displayName}
-                        >
-                          {sourceApp.iconAsset ? (
-                            <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
-                          ) : <sourceApp.icon className="h-3.5 w-3.5" />}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Card-level Action Buttons: Exactly two buttons [Đến chat] and [Xóa] */}
-                <div
-                  className={`absolute right-0 top-0 h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
-                  inert={!isSelected}
-                >
-                  {/* Đến chat / Go to conversation button */}
-                  {node.sourceAppId && (
                     <button
                       type="button"
-                      aria-label="Đến chat"
-                      title="Đến chat"
+                      aria-label="Xóa"
+                      title="Xóa ảnh"
                       onClick={e => {
                         e.stopPropagation();
-                        onNavigateToSource(node.sourceAppId, node.conversationId || node.recordRefId);
+                        if (onDeleteCard) onDeleteCard(node.nodeId);
+                        else onRemoveNode?.(node.nodeId);
                       }}
-                      className="relative flex h-6 w-6 items-center justify-center rounded-[4px] bg-[#D5DDE5] hover:bg-[#DC2626] hover:text-white text-slate-700 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
+                      className="relative flex h-6 w-6 items-center justify-center rounded-[4px] bg-black/75 hover:bg-[#DC2626] text-white transition-colors active:scale-90 shadow cursor-pointer before:absolute before:-inset-2"
                     >
-                      <IoNavigateOutline className="text-xs" />
+                      <IoTrashOutline className="text-xs" />
                     </button>
-                  )}
+                  </div>
 
-                  {/* Xóa thẻ button */}
-                  <button
-                    type="button"
-                    aria-label="Xóa"
-                    title="Xóa thẻ"
-                    onClick={e => {
-                      e.stopPropagation();
-                      if (onDeleteCard) onDeleteCard(node.nodeId);
-                      else onRemoveNode?.(node.nodeId);
-                    }}
-                    className="relative flex h-6 w-6 items-center justify-center rounded-[4px] bg-[#D5DDE5] hover:bg-[#DC2626] hover:text-white text-slate-700 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
-                  >
-                    <IoTrashOutline className="text-xs" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Pinned Photo Polaroid Frame */}
-              {node.imageSrc && (
-                <div
-                  data-pinned-photo={node.nodeId}
-                  className="mb-1.5 rounded-[2px] border border-[#D8CFC0] bg-white p-1 pb-1.5 shadow-xs"
-                >
-                  <div className="h-24 w-full overflow-hidden rounded-[1px] bg-[#1C1C1E]">
-                    {node.imagePosition ? (
-                      <svg
-                        viewBox="0 0 627 627"
-                        preserveAspectRatio="xMidYMid slice"
-                        className="h-full w-full pointer-events-none"
-                        aria-label={node.label}
-                      >
-                        <image
-                          href={node.imageSrc}
-                          xlinkHref={node.imageSrc}
-                          x={node.imagePosition.startsWith('100%') ? -627 : 0}
-                          y={node.imagePosition.endsWith('100%') ? -627 : 0}
-                          width="1254"
-                          height="1254"
-                        />
-                      </svg>
-                    ) : (
+                  <div className="w-full overflow-hidden rounded-[1px] bg-[#1C1C1E]">
+                    {node.imagePosition ? (() => {
+                      const tileW = node.imageAspect === '4:3' ? 400 : 300;
+                      const tileH = node.imageAspect === '4:3' ? 300 : 400;
+                      const clipId = `polaroid-clip-${node.nodeId}`;
+                      return (
+                        <svg
+                          viewBox={`0 0 ${tileW} ${tileH}`}
+                          preserveAspectRatio="xMidYMid meet"
+                          className="block w-full h-auto pointer-events-none"
+                          aria-label={node.label}
+                        >
+                          <defs>
+                            <clipPath id={clipId}>
+                              <rect x="0" y="0" width={tileW} height={tileH} />
+                            </clipPath>
+                          </defs>
+                          <image
+                            href={node.imageSrc}
+                            xlinkHref={node.imageSrc}
+                            x={node.imagePosition.startsWith('100%') ? -tileW : 0}
+                            y={node.imagePosition.endsWith('100%') ? -tileH : 0}
+                            width={tileW * 2}
+                            height={tileH * 2}
+                            preserveAspectRatio="none"
+                            clipPath={`url(#${clipId})`}
+                          />
+                        </svg>
+                      );
+                    })() : (
                       <img
                         src={node.imageSrc}
                         alt={node.label}
                         draggable={false}
-                        className="h-full w-full object-cover select-none"
+                        className="block w-full h-auto select-none"
                       />
                     )}
+                  </div>
+
+                  {photoMeta && (
+                    <div
+                      data-pinned-photo-meta={node.nodeId}
+                      className="mt-2 space-y-0.5 px-0.5 font-handwriting text-note-meta text-slate-700 leading-snug"
+                    >
+                      {photoMeta.dateTimeText && (
+                        <div className="flex items-start gap-1">
+                          <IoTimeOutline className="mt-0.5 h-3 w-3 shrink-0 text-slate-500" aria-hidden="true" />
+                          <span className="min-w-0 break-words">{photoMeta.dateTimeText}</span>
+                        </div>
+                      )}
+                      {photoMeta.locationText && (
+                        <div className="flex items-start gap-1">
+                          <IoLocationOutline className="mt-0.5 h-3 w-3 shrink-0 text-[#DC2626]" aria-hidden="true" />
+                          <span className="min-w-0 break-words">{photoMeta.locationText}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Top Bar: Yellow Sticky Note Title on Left, Separated Film-Framed Avatar + App Icon on Right, and Action Buttons */
+                <div className={`relative min-h-[36px] ${hasBody ? 'pb-1.5' : 'pb-0.5'}`}>
+                  <div
+                    className="relative -ml-3.5 -mt-1 flex min-w-0 items-center justify-between gap-2 w-[calc(100%+14px)]"
+                    style={isSelected ? {
+                      WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
+                      maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
+                    } : undefined}
+                  >
+                    <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1.5 py-1 pl-2.5 pr-2.5 -rotate-[1.5deg]">
+                      {!avatarName && !sourceApp && (
+                        <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
+                      )}
+                      <h4 className="font-handwriting text-note-title text-slate-900 line-clamp-2">
+                        {isAlias && isUnmasked
+                          ? `[BÓC TRẦN] ${node.label}`
+                          : node.label}
+                      </h4>
+                    </div>
+
+                    {(avatarName || sourceApp) && (
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        {avatarName && (
+                          <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
+                            <ContactAvatar name={avatarName} size={32} shape="square" />
+                          </span>
+                        )}
+                        {sourceApp && (
+                          <span
+                            className={`flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-[5px] text-white shadow-xs ring-1 ring-black/10 ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                            title={sourceApp.displayName}
+                            role="img"
+                            aria-label={sourceApp.displayName}
+                          >
+                            {sourceApp.iconAsset ? (
+                              <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
+                            ) : <sourceApp.icon className="h-3.5 w-3.5" />}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card-level Action Buttons: Exactly two buttons [Đến chat] and [Xóa] */}
+                  <div
+                    className={`absolute right-0 top-0 h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
+                    inert={!isSelected}
+                  >
+                    {/* Đến chat / Go to conversation button */}
+                    {node.sourceAppId && (
+                      <button
+                        type="button"
+                        aria-label="Đến chat"
+                        title="Đến chat"
+                        onClick={e => {
+                          e.stopPropagation();
+                          onNavigateToSource(node.sourceAppId, node.conversationId || node.recordRefId);
+                        }}
+                        className="relative flex h-6 w-6 items-center justify-center rounded-[4px] bg-[#D5DDE5] hover:bg-[#DC2626] hover:text-white text-slate-700 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
+                      >
+                        <IoNavigateOutline className="text-xs" />
+                      </button>
+                    )}
+
+                    {/* Xóa thẻ button */}
+                    <button
+                      type="button"
+                      aria-label="Xóa"
+                      title="Xóa thẻ"
+                      onClick={e => {
+                        e.stopPropagation();
+                        if (onDeleteCard) onDeleteCard(node.nodeId);
+                        else onRemoveNode?.(node.nodeId);
+                      }}
+                      className="relative flex h-6 w-6 items-center justify-center rounded-[4px] bg-[#D5DDE5] hover:bg-[#DC2626] hover:text-white text-slate-700 transition-colors active:scale-90 shadow-xs cursor-pointer before:absolute before:-inset-2"
+                    >
+                      <IoTrashOutline className="text-xs" />
+                    </button>
                   </div>
                 </div>
               )}
@@ -610,14 +699,23 @@ const CorkboardContents = memo(function CorkboardContents({
   );
 });
 
-export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...contentsProps }) => {
+export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
+  viewport,
+  viewportRef: externalViewportRef,
+  planeRef,
+  isOpen = true,
+  ...contentsProps
+}) => {
   const { placedNodes, activePairing, selectedEdgeId, onSelectCard, onSelectEdge, onSeverEdge, onCancelPairing } = contentsProps;
   const zoomRef = useRef(viewport.zoom);
-  useLayoutEffect(() => { zoomRef.current = viewport.zoom; }, [viewport.zoom]);
-  const panStyle: React.CSSProperties = {
+  useLayoutEffect(() => {
+    zoomRef.current = externalViewportRef?.current.zoom ?? viewport.zoom;
+  }, [externalViewportRef, viewport.zoom]);
+  const planeStyle: React.CSSProperties = {
     left: '50%',
     top: '50%',
-    transform: `translate(${Math.round(-viewport.x * viewport.zoom)}px, ${Math.round(-viewport.y * viewport.zoom)}px)`,
+    transformOrigin: '0 0',
+    transform: formatCorkboardTransform(viewport),
   };
   return (
     <div
@@ -628,7 +726,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
       }}
     >
       {/* Overhead Cold War Fluorescent Lamp Highlight */}
-      <FluorescentLampHighlight />
+      <FluorescentLampHighlight active={isOpen} />
 
       {/* Empty State Overlay */}
       {placedNodes.length === 0 && (
@@ -660,7 +758,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
 
       {/* Pairing Banner Indicator */}
       {activePairing.sourceNodeId && (
-        <div className="absolute top-3 left-3 right-3 z-40 flex items-center justify-between rounded-[6px] bg-[#0D1219]/95 border border-[#E11D48]/55 p-2.5 px-3.5 text-ios-caption-1 font-semibold text-[#F1F5F9] shadow-2xl backdrop-blur-md">
+        <div className="absolute top-3 left-3 right-3 z-40 flex items-center justify-between rounded-[6px] bg-[#0D1219]/95 border border-[#E11D48]/55 p-2.5 px-3.5 text-ios-caption-1 font-semibold text-[#F1F5F9] shadow-2xl">
           <span className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#E11D48] animate-pulse shrink-0" />
             <span className="font-sans uppercase tracking-wide">ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
@@ -675,8 +773,8 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
         </div>
       )}
 
-      {/* Zoomable & Pannable Virtual Plane */}
-      <div className="absolute" style={panStyle}>
+      {/* Zoomable & Pannable Virtual Plane (GPU transform during gestures, crisp CSS zoom when settled) */}
+      <div ref={planeRef} className="absolute" style={planeStyle}>
         <div
           className="relative"
           style={{
@@ -691,7 +789,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({ viewport, ...c
 
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (
-        <div className="corkboard-control-dock absolute bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-[6px] bg-[#0D1219]/96 border border-slate-700/85 p-1.5 pl-3.5 shadow-2xl backdrop-blur-md">
+        <div className="corkboard-control-dock absolute bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-[6px] bg-[#0D1219]/96 border border-slate-700/85 p-1.5 pl-3.5 shadow-2xl">
           <span className="font-sans text-ios-caption-1 font-medium text-[#F1F5F9] whitespace-nowrap">Đã chọn sợi dây</span>
           <button
             type="button"

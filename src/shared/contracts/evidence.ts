@@ -40,6 +40,7 @@ export interface EvidenceSource {
   sender?: string;
   imageSrc?: string;
   imagePosition?: string;
+  imageAspect?: '3:4' | '4:3';
 }
 
 export interface UniversalEvidenceItem {
@@ -61,6 +62,7 @@ export interface UniversalEvidenceItem {
   sender?: string;
   imageSrc?: string;
   imagePosition?: string;
+  imageAspect?: '3:4' | '4:3';
 }
 
 /**

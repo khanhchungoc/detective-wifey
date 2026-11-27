@@ -24,6 +24,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
   const rootRef = useRef<HTMLDivElement>(null);
   const [activePhotoId, setActivePhotoId] = useState<string | null>(null);
   const [originDelta, setOriginDelta] = useState<PhotoOriginDelta | null>(null);
+  const [navDirection, setNavDirection] = useState<-1 | 0 | 1>(0);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isViewingHidden, setIsViewingHidden] = useState(false);
   const [evidenceItem, setEvidenceItem] = useState<UniversalEvidenceItem | null>(null);
@@ -42,10 +43,26 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
   }, [photosData.photos]);
 
   // Selected photo for Lightbox
+  const activeAlbumPhotos = isViewingHidden ? hiddenPhotos : publicPhotos;
+  const activePhotoIndex = useMemo(() => {
+    if (!activePhotoId) return -1;
+    return activeAlbumPhotos.findIndex((p) => p.id === activePhotoId);
+  }, [activeAlbumPhotos, activePhotoId]);
+
   const selectedPhoto = useMemo(() => {
     if (!activePhotoId) return null;
     return photosData.photos.find((p) => p.id === activePhotoId) || null;
   }, [activePhotoId, photosData.photos]);
+
+  const handleStepPhoto = useCallback((direction: -1 | 1) => {
+    if (activePhotoIndex < 0) return;
+    const target = activeAlbumPhotos[activePhotoIndex + direction];
+    if (!target) return;
+    setOriginDelta(null);
+    setNavDirection(direction);
+    setActivePhotoId(target.id);
+    setIsInfoOpen(false);
+  }, [activeAlbumPhotos, activePhotoIndex]);
 
   // Toast handler
   const showToast = useCallback((msg: string) => {
@@ -76,11 +93,13 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     } else {
       setOriginDelta(null);
     }
+    setNavDirection(0);
     setActivePhotoId(id);
     setIsInfoOpen(false);
   }, []);
 
   const handleCloseLightbox = useCallback(() => {
+    setNavDirection(0);
     setActivePhotoId(null);
     setIsInfoOpen(false);
   }, []);
@@ -98,7 +117,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     }
   }, [isInfoOpen, activePhotoId, isViewingHidden, onReturnHome]);
 
-  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack });
+  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack, enabled: !activePhotoId });
 
   const handleTriggerEvidence = useCallback((item: UniversalEvidenceItem) => {
     try {
@@ -140,11 +159,11 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
           onToggleViewHidden={setIsViewingHidden}
         />
 
-        {/* Forensic Lightbox View (When photo selected) */}
+        {/* Forensic Lightbox View (Persistent backdrop/header while browsing photos) */}
         <AnimatePresence>
           {selectedPhoto && (
             <PhotoLightboxView
-              key={selectedPhoto.id}
+              key="photo-lightbox"
               photo={selectedPhoto}
               caseId={caseData.caseId}
               husbandName={caseData.husbandName}
@@ -154,6 +173,11 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
               onTriggerEvidence={handleTriggerEvidence}
               onShowToast={showToast}
               originDelta={originDelta}
+              navDirection={navDirection}
+              hasPrev={activePhotoIndex > 0}
+              hasNext={activePhotoIndex >= 0 && activePhotoIndex < activeAlbumPhotos.length - 1}
+              onPrevPhoto={() => handleStepPhoto(-1)}
+              onNextPhoto={() => handleStepPhoto(1)}
             />
           )}
         </AnimatePresence>

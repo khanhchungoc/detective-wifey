@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
+  AnimatePresence,
   animate,
   motion,
   useMotionValue,
@@ -39,12 +40,20 @@ interface PhotoLightboxViewProps {
   onTriggerEvidence: (item: UniversalEvidenceItem) => void;
   onShowToast?: (message: string) => void;
   originDelta?: PhotoOriginDelta | null;
+  navDirection?: -1 | 0 | 1;
+  hasPrev?: boolean;
+  hasNext?: boolean;
+  onPrevPhoto?: () => void;
+  onNextPhoto?: () => void;
 }
 
 const IOS_SPRING = { type: 'spring' as const, stiffness: 360, damping: 32, mass: 0.9 };
 const IOS_EASE = [0.4, 0, 0.2, 1] as const;
 const DISMISS_DISTANCE = 90;
 const DISMISS_VELOCITY = 0.45;
+const BROWSE_DISTANCE = 60;
+const BROWSE_VELOCITY = 0.35;
+const EDGE_SWIPE_BACK_ZONE = 28;
 const MIN_RUBBER_ZOOM = 0.85;
 const MAX_RUBBER_ZOOM = 5.5;
 
@@ -59,6 +68,11 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   isInfoOpen,
   onTriggerEvidence,
   originDelta,
+  navDirection = 0,
+  hasPrev = false,
+  hasNext = false,
+  onPrevPhoto,
+  onNextPhoto,
 }) => {
   const prefersReducedMotion = useReducedMotion();
   const [isZoomed, setIsZoomed] = useState(false);
@@ -87,7 +101,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const gestureModeRef = useRef<GestureMode>('idle');
   const pressStartRef = useRef({ x: 0, y: 0, time: 0 });
-  const lastMoveRef = useRef({ y: 0, time: 0, vy: 0 });
+  const lastMoveRef = useRef({ x: 0, y: 0, time: 0, vx: 0, vy: 0 });
   const movedRef = useRef(false);
   const wasPinchRef = useRef(false);
   const lastTapRef = useRef<{ time: number; x: number; y: number }>({ time: 0, x: 0, y: 0 });
@@ -168,6 +182,23 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     animate(chromeOpacity, 1, { duration: 0.2, ease: IOS_EASE });
   }, [dragX, dragY, dragScale, dragBackdropOpacity, chromeOpacity, prefersReducedMotion]);
 
+  // Reset zoom and drag offsets cleanly when switching to prev/next photo
+  useEffect(() => {
+    stopActiveAnimations();
+    viewRef.current = fitImage;
+    photoX.set(0);
+    photoY.set(0);
+    photoScale.set(1);
+    dragX.set(0);
+    dragY.set(0);
+    dragScale.set(1);
+    dragBackdropOpacity.set(1);
+    chromeOpacity.set(1);
+    setIsZoomed(false);
+    setManipulating(false);
+    gestureModeRef.current = 'idle';
+  }, [photo.id, stopActiveAnimations, photoX, photoY, photoScale, dragX, dragY, dragScale, dragBackdropOpacity, chromeOpacity]);
+
   // Measure viewport once on mount and on resize (never during pointer move)
   useEffect(() => {
     const stage = stageRef.current;
@@ -222,15 +253,22 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       } else if (event.key === '0') {
         event.preventDefault();
         animateToView(fitImage);
+      } else if (event.key === 'ArrowLeft' && !isInfoOpen && hasPrev && onPrevPhoto) {
+        event.preventDefault();
+        onPrevPhoto();
+      } else if (event.key === 'ArrowRight' && !isInfoOpen && hasNext && onNextPhoto) {
+        event.preventDefault();
+        onNextPhoto();
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isInfoOpen, onToggleInfo, onBack, animateToView, readCachedBounds]);
+  }, [isInfoOpen, onToggleInfo, onBack, animateToView, readCachedBounds, hasPrev, hasNext, onPrevPhoto, onNextPhoto]);
 
   // Swipe right from left edge to go back to grid (disabled while zoomed or info open)
   const swipeBackHandlers = useSwipeBack({
     enabled: !isZoomed && !isInfoOpen,
+    maxStartDistance: EDGE_SWIPE_BACK_ZONE,
     onBack: (e?: unknown) => {
       if (e && typeof (e as Event).stopPropagation === 'function') {
         (e as Event).stopPropagation();
@@ -261,8 +299,11 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     stopActiveAnimations();
 
     if (pointersRef.current.size === 0) {
+      if (viewRef.current.zoom <= 1.05 && event.clientX - stageRectRef.current.left <= EDGE_SWIPE_BACK_ZONE) {
+        return;
+      }
       pressStartRef.current = { x: event.clientX, y: event.clientY, time: performance.now() };
-      lastMoveRef.current = { y: event.clientY, time: performance.now(), vy: 0 };
+      lastMoveRef.current = { x: event.clientX, y: event.clientY, time: performance.now(), vx: 0, vy: 0 };
       movedRef.current = false;
       wasPinchRef.current = false;
       gestureModeRef.current = viewRef.current.zoom > 1.05 ? 'pan' : 'idle';
@@ -366,8 +407,10 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     if (gestureModeRef.current === 'dismiss') {
       const dt = Math.max(1, now - lastMoveRef.current.time);
       lastMoveRef.current = {
+        x: event.clientX,
         y: event.clientY,
         time: now,
+        vx: (event.clientX - lastMoveRef.current.x) / dt,
         vy: (event.clientY - lastMoveRef.current.y) / dt,
       };
       const clampedDy = Math.max(-24, dyTotal);
@@ -377,6 +420,18 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       dragScale.set(1 - progress * 0.35);
       dragBackdropOpacity.set(1 - progress * 0.85);
       chromeOpacity.set(Math.max(0, 1 - progress * 3));
+      event.stopPropagation();
+    } else if (gestureModeRef.current === 'horizontal') {
+      const dt = Math.max(1, now - lastMoveRef.current.time);
+      lastMoveRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        time: now,
+        vx: (event.clientX - lastMoveRef.current.x) / dt,
+        vy: (event.clientY - lastMoveRef.current.y) / dt,
+      };
+      const canMove = (dxTotal < 0 && hasNext) || (dxTotal > 0 && hasPrev);
+      dragX.set(canMove ? dxTotal : dxTotal * 0.28);
       event.stopPropagation();
     }
   };
@@ -426,6 +481,19 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       return;
     }
 
+    if (mode === 'horizontal') {
+      const dxTotal = event.clientX - pressStartRef.current.x;
+      if (!cancelled && (dxTotal <= -BROWSE_DISTANCE || lastMoveRef.current.vx < -BROWSE_VELOCITY) && hasNext && onNextPhoto) {
+        onNextPhoto();
+      } else if (!cancelled && (dxTotal >= BROWSE_DISTANCE || lastMoveRef.current.vx > BROWSE_VELOCITY) && hasPrev && onPrevPhoto) {
+        onPrevPhoto();
+      } else {
+        resetSwipeVisuals();
+      }
+      event.stopPropagation();
+      return;
+    }
+
     if (mode === 'up' && !cancelled) {
       const dyTotal = event.clientY - pressStartRef.current.y;
       const dxTotal = Math.abs(event.clientX - pressStartRef.current.x);
@@ -448,17 +516,20 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     }
   };
 
-  // Stop touch propagation to useSwipeBack when pinching, zooming, or dragging vertically
+  // Stop touch propagation so shell-level swipe-back never hijacks photo browsing/panning
   const handleTouchGuard = (event: React.TouchEvent<HTMLElement>) => {
     if (
-      event.touches.length > 1
-      || viewRef.current.zoom > 1.05
-      || gestureModeRef.current === 'dismiss'
-      || gestureModeRef.current === 'pinch'
-      || gestureModeRef.current === 'pan'
+      event.touches.length === 1
+      && viewRef.current.zoom <= 1.05
+      && gestureModeRef.current === 'idle'
     ) {
-      event.stopPropagation();
+      const rect = stageRectRef.current;
+      const startX = event.touches[0].clientX;
+      if (rect.width > 0 && startX - rect.left <= EDGE_SWIPE_BACK_ZONE) {
+        return;
+      }
     }
+    event.stopPropagation();
   };
 
   const evidenceItem = buildPhotoEvidenceItem(photo, caseId, husbandName, 'lightbox');
@@ -473,10 +544,36 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       ? { x: originDelta.dx, y: originDelta.dy, scale: originDelta.scale, opacity: 0, transition: { duration: 0.24, ease: IOS_EASE } }
       : { y: 24, scale: 0.9, opacity: 0, transition: { duration: 0.2, ease: IOS_EASE } };
 
+  const slideInitial = navDirection !== 0
+    ? { x: navDirection > 0 ? '100%' : '-100%', opacity: 1 }
+    : false;
+
+  const slideExit = {
+    x: navDirection >= 0 ? '-100%' : '100%',
+    opacity: 1,
+    transition: { duration: 0.22, ease: IOS_EASE },
+  };
+
   return (
     <motion.div
       {...swipeBackHandlers}
       data-photo-lightbox
+      onTouchStart={(e) => {
+        swipeBackHandlers.onTouchStart(e);
+        e.stopPropagation();
+      }}
+      onTouchMove={(e) => {
+        swipeBackHandlers.onTouchMove(e);
+        e.stopPropagation();
+      }}
+      onTouchEnd={(e) => {
+        swipeBackHandlers.onTouchEnd(e);
+        e.stopPropagation();
+      }}
+      onPointerDown={(e) => {
+        swipeBackHandlers.onPointerDown(e);
+        e.stopPropagation();
+      }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -517,15 +614,16 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
         <button
           type="button"
           onClick={onToggleInfo}
-          className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-colors active:scale-95 ${
-            isInfoOpen ? 'text-[#2979FF] bg-white/10' : 'text-white/80 hover:text-white'
+          onPointerDown={(e) => e.stopPropagation()}
+          className={`relative -mr-2 min-w-[52px] min-h-[52px] px-3 flex items-center justify-center rounded-full cursor-pointer touch-manipulation transition-colors active:scale-95 after:absolute after:-inset-2 after:content-[''] ${
+            isInfoOpen ? 'text-[#2979FF] bg-white/10' : 'text-white/85 hover:text-white'
           }`}
           aria-label="Thông tin ảnh"
         >
           {isInfoOpen ? (
-            <IoInformationCircle className="w-6 h-6" />
+            <IoInformationCircle className="w-[26px] h-[26px]" />
           ) : (
-            <IoInformationCircleOutline className="w-6 h-6" />
+            <IoInformationCircleOutline className="w-[26px] h-[26px]" />
           )}
         </button>
       </motion.header>
@@ -557,9 +655,8 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
             exit={heroExit}
             transition={IOS_SPRING}
             className="relative w-full h-full flex items-center justify-center"
-            style={{ willChange: 'transform, opacity' }}
           >
-            {/* Middle Swipe-Down Dismiss Container */}
+            {/* Middle Swipe-Down Dismiss / Horizontal Browse Container */}
             <motion.div
               data-lightbox-drag-layer
               className="relative w-full h-full flex items-center justify-center"
@@ -567,26 +664,37 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                 x: dragX,
                 y: dragY,
                 scale: dragScale,
-                willChange: 'transform',
               }}
             >
               {/* Inner Pinch-Zoom & 2D Pan Container (keeps hotspot ring locked to photo) */}
               <motion.div
                 data-lightbox-zoom-layer
-                className="relative w-full h-full flex items-center justify-center"
+                className="relative w-full h-full flex items-center justify-center overflow-hidden"
                 style={{
                   x: photoX,
                   y: photoY,
                   scale: photoScale,
                   transformOrigin: 'center center',
-                  willChange: 'transform',
+                  willChange: manipulating ? 'transform' : 'auto',
                 }}
               >
-                <PhotoPreview
-                  photo={photo}
-                  className="w-full h-full"
-                  zoomLevel={1}
-                />
+                <AnimatePresence initial={false} mode="popLayout">
+                  <motion.div
+                    key={photo.id}
+                    initial={slideInitial}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={slideExit}
+                    transition={{ duration: 0.24, ease: IOS_EASE }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <PhotoPreview
+                      photo={photo}
+                      fit="contain"
+                      className="w-full h-full"
+                      zoomLevel={1}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </motion.div>
             </motion.div>
           </motion.div>

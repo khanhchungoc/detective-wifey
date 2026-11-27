@@ -2,13 +2,28 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { clampZoom, CANVAS_SIZE } from './graphEngine';
 import type { CorkboardViewport } from './types';
 
+export function formatCorkboardTransform(viewport: CorkboardViewport, settledZoom = viewport.zoom): string {
+  const tx = Math.round(-viewport.x * viewport.zoom * 100) / 100;
+  const ty = Math.round(-viewport.y * viewport.zoom * 100) / 100;
+  const relScale = settledZoom > 0 ? viewport.zoom / settledZoom : 1;
+  if (Math.abs(relScale - 1) < 0.0005) {
+    return `translate(${tx}px, ${ty}px)`;
+  }
+  const scale = Math.round(relScale * 10000) / 10000;
+  return `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+}
+
 export interface UseCorkboardGesturesOptions {
   initialViewport?: CorkboardViewport;
   onTapBackground?: () => void;
+  planeRef?: React.RefObject<HTMLDivElement | null>;
+  boardRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   const onTapBackground = options?.onTapBackground;
+  const planeRef = options?.planeRef;
+  const boardRef = options?.boardRef;
   const [viewport, commitViewport] = useState<CorkboardViewport>(() => options?.initialViewport ?? {
     x: CANVAS_SIZE / 2,
     y: CANVAS_SIZE / 2,
@@ -16,19 +31,81 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   });
 
   // Keep input calculations current while committing at most once per display frame.
+  // When planeRef is attached, active pan/pinch/wheel updates a relative GPU transform
+  // (zero layout/React cost) and commits crisp CSS zoom once the gesture settles.
   const viewportRef = useRef(viewport);
+  const settledZoomRef = useRef(viewport.zoom);
   const frameRef = useRef<number | null>(null);
-  const setViewport = useCallback((update: React.SetStateAction<CorkboardViewport>) => {
+  const wheelSettleTimerRef = useRef<number | null>(null);
+  const pendingCommitRef = useRef(false);
+
+  const applyPlaneTransform = useCallback((next: CorkboardViewport, activeGesture = false) => {
+    const plane = planeRef?.current;
+    if (!plane) return;
+    if (activeGesture) {
+      const tx = Math.round(-next.x * next.zoom * 100) / 100;
+      const ty = Math.round(-next.y * next.zoom * 100) / 100;
+      const relScale = settledZoomRef.current > 0
+        ? Math.round((next.zoom / settledZoomRef.current) * 10000) / 10000
+        : 1;
+      plane.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${relScale})`;
+    } else {
+      plane.style.transform = formatCorkboardTransform(next, settledZoomRef.current);
+    }
+  }, [planeRef]);
+
+  const setGestureWillChange = useCallback((active: boolean) => {
+    const plane = planeRef?.current;
+    if (plane) {
+      plane.style.willChange = active ? 'transform' : '';
+    }
+  }, [planeRef]);
+
+  const flushViewportCommit = useCallback(() => {
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+    if (wheelSettleTimerRef.current !== null) {
+      window.clearTimeout(wheelSettleTimerRef.current);
+      wheelSettleTimerRef.current = null;
+    }
+    pendingCommitRef.current = false;
+    settledZoomRef.current = viewportRef.current.zoom;
+    setGestureWillChange(false);
+    applyPlaneTransform(viewportRef.current, false);
+    commitViewport(viewportRef.current);
+  }, [applyPlaneTransform, setGestureWillChange]);
+
+  const scheduleViewportUpdate = useCallback((update: React.SetStateAction<CorkboardViewport>, commitToReact: boolean) => {
     viewportRef.current = typeof update === 'function' ? update(viewportRef.current) : update;
+    if (commitToReact || !planeRef?.current) {
+      pendingCommitRef.current = true;
+    }
     if (frameRef.current !== null) return;
     frameRef.current = requestAnimationFrame(() => {
       frameRef.current = null;
-      commitViewport(viewportRef.current);
+      const shouldCommit = pendingCommitRef.current || !planeRef?.current;
+      pendingCommitRef.current = false;
+      if (shouldCommit) {
+        settledZoomRef.current = viewportRef.current.zoom;
+        applyPlaneTransform(viewportRef.current, false);
+        commitViewport(viewportRef.current);
+      } else {
+        applyPlaneTransform(viewportRef.current, true);
+      }
     });
-  }, []);
+  }, [applyPlaneTransform, planeRef]);
+
+  const setViewport = useCallback((update: React.SetStateAction<CorkboardViewport>) => {
+    scheduleViewportUpdate(update, true);
+  }, [scheduleViewportUpdate]);
+
   useEffect(() => () => {
     if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     frameRef.current = null;
+    if (wheelSettleTimerRef.current !== null) window.clearTimeout(wheelSettleTimerRef.current);
+    wheelSettleTimerRef.current = null;
   }, []);
 
   const isDragging = useRef(false);
@@ -75,23 +152,67 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     setViewport(prev => ({ ...prev, x, y }));
   }, []);
 
-  // Desktop Mouse Wheel Zoom Handler
-  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+  // Desktop Trackpad Pinch-Zoom (ctrlKey/metaKey) & Two-Finger Pan Handler
+  const applyWheelGesture = useCallback((
+    e: Pick<WheelEvent, 'preventDefault' | 'clientX' | 'clientY' | 'deltaX' | 'deltaY' | 'deltaMode' | 'ctrlKey' | 'metaKey'>,
+    target: HTMLElement,
+  ) => {
     e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left - rect.width / 2;
-    const offsetY = e.clientY - rect.top - rect.height / 2;
-    const pixels = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.height : 1);
-    setViewport(prev => {
-      const zoom = clampZoom(prev.zoom * Math.exp(-pixels * 0.002));
-      if (zoom === prev.zoom) return prev;
-      return {
-        zoom,
-        x: prev.x + offsetX / prev.zoom - offsetX / zoom,
-        y: prev.y + offsetY / prev.zoom - offsetY / zoom,
-      };
-    });
-  }, [setViewport]);
+    const rect = target.getBoundingClientRect();
+    const unitScale = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.height : 1;
+    const dxPixels = e.deltaX * unitScale;
+    const dyPixels = e.deltaY * unitScale;
+    const useDirectPlane = Boolean(planeRef?.current);
+
+    if (useDirectPlane) {
+      setGestureWillChange(true);
+      if (wheelSettleTimerRef.current !== null) {
+        window.clearTimeout(wheelSettleTimerRef.current);
+      }
+      wheelSettleTimerRef.current = window.setTimeout(() => {
+        wheelSettleTimerRef.current = null;
+        flushViewportCommit();
+      }, 120);
+    }
+
+    if (e.ctrlKey || e.metaKey) {
+      const offsetX = e.clientX - rect.left - rect.width / 2;
+      const offsetY = e.clientY - rect.top - rect.height / 2;
+      scheduleViewportUpdate(prev => {
+        const zoom = clampZoom(prev.zoom * Math.exp(-dyPixels * 0.008));
+        if (zoom === prev.zoom) return prev;
+        return {
+          zoom,
+          x: prev.x + offsetX / prev.zoom - offsetX / zoom,
+          y: prev.y + offsetY / prev.zoom - offsetY / zoom,
+        };
+      }, !useDirectPlane);
+      return;
+    }
+
+    scheduleViewportUpdate(prev => ({
+      ...prev,
+      x: Math.max(-100, Math.min(CANVAS_SIZE + 100, prev.x + dxPixels / prev.zoom)),
+      y: Math.max(-100, Math.min(CANVAS_SIZE + 100, prev.y + dyPixels / prev.zoom)),
+    }), !useDirectPlane);
+  }, [flushViewportCommit, planeRef, scheduleViewportUpdate, setGestureWillChange]);
+
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    if (boardRef?.current) return;
+    applyWheelGesture(e, e.currentTarget);
+  }, [applyWheelGesture, boardRef]);
+
+  // Attach a native non-passive wheel listener so trackpad pinch (ctrlKey + wheel)
+  // and two-finger panning call preventDefault() cleanly without zooming/scrolling the page.
+  useEffect(() => {
+    const board = boardRef?.current;
+    if (!board || typeof board.addEventListener !== 'function') return;
+    const onNativeWheel = (e: WheelEvent) => {
+      applyWheelGesture(e, board);
+    };
+    board.addEventListener('wheel', onNativeWheel, { passive: false });
+    return () => board.removeEventListener('wheel', onNativeWheel);
+  }, [applyWheelGesture, boardRef]);
 
   // Pointer / Mouse Drag Panning Handlers
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
@@ -125,8 +246,9 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     e.stopPropagation();
     const rawDx = e.clientX - dragStart.current.x;
     const rawDy = e.clientY - dragStart.current.y;
-    if (Math.hypot(rawDx, rawDy) > 6) {
+    if (!dragStart.current.moved && Math.hypot(rawDx, rawDy) > 6) {
       dragStart.current.moved = true;
+      setGestureWillChange(true);
       e.currentTarget.setPointerCapture(e.pointerId);
     }
 
@@ -134,24 +256,30 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     const dy = rawDy / viewportRef.current.zoom;
 
     // Generous boundary padding (-100 to CANVAS_SIZE + 100) so edge cards are never clipped
-    setViewport(prev => ({
+    scheduleViewportUpdate(prev => ({
       ...prev,
       x: Math.max(-100, Math.min(CANVAS_SIZE + 100, dragStart.current.startCamX - dx)),
       y: Math.max(-100, Math.min(CANVAS_SIZE + 100, dragStart.current.startCamY - dy)),
-    }));
-  }, [setViewport]);
+    }), false);
+  }, [scheduleViewportUpdate, setGestureWillChange]);
 
   const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging.current || multiTouch.current) return;
     isDragging.current = false;
+    setGestureWillChange(false);
     try {
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
     } catch {
       // Ignore if pointer capture already lost
     }
 
+    if (dragStart.current.moved) {
+      flushViewportCommit();
+      return;
+    }
+
     // Double-tap zoom toggle or single-tap background selection dismissal
-    if (!dragStart.current.moved && !(e.target as Element).closest('.corkboard-string, .corkboard-node-card, button')) {
+    if (!(e.target as Element).closest('.corkboard-string, .corkboard-node-card, button')) {
       onTapBackground?.();
       const now = Date.now();
       if (now - lastTapTime.current < 320) {
@@ -164,7 +292,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
         lastTapTime.current = now;
       }
     }
-  }, [onTapBackground]);
+  }, [flushViewportCommit, onTapBackground, setGestureWillChange, setViewport]);
 
   // Capture touch pointers before card drag handlers. One owner for the entire pinch,
   // including the remaining finger after the first finger lifts.
@@ -177,6 +305,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     isDragging.current = false;
     lastTapTime.current = 0;
     multiTouch.current = true;
+    setGestureWillChange(true);
     setIsPinching(true);
     const [t1, t2] = [...touchPointers.current.values()];
     const rect = e.currentTarget.getBoundingClientRect();
@@ -203,13 +332,13 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     const [t1, t2] = [...touchPointers.current.values()];
     const zoom = clampZoom(start.initialZoom *
       Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY) / Math.max(1, start.initialDist));
-    setViewport({
+    scheduleViewportUpdate({
       zoom,
       x: start.initialCamX + start.centroidX / start.initialZoom -
         ((t1.clientX + t2.clientX) / 2 - start.screenCenterX) / zoom,
       y: start.initialCamY + start.centroidY / start.initialZoom -
         ((t1.clientY + t2.clientY) / 2 - start.screenCenterY) / zoom,
-    });
+    }, false);
   };
 
   const handleTouchPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -220,6 +349,10 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     if (touchPointers.current.size < 2) pinchStart.current = null;
     if (touchPointers.current.size === 0) {
       multiTouch.current = false;
+      setGestureWillChange(false);
+      if (planeRef?.current) {
+        flushViewportCommit();
+      }
       setIsPinching(false);
     }
   };
@@ -248,7 +381,15 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       onPointerDown: handlePointerDown,
       onPointerMove: handlePointerMove,
       onPointerUp: handlePointerUp,
-      onPointerCancel: () => { isDragging.current = false; lastTapTime.current = 0; },
+      onPointerCancel: () => {
+        const wasMoved = isDragging.current && dragStart.current.moved;
+        isDragging.current = false;
+        lastTapTime.current = 0;
+        setGestureWillChange(false);
+        if (wasMoved && planeRef?.current) {
+          flushViewportCommit();
+        }
+      },
       onWheel: handleWheel,
       style: { touchAction: 'none' as const },
     },

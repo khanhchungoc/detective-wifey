@@ -98,6 +98,9 @@ describe('case-supplied photo library', () => {
       onCancelPairing: vi.fn(),
     }));
     expect(boardHtml).toContain('data-pinned-photo="node_record_photo_dinner"');
+    expect(boardHtml).toContain('data-pinned-photo-meta="node_record_photo_dinner"');
+    expect(boardHtml).toContain('15/10/2026 19:45');
+    expect(boardHtml).toContain('Phố Cổ, Hoàn Kiếm, Hà Nội');
     expect(boardHtml).toContain('<img ');
   });
 });
