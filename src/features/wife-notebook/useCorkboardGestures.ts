@@ -17,12 +17,15 @@ export interface UseCorkboardGesturesOptions {
   initialViewport?: CorkboardViewport;
   onTapBackground?: () => void;
   planeRef?: React.RefObject<HTMLDivElement | null>;
+  /** Board surface plane rendered under the fixed lamp; mirrors every planeRef transform. */
+  surfaceRef?: React.RefObject<HTMLDivElement | null>;
   boardRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   const onTapBackground = options?.onTapBackground;
   const planeRef = options?.planeRef;
+  const surfaceRef = options?.surfaceRef;
   const boardRef = options?.boardRef;
   const [viewport, commitViewport] = useState<CorkboardViewport>(() => options?.initialViewport ?? {
     x: CANVAS_SIZE / 2,
@@ -42,24 +45,26 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   const applyPlaneTransform = useCallback((next: CorkboardViewport, activeGesture = false) => {
     const plane = planeRef?.current;
     if (!plane) return;
+    let transform: string;
     if (activeGesture) {
       const tx = Math.round(-next.x * next.zoom * 100) / 100;
       const ty = Math.round(-next.y * next.zoom * 100) / 100;
       const relScale = settledZoomRef.current > 0
         ? Math.round((next.zoom / settledZoomRef.current) * 10000) / 10000
         : 1;
-      plane.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${relScale})`;
+      transform = `translate3d(${tx}px, ${ty}px, 0) scale(${relScale})`;
     } else {
-      plane.style.transform = formatCorkboardTransform(next, settledZoomRef.current);
+      transform = formatCorkboardTransform(next, settledZoomRef.current);
     }
-  }, [planeRef]);
+    plane.style.transform = transform;
+    if (surfaceRef?.current) surfaceRef.current.style.transform = transform;
+  }, [planeRef, surfaceRef]);
 
   const setGestureWillChange = useCallback((active: boolean) => {
-    const plane = planeRef?.current;
-    if (plane) {
-      plane.style.willChange = active ? 'transform' : '';
-    }
-  }, [planeRef]);
+    const willChange = active ? 'transform' : '';
+    if (planeRef?.current) planeRef.current.style.willChange = willChange;
+    if (surfaceRef?.current) surfaceRef.current.style.willChange = willChange;
+  }, [planeRef, surfaceRef]);
 
   const flushViewportCommit = useCallback(() => {
     if (frameRef.current !== null) {

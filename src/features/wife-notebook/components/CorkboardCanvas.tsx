@@ -108,6 +108,7 @@ interface CorkboardCanvasProps {
   viewport: CorkboardViewport;
   viewportRef?: React.RefObject<CorkboardViewport>;
   planeRef?: React.RefObject<HTMLDivElement | null>;
+  surfaceRef?: React.RefObject<HTMLDivElement | null>;
   isOpen?: boolean;
   isPinching?: boolean;
   placedNodes: PlacedNode[];
@@ -132,7 +133,7 @@ interface CorkboardCanvasProps {
 
 export { calculateYarnStringCurve } from '../graphEngine';
 
-type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'isOpen'> & {
+type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'surfaceRef' | 'isOpen'> & {
   zoomRef: React.RefObject<number>;
 };
 
@@ -739,6 +740,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
   viewport,
   viewportRef: externalViewportRef,
   planeRef,
+  surfaceRef,
   isOpen = true,
   ...contentsProps
 }) => {
@@ -753,6 +755,11 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
     transformOrigin: '0 0',
     transform: formatCorkboardTransform(viewport),
   };
+  const planeSizeStyle: React.CSSProperties = {
+    width: `${CANVAS_SIZE}px`,
+    height: `${CANVAS_SIZE}px`,
+    zoom: viewport.zoom,
+  };
   return (
     <div
       className="notebook-cardboard isolate relative w-full h-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
@@ -761,6 +768,14 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
         onSelectEdge?.(null);
       }}
     >
+      {/* Chalkboard surface + frame: moves and zooms with the cards so the board edge is visible */}
+      <div ref={surfaceRef} aria-hidden="true" className="pointer-events-none absolute" style={planeStyle}>
+        <div className="notebook-board-surface" style={planeSizeStyle} />
+      </div>
+
+      {/* Screen-fixed edge falloff over the board, under the cards */}
+      <div aria-hidden="true" className="notebook-board-shade pointer-events-none absolute inset-0" />
+
       {/* Overhead Cold War Fluorescent Lamp Highlight */}
       <FluorescentLampHighlight active={isOpen} />
 
@@ -811,14 +826,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
 
       {/* Zoomable & Pannable Virtual Plane (GPU transform during gestures, crisp CSS zoom when settled) */}
       <div ref={planeRef} className="absolute" style={planeStyle}>
-        <div
-          className="relative"
-          style={{
-            width: `${CANVAS_SIZE}px`,
-            height: `${CANVAS_SIZE}px`,
-            zoom: viewport.zoom,
-          }}
-        >
+        <div className="relative" style={planeSizeStyle}>
           <CorkboardContents {...contentsProps} zoomRef={zoomRef} />
         </div>
       </div>

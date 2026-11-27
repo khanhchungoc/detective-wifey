@@ -35,7 +35,7 @@ import { useCorkboardGestures } from './useCorkboardGestures';
 import { CorkboardCanvas } from './components/CorkboardCanvas';
 import { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 import { ConfrontationModal } from './components/ConfrontationModal';
-import chalkboardMapUrl from './assets/chalkboard-map.png';
+import chalkboardMapUrl from './assets/chalkboard-map.webp';
 import './notebook.css';
 import type { PlacedNode, CorkboardViewport, PairingState, TaggedEvidenceItem, UndoAction } from './types';
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
@@ -611,6 +611,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   }, [hasRestoredCards, savedState, placedNodes]);
 
   const planeRef = useRef<HTMLDivElement>(null);
+  const surfaceRef = useRef<HTMLDivElement>(null);
 
   // Warm chalkboard texture and handwriting font on idle so the first slide-out never stalls on decode.
   useEffect(() => {
@@ -649,6 +650,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     initialViewport,
     onTapBackground: handleDismissSelection,
     planeRef,
+    surfaceRef,
     boardRef,
   });
 
@@ -1259,6 +1261,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             viewport={viewport}
             viewportRef={viewportRef}
             planeRef={planeRef}
+            surfaceRef={surfaceRef}
             isOpen={isOpen}
             isPinching={isPinching}
             placedNodes={placedNodes}

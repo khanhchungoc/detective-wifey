@@ -196,6 +196,30 @@ describe('corkboard mobile gesture ownership', () => {
     expect(updates).toEqual([{ x: 950, y: 970, zoom: 1 }]);
   });
 
+  it('mirrors every plane transform onto the board surface layer so the chalkboard pans and zooms with the cards', () => {
+    updates.length = 0;
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const surface = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 1000, y: 1000, zoom: 1 },
+      planeRef: { current: plane },
+      surfaceRef: { current: surface },
+    });
+    const start = pointer(1, 200, 300);
+    start.target = { closest: (selector: string) => selector === '.corkboard-string' ? {} : null } as unknown as EventTarget;
+    handlers.onPointerDown(start);
+    handlers.onPointerMove(pointer(1, 250, 330));
+    expect(surface.style.willChange).toBe('transform');
+
+    flushFrame();
+    expect(surface.style.transform).toBe(plane.style.transform);
+    expect(surface.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
+
+    handlers.onPointerUp(pointer(1, 250, 330));
+    expect(surface.style.willChange).toBe('');
+    expect(surface.style.transform).toBe(plane.style.transform);
+  });
+
   it('attaches a non-passive native wheel listener on boardRef so trackpad pinch zooms the board without zooming the page', () => {
     updates.length = 0;
     let wheelHandler: ((e: WheelEvent) => void) | undefined;
