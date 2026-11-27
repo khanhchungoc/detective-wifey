@@ -24,12 +24,19 @@ import { getAppBrand } from '../../shared/branding';
 
 const BRAND = getAppBrand('banking');
 
+function TechcornHeaderLogo() {
+  return (
+    <span aria-hidden="true" className="flex h-8 w-10 shrink-0 items-center justify-center overflow-hidden">
+      <img src={bankingLogo} alt="" draggable={false} className="h-14 w-14 max-w-none shrink-0" />
+    </span>
+  );
+}
+
 function TechcornHomeIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M4 12L9 7L11 9L8 12L11 15L9 17L4 12Z" />
-      <path d="M20 12L15 7L13 9L16 12L13 15L15 17L20 12Z" />
-    </svg>
+    <span aria-hidden="true" className={`flex shrink-0 items-center justify-center overflow-hidden ${className ?? 'h-5 w-7'}`}>
+      <img src={bankingLogo} alt="" draggable={false} className="h-9 w-9 max-w-none shrink-0" />
+    </span>
   );
 }
 
@@ -79,10 +86,10 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     if (challenge && !unlockedChallenges.has(challenge.challengeId)) onRequestUnlock?.(challenge.challengeId);
   };
 
-  const title = appLocked || activeTab === 'home' ? 'Ngân hàng'
+  const title = appLocked || activeTab === 'home' ? BRAND.brandName
     : selectedVault ? 'Chi tiết hũ quỹ'
     : activeTab === 'profile' ? 'Thông tin tài khoản'
-    : tabs.find(tab => tab.id === activeTab)?.label || 'Ngân hàng';
+    : tabs.find(tab => tab.id === activeTab)?.label || BRAND.brandName;
 
   const initials = caseData.husbandName
     ? caseData.husbandName.split(' ').filter(Boolean).slice(-2).map(p => p[0]).join('').toUpperCase()
@@ -103,16 +110,18 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
         aria-hidden={Boolean(selectedVault)}
       >
         {/* Top Header */}
-        <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-3 py-1.5 shadow-xs">
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              aria-label={activeTab === 'home' || appLocked ? 'Về màn hình chính' : 'Quay lại'}
-              onClick={handleBack}
-              className="bank-control flex shrink-0 items-center justify-center text-[#111827] hover:bg-neutral-100"
-            >
-              <IoChevronBack aria-hidden="true" className="h-6 w-6" />
-            </button>
+        <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-2.5 py-1.5 shadow-xs">
+          <div className="flex items-center gap-1">
+            {(activeTab !== 'home' || appLocked) && (
+              <button
+                type="button"
+                aria-label={appLocked ? 'Về màn hình chính' : 'Quay lại'}
+                onClick={handleBack}
+                className="bank-control flex shrink-0 items-center justify-center text-[#111827] hover:bg-neutral-100"
+              >
+                <IoChevronBack aria-hidden="true" className="h-6 w-6" />
+              </button>
+            )}
 
             {/* Left User Avatar + Tier (On Home view) */}
             {activeTab === 'home' && !appLocked && (
@@ -132,14 +141,14 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
             )}
           </div>
 
-          <div className="flex min-w-0 items-center justify-center gap-2">
-            <img src={bankingLogo} alt="" aria-hidden="true" draggable={false} className="h-7 w-7 shrink-0" />
+          <div className="flex min-w-0 items-center justify-center gap-1.5">
+            <TechcornHeaderLogo />
             <h1 className="min-w-0 truncate text-center text-base font-bold tracking-tight text-[#111827]">
               {title}
             </h1>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center">
             <button
               type="button"
               disabled
@@ -258,7 +267,13 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                     isActive ? 'text-[#ED1C24]' : 'text-[#6B7280] hover:text-[#111827]'
                   }`}
                 >
-                  <Icon className="h-5 w-5 shrink-0" />
+                  <Icon
+                    className={
+                      id === 'home'
+                        ? `h-5 w-7 shrink-0 transition-opacity ${isActive ? '' : 'opacity-55 grayscale'}`
+                        : 'h-5 w-5 shrink-0'
+                    }
+                  />
                   <span className={`max-w-full truncate text-ios-caption-2 leading-none ${isActive ? 'font-bold' : 'font-medium'}`}>
                     {label}
                   </span>
@@ -293,8 +308,8 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
             >
               <IoChevronBack aria-hidden="true" className="h-6 w-6" />
             </button>
-            <div className="flex min-w-0 items-center justify-center gap-2">
-              <img src={bankingLogo} alt="" aria-hidden="true" draggable={false} className="h-7 w-7 shrink-0" />
+            <div className="flex min-w-0 items-center justify-center gap-1.5">
+              <TechcornHeaderLogo />
               <h1 className="min-w-0 truncate text-center text-base font-bold tracking-tight text-[#111827]">
                 Chi tiết hũ quỹ
               </h1>
