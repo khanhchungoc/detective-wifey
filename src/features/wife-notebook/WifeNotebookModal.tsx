@@ -36,7 +36,7 @@ import { useCorkboardGestures } from './useCorkboardGestures';
 import { CorkboardCanvas } from './components/CorkboardCanvas';
 import { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 import { ConfrontationModal } from './components/ConfrontationModal';
-import chalkboardMapUrl from './assets/chalkboard-map.webp';
+import chalkboardBoardUrl from './assets/chalkboard-board.webp';
 import './notebook.css';
 import type { PlacedNode, CorkboardViewport, PairingState, TaggedEvidenceItem, UndoAction } from './types';
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
@@ -651,7 +651,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     const warmAssets = () => {
       if (typeof Image !== 'undefined') {
         const img = new Image();
-        img.src = chalkboardMapUrl;
+        img.src = chalkboardBoardUrl;
         void img.decode?.().catch(() => {});
       }
       void document.fonts?.load('400 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
