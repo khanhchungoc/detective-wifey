@@ -58,9 +58,12 @@ jobs:
         run: node --test scripts/pwa.test.mjs
 
       - name: Install Playwright Chromium
+        # Skip on a branch checkout that has no browser tests yet (main until stg is released).
+        if: hashFiles('playwright.config.ts') != ''
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E Tests (Smoke on stg, Full on main)
+        if: hashFiles('playwright.config.ts') != ''
         run: |
           if [ "${{ matrix.branch }}" = "main" ]; then
             npm run test:e2e
