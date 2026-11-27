@@ -40,15 +40,7 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
         aria-hidden={Boolean(selectedMail)}
       >
         <header className="flex items-center justify-between px-3 h-14 bg-[#EA4335] text-white shadow-md shrink-0">
-          <button
-            type="button"
-            onClick={onReturnHome}
-            className="flex items-center gap-1 min-w-[44px] min-h-[44px] px-2 text-ios-subheadline font-semibold rounded-lg hover:bg-white/10 active:scale-95 transition-all"
-            aria-label="Trang chủ"
-          >
-            <IoChevronBack className="w-5 h-5" />
-            <span>Trang chủ</span>
-          </button>
+          <div className="w-11" />
           <div className="flex items-center gap-2">
             <IoMailOutline className="w-5 h-5 text-white" />
             <h1 className="text-ios-headline font-bold tracking-tight">{BRAND.brandName}</h1>

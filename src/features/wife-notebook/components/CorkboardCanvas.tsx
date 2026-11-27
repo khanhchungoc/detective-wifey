@@ -40,6 +40,17 @@ function getCardTiltDeg(nodeId: string): number {
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active = true }: { active?: boolean }) {
   const prefersReducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<'ignition' | 'ambient'>('ignition');
+  const [animReady, setAnimReady] = useState(false);
+
+  // Defer lamp flicker motion until after the board slide-in completes so frame 1 stays 120Hz smooth.
+  useEffect(() => {
+    if (!active || prefersReducedMotion) {
+      setAnimReady(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setAnimReady(true), 400);
+    return () => window.clearTimeout(timer);
+  }, [active, prefersReducedMotion]);
 
   const tubeEl = (
     <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
@@ -53,7 +64,7 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active
     <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
   );
 
-  if (prefersReducedMotion || !active) {
+  if (prefersReducedMotion || !animReady) {
     return (
       <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
@@ -208,11 +219,14 @@ const CorkboardContents = memo(function CorkboardContents({
   // Active dragging node ID for cursor and rotation styling
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [cardStack, setCardStack] = useState<string[]>([]);
+  const svgRef = useRef<SVGSVGElement>(null);
 
-  // Card dragging state reference
+  // Card dragging state reference (drives GPU transform + connected SVG paths directly with 0 React re-renders)
   const cardDragRef = useRef<{
     pointerId: number;
     nodeId: string;
+    element: HTMLElement;
+    tiltDeg: number;
     startX: number;
     startY: number;
     origX: number;
@@ -220,16 +234,50 @@ const CorkboardContents = memo(function CorkboardContents({
     pendingX: number;
     pendingY: number;
     hasMoved: boolean;
+    connectedEdges: Array<{
+      isSource: boolean;
+      otherX: number;
+      otherY: number;
+      isKeyString: boolean;
+      paths: SVGPathElement[];
+    }>;
   } | null>(null);
   const dragFrameRef = useRef<number | null>(null);
+
+  const applyLiveCardDrag = (drag: NonNullable<typeof cardDragRef.current>) => {
+    const deltaX = drag.pendingX - drag.origX;
+    const deltaY = drag.pendingY - drag.origY;
+    drag.element.style.willChange = 'transform';
+    drag.element.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(1.04)`;
+
+    for (const conn of drag.connectedEdges) {
+      const x1 = (conn.isSource ? drag.pendingX : conn.otherX) + PIN_OFFSET_X;
+      const y1 = (conn.isSource ? drag.pendingY : conn.otherY) + PIN_OFFSET_Y;
+      const x2 = (conn.isSource ? conn.otherX : drag.pendingX) + PIN_OFFSET_X;
+      const y2 = (conn.isSource ? conn.otherY : drag.pendingY) + PIN_OFFSET_Y;
+      const { pathD } = calculateYarnStringCurve(x1, y1, x2, y2, conn.isKeyString);
+      for (const pathEl of conn.paths) {
+        pathEl.setAttribute('d', pathD);
+      }
+    }
+  };
+
+  const resetLiveCardDragVisuals = (drag: NonNullable<typeof cardDragRef.current>) => {
+    drag.element.style.willChange = '';
+    drag.element.style.transform = `rotate(${drag.tiltDeg}deg)`;
+  };
+
   const flushDragMove = () => {
     if (dragFrameRef.current !== null) {
       cancelAnimationFrame(dragFrameRef.current);
       dragFrameRef.current = null;
     }
     const drag = cardDragRef.current;
-    if (drag && drag.hasMoved) {
-      onMoveNode(drag.nodeId, drag.pendingX, drag.pendingY);
+    if (drag) {
+      resetLiveCardDragVisuals(drag);
+      if (drag.hasMoved) {
+        onMoveNode(drag.nodeId, drag.pendingX, drag.pendingY);
+      }
     }
   };
 
@@ -242,6 +290,9 @@ const CorkboardContents = memo(function CorkboardContents({
       if (dragFrameRef.current !== null) {
         cancelAnimationFrame(dragFrameRef.current);
         dragFrameRef.current = null;
+      }
+      if (cardDragRef.current) {
+        resetLiveCardDragVisuals(cardDragRef.current);
       }
       cardDragRef.current = null;
       setActiveDragId(null);
@@ -307,11 +358,37 @@ const CorkboardContents = memo(function CorkboardContents({
                 const overlayLeft = overlay ? overlay.getBoundingClientRect().left : 0;
                 if (e.clientX - overlayLeft <= 44) return;
                 e.stopPropagation();
+                const cardEl = e.currentTarget as HTMLElement;
                 setActiveDragId(node.nodeId);
                 setCardStack(previous => [...previous.filter(id => id !== node.nodeId && nodeMap.has(id)), node.nodeId]);
+                const connectedEdges: NonNullable<typeof cardDragRef.current>['connectedEdges'] = [];
+                const svgEl = svgRef.current;
+                if (svgEl) {
+                  for (const edge of edges) {
+                    if (edge.sourceNodeId !== node.nodeId && edge.targetNodeId !== node.nodeId) continue;
+                    const isSource = edge.sourceNodeId === node.nodeId;
+                    const otherNode = nodeMap.get(isSource ? edge.targetNodeId : edge.sourceNodeId);
+                    if (!otherNode) continue;
+                    const group = svgEl.querySelector<SVGGElement>(`[data-edge-id="${CSS.escape ? CSS.escape(edge.edgeId) : edge.edgeId}"]`);
+                    if (!group) continue;
+                    const isContradiction = edge.relationship === 'contradicts_alibi';
+                    const isVerifiedKeyEdge = verifiedKeyEdgeIdSet
+                      ? verifiedKeyEdgeIdSet.has(edge.edgeId)
+                      : (edge.isCanonical !== false && edge.isSmokingGun);
+                    connectedEdges.push({
+                      isSource,
+                      otherX: otherNode.x,
+                      otherY: otherNode.y,
+                      isKeyString: isContradiction || isVerifiedKeyEdge,
+                      paths: Array.from(group.querySelectorAll<SVGPathElement>('path')),
+                    });
+                  }
+                }
                 cardDragRef.current = {
                   pointerId: e.pointerId,
                   nodeId: node.nodeId,
+                  element: cardEl,
+                  tiltDeg,
                   startX: e.clientX,
                   startY: e.clientY,
                   origX: node.x,
@@ -319,8 +396,9 @@ const CorkboardContents = memo(function CorkboardContents({
                   pendingX: node.x,
                   pendingY: node.y,
                   hasMoved: false,
+                  connectedEdges,
                 };
-                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                cardEl.setPointerCapture(e.pointerId);
               }}
               onPointerMove={e => {
                 const drag = cardDragRef.current;
@@ -337,7 +415,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   dragFrameRef.current = requestAnimationFrame(() => {
                     dragFrameRef.current = null;
                     const active = cardDragRef.current;
-                    if (active) onMoveNode(active.nodeId, active.pendingX, active.pendingY);
+                    if (active) applyLiveCardDrag(active);
                   });
                 }
               }}
@@ -362,6 +440,9 @@ const CorkboardContents = memo(function CorkboardContents({
                 if (dragFrameRef.current !== null) {
                   cancelAnimationFrame(dragFrameRef.current);
                   dragFrameRef.current = null;
+                }
+                if (cardDragRef.current) {
+                  resetLiveCardDragVisuals(cardDragRef.current);
                 }
                 cardDragRef.current = null;
                 setActiveDragId(null);
@@ -621,6 +702,7 @@ const CorkboardContents = memo(function CorkboardContents({
 
         {/* 2. SVG Red String Layer Rendered ON TOP of Notes (z-30) */}
         <svg
+          ref={svgRef}
           className="absolute inset-0 w-full h-full pointer-events-none z-30"
           style={{ overflow: 'visible' }}
         >
@@ -655,6 +737,7 @@ const CorkboardContents = memo(function CorkboardContents({
             return (
               <g
                 key={edge.edgeId}
+                data-edge-id={edge.edgeId}
                 className="corkboard-string pointer-events-auto cursor-pointer"
                 onClick={event => {
                   event.stopPropagation();

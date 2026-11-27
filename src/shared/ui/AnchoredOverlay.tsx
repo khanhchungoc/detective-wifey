@@ -32,6 +32,14 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         const scale = Number((1 - remainingProgress * 0.06).toFixed(4));
         screen.style.transform = `translate3d(0, 0, 0) scale(${scale})`;
       }
+      const tab = document.querySelector<HTMLElement>(anchorSelector);
+      if (tab) {
+        const dockY = parseFloat(tab.dataset.dockY || '0') || 0;
+        const tabWidth = tab.offsetWidth || 46;
+        tab.style.transition = 'none';
+        tab.style.opacity = '1';
+        tab.style.transform = `translate3d(${Number((displacement - tabWidth).toFixed(2))}px, ${dockY}px, 0)`;
+      }
     },
     onSwipeEnd: (committed) => {
       if (!committed) {
@@ -50,6 +58,14 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
         } else {
           screen.style.transform = 'translate3d(0, 0, 0) scale(0.94)';
         }
+      }
+      const tab = document.querySelector<HTMLElement>(anchorSelector);
+      if (tab && !committed) {
+        const dockY = parseFloat(tab.dataset.dockY || '0') || 0;
+        const tabWidth = tab.offsetWidth || 46;
+        tab.style.transition = `transform ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}, opacity ${NOTEBOOK_CLOSE_DURATION_MS}ms ${NOTEBOOK_SLIDE_EASING}`;
+        tab.style.transform = `translate3d(${-tabWidth}px, ${dockY}px, 0)`;
+        tab.style.opacity = '0';
       }
     },
   });
@@ -70,12 +86,9 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
     if (!drawer) return;
     if (!open && !initialized.current) {
       lastDisplacementRef.current = 0;
-      drawer.style.opacity = '0';
       drawer.style.transform = NOTEBOOK_CLOSED_TRANSFORM;
       return;
     }
-    drawer.style.visibility = 'visible';
-    drawer.style.opacity = '1';
     const anchor = document.querySelector<HTMLElement>(anchorSelector);
     if (!initialized.current) {
       if (!drawer.style.transform || drawer.style.transform === 'none') {
@@ -89,7 +102,6 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
     lastDisplacementRef.current = 0;
     animation.current = animateOverlay(drawer, open, NOTEBOOK_CLOSED_TRANSFORM, () => {
       if (!open) {
-        drawer.style.opacity = '0';
         initialized.current = false;
         anchor?.focus({ preventScroll: true });
       }
@@ -134,10 +146,10 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       <div
         ref={drawerRef}
         data-notebook-overlay
-        className="absolute inset-0 z-20 overflow-hidden bg-[#0E0A07] shadow-[-8px_0_28px_rgba(0,0,0,0.55)]"
+        className="absolute inset-0 z-20 overflow-hidden bg-[#0E0A07] border-l border-white/10"
         style={{
           pointerEvents: open ? 'auto' : 'none',
-          willChange: 'transform, opacity',
+          willChange: 'transform',
           backfaceVisibility: 'hidden',
           contain: 'layout paint style',
         }}

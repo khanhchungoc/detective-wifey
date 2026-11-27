@@ -1,6 +1,5 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import {
-  AnimatePresence,
   animate,
   motion,
   useMotionValue,
@@ -32,6 +31,8 @@ export interface PhotoOriginDelta {
 
 interface PhotoLightboxViewProps {
   photo: PhotoItem;
+  prevPhoto?: PhotoItem | null;
+  nextPhoto?: PhotoItem | null;
   caseId: string;
   husbandName: string;
   onBack: () => void;
@@ -40,7 +41,6 @@ interface PhotoLightboxViewProps {
   onTriggerEvidence: (item: UniversalEvidenceItem) => void;
   onShowToast?: (message: string) => void;
   originDelta?: PhotoOriginDelta | null;
-  navDirection?: -1 | 0 | 1;
   hasPrev?: boolean;
   hasNext?: boolean;
   onPrevPhoto?: () => void;
@@ -53,6 +53,7 @@ const DISMISS_DISTANCE = 90;
 const DISMISS_VELOCITY = 0.45;
 const BROWSE_DISTANCE = 60;
 const BROWSE_VELOCITY = 0.35;
+const SLIDE_GAP = 16;
 const EDGE_SWIPE_BACK_ZONE = 28;
 const MIN_RUBBER_ZOOM = 0.85;
 const MAX_RUBBER_ZOOM = 5.5;
@@ -61,6 +62,8 @@ type GestureMode = 'idle' | 'dismiss' | 'pan' | 'pinch' | 'up' | 'horizontal';
 
 export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   photo,
+  prevPhoto = null,
+  nextPhoto = null,
   caseId,
   husbandName,
   onBack,
@@ -68,7 +71,6 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   isInfoOpen,
   onTriggerEvidence,
   originDelta,
-  navDirection = 0,
   hasPrev = false,
   hasNext = false,
   onPrevPhoto,
@@ -106,6 +108,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   const wasPinchRef = useRef(false);
   const lastTapRef = useRef<{ time: number; x: number; y: number }>({ time: 0, x: 0, y: 0 });
   const activeAnimationsRef = useRef<Array<{ stop: () => void }>>([]);
+  const isPagingRef = useRef(false);
 
   const stopActiveAnimations = useCallback(() => {
     for (let i = 0; i < activeAnimationsRef.current.length; i += 1) {
@@ -182,9 +185,10 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     animate(chromeOpacity, 1, { duration: 0.2, ease: IOS_EASE });
   }, [dragX, dragY, dragScale, dragBackdropOpacity, chromeOpacity, prefersReducedMotion]);
 
-  // Reset zoom and drag offsets cleanly when switching to prev/next photo
-  useEffect(() => {
+  // Reset zoom and drag offsets synchronously before paint when photo.id swaps after a slide completes
+  useLayoutEffect(() => {
     stopActiveAnimations();
+    isPagingRef.current = false;
     viewRef.current = fitImage;
     photoX.set(0);
     photoY.set(0);
@@ -198,6 +202,26 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     setManipulating(false);
     gestureModeRef.current = 'idle';
   }, [photo.id, stopActiveAnimations, photoX, photoY, photoScale, dragX, dragY, dragScale, dragBackdropOpacity, chromeOpacity]);
+
+  const commitSlideBrowse = useCallback((direction: -1 | 1) => {
+    const commit = direction > 0 ? onNextPhoto : onPrevPhoto;
+    if (!commit || isPagingRef.current) return;
+    if (prefersReducedMotion) {
+      commit();
+      return;
+    }
+    if (stageRectRef.current.width === 0) measureStage();
+    const stride = (stageRectRef.current.width || 390) + SLIDE_GAP;
+    const targetX = direction > 0 ? -stride : stride;
+    isPagingRef.current = true;
+    const controls = animate(dragX, targetX, { duration: 0.24, ease: IOS_EASE });
+    activeAnimationsRef.current.push(controls);
+    void controls.then(() => {
+      if (isPagingRef.current) {
+        commit();
+      }
+    });
+  }, [dragX, measureStage, onNextPhoto, onPrevPhoto, prefersReducedMotion]);
 
   // Measure viewport once on mount and on resize (never during pointer move)
   useEffect(() => {
@@ -255,15 +279,15 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
         animateToView(fitImage);
       } else if (event.key === 'ArrowLeft' && !isInfoOpen && hasPrev && onPrevPhoto) {
         event.preventDefault();
-        onPrevPhoto();
+        commitSlideBrowse(-1);
       } else if (event.key === 'ArrowRight' && !isInfoOpen && hasNext && onNextPhoto) {
         event.preventDefault();
-        onNextPhoto();
+        commitSlideBrowse(1);
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isInfoOpen, onToggleInfo, onBack, animateToView, readCachedBounds, hasPrev, hasNext, onPrevPhoto, onNextPhoto]);
+  }, [isInfoOpen, onToggleInfo, onBack, animateToView, readCachedBounds, hasPrev, hasNext, onPrevPhoto, onNextPhoto, commitSlideBrowse]);
 
   // Swipe right from left edge to go back to grid (disabled while zoomed or info open)
   const swipeBackHandlers = useSwipeBack({
@@ -484,9 +508,9 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     if (mode === 'horizontal') {
       const dxTotal = event.clientX - pressStartRef.current.x;
       if (!cancelled && (dxTotal <= -BROWSE_DISTANCE || lastMoveRef.current.vx < -BROWSE_VELOCITY) && hasNext && onNextPhoto) {
-        onNextPhoto();
+        commitSlideBrowse(1);
       } else if (!cancelled && (dxTotal >= BROWSE_DISTANCE || lastMoveRef.current.vx > BROWSE_VELOCITY) && hasPrev && onPrevPhoto) {
-        onPrevPhoto();
+        commitSlideBrowse(-1);
       } else {
         resetSwipeVisuals();
       }
@@ -543,16 +567,6 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     : originDelta
       ? { x: originDelta.dx, y: originDelta.dy, scale: originDelta.scale, opacity: 0, transition: { duration: 0.24, ease: IOS_EASE } }
       : { y: 24, scale: 0.9, opacity: 0, transition: { duration: 0.2, ease: IOS_EASE } };
-
-  const slideInitial = navDirection !== 0
-    ? { x: navDirection > 0 ? '100%' : '-100%', opacity: 1 }
-    : false;
-
-  const slideExit = {
-    x: navDirection >= 0 ? '-100%' : '100%',
-    opacity: 1,
-    transition: { duration: 0.22, ease: IOS_EASE },
-  };
 
   return (
     <motion.div
@@ -656,7 +670,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
             transition={IOS_SPRING}
             className="relative w-full h-full flex items-center justify-center"
           >
-            {/* Middle Swipe-Down Dismiss / Horizontal Browse Container */}
+            {/* Middle Swipe-Down Dismiss / 3-Slide Horizontal Pager Container */}
             <motion.div
               data-lightbox-drag-layer
               className="relative w-full h-full flex items-center justify-center"
@@ -664,9 +678,27 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                 x: dragX,
                 y: dragY,
                 scale: dragScale,
+                willChange: manipulating ? 'transform' : 'auto',
               }}
             >
-              {/* Inner Pinch-Zoom & 2D Pan Container (keeps hotspot ring locked to photo) */}
+              {/* Previous Adjacent Photo Slot (visible immediately as user swipes right) */}
+              {prevPhoto && !isZoomed && (
+                <div
+                  aria-hidden="true"
+                  data-lightbox-prev-slide
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  style={{ transform: `translate3d(calc(-100% - ${SLIDE_GAP}px), 0, 0)` }}
+                >
+                  <PhotoPreview
+                    photo={prevPhoto}
+                    fit="contain"
+                    className="w-full h-full"
+                    zoomLevel={1}
+                  />
+                </div>
+              )}
+
+              {/* Center Active Photo (Pinch-Zoom & 2D Pan Container) */}
               <motion.div
                 data-lightbox-zoom-layer
                 className="relative w-full h-full flex items-center justify-center overflow-hidden"
@@ -678,24 +710,30 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                   willChange: manipulating ? 'transform' : 'auto',
                 }}
               >
-                <AnimatePresence initial={false} mode="popLayout">
-                  <motion.div
-                    key={photo.id}
-                    initial={slideInitial}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={slideExit}
-                    transition={{ duration: 0.24, ease: IOS_EASE }}
-                    className="absolute inset-0 flex items-center justify-center"
-                  >
-                    <PhotoPreview
-                      photo={photo}
-                      fit="contain"
-                      className="w-full h-full"
-                      zoomLevel={1}
-                    />
-                  </motion.div>
-                </AnimatePresence>
+                <PhotoPreview
+                  photo={photo}
+                  fit="contain"
+                  className="w-full h-full"
+                  zoomLevel={1}
+                />
               </motion.div>
+
+              {/* Next Adjacent Photo Slot (visible immediately as user swipes left) */}
+              {nextPhoto && !isZoomed && (
+                <div
+                  aria-hidden="true"
+                  data-lightbox-next-slide
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  style={{ transform: `translate3d(calc(100% + ${SLIDE_GAP}px), 0, 0)` }}
+                >
+                  <PhotoPreview
+                    photo={nextPhoto}
+                    fit="contain"
+                    className="w-full h-full"
+                    zoomLevel={1}
+                  />
+                </div>
+              )}
             </motion.div>
           </motion.div>
         </StoryEvidenceTarget>

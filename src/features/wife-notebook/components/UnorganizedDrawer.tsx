@@ -85,10 +85,10 @@ export const UnorganizedDrawer: React.FC<UnorganizedDrawerProps> = ({
         className="corkboard-drawer absolute top-3 right-0 z-30 flex w-9 flex-col items-center gap-1 rounded-l-[6px] border-y border-l border-slate-700 bg-[#141A22] hover:bg-[#1B232E] px-1 py-1.5 shadow-lg backdrop-blur-md active:scale-95 transition-all cursor-pointer min-h-[44px] before:absolute before:inset-y-0 before:-inset-x-1"
       >
         <IoChevronBackOutline className="text-sm text-[#FB7185]" />
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-[4px] bg-[#E11D48] px-1 font-sans text-[10px] font-black text-white shadow">
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-[4px] bg-[#E11D48] px-1 font-sans text-ios-caption-2 font-black text-white shadow">
           {unplacedNodes.length}
         </span>
-        <span className="[writing-mode:vertical-rl] rotate-180 font-sans text-[10px] font-black uppercase tracking-wider text-slate-200 select-none">
+        <span className="[writing-mode:vertical-rl] rotate-180 font-sans text-ios-caption-2 font-black uppercase tracking-wider text-slate-200 select-none">
           MANH MỐI
         </span>
       </button>
@@ -122,7 +122,7 @@ export const UnorganizedDrawer: React.FC<UnorganizedDrawerProps> = ({
             <span className="font-sans text-xs font-black uppercase tracking-wider text-[#F1F5F9]">
               MANH MỐI
             </span>
-            <span className="rounded-[4px] bg-[#E11D48] px-2 py-0.5 font-sans text-[10px] font-bold text-white shadow-sm">
+            <span className="rounded-[4px] bg-[#E11D48] px-2 py-0.5 font-sans text-ios-caption-2 font-bold text-white shadow-sm">
               {unplacedNodes.length}
             </span>
           </div>
@@ -131,7 +131,7 @@ export const UnorganizedDrawer: React.FC<UnorganizedDrawerProps> = ({
             type="button"
             onClick={onToggleOpen}
             aria-label="Đóng khay manh mối"
-            className="flex h-9 w-9 items-center justify-center rounded-[4px] border border-slate-700 bg-[#1B232E] hover:bg-slate-700 text-slate-200 transition-colors active:scale-95"
+            className="flex h-11 w-11 items-center justify-center rounded-[4px] border border-slate-700 bg-[#1B232E] hover:bg-slate-700 text-slate-200 transition-colors active:scale-95"
           >
             <IoChevronForwardOutline className="text-lg" />
           </button>
@@ -171,11 +171,11 @@ export const UnorganizedDrawer: React.FC<UnorganizedDrawerProps> = ({
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className="font-sans text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-[2px] bg-[#D5DDE5] text-slate-700">
+                      <span className="font-sans text-ios-caption-2 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-[2px] bg-[#D5DDE5] text-slate-700">
                         {getSourceLabel(node.sourceAppId)}
                       </span>
                       {node.type === 'suspect' && (
-                        <span className="font-sans text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-[2px] bg-rose-100 text-rose-800 border border-rose-300">
+                        <span className="font-sans text-ios-caption-2 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-[2px] bg-rose-100 text-rose-800 border border-rose-300">
                           Nghi phạm
                         </span>
                       )}

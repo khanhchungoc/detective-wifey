@@ -112,10 +112,10 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
         {/* Top Header */}
         <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-2.5 py-1.5 shadow-xs">
           <div className="flex items-center gap-1">
-            {(activeTab !== 'home' || appLocked) && (
+            {activeTab !== 'home' && !appLocked && (
               <button
                 type="button"
-                aria-label={appLocked ? 'Về màn hình chính' : 'Quay lại'}
+                aria-label="Quay lại"
                 onClick={handleBack}
                 className="bank-control flex shrink-0 items-center justify-center text-[#111827] hover:bg-neutral-100"
               >
@@ -131,10 +131,10 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                 aria-label={`Hồ sơ ${caseData.husbandName || 'Pham Quoc Bao'}, Hạng ${tier}`}
                 className="bank-control flex items-center gap-1.5 rounded-full p-1 hover:bg-neutral-100"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ED1C24] text-xs font-bold text-white shadow-xs">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#C81018] text-xs font-bold text-white shadow-xs">
                   {initials}
                 </span>
-                <span className="rounded-full bg-[#ED1C24]/10 px-2 py-0.5 text-ios-caption-2 font-semibold text-[#ED1C24]">
+                <span className="rounded-full bg-[#C81018]/10 px-2 py-0.5 text-ios-caption-2 font-semibold text-[#C81018]">
                   {tier}
                 </span>
               </button>
@@ -167,7 +167,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
               {!!data?.unreadCount && (
                 <span
                   aria-hidden="true"
-                  className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ED1C24] px-1 text-ios-caption-2 font-bold text-white shadow-xs"
+                  className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#C81018] px-1 text-ios-caption-2 font-bold text-white shadow-xs"
                 >
                   {data.unreadCount}
                 </span>
@@ -197,7 +197,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                 type="button"
                 disabled={!rootChallenge || !onRequestUnlock}
                 onClick={() => rootChallenge && onRequestUnlock?.(rootChallenge.challengeId)}
-                className="bank-control inline-flex items-center justify-center rounded-xl bg-[#ED1C24] px-6 text-sm font-semibold text-white shadow-md hover:bg-[#B71C1C] transition-colors disabled:opacity-40"
+                className="bank-control inline-flex items-center justify-center rounded-xl bg-[#C81018] px-6 text-sm font-semibold text-white shadow-md hover:bg-[#B71C1C] transition-colors disabled:opacity-40"
               >
                 Mở khóa {BRAND.brandName}
               </button>
@@ -264,7 +264,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                   onClick={() => navigate(id)}
                   aria-current={isActive ? 'page' : undefined}
                   className={`bank-control flex min-w-0 flex-col items-center justify-center gap-1 text-center transition-colors ${
-                    isActive ? 'text-[#ED1C24]' : 'text-[#6B7280] hover:text-[#111827]'
+                    isActive ? 'text-[#C81018]' : 'text-[#52525B] hover:text-[#111827]'
                   }`}
                 >
                   <Icon

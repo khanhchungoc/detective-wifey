@@ -79,7 +79,7 @@ export function MessagesApp(props: VirtualAppProps) {
     </StoryEvidenceTarget>
   );
   return <SwipeBackContainer className="min-h-[44px] communication-app messages-app" onBack={threadId ? back : props.onReturnHome} enabled={!draft && !evidence.active}>
-    <CommunicationHeader title={threadId ? thread?.name || 'Tin nhắn' : 'Tin nhắn'} backLabel={threadId ? 'Tin nhắn' : 'Trang chủ'} onBack={threadId ? back : props.onReturnHome} avatarName={threadId ? thread?.name : undefined} />
+    <CommunicationHeader title={threadId ? thread?.name || 'Tin nhắn' : 'Tin nhắn'} backLabel="Tin nhắn" onBack={threadId ? back : undefined} avatarName={threadId ? thread?.name : undefined} />
     {!threadId ? <main className="communication-scroll">
       <h2 className="communication-large-title">Tin nhắn</h2>
       <div className="messages-search"><IoSearch aria-hidden="true" /><input aria-label="Tìm kiếm tin nhắn" placeholder="Tìm kiếm tin nhắn" value={query} onChange={e => setQuery(e.target.value)} />{query && <button type="button" aria-label="Xóa tìm kiếm" onClick={() => setQuery('')}><IoClose /></button>}</div>

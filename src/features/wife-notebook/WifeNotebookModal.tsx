@@ -671,13 +671,20 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     setViewport({ ...center, zoom: 1.0 });
   }, [placedNodes, setViewport]);
 
-  // Flush position immediately when modal closes
+  // Flush position after close slide completes so storage serialization never stalls frame 1.
   const prevIsOpen = useRef(isOpen);
   useEffect(() => {
+    let timer: number | undefined;
     if (prevIsOpen.current && !isOpen) {
-      saveCorkboard(caseId, placedNodes, edges, viewportRef.current);
+      const snapshotViewport = viewportRef.current;
+      timer = window.setTimeout(() => {
+        saveCorkboard(caseId, placedNodes, edges, snapshotViewport);
+      }, 360);
     }
     prevIsOpen.current = isOpen;
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, [isOpen, caseId, placedNodes, edges, viewportRef, saveCorkboard]);
 
   // Card Movement Handler (repositioning card on the corkboard & persisting)
@@ -1299,12 +1306,23 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           >
             <button
               type="button"
+              onPointerDown={(e) => {
+                // Keep left-edge swipe-back from intercepting taps on the close button.
+                e.stopPropagation();
+              }}
+              onPointerUp={(e) => {
+                if (e.pointerType === 'touch' && e.isPrimary) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onClose();
+                }
+              }}
               onClick={onClose}
               aria-label="Đóng sổ tay của vợ"
               title="Quay lại màn hình chính"
-              className="pointer-events-auto relative flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+              className="group pointer-events-auto relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 transition-colors cursor-pointer touch-manipulation"
             >
-              <IoChevronBack className="h-4 w-4" aria-hidden="true" />
+              <IoChevronBack className="h-4 w-4 transition-transform duration-100 group-active:scale-90" aria-hidden="true" />
             </button>
 
             <div className="pointer-events-auto flex items-center gap-1 rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] p-0.5 shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)]">
@@ -1313,18 +1331,18 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
                 onClick={handleAutoArrange}
                 aria-label="Xếp gọn"
                 title="Xếp gọn"
-                className="relative flex h-9 w-9 items-center justify-center rounded-[4px] text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer after:absolute after:-inset-1 after:content-['']"
+                className="relative flex h-11 w-11 items-center justify-center rounded-[4px] text-[#CBD5E1] hover:bg-slate-800 hover:text-white active:scale-95 transition-all cursor-pointer"
               >
-                <IoGridOutline className="h-3.5 w-3.5 text-[#94A3B8]" aria-hidden="true" />
+                <IoGridOutline className="h-4 w-4 text-[#CBD5E1]" aria-hidden="true" />
               </button>
 
               <button
                 type="button"
                 onClick={handleOpenConfrontation}
-                className="relative flex h-9 items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-3 text-white shadow-[0_4px_12px_rgba(225,29,72,0.38)] active:scale-95 transition-all cursor-pointer after:absolute after:-inset-y-1 after:inset-x-0 after:content-['']"
+                className="relative flex h-11 items-center justify-center gap-1.5 rounded-[4px] border border-[#FB7185]/35 bg-[#E11D48] hover:bg-[#BE123C] px-3 text-white shadow-[0_4px_12px_rgba(225,29,72,0.38)] active:scale-95 transition-all cursor-pointer"
               >
                 <IoScaleOutline className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="whitespace-nowrap font-sans text-[11px] font-bold uppercase tracking-[0.05em] text-white leading-none">
+                <span className="whitespace-nowrap font-sans text-ios-caption-2 font-bold uppercase tracking-[0.05em] text-white leading-none">
                   Đối chất
                 </span>
               </button>

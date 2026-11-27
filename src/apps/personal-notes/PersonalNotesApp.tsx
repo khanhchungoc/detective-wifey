@@ -2,7 +2,7 @@ import { useMotionState } from '../../shared/motion/useMotionState';
 import { readAppData } from './data';
 import React from 'react';
 import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
-import { IoChevronBack, IoDocumentTextOutline } from 'react-icons/io5';
+import { IoDocumentTextOutline } from 'react-icons/io5';
 import { IoDocumentText } from 'react-icons/io5';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { StoryEvidenceTarget } from '../../features/investigation';
@@ -25,15 +25,7 @@ export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
       className="flex flex-col h-full w-full bg-[#FFF9E6] text-[#202124] select-none font-sans"
     >
       <header className="flex items-center justify-between px-3 h-14 bg-[#1A73E8] text-white shadow-md shrink-0">
-        <button
-          type="button"
-          onClick={onReturnHome}
-          className="flex items-center gap-1 min-w-[44px] min-h-[44px] px-2 text-sm font-semibold rounded-lg hover:bg-white/10 active:scale-95 transition-all"
-          aria-label="Trang chủ"
-        >
-          <IoChevronBack className="w-5 h-5" />
-          <span>Trang chủ</span>
-        </button>
+        <div className="w-11" />
         <div className="flex items-center gap-2">
           <IoDocumentTextOutline className="w-5 h-5 text-white" />
           <h1 className="text-ios-headline font-bold tracking-tight">Ghi chú của chồng</h1>

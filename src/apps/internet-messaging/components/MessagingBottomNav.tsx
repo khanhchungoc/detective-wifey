@@ -35,7 +35,7 @@ export const MessagingBottomNav: React.FC<MessagingBottomNavProps> = ({
         <div className="relative">
           <IoChatbubbleOutline />
           {messageBadgeCount > 0 && (
-            <span className="absolute -top-1 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#FF3B30] text-white text-ios-caption-2 font-bold flex items-center justify-center shadow-xs">
+            <span className="absolute -top-1 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-[#D70015] text-white text-ios-caption-2 font-bold flex items-center justify-center shadow-xs">
               {messageBadgeCount}
             </span>
           )}
@@ -69,7 +69,7 @@ export const MessagingBottomNav: React.FC<MessagingBottomNavProps> = ({
       >
         <div className="relative">
           <IoGridOutline />
-          <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#FF3B30]" />
+          <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#D70015]" />
         </div>
         <span className="text-ios-caption-1 font-medium leading-none">Khám phá</span>
       </button>
@@ -100,7 +100,7 @@ export const MessagingBottomNav: React.FC<MessagingBottomNavProps> = ({
       >
         <div className="relative">
           <IoPersonOutline />
-          <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#FF3B30]" />
+          <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#D70015]" />
         </div>
         <span className="text-ios-caption-1 font-medium leading-none">Cá nhân</span>
       </button>
