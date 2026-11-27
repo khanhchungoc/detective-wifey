@@ -309,14 +309,10 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(html).toContain('data-briefing-phase="briefing"');
     expect(html).toContain('h-[100dvh]');
     expect(html).toContain('max-w-4xl');
-    expect(html).toContain('bg-game-paper');
-    expect(html).toContain('border-game-paper-border');
-    expect(html).toContain('text-game-ink');
-    expect(html).toContain('HỒ SƠ MÀN 1');
-    expect(html).toContain('w-40');
-    expect(html).toContain('h-52');
-    expect(html).toContain('md:w-48');
-    expect(html).toContain('md:h-60');
+    expect(html).toContain('bg-game-canvas');
+    expect(html).toContain('text-game-text');
+    expect(html).toContain('Màn 1');
+    expect(html).not.toContain('HỒ SƠ MÀN 1');
     expect(html).toContain('Nguyễn Huy Hoàng');
     expect(html).toContain('29 tuổi');
     expect(html).toContain('Tech Lead · Technosoft (Hà Nội)');
@@ -331,6 +327,7 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(html).toContain('Nghi vấn');
     expect(html).not.toContain('Linh cảm của vợ');
     expect(html).toContain(SAMPLE_BRIEFING.suspicionHook);
+    expect(html.indexOf('Lời khai tối nay')).toBeLessThan(html.indexOf('Hồ sơ nhân vật'));
     expect(html).not.toContain('Ứng dụng');
     expect(html).not.toContain('Lượt nghi ngờ');
     expect(html).not.toContain('Bảo mật');
@@ -358,7 +355,7 @@ describe('LevelContextBriefing (US-037)', () => {
         extractText(el.props.children as React.ReactNode).includes('Mở điện thoại'),
     );
     expect(startButtons).toHaveLength(1);
-    expect(String(startButtons[0].props.className)).toContain('bg-game-crimson');
+    expect(String(startButtons[0].props.className)).toContain('game-btn-primary');
     expect(String(startButtons[0].props.className)).toContain('min-h-[48px]');
     expect(String(startButtons[0].props.className)).toContain('touch-target-min');
     (startButtons[0].props.onClick as () => void)();
@@ -383,7 +380,7 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(recallHtml).toContain('aria-modal="true"');
     expect(recallHtml).toContain('max-w-4xl');
     expect(recallHtml).toContain(SAMPLE_BRIEFING.levelTitle);
-    expect(recallHtml).toContain('HỒ SƠ MÀN 1');
+    expect(recallHtml).toContain('Màn 1');
     expect(recallHtml).toContain('Đóng');
     expect(recallHtml).toContain('Hồ sơ nhân vật');
     expect(recallHtml).toContain('Minh Thư');

@@ -5,7 +5,7 @@ import hoangPortraitUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
-import { LocalStorageAdapter, ResumeSessionModal, type GameStateRepository } from '../features/session';
+import { LocalStorageAdapter, type GameStateRepository } from '../features/session';
 import { PlaySession } from '../features/play-session';
 import { SharedPinLockpad } from '../features/locks';
 import { WifeNotebookModal } from '../features/wife-notebook';
@@ -140,6 +140,12 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
       ? 'phone-stage'
       : flowStage;
 
+  const earnedStars = useMemo(
+    () => Object.values(state.playerProgress.bestStarRatings).reduce((sum, rating) => sum + rating, 0),
+    [state.playerProgress.bestStarRatings],
+  );
+  const maxStars = useMemo(() => Math.max(1, game.availableLevels().length) * 3, [game]);
+
   return (
     <div className="w-full h-[100dvh] flex justify-center items-center overflow-hidden bg-game-backdrop">
       <AnimatePresence mode="wait">
@@ -154,6 +160,17 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
           >
             <GameStartupScreen
               preloadAssets={[hoangPortraitUrl]}
+              hasOngoingGame={Boolean(state.ongoingSession)}
+              ongoingLevelNumber={state.ongoingSession?.levelNumber}
+              isMuted={isMuted}
+              onToggleMute={() => setIsMuted(prev => !prev)}
+              earnedStars={earnedStars}
+              maxStars={maxStars}
+              onContinue={() => {
+                if (game.resumeOngoing()) {
+                  setFlowStage('phone-home');
+                }
+              }}
               onStart={() => setFlowStage('level-selector')}
             />
           </motion.div>
@@ -281,8 +298,6 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   expectedPin={pendingChallenge.challenge.expectedAnswer} currentStrikes={state.strikes}
                   maxStrikes={caseConfig.allowedStrikes} onSuccess={id => transition('sheet-out', () => game.solveChallenge(id))}
                   onFailStrike={game.failChallenge} onCancel={() => transition('sheet-out', game.cancelChallenge)} />}
-                {state.resumableSession && flowStage === 'phone-home' && <ResumeSessionModal session={state.resumableSession}
-                  onResume={() => transition('fade', game.resume)} onRestart={() => transition('fade', game.restart)} />}
               </>}
             >
               {Object.values(APP_REGISTRY).map(({ appId, component: AppComponent }) => <RetainedAppView

@@ -267,3 +267,33 @@ body {
   opacity: 1;
 }
 
+/* Tactile Game Buttons (Start Screen & Briefing CTA) */
+.game-btn-primary {
+  background-color: var(--game-crimson);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 3px solid #9F1239;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 8px 20px rgba(0, 0, 0, 0.42);
+}
+
+.game-btn-primary:hover:not(:disabled) {
+  background-color: var(--game-crimson-deep);
+}
+
+.game-btn-secondary {
+  background-color: rgba(20, 26, 34, 0.92);
+  border: 1px solid rgba(245, 241, 232, 0.14);
+  border-bottom: 3px solid var(--game-backdrop);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.game-btn-secondary:hover:not(:disabled) {
+  background-color: rgba(27, 35, 48, 0.96);
+  border-color: rgba(245, 241, 232, 0.24);
+}
+
+
+
