@@ -13,12 +13,16 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
   const lastDisplacementRef = useRef(0);
   const animation = useRef<Animation | undefined>(undefined);
   const initialized = useRef(false);
+  // A cancelled swipe can end after a button already closed the board; it must not re-shrink the home screen.
+  const openRef = useRef(open);
+  openRef.current = open;
   const onKeyDown = useDialogFocus(open, containerRef, onClose);
   const swipeHandlers = useSwipeBack({
     onBack: onClose,
     enabled: open,
     maxStartDistance: 44,
     onSwipeProgress: (progress, displacement) => {
+      if (!openRef.current) return;
       lastDisplacementRef.current = displacement;
       const backdrop = backdropRef.current;
       if (backdrop) {
@@ -42,6 +46,7 @@ export function AnchoredOverlay({ open, anchorSelector, label, onClose, children
       }
     },
     onSwipeEnd: (committed) => {
+      if (!openRef.current) return;
       if (!committed) {
         lastDisplacementRef.current = 0;
       }

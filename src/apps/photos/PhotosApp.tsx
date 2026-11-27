@@ -113,7 +113,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     }
   }, [isInfoOpen, activePhotoId, isViewingHidden, onReturnHome]);
 
-  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack, enabled: !activePhotoId });
+  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack, enabled: !activePhotoId, exitsApp: !isInfoOpen && !isViewingHidden });
 
   const handleTriggerEvidence = useCallback((item: UniversalEvidenceItem) => {
     try {

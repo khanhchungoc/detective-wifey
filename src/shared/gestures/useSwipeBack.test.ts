@@ -39,6 +39,24 @@ it('tracks the finger and snaps back on cancellation without navigating', () => 
   expect(onBack).not.toHaveBeenCalled();
 });
 
+it('slides the whole app card when the back exits the app, keeping the inner element as gesture owner', () => {
+  const card = new Surface();
+  const root = new Surface();
+  root.closest = (selector: string) => selector === '[data-app-surface]' ? card : selector === '[data-swipe-surface]' ? root : null;
+  const engine = createSwipeBackEngine({ onBack: vi.fn(), exitsApp: true });
+  engine.onTouchStart({ currentTarget: root as unknown as HTMLElement, target: root as unknown as HTMLElement,
+    touches: [{ clientX: 10, clientY: 100 }] });
+  engine.onTouchMove({ touches: [{ clientX: 60, clientY: 101 }] });
+  paint();
+  expect(card.style.transform).toBe('translate3d(50px, 0, 0)');
+  expect(root.style.transform).toBe('');
+  expect(root.dataset).toHaveProperty('swipeSurface');
+  expect(card.dataset).not.toHaveProperty('swipeSurface');
+  engine.onTouchCancel();
+  expect(card.style.transform).toBe('');
+  expect(root.dataset).not.toHaveProperty('swipeSurface');
+});
+
 it('coalesces movement into one frame and measures width only at gesture start', () => {
   const engine = createSwipeBackEngine({ onBack: vi.fn() });
   const surface = new Surface();

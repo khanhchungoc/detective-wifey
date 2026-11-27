@@ -78,7 +78,7 @@ export function MessagesApp(props: VirtualAppProps) {
       </button>
     </StoryEvidenceTarget>
   );
-  return <SwipeBackContainer className="min-h-[44px] communication-app messages-app" onBack={threadId ? back : props.onReturnHome} enabled={!draft && !evidence.active}>
+  return <SwipeBackContainer className="min-h-[44px] communication-app messages-app" onBack={threadId ? back : props.onReturnHome} enabled={!draft && !evidence.active} exitsApp={!threadId}>
     <CommunicationHeader title={threadId ? thread?.name || 'Tin nhắn' : 'Tin nhắn'} backLabel="Tin nhắn" onBack={threadId ? back : undefined} avatarName={threadId ? thread?.name : undefined} />
     {!threadId ? <main className="communication-scroll">
       <h2 className="communication-large-title">Tin nhắn</h2>

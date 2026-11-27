@@ -28,7 +28,7 @@ export const RideHailingApp: React.FC<VirtualAppProps> = ({
     }
   };
 
-  const swipeHandlers = useSwipeBack({ onBack: handleBack });
+  const swipeHandlers = useSwipeBack({ onBack: handleBack, exitsApp: !selectedTrip });
 
   return (
     <div

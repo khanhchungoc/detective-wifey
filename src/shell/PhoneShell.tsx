@@ -418,9 +418,11 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
             ...(isIOS ? { paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
             touchAction: 'pan-y',
           }}
+          // The whole card slides on swipe-back so the app background never stays behind as a bar.
+          {...shellAppSwipeHandlers}
         >
           <div data-app-status-background aria-hidden="true" className="shrink-0" style={{ height: 'var(--phone-system-top)' }} />
-          <div data-app-viewport tabIndex={-1} className="relative min-h-0 flex-1 flex flex-col overflow-hidden outline-none" style={{ touchAction: 'pan-y' }} {...shellAppSwipeHandlers}>
+          <div data-app-viewport tabIndex={-1} className="relative min-h-0 flex-1 flex flex-col overflow-hidden outline-none" style={{ touchAction: 'pan-y' }}>
             <AppErrorBoundary
               onErrorFallback={() => {
                 onReturnHome();

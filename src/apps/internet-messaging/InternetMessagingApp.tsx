@@ -135,6 +135,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
   const swipeHandlers = useSwipeBack({
     onBack: onReturnHome,
     enabled: !isDetailActive,
+    exitsApp: true,
   });
 
   const handleTag = (suspectName: string, source?: EvidenceSource) => {
