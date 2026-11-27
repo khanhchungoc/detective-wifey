@@ -96,7 +96,9 @@ export function NotebookTab({
     const openTransform = transform({ x: -NOTEBOOK_TAB_WIDTH, y: docked.y });
     const toTransform = open ? openTransform : closedTransform;
 
-    const computed = getComputedStyle(element).transform;
+    const isSliding = Boolean(boardSlide.current && boardSlide.current.playState === 'running');
+    const styleTransform = !isSliding ? element.style.transform : '';
+    const computed = styleTransform && styleTransform !== 'none' ? styleTransform : getComputedStyle(element).transform;
     const fromTransform = computed && computed !== 'none'
       ? computed
       : (open ? closedTransform : openTransform);
@@ -135,7 +137,17 @@ export function NotebookTab({
     const cancelled = event.type !== 'pointerup';
     active.moved ||= isFloatingDrag(dx, dy);
     suppressClick.current = active.moved || cancelled;
-    if (!active.moved && !cancelled) return;
+    if (!active.moved && !cancelled) {
+      if (event.pointerType === 'touch') {
+        suppressClick.current = true;
+        settling.current?.cancel();
+        event.currentTarget.dataset.edge = 'right';
+        event.currentTarget.dataset.floating = 'false';
+        if (open) onClose?.();
+        else onOpen();
+      }
+      return;
+    }
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const velocity = floatingVelocity(active.samples, { x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
     const button = event.currentTarget;

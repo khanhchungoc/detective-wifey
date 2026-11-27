@@ -62,32 +62,16 @@ nav.app-bottom-nav > button svg {
   --ios-font-lockpad-subtext: 0.625rem; /* 10px */
 }
 
-/* Universal Simplified Slim Transparent Scrollbars across OS and apps */
+/* Hide scrollbars across OS and virtual apps while keeping touch/wheel scrolling enabled */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent !important;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.45) !important;
-  border-radius: 9999px !important;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.75) !important;
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent !important;
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 html,

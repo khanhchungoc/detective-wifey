@@ -112,10 +112,10 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
         {/* Top Header */}
         <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-2.5 py-1.5 shadow-xs">
           <div className="flex items-center gap-1">
-            {(activeTab !== 'home' || appLocked) && (
+            {activeTab !== 'home' && !appLocked && (
               <button
                 type="button"
-                aria-label={appLocked ? 'Về màn hình chính' : 'Quay lại'}
+                aria-label="Quay lại"
                 onClick={handleBack}
                 className="bank-control flex shrink-0 items-center justify-center text-[#111827] hover:bg-neutral-100"
               >
