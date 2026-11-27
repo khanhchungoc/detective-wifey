@@ -106,7 +106,7 @@ Help a new player complete their first investigation in Bắt được Tiểu ta
 - [Epic 02](../epic-02-investigation-suspicion-mechanics/epic.md): existing planned hint story.
 - [Original signed-off game discovery](2026-10-13-jealous-wife-detective-game.md): free app-level hint baseline.
 - [Signed-off pinning and confrontation discovery](2026-10-20-us-011-us-016-pinning-confrontation.md): current shared investigation interactions.
-- [Notebook feature specification](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md): supporting context; the later signed-off pinning/confrontation decisions supersede conflicting older details.
+- [Notebook feature specification](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md): supporting context; the later signed-off pinning/confrontation decisions supersede conflicting older details.
 
 ## Next Step
 

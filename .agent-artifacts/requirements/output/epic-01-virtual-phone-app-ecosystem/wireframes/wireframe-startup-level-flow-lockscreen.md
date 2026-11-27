@@ -16,7 +16,7 @@ timestamp: "2026-11-27"
 - **Primary Goal**: Move smoothly from app launch through husband/level selection, comedic narrative context & persona briefing, and unlocking the husband's iOS 27 phone to start investigating, with quick mid-case return via the phone's Notification Dropdown.
 - **Context / Use Case**: Entry flow for first-time and returning players, plus mid-case level switching and case-context recall.
 - **Platform**: Mobile-first portrait web viewport (375px-430px base width; centered phone bezel on desktop).
-- **Parent Design Reference**: [Phone OS Master Design](../../../project-knowledge-base/solution-context/apps/phone-os/app-design.md)
+- **Parent Design References**: [Game App Design System](../../../project-knowledge-base/solution-context/design-system/game-design-system.md) (Screens 1-3: Startup, Level Selector Hub, Case Context & Intro) and [Phone OS Master Design](../../../project-knowledge-base/solution-context/apps/phone-os/app-design.md) (Screens 4-5: iOS 27 Lockscreen & Notification Dropdown).
 
 ## Screen Inventory
 

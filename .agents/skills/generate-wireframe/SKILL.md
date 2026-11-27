@@ -42,7 +42,7 @@ Before authoring any wireframe for virtual apps or OS shell features in the *Jea
    - **`comms`** (Phone Dialer & SMS): `apps/phone-os/comms/app-design.md`
    - **`photos`** (Media Gallery & Forensics): `apps/phone-os/photos/app-design.md`
    - **`husband-notes` / `personal-notes`** (Husband's Notes & Calendar): `apps/personal-notes/app-design.md`
-   - **`wife-notebook`** (Sổ Tay Bắt Ghen & Hub): `apps/phone-os/wife-notebook/app-design.md`
+   - **`evidence-board`** (Sổ Tay Bắt Ghen & Hub): `apps/phone-os/evidence-board/app-design.md`
 2. **Extract Authoritative Tokens & Layout Models** via `view_file`:
    - *Branding & Parody Persona* (Section 1): App title, trademark defense theme, visual persona.
    - *Design Tokens & Ergonomics* (Section 2): Exact brand color palette hex codes, surface background, card colors, text primary, and touch target minimums ($\ge 44 \times 44\text{px}$ for buttons/tabs; $\ge 48\text{px}$ for search bars/inputs).

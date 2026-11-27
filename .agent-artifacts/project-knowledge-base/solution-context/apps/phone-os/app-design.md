@@ -30,7 +30,7 @@ To prevent monolithic document bloat, detailed specifications for individual OS 
 | **Native Phone (Dialer & Contacts)** | [phone/app-design.md](phone/app-design.md) | Recents call logs, duration badges, and contact directory inspector |
 | **Native Messages (SMS Threads)** | [messages/app-design.md](messages/app-design.md) | SMS bubbles, parody tapbacks, dynamic text effects, and brand notifications |
 | **Photos & Media Vault** | [photos/app-design.md](photos/app-design.md) | iOS 27 unified single-view photostream, smart suspect collections, hidden private album PIN lock |
-| **Wife's Investigation Notebook** | [wife-notebook/app-design.md](wife-notebook/app-design.md) | Dossier suspect cards, evidence pinning, confrontation HUD |
+| **Wife's Investigation Notebook** | [evidence-board/app-design.md](evidence-board/app-design.md) | Dossier suspect cards, evidence pinning, confrontation HUD |
 
 ---
 

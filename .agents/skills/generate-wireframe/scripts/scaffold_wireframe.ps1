@@ -97,8 +97,8 @@ try {
             $candidatePaths = @((Join-Path $baseContext 'phone-os/comms/app-design.md')) + $candidatePaths
         } elseif ($appId -in @('photos', 'gallery')) {
             $candidatePaths = @((Join-Path $baseContext 'phone-os/photos/app-design.md')) + $candidatePaths
-        } elseif ($appId -in @('wife-notebook', 'wife_notebook', 'notebook')) {
-            $candidatePaths = @((Join-Path $baseContext 'phone-os/wife-notebook/app-design.md')) + $candidatePaths
+        } elseif ($appId -in @('evidence-board', 'wife-notebook', 'wife_notebook', 'notebook')) {
+            $candidatePaths = @((Join-Path $baseContext 'phone-os/evidence-board/app-design.md')) + $candidatePaths
         } elseif ($appId -in @('husband-notes', 'husband_notes', 'notes', 'personal-notes')) {
             $candidatePaths = @((Join-Path $baseContext 'personal-notes/app-design.md')) + $candidatePaths
         } elseif ($appId -in @('zola', 'internet-messaging', 'messaging', 'chat')) {

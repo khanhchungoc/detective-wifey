@@ -86,7 +86,7 @@ When generating wireframes for virtual apps in the *Jealous Wife Detective Game*
 | `comms` | Comms (Phone & SMS) | `.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/comms/app-design.md` | Royal Blue `#007AFF` / `#34C759` |
 | `photos` | Photos (Gallery & Forensics) | `.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/photos/app-design.md` | Obsidian Black `#000000` / `#2979FF` |
 | `husband-notes` / `personal-notes` | Husband's Notes & Calendar | `.agent-artifacts/project-knowledge-base/solution-context/apps/personal-notes/app-design.md` | Warm Parchment `#FFF9E6` / `#1A73E8` |
-| `wife-notebook` | Sổ Tay Bắt Ghen (Wife Hub) | `.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md` | Fuchsia Rose `#D81B60` |
+| `evidence-board` | Sổ Tay Bắt Ghen (Wife Hub) | `.agent-artifacts/project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md` | Fuchsia Rose `#D81B60` |
 
 ### Emulated Smartphone Viewport & Container Framing
 - **Viewport**: Virtual smartphone portrait ratio ($375\text{px}$–$430\text{px}$ base width, $812\text{px}$–$932\text{px}$ height) conforming to `phone-os/app-design.md`.

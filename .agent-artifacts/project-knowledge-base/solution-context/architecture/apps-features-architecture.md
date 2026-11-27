@@ -111,7 +111,7 @@ Individual visual identity, view hierarchies, and clue integrations are document
 * **GeeMail (Email Parody)**: [Features](../apps/email/features.md) \| [App Design](../apps/email/app-design.md)
 * **InkedLin (LinkedIn Parody)**: [Features](../apps/professional-network/features.md) \| [App Design](../apps/professional-network/app-design.md)
 * **Tim (Teams Parody)**: [Features](../apps/team-collaboration/features.md) \| [App Design](../apps/team-collaboration/app-design.md)
-* **Sổ Tay Bắt Ghen Của Vợ (Wife's Notebook)**: [Features](../apps/phone-os/wife-notebook/features.md) \| [App Design](../apps/phone-os/wife-notebook/app-design.md)
+* **Sổ Tay Bắt Ghen Của Vợ (Wife's Notebook)**: [Features](../apps/phone-os/evidence-board/features.md) \| [App Design](../apps/phone-os/evidence-board/app-design.md)
 
 ---
 
@@ -310,4 +310,4 @@ To support long play sessions and prevent progress loss across page refreshes or
 | **GeeMail (Email)** | [apps/email/](../apps/email/) | [Features](../apps/email/features.md) & [Design](../apps/email/app-design.md) |
 | **InkedLin (Professional Network)** | [apps/professional-network/](../apps/professional-network/) | [Features](../apps/professional-network/features.md) & [Design](../apps/professional-network/app-design.md) |
 | **Tim (Team Collaboration)** | [apps/team-collaboration/](../apps/team-collaboration/) | [Features](../apps/team-collaboration/features.md) & [Design](../apps/team-collaboration/app-design.md) |
-| **Wife's Notebook Spec** | [apps/phone-os/wife-notebook/](../apps/phone-os/wife-notebook/) | [Features](../apps/phone-os/wife-notebook/features.md) & [Design](../apps/phone-os/wife-notebook/app-design.md) |
+| **Wife's Notebook Spec** | [apps/phone-os/evidence-board/](../apps/phone-os/evidence-board/) | [Features](../apps/phone-os/evidence-board/features.md) & [Design](../apps/phone-os/evidence-board/app-design.md) |

@@ -18,7 +18,7 @@ As a **Player**, I want to play through a short skippable comedic intro dialogue
 ### Canonical Wireframe Reference
 
 - **ASCII Wireframe (Screen SSOT)**: [Startup, Level Selector Hub, Case Context & iOS 27 Lockscreen Flow (Screens 3 & 5)](./wireframes/wireframe-startup-level-flow-lockscreen.md)
-- **Parent Application Design**: [Phone OS Master Design](../../../project-knowledge-base/solution-context/apps/phone-os/app-design.md)
+- **Parent Design System**: [Game App Design System (Cold War Darkroom & Detective Dossier)](../../../project-knowledge-base/solution-context/design-system/game-design-system.md)
 
 ---
 

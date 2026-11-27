@@ -17,8 +17,8 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 
 ## Nguồn đối chiếu
 
-- [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md): Mục 3.3 phòng thẩm vấn 3 tầng, đèn spotlight, Comic Hoàng và bộ chọn COD Cold War.
-- [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/features.md): Mục 2.4 state machine đối chất theo nhịp và fallback bậc thang.
+- [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md): Mục 3.3 phòng thẩm vấn 3 tầng, đèn spotlight, Comic Hoàng và bộ chọn COD Cold War.
+- [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md): Mục 2.4 state machine đối chất theo nhịp và fallback bậc thang.
 - [Màn chơi Chồng Hoàng Màn 1](../../epic-04-detective-case-stories-level-content/us-027-husband-hoang-level-1-case-implementation.md): Mục 5 kịch bản đối chất 4 nhịp và lời thoại thú tội.
 - [Biên bản khám phá](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md): Tự động đánh giá đồ thị, không gắp thẻ thủ công, phạt 1 vạch nghi ngờ khi đối chất thất bại.
 - Thành phần mã nguồn thực tế: `WifeNotebookModal.tsx`, `confrontationEngine.ts`, `ConfrontationModal.tsx`, `HusbandCharacterImage.tsx`, `confrontationMotion.ts`, `graphEngine.ts`, `level01Fixture.ts`.

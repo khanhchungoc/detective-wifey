@@ -12,7 +12,7 @@ scope: project-wide
 - Một cuộc trò chuyện có một thẻ; từng tin nhắn đã chọn nằm trong phần nội dung.
 - Áp dụng cho bảng manh mối và khay manh mối trên giao diện điện thoại.
 - Trạng thái: đề xuất chờ duyệt. Ví dụ bên dưới chỉ minh họa bố cục, không bổ sung dữ liệu vụ án.
-- Tham chiếu: [Thiết kế Sổ Tay Bắt Ghen](../../../project-knowledge-base/solution-context/apps/phone-os/wife-notebook/app-design.md).
+- Tham chiếu: [Thiết kế Sổ Tay Bắt Ghen](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md).
 
 ## 1. Thẻ chỉ ghim người hoặc bí danh
 
