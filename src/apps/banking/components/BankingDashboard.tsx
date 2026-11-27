@@ -14,6 +14,7 @@ import {
   IoCheckmarkCircleOutline,
 } from 'react-icons/io5';
 import type { BankingData } from '../types';
+import bankingLogo from '../assets/banking-logo.svg';
 
 const tierLabels = {
   standard: 'Standard',
@@ -45,64 +46,73 @@ export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingD
   return (
     <section aria-label="Tổng quan tài khoản" className="bank-dashboard-canvas flex min-h-full flex-col space-y-4 p-4 pb-24">
       {/* 3. Floating Account Hero Card ("Số dư hiện có") */}
-      <div className="bank-card-elevated p-4">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-[#374151]">Số dư hiện có</p>
-          <button
-            type="button"
-            onClick={() => setShowBalance(visible => !visible)}
-            aria-label={showBalance ? 'Ẩn số dư' : 'Hiện số dư'}
-            aria-pressed={showBalance}
-            className="bank-control flex items-center justify-center text-[#6B7280] hover:text-[#111827]"
-          >
-            {showBalance ? <IoEyeOffOutline aria-hidden="true" className="h-5 w-5" /> : <IoEyeOutline aria-hidden="true" className="h-5 w-5" />}
-          </button>
-        </div>
-
-        <div className="mt-1">
-          <p className="bank-amount text-2xl font-bold tracking-tight text-[#111827]" aria-live="polite">
-            {showBalance ? data.actualBalance : data.maskedBalance}
-          </p>
-        </div>
-
-        {/* Tier Upgrade Sub-card */}
-        <div className="mt-3 rounded-xl bg-[#F5F6F8] p-3 border border-[#E5E7EB]">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-sm font-bold text-[#111827]">Lên hạng Inspire Max</p>
-              <p className="mt-1 text-xs text-[#4B5563] leading-relaxed">
-                Duy trì số dư tài khoản bình quân 3 tháng từ 30 triệu để lên hạng và tích điểm hoàn tới 25%.
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 flex items-center justify-end">
+      <div className="bank-card-elevated relative overflow-hidden p-4">
+        <img
+          src={bankingLogo}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 -rotate-12 select-none opacity-[0.08] mix-blend-multiply"
+        />
+        <div className="relative z-10">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-[#374151]">Số dư hiện có</p>
             <button
               type="button"
-              onClick={onOpenHistory}
-              className="bank-control flex items-center justify-center rounded-full bg-black px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-neutral-800 transition-colors"
+              onClick={() => setShowBalance(visible => !visible)}
+              aria-label={showBalance ? 'Ẩn số dư' : 'Hiện số dư'}
+              aria-pressed={showBalance}
+              className="bank-control flex items-center justify-center text-[#6B7280] hover:text-[#111827]"
             >
-              Tài khoản &amp; lịch sử
+              {showBalance ? <IoEyeOffOutline aria-hidden="true" className="h-5 w-5" /> : <IoEyeOutline aria-hidden="true" className="h-5 w-5" />}
             </button>
           </div>
-        </div>
 
-        {/* Account Number & Copy */}
-        <div className="mt-3 flex items-center justify-between border-t border-[#F3F4F6] pt-2.5">
-          <div className="min-w-0">
-            <p className="text-ios-caption-2 text-[#6B7280]">Tài khoản thanh toán</p>
-            <p className="bank-amount select-text break-words text-sm font-semibold text-[#111827]">
-              {data.accountNumber || '-'}
+          <div className="mt-1">
+            <p className="bank-amount text-2xl font-bold tracking-tight text-[#111827]" aria-live="polite">
+              {showBalance ? data.actualBalance : data.maskedBalance}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={copyAccount}
-            disabled={!data.accountNumber}
-            aria-label="Sao chép số tài khoản"
-            className="bank-control flex shrink-0 items-center justify-center text-[#6B7280] hover:text-[#111827] disabled:opacity-40"
-          >
-            <IoCopyOutline aria-hidden="true" className="h-5 w-5" />
-          </button>
+
+          {/* Tier Upgrade Sub-card */}
+          <div className="mt-3 rounded-xl border border-[#E5E7EB] bg-[#F5F6F8]/75 p-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-sm font-bold text-[#111827]">Lên hạng Inspire Max</p>
+                <p className="mt-1 text-xs text-[#4B5563] leading-relaxed">
+                  Duy trì số dư tài khoản bình quân 3 tháng từ 30 triệu để lên hạng và tích điểm hoàn tới 25%.
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-end">
+              <button
+                type="button"
+                onClick={onOpenHistory}
+                className="bank-control flex items-center justify-center rounded-full bg-black px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-neutral-800 transition-colors"
+              >
+                Tài khoản &amp; lịch sử
+              </button>
+            </div>
+          </div>
+
+          {/* Account Number & Copy */}
+          <div className="mt-3 flex items-center justify-between border-t border-[#F3F4F6] pt-2.5">
+            <div className="min-w-0">
+              <p className="text-ios-caption-2 text-[#6B7280]">Tài khoản thanh toán</p>
+              <p className="bank-amount select-text break-words text-sm font-semibold text-[#111827]">
+                {data.accountNumber || '-'}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={copyAccount}
+              disabled={!data.accountNumber}
+              aria-label="Sao chép số tài khoản"
+              className="bank-control flex shrink-0 items-center justify-center text-[#6B7280] hover:text-[#111827] disabled:opacity-40"
+            >
+              <IoCopyOutline aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
 
