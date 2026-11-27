@@ -646,7 +646,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       }
     });
 
-    it('renders crisp settled CSS zoom with 2D translate on the virtual plane (GPU transform applies only during active gestures)', () => {
+    it('renders crisp settled CSS zoom on a permanently GPU-promoted virtual plane (no layer re-creation flash between gestures)', () => {
       const html = renderToStaticMarkup(
         <CorkboardCanvas
           placedNodes={[placedNode]}
@@ -665,7 +665,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         />,
       );
 
-      expect(html).toContain('transform:translate(-875px, -1050px)');
+      expect(html).toContain('transform:translate3d(-875px, -1050px, 0);will-change:transform');
       expect(html).toContain('transform-origin:0 0');
       expect(html).toContain('zoom:1.75');
     });

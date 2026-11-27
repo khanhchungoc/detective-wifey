@@ -671,6 +671,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   }, []);
 
   // Corkboard gestures and zoom engine
+  const prefersReducedMotion = useReducedMotion();
   const {
     viewport,
     viewportRef,
@@ -683,12 +684,12 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     initialViewport,
     onTapBackground: point => tapBackgroundRef.current(point),
     locked: boardMode === 'wall',
+    reducedMotion: Boolean(prefersReducedMotion),
     planeRef,
     surfaceRef,
     boardRef,
   });
 
-  const prefersReducedMotion = useReducedMotion();
   const flightMs = prefersReducedMotion ? 0 : 420;
   const enterWallView = useCallback(() => {
     handleDismissSelection();

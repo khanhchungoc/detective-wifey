@@ -185,14 +185,12 @@ describe('corkboard mobile gesture ownership', () => {
     handlers.onPointerMove(move1);
     handlers.onPointerMove(move2);
     expect(move1.currentTarget.setPointerCapture).toHaveBeenCalledTimes(1);
-    expect(plane.style.willChange).toBe('transform');
 
     flushFrame();
     expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
     expect(updates).toHaveLength(0);
 
     handlers.onPointerUp(pointer(1, 250, 330));
-    expect(plane.style.willChange).toBe('');
     expect(updates).toEqual([{ x: 950, y: 970, zoom: 1 }]);
   });
 
@@ -209,14 +207,12 @@ describe('corkboard mobile gesture ownership', () => {
     start.target = { closest: (selector: string) => selector === '.corkboard-string' ? {} : null } as unknown as EventTarget;
     handlers.onPointerDown(start);
     handlers.onPointerMove(pointer(1, 250, 330));
-    expect(surface.style.willChange).toBe('transform');
 
     flushFrame();
     expect(surface.style.transform).toBe(plane.style.transform);
     expect(surface.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
 
     handlers.onPointerUp(pointer(1, 250, 330));
-    expect(surface.style.willChange).toBe('');
     expect(surface.style.transform).toBe(plane.style.transform);
   });
 
@@ -232,6 +228,28 @@ describe('corkboard mobile gesture ownership', () => {
     expect(taps).toEqual([{ x: 950, y: 950 }]);
   });
 
+  it('double tap zooms to 2x around the tapped spot, and a second double tap zooms back to 1x', () => {
+    const { containerProps: handlers, viewportRef } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 1 },
+      reducedMotion: true,
+    });
+    const tap = () => {
+      handlers.onPointerDown(pointer(1, 300, 400));
+      handlers.onPointerUp(pointer(1, 300, 400));
+    };
+    tap();
+    tap();
+    flushFrame();
+    // Tapped board point (1000, 1000) stays under the finger at 2x.
+    expect(updates).toEqual([{ x: 950, y: 950, zoom: 2 }]);
+    expect(viewportRef.current).toEqual({ x: 950, y: 950, zoom: 2 });
+
+    tap();
+    tap();
+    flushFrame();
+    expect(updates[updates.length - 1]).toEqual({ x: 900, y: 900, zoom: 1 });
+  });
+
   it('ignores pan, pinch and wheel input while locked (wall view)', () => {
     const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
     const { containerProps: handlers } = useCorkboardGestures({
@@ -245,7 +263,6 @@ describe('corkboard mobile gesture ownership', () => {
     handlers.onPointerMove(pointer(1, 200, 250));
     handlers.onPointerUp(pointer(1, 200, 250));
     flushFrame();
-    expect(plane.style.willChange).toBe('');
     expect(plane.style.transform).toBe('');
     expect(updates).toHaveLength(0);
   });
@@ -261,7 +278,6 @@ describe('corkboard mobile gesture ownership', () => {
     });
     animateTo({ x: 400, y: 500, zoom: 1 }, 400);
     flushFrame(200);
-    expect(plane.style.willChange).toBe('transform');
     expect(surface.style.transform).toBe(plane.style.transform);
     expect(updates).toHaveLength(0);
 
@@ -271,8 +287,7 @@ describe('corkboard mobile gesture ownership', () => {
 
     flushFrame(400);
     expect(updates).toEqual([{ x: 400, y: 500, zoom: 1 }]);
-    expect(plane.style.willChange).toBe('');
-    expect(plane.style.transform).toBe('translate(-400px, -500px)');
+    expect(plane.style.transform).toBe('translate3d(-400px, -500px, 0)');
     vi.restoreAllMocks();
   });
 

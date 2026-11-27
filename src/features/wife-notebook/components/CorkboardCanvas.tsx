@@ -757,6 +757,8 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
     top: '50%',
     transformOrigin: '0 0',
     transform: formatCorkboardTransform(viewport),
+    // Permanently promoted: dropping the layer after each pan/zoom/flight made cards flash for a frame.
+    willChange: 'transform',
   };
   const planeSizeStyle: React.CSSProperties = {
     width: `${CANVAS_SIZE}px`,
