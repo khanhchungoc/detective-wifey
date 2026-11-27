@@ -19,7 +19,7 @@
 /* Cold War chalkboard surface: lives on the zoom plane, so keep it to one image + a flat frame (no blur, no gradients) */
 .notebook-board-surface {
   background-color: var(--notebook-canvas);
-  /* One opaque full-board 1800px image (no tiling, base colour baked in) so chalk drawings never repeat in a grid */
+  /* One opaque 2400px full-board image (no tiling, base colour baked in) so chalk never repeats in a grid and stays sharp at 2x */
   background-image: url('./assets/chalkboard-board.webp');
   background-size: 100% 100%;
   background-repeat: no-repeat;
