@@ -19,7 +19,13 @@ test.describe('Phone Shell @smoke', () => {
 
     // Launch Zola and return via bottom home button
     await launchApp(page, 'internet-messaging');
-    await page.getByRole('button', { name: 'Về trang chủ' }).click();
+    // The bottom home button only exists on the Android layout; iOS layout uses the swipe gesture only.
+    if (test.info().project.name === 'android') {
+      await page.getByRole('button', { name: 'Về trang chủ' }).click();
+    } else {
+      await expect(page.getByRole('button', { name: 'Về trang chủ' })).toHaveCount(0);
+      await swipeUpHome(page);
+    }
     await expect(page.locator('[data-app-surface]')).toBeHidden();
 
     // Launch Photos and return via upward swipe from home bar
@@ -38,14 +44,22 @@ test.describe('Phone Shell @smoke', () => {
   test('opens Control Center and navigates to Level Selector sheet', async ({ page }) => {
     const errors = await startCleanPhone(page);
 
+    // With the status bar hidden, the first pull-down only shows a chevron hint; the second opens the panel.
+    const controlCenter = page.getByRole('dialog', { name: 'Trung tâm điều khiển' });
     await swipeDownControlCenter(page);
+    if (!(await controlCenter.isVisible())) {
+      await swipeDownControlCenter(page);
+    }
+    const levelsButton = controlCenter.getByRole('button', { name: 'Chọn màn chơi' });
+    await expect(levelsButton).toBeVisible();
+    await levelsButton.click();
 
-    await expect(page.getByRole('button', { name: 'Chọn màn chơi' })).toBeVisible();
-    await page.getByRole('button', { name: 'Chọn màn chơi' }).click();
-
-    await expect(page.getByText('HỒ SƠ VỤ ÁN & CHỌN MÀN CHƠI')).toBeVisible();
-    await page.getByRole('button', { name: 'Đóng' }).click();
-    await expect(page.getByText('HỒ SƠ VỤ ÁN & CHỌN MÀN CHƠI')).toBeHidden();
+    // Level selector now asks for confirmation before leaving the level.
+    const confirm = page.getByRole('dialog', { name: 'Đổi màn chơi?' });
+    await expect(confirm).toBeVisible();
+    await confirm.getByRole('button', { name: 'Ở lại' }).click();
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('.phone-shell')).toBeVisible();
 
     expect(errors).toEqual([]);
   });
