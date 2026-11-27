@@ -38,6 +38,8 @@ export interface EvidenceSource {
   isExplicitConversationPin?: boolean;
   direction?: 'incoming' | 'outgoing' | 'inflow' | 'outflow';
   sender?: string;
+  imageSrc?: string;
+  imagePosition?: string;
 }
 
 export interface UniversalEvidenceItem {
@@ -57,6 +59,8 @@ export interface UniversalEvidenceItem {
   isExplicitConversationPin?: boolean;
   direction?: 'incoming' | 'outgoing' | 'inflow' | 'outflow';
   sender?: string;
+  imageSrc?: string;
+  imagePosition?: string;
 }
 
 /**

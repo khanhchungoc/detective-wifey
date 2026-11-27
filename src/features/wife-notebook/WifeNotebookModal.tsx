@@ -329,6 +329,8 @@ export function deriveNodesFromTaggedEvidence(
           rawTimestamp: tag.evidence?.rawTimestamp,
           direction: tag.evidence?.direction,
           sender: tag.evidence?.sender,
+          imageSrc: tag.evidence?.imageSrc || canonicalMatch.imageSrc,
+          imagePosition: tag.evidence?.imagePosition || canonicalMatch.imagePosition,
         });
       } else {
         nodes.push({
@@ -350,6 +352,8 @@ export function deriveNodesFromTaggedEvidence(
           rawTimestamp: tag.evidence?.rawTimestamp,
           direction: tag.evidence?.direction,
           sender: tag.evidence?.sender,
+          imageSrc: tag.evidence?.imageSrc,
+          imagePosition: tag.evidence?.imagePosition,
           isInitialDisguise: false,
         });
       }

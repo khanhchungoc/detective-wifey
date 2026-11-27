@@ -272,7 +272,7 @@ const CorkboardContents = memo(function CorkboardContents({
           const isDraggingThis = activeDragId === node.nodeId;
           const tiltDeg = getCardTiltDeg(node.nodeId);
           const timelineEntries = parseNodeToTimelineEntries(node);
-          const hasBody = timelineEntries.length > 0;
+          const hasBody = timelineEntries.length > 0 || Boolean(node.imageSrc);
 
           return (
             <div
@@ -466,6 +466,41 @@ const CorkboardContents = memo(function CorkboardContents({
                   </button>
                 </div>
               </div>
+
+              {/* Pinned Photo Polaroid Frame */}
+              {node.imageSrc && (
+                <div
+                  data-pinned-photo={node.nodeId}
+                  className="mb-1.5 rounded-[2px] border border-[#D8CFC0] bg-white p-1 pb-1.5 shadow-xs"
+                >
+                  <div className="h-24 w-full overflow-hidden rounded-[1px] bg-[#1C1C1E]">
+                    {node.imagePosition ? (
+                      <svg
+                        viewBox="0 0 627 627"
+                        preserveAspectRatio="xMidYMid slice"
+                        className="h-full w-full pointer-events-none"
+                        aria-label={node.label}
+                      >
+                        <image
+                          href={node.imageSrc}
+                          xlinkHref={node.imageSrc}
+                          x={node.imagePosition.startsWith('100%') ? -627 : 0}
+                          y={node.imagePosition.endsWith('100%') ? -627 : 0}
+                          width="1254"
+                          height="1254"
+                        />
+                      </svg>
+                    ) : (
+                      <img
+                        src={node.imageSrc}
+                        alt={node.label}
+                        draggable={false}
+                        className="h-full w-full object-cover select-none"
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Card Body: Reusable Left-Hand Vertical Timeline Rail */}
               {timelineEntries.length > 0 && (

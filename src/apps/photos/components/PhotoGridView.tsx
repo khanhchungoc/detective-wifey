@@ -9,6 +9,7 @@ import {
   IoPlay,
 } from 'react-icons/io5';
 import type { PhotoItem } from '../types';
+import { buildPhotoEvidenceItem } from '../data';
 import { PhotoPreview } from './PhotoPreview';
 import { StoryEvidenceTarget, type UniversalEvidenceItem } from '../../../features/investigation';
 
@@ -131,20 +132,7 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
                 {displayedPhotos.map((photo) => (
                   <StoryEvidenceTarget
                     key={photo.id}
-                    item={{
-                      title: photo.title,
-                      subtitle: photo.date,
-                      snippet: photo.description || photo.title,
-                      suspectToTag: photo.suspectName || husbandName,
-                      source: {
-                        caseId,
-                        recordId: photo.id,
-                        clueRefId: photo.clueRefId,
-                        title: photo.title,
-                        snippet: photo.description || photo.title,
-                        kind: 'photo',
-                      },
-                    }}
+                    item={buildPhotoEvidenceItem(photo, caseId, husbandName, 'grid')}
                     onTriggerEvidence={onTriggerEvidence}
                   >
                     <div

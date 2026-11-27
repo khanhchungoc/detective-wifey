@@ -7,6 +7,7 @@ import {
   IoLocationSharp,
 } from 'react-icons/io5';
 import type { PhotoItem } from '../types';
+import { buildPhotoEvidenceItem } from '../data';
 import { PhotoPreview } from './PhotoPreview';
 import { StoryEvidenceTarget, type UniversalEvidenceItem } from '../../../features/investigation';
 
@@ -81,20 +82,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
     ? exif.streetLabels
     : ['P. Nghĩa Đô', 'HỒ TÙNG MẬU', 'QL.32'];
 
-  const evidenceItem: UniversalEvidenceItem = {
-    title: photo.title,
-    subtitle: `${formattedDate} • ${exif.locationName}`,
-    snippet: `EXIF [${exif.device}] ${formattedDate} tại ${exif.locationName}. Thông số: ISO ${exif.iso}, tiêu cự ${exif.focalLength}mm, ${exif.aperture}, ${exif.shutterSpeed}.`,
-    suspectToTag: photo.suspectName || husbandName,
-    source: {
-      caseId,
-      recordId: `exif_${photo.id}`,
-      clueRefId: photo.clueRefId,
-      title: `EXIF: ${photo.title}`,
-      snippet: `Thời gian chụp: ${formattedDate}. Địa điểm: ${exif.locationName}. Thiết bị: ${exif.device}.`,
-      kind: 'photo',
-    },
-  };
+  const evidenceItem = buildPhotoEvidenceItem(photo, caseId, husbandName, 'exif', formattedDate);
 
   const handleDragPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;

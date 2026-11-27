@@ -99,7 +99,11 @@ describe('Level 1 story content through runtime adapters', () => {
       expect(serialized).not.toContain(oldContent);
     }
     const clues = [...serialized.matchAll(/CLUE-[A-Z]+-\d+/g)].map(match => match[0]);
-    expect(new Set(clues)).toEqual(new Set(['CLUE-ZOLA-07', 'CLUE-BANK-06', 'CLUE-POSH-05', 'CLUE-PHONE-01']));
+    expect(new Set(clues)).toEqual(new Set(['CLUE-ZOLA-07', 'CLUE-BANK-06', 'CLUE-POSH-05', 'CLUE-PHONE-01', 'CLUE-PHOT-05']));
+    const dinnerPhoto = readPhotosData(data.photos).photos.find(photo => photo.id === 'photo_dinner_claypot');
+    expect(dinnerPhoto?.clueRefId).toBe('CLUE-PHOT-05');
+    expect(dinnerPhoto?.hasForensicHotspot).toBe(true);
+    expect(dinnerPhoto?.highResUrl).toBeTruthy();
   });
 
   it('renders the supplied inbox preview without leaking the replaced rental story', () => {
