@@ -5,7 +5,6 @@ import {
   IoLockClosedOutline,
   IoLockOpenOutline,
   IoPeopleOutline,
-  IoLocationOutline,
   IoCalendarOutline,
   IoPlay,
 } from 'react-icons/io5';
@@ -192,23 +191,6 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
                       <div>
                         <h3 className="text-ios-subheadline font-semibold text-white">Gương mặt & Đối tượng</h3>
                         <p className="text-ios-caption-2 text-slate-400">4 người nhận diện</p>
-                      </div>
-                    </div>
-                    <span className="text-xs text-slate-400">&gt;</span>
-                  </div>
-
-                  {/* Trip Places Collection */}
-                  <div
-                    onClick={() => onShowToast('Đang tải bản đồ các địa điểm chụp ảnh')}
-                    className="p-3.5 flex items-center justify-between cursor-pointer hover:bg-white/5 active:scale-[0.98] active:opacity-75 transition-all duration-100"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-[#2C2C2E] flex items-center justify-center text-emerald-400">
-                        <IoLocationOutline className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h3 className="text-ios-subheadline font-semibold text-white">Chuyến đi đáng ngờ</h3>
-                        <p className="text-ios-caption-2 text-slate-400">2 địa điểm gắn thẻ GPS</p>
                       </div>
                     </div>
                     <span className="text-xs text-slate-400">&gt;</span>
