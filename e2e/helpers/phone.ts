@@ -36,11 +36,12 @@ export async function openLevelToLockscreen(page: Page, caseId = 'case_01'): Pro
   await page.locator(`[data-case-id="${caseId}"]`).click();
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
   const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
-  // The intro is skipped on replays, so wait for whichever screen shows first.
-  await expect(skip.or(openPhone).first()).toBeVisible();
-  if (await skip.isVisible()) {
-    await skip.click();
-  }
+  // The intro may be skipped on replays, and a "Bỏ qua" tap right after it mounts can be ignored,
+  // so retry until the briefing's "Mở điện thoại" button shows.
+  await expect(async () => {
+    if (await skip.isVisible()) await skip.click();
+    await expect(openPhone).toBeVisible({ timeout: 1000 });
+  }).toPass();
   await openPhone.click();
   const lock = page.locator('[data-phone-lockscreen]');
   await expect(lock).toBeVisible();
@@ -114,32 +115,44 @@ export async function launchApp(page: Page, appId: string): Promise<void> {
 }
 
 /**
- * Triggers the 380ms universal long-press gesture on a StoryEvidenceTarget element
- * and waits for the UniversalEvidenceModal dialog to appear.
+ * Evidence targets of the app on screen. Other apps stay mounted but hidden, so always scope here.
  */
-export async function longPressToPinModal(page: Page, target: Locator): Promise<Locator> {
-  await target.scrollIntoViewIfNeeded();
-  const box = await target.boundingBox();
-  if (!box) {
-    throw new Error('Cannot long-press element without a bounding box');
-  }
-  const cx = box.x + box.width / 2;
-  const cy = box.y + box.height / 2;
-
-  const dialog = page.getByRole('dialog');
-  await touchHold(page, { x: cx, y: cy }, async () => {
-    await expect(dialog).toBeVisible({ timeout: 2500 });
-  });
-  return dialog;
+export function activeEvidence(page: Page): Locator {
+  return page.locator('[data-app-instance]:not([hidden]) [data-evidence-target="true"]');
 }
 
 /**
- * Confirms pinning inside the open UniversalEvidenceModal.
+ * Long-presses a story target with a real touch until the evidence dialog opens, optionally
+ * inspects it, then pins it with "Ghim".
+ * The finger is dragged away and the touch cancelled, not lifted: a plain lift currently lands as
+ * a tap on the dialog backdrop and closes it (see the release test in investigation.spec.ts).
+ * shortcut: cancel instead of lift, switch back to a plain lift once that bug is fixed.
  */
-export async function confirmEvidencePin(dialog: Locator): Promise<void> {
-  const pinBtn = dialog.getByRole('button', { name: 'Ghim', exact: true });
-  await expect(pinBtn).toBeEnabled();
-  await pinBtn.click();
+export async function longPressAndPin(
+  page: Page,
+  target: Locator,
+  inspect?: (dialog: Locator) => Promise<void>,
+): Promise<void> {
+  // Centre the target so the touch cannot land in the home-indicator or tab-bar edge zones.
+  await target.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  const box = await target.boundingBox();
+  if (!box) throw new Error('Cannot long-press element without a bounding box');
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  const dialog = page.getByRole('dialog');
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+  try {
+    await expect(dialog).toBeVisible({ timeout: 2500 });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + 60, y: y + 60 }] });
+  } finally {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+    await cdp.detach();
+  }
+  if (inspect) await inspect(dialog);
+  const pin = dialog.getByRole('button', { name: 'Ghim', exact: true });
+  await expect(pin).toBeEnabled();
+  await pin.click();
   await expect(dialog).toBeHidden();
 }
 

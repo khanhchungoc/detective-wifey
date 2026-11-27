@@ -1,43 +1,54 @@
 import { expect, test } from '@playwright/test';
 import {
-  confirmEvidencePin,
+  activeEvidence,
   launchApp,
-  longPressToPinModal,
+  longPressAndPin,
   startCleanPhone,
+  swipeUpHome,
 } from './helpers/phone';
 
 test.describe('Wife Notebook & Confrontation @smoke', () => {
-  test('displays pinned clue on corkboard and opens confrontation confirmation flow', async ({ page }) => {
+  test('shows a pinned clue on the corkboard and opens the confrontation flow', async ({ page }) => {
     const errors = await startCleanPhone(page);
 
-    // Pin one clue first
-    await launchApp(page, 'internet-messaging');
-    const firstTarget = page.locator('[data-app-viewport] [data-evidence-target="true"]').first();
-    const dialog = await longPressToPinModal(page, firstTarget);
-    await confirmEvidencePin(dialog);
+    // Pin the Shopee order: it points at suspect Thu Hương, so she appears on the suspect list.
+    await launchApp(page, 'ecommerce');
+    await page.getByRole('button', { name: 'Tôi', exact: true }).click();
+    await page.getByRole('button', { name: 'Tất cả đơn' }).click();
+    await longPressAndPin(
+      page,
+      activeEvidence(page).filter({ hasText: 'Set váy lụa công sở' }).first(),
+    );
+    await swipeUpHome(page);
 
-    // Open Wife's Notebook via floating NotebookTab
+    // Open the notebook from the floating tab: the clue is a card on the corkboard.
     await page.locator('[data-notebook-tab]').click();
-    await expect(page.locator('button[title="Quay lại màn hình chính"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="node_record_ecommerce_order"]')).toBeVisible();
+    await expect(page.locator('[aria-label^="Định vị bảng"]')).toHaveAttribute('aria-label', /1 manh mối/);
 
-    // Corkboard contains at least one placed clue node
-    await expect(page.locator('[data-node-id]').first()).toBeVisible();
-
-    // Auto-arrange button works without errors
+    // Auto-arrange keeps the card on the board.
     await page.getByRole('button', { name: 'Xếp gọn' }).click();
+    await expect(page.locator('[data-node-id="node_record_ecommerce_order"]')).toBeVisible();
 
-    // Confrontation button opens confirmation modal and can launch confrontation
-    const confrontBtn = page.getByRole('button', { name: /Đối chất/ });
-    await expect(confrontBtn).toBeVisible();
-    await confrontBtn.click();
+    // "ĐỐI CHẤT" -> suspect picker -> confirm step.
+    await page.getByRole('button', { name: /Đối chất/i }).click();
+    const picker = page.getByRole('dialog', { name: 'Chọn nghi phạm' });
+    await expect(picker).toBeVisible();
+    await picker.locator('[data-suspect-polaroid="suspect_huong"]').click();
+    const confirm = page.getByRole('dialog', { name: 'Xác nhận đối chất' });
+    await expect(confirm).toBeVisible();
+    await expect(confirm.getByRole('alert')).toContainText('Đối chất thất bại');
 
-    // Confirmation dialog appears; confirm or cancel cleanly
-    const confirmModalBtn = page.getByRole('button', { name: /Vẫn đối chất|Bắt đầu đối chất|Đối chất ngay/ }).first();
-    if (await confirmModalBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await confirmModalBtn.click();
-      // Scripted confrontation opening choices appear
-      await expect(page.getByText(/Hoàng, anh có gì lừa dối tôi không|Tôi biết anh đang ngoại tình/)).toBeVisible();
-    }
+    // Confirming opens the scripted interrogation with the two opening lines.
+    await confirm.getByRole('button', { name: /!/ }).click();
+    const interrogation = page.getByRole('dialog', { name: /Đối chất · / });
+    await expect(interrogation).toBeVisible();
+    await expect(interrogation.locator('[data-choice-id="open_ask"]')).toContainText('Hoàng, anh có gì lừa dối tôi không');
+    await expect(interrogation.locator('[data-choice-id="open_offer"]')).toContainText('Tôi biết anh đang ngoại tình');
+
+    // The interrogation can be closed without picking a line.
+    await interrogation.getByRole('button', { name: 'Đóng đối chất' }).click();
+    await expect(interrogation).toBeHidden();
 
     expect(errors).toEqual([]);
   });
