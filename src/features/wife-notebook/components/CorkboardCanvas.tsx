@@ -17,7 +17,10 @@ import {
 import type { AppDefinition } from '../../../shared/contracts/app-contracts';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, calculateYarnStringCurve, clampCardPosition } from '../graphEngine';
-import { formatCorkboardTransform } from '../useCorkboardGestures';
+import { formatCorkboardTransform, formatSurfaceTransform } from '../useCorkboardGestures';
+import chalkboardBoardUrl from '../assets/chalkboard-board.webp';
+import detectiveOfficeWallUrl from '../assets/detective-office-wall.webp';
+import detectiveOfficeWallDesktopUrl from '../assets/detective-office-wall-desktop.webp';
 import type { CorkboardViewport, PlacedNode, PairingState } from '../types';
 import type { CaseGraphEdge } from '../../../shared/contracts/knowledge-graph';
 import {
@@ -87,17 +90,17 @@ const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active
 
   return (
     <>
-      {/* Single overhead light wash across the entire board, synced 1:1 with lamp flicker */}
-      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-0" style={{ willChange: 'opacity' }}>
-        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_0%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
+      {/* Overhead light wash on the detective office wall behind the board, synced 1:1 with lamp flicker */}
+      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2]" style={{ willChange: 'opacity' }}>
+        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_4%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
       </div>
-      {/* Global board & card dimming veil inversely synced to the single overhead lamp (hidden at rest) */}
-      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[25]" style={{ opacity: 0, willChange: 'opacity' }}>
-        <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
+      {/* Wall dimming veil inversely synced to the overhead lamp flicker (hidden at rest) */}
+      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3]" style={{ opacity: 0, willChange: 'opacity' }}>
+        <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_4%,rgba(4,7,12,0.68)_0%,rgba(4,7,12,0.84)_55%,rgba(3,5,9,0.92)_100%)]" />
       </div>
-      {/* Overhead fluorescent tube */}
-      <div ref={tubeRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center" style={{ willChange: 'opacity' }}>
-        <div className="notebook-lamp-tube h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
+      {/* Overhead fluorescent tube glow aligned to the wall fixture behind the board (covered when board moves forward) */}
+      <div ref={tubeRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[6.2%] md:top-[4.5%] z-[4] flex flex-col items-center" style={{ willChange: 'opacity' }}>
+        <div className="notebook-lamp-tube h-[4px] w-[52%] md:w-[27%] max-w-[230px] md:max-w-[340px] rounded-full bg-[#E2ECF8]/75 shadow-[0_0_18px_6px_rgba(226,236,248,0.42),0_10px_36px_12px_rgba(148,163,184,0.2)]" />
       </div>
     </>
   );
@@ -766,6 +769,19 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
     height: `${CANVAS_HEIGHT}px`,
     zoom: viewport.zoom,
   };
+  // Surface plane never uses CSS zoom: it scales purely on the GPU from a fixed 1800x1200 img
+  // so zooming never invalidates GPU tiles or causes black-tile checkerboarding on mobile.
+  const surfaceStyle: React.CSSProperties = {
+    left: '50%',
+    top: '50%',
+    transformOrigin: '0 0',
+    transform: formatSurfaceTransform(viewport),
+    willChange: 'transform',
+  };
+  const surfaceSizeStyle: React.CSSProperties = {
+    width: `${CANVAS_WIDTH}px`,
+    height: `${CANVAS_HEIGHT}px`,
+  };
   return (
     <div
       data-board-mode={mode}
@@ -775,44 +791,59 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
         onSelectEdge?.(null);
       }}
     >
-      {/* Chalkboard surface + frame: moves and zooms with the cards so the board edge is visible */}
-      {/* Focus view: dims the wall behind the board (opacity fade only) */}
-      <div aria-hidden="true" className="notebook-wall-veil pointer-events-none absolute inset-0" />
+      {/* Clean, neat dark detective office wall behind the evidence board (portrait mobile-first, 16:9 desktop) */}
+      <picture className="pointer-events-none absolute inset-0 z-0 block h-full w-full select-none">
+        <source media="(min-aspect-ratio: 1/1)" srcSet={detectiveOfficeWallDesktopUrl} />
+        <img
+          src={detectiveOfficeWallUrl}
+          width={768}
+          height={1376}
+          alt=""
+          draggable={false}
+          decoding="sync"
+          className="h-full w-full object-cover object-center"
+        />
+      </picture>
 
-      <div ref={surfaceRef} aria-hidden="true" className="pointer-events-none absolute" style={planeStyle}>
-        <div className="notebook-board-surface" style={planeSizeStyle} />
-      </div>
-
-      {/* Screen-fixed edge falloff over the board, under the cards */}
-      <div aria-hidden="true" className="notebook-board-shade pointer-events-none absolute inset-0" />
-
-      {/* Overhead Cold War Fluorescent Lamp Highlight */}
+      {/* Overhead Cold War Fluorescent Lamp Highlight: mounted on the wall BEHIND the board */}
       <FluorescentLampHighlight active={isOpen} />
 
-      {/* Empty State Overlay */}
+      {/* Focus view: dims the office wall and overhead lamp behind the board (opacity fade only) */}
+      <div aria-hidden="true" className="notebook-wall-veil pointer-events-none absolute inset-0 z-[5]" />
+
+      {/* Chalkboard surface + physical dark brown wooden frame: moves forward in front of the wall & lamp */}
+      <div ref={surfaceRef} aria-hidden="true" className="pointer-events-none absolute z-[10]" style={surfaceStyle}>
+        <div className="notebook-board-surface" style={surfaceSizeStyle}>
+          <div className="notebook-board-frame" />
+          <div className="notebook-board-recess">
+            <img
+              src={chalkboardBoardUrl}
+              width={CANVAS_WIDTH}
+              height={CANVAS_HEIGHT}
+              alt=""
+              draggable={false}
+              decoding="sync"
+              className="block h-full w-full select-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Empty State Overlay: quiet, compact dark hint above the dock so the wooden-framed board stays unobstructed */}
       {placedNodes.length === 0 && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-20">
-          <div className="corkboard-paper-card relative max-w-[260px] rounded-[3px] border border-[#B8C4D0] px-5 pt-6 pb-5 shadow-[0_14px_32px_rgba(0,0,0,0.68)] -rotate-1">
-            <div className="absolute left-1/2 -translate-x-1/2 -top-2.5 flex flex-col items-center">
-              <div
-                aria-hidden="true"
-                className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#D4B44C]/80 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
-              />
-              <div className="relative h-5 w-5 rounded-full bg-gradient-to-br from-[#FB7185] via-[#E11D48] to-[#881337] border border-[#FDA4AF]/75 shadow-[0_3px_6px_rgba(0,0,0,0.65)]">
-                <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
-              </div>
-            </div>
-            <div className="mx-auto mb-2.5 flex h-11 w-11 items-center justify-center rounded-[4px] border border-[#B8C4D0] bg-[#D5DDE5] text-[#DC2626] text-xl">
+        <div className="pointer-events-none absolute inset-x-4 bottom-24 z-20 flex justify-center">
+          <div className="flex max-w-[300px] items-center gap-2.5 rounded-[8px] border border-slate-700/60 bg-[#0D1219]/85 px-3.5 py-2.5 text-left shadow-xl backdrop-blur-sm">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[5px] border border-slate-700/70 bg-slate-800/80 text-[#FB7185] text-base">
               <IoBookOutline />
             </div>
-            <h3 className="font-sans text-ios-caption-1 font-extrabold text-slate-900 uppercase tracking-wider">
-              CHƯA CÓ MANH MỐI NÀO
-            </h3>
-            <p className="mt-1.5 text-ios-caption-1 text-slate-700 leading-relaxed">
-              Khám phá các ứng dụng trên điện thoại.
-              <br />
-              <strong className="text-slate-900">Nhấn giữ</strong> nội dung đáng ngờ để ghim vào bảng manh mối.
-            </p>
+            <div className="min-w-0">
+              <h3 className="font-sans text-ios-caption-2 font-bold text-[#F1F5F9] uppercase tracking-wider">
+                Chưa có manh mối nào
+              </h3>
+              <p className="mt-0.5 font-sans text-ios-caption-2 text-slate-300/90 leading-snug">
+                <strong className="text-white">Nhấn giữ</strong> nội dung đáng ngờ để ghim lên bảng.
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -835,11 +866,14 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
       )}
 
       {/* Zoomable & Pannable Virtual Plane (GPU transform during gestures, crisp CSS zoom when settled) */}
-      <div ref={planeRef} className="absolute" style={planeStyle}>
+      <div ref={planeRef} className="absolute z-[12]" style={planeStyle}>
         <div className="relative" style={planeSizeStyle}>
           <CorkboardContents {...contentsProps} zoomRef={zoomRef} />
         </div>
       </div>
+
+      {/* Subtle screen-fixed edge vignette */}
+      <div aria-hidden="true" className="notebook-board-shade pointer-events-none absolute inset-0 z-[15]" />
 
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (

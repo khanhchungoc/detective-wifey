@@ -26,33 +26,23 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await expect(page.locator('[data-node-id="node_record_ecommerce_order"]')).toBeVisible();
     await expect(page.locator('[aria-label^="Định vị bảng"]')).toHaveAttribute('aria-label', /1 manh mối/);
 
-    // Opens in wall view; tapping the card zooms in, tapping the wall zooms back out.
+    // Opens in wall view; double-tapping the board/card brings the board forward, double-tapping again puts it back on the wall.
     const board = page.locator('[data-board-mode]');
     await expect(board).toHaveAttribute('data-board-mode', 'wall');
     const card = page.locator('[data-node-id="node_record_ecommerce_order"]');
     const wallWidth = (await card.boundingBox())!.width;
-    await card.click();
+    await card.dblclick();
     await expect(board).toHaveAttribute('data-board-mode', 'focus');
     await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(wallWidth * 3);
 
-    // Double tap on empty board zooms to 2x, double tap again returns to 1x.
+    // Double tap on empty board puts the board back on the wall.
     const vp = page.viewportSize()!;
-    const focusWidth = (await card.boundingBox())!.width;
     await page.mouse.dblclick(vp.width / 2, vp.height - 190);
-    await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(focusWidth * 1.8);
-    await page.mouse.dblclick(vp.width / 2, vp.height - 190);
-    await expect.poll(async () => Math.round((await card.boundingBox())!.width)).toBe(Math.round(focusWidth));
+    await expect(board).toHaveAttribute('data-board-mode', 'wall');
+    await expect.poll(async () => Math.round((await card.boundingBox())!.width)).toBe(Math.round(wallWidth));
 
-    // Pan the board partly off screen, then tap the exposed wall to return to wall view.
-    await page.mouse.move(vp.width / 2, vp.height / 2);
-    await page.mouse.wheel(-3000, -3000);
-    await expect.poll(async () => {
-      await page.mouse.click(vp.width / 2, 160);
-      return board.getAttribute('data-board-mode');
-    }).toBe('wall');
-
-    // Closing and reopening keeps the current view.
-    await card.click();
+    // Double-tapping the card again brings it forward; closing and reopening keeps the current view.
+    await card.dblclick();
     await expect(board).toHaveAttribute('data-board-mode', 'focus');
     await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(wallWidth * 3);
     const focusedBox = await card.boundingBox();

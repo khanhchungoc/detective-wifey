@@ -647,7 +647,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       }
     });
 
-    it('renders crisp settled CSS zoom on a permanently GPU-promoted virtual plane (no layer re-creation flash between gestures)', () => {
+    it('renders crisp settled CSS zoom on the card plane and pure GPU scale on the fixed-size chalkboard surface', () => {
       const html = renderToStaticMarkup(
         <CorkboardCanvas
           placedNodes={[placedNode]}
@@ -667,8 +667,14 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       );
 
       expect(html).toContain('transform:translate3d(-875px, -1050px, 0);will-change:transform');
+      expect(html).toContain('transform:translate3d(-875px, -1050px, 0) scale(1.75);will-change:transform');
       expect(html).toContain('transform-origin:0 0');
       expect(html).toContain('zoom:1.75');
+      expect(html).toContain('class="notebook-board-surface" style="width:1800px;height:1200px"');
+      expect(html).toContain('notebook-board-frame');
+      expect(html).toContain('decoding="sync"');
+      // 3D depth: overhead lamp tube (z-[4]) sits on the office wall BEHIND the board surface (z-[10]).
+      expect(html.indexOf('notebook-lamp-tube')).toBeLessThan(html.indexOf('notebook-board-surface'));
     });
 
     it('renders red strings for both alibi contradictions and verified key smoking-gun links, and yellow for neutral or speculative links', () => {

@@ -39,6 +39,7 @@ import { CorkboardCanvas } from './components/CorkboardCanvas';
 import { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 import { ConfrontationModal } from './components/ConfrontationModal';
 import chalkboardBoardUrl from './assets/chalkboard-board.webp';
+import detectiveOfficeWallUrl from './assets/detective-office-wall.webp';
 import './notebook.css';
 import type { PlacedNode, CorkboardViewport, PairingState, TaggedEvidenceItem, UndoAction } from './types';
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
@@ -77,8 +78,8 @@ interface SavedCorkboardState {
   mode?: CorkboardMode;
 }
 
-/** Screen gap (px) kept around the board in wall view so the wall and lamp stay visible. */
-const WALL_VIEW_MARGIN_PX = 28;
+/** Screen gap (px) kept around the board in wall view so the detective office and lamp stay visible. */
+const WALL_VIEW_MARGIN_PX = 36;
 const FOCUS_ZOOM = 1.0;
 
 function isInsideBoard(point: { x: number; y: number }): boolean {
@@ -94,9 +95,12 @@ function isBoardChromeControl(target: EventTarget): boolean {
 function computeWallViewport(board: HTMLElement | null): CorkboardViewport {
   const width = board?.clientWidth || 390;
   const height = board?.clientHeight || 844;
+  const isLandscape = width >= height;
+  const marginX = isLandscape ? Math.max(WALL_VIEW_MARGIN_PX, Math.round(width * 0.18)) : WALL_VIEW_MARGIN_PX;
+  const marginY = isLandscape ? Math.max(WALL_VIEW_MARGIN_PX, Math.round(height * 0.26)) : WALL_VIEW_MARGIN_PX;
   const fit = Math.min(
-    (width - WALL_VIEW_MARGIN_PX * 2) / CANVAS_WIDTH,
-    (height - WALL_VIEW_MARGIN_PX * 2) / CANVAS_HEIGHT,
+    (width - marginX * 2) / CANVAS_WIDTH,
+    (height - marginY * 2) / CANVAS_HEIGHT,
   );
   return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2, zoom: Math.max(0.05, fit) };
 }
@@ -650,14 +654,16 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   const planeRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
 
-  // Warm chalkboard texture and handwriting font on idle so the first slide-out never stalls on decode.
+  // Warm chalkboard + office wall textures and handwriting font on idle so the first slide-out never stalls on decode.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const warmAssets = () => {
       if (typeof Image !== 'undefined') {
-        const img = new Image();
-        img.src = chalkboardBoardUrl;
-        void img.decode?.().catch(() => {});
+        for (const src of [chalkboardBoardUrl, detectiveOfficeWallUrl]) {
+          const img = new Image();
+          img.src = src;
+          void img.decode?.().catch(() => {});
+        }
       }
       void document.fonts?.load('400 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
       void document.fonts?.load('500 14px "Shantell Sans"', 'Tiếng Việt ăâđêôơư').catch(() => {});
@@ -688,6 +694,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   } = useCorkboardGestures({
     initialViewport,
     onTapBackground: point => tapBackgroundRef.current(point),
+    onDoubleTapBackground: () => doubleTapBackgroundRef.current(),
     locked: boardMode === 'wall',
     reducedMotion: Boolean(prefersReducedMotion),
     planeRef,
@@ -708,7 +715,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     animateTo({ x: point.x, y: point.y, zoom: FOCUS_ZOOM }, flightMs);
   }, [animateTo, flightMs]);
 
-  // Focus view: tapping the wall around the board flies back out to the wall view.
+  // Focus view: tapping the wall around the board or double-tapping the board puts it back on the wall.
   const tapBackgroundRef = useRef<(point: { x: number; y: number }) => void>(() => {});
   tapBackgroundRef.current = point => {
     if (!isInsideBoard(point)) {
@@ -717,12 +724,25 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     }
     handleDismissSelection();
   };
+  const doubleTapBackgroundRef = useRef<() => void>(() => {});
+  doubleTapBackgroundRef.current = () => {
+    enterWallView();
+  };
 
-  // Wall view: cards are not interactive; a tap on a card zooms to it, a tap on the board zooms to that spot.
+  // Wall view: cards are not interactive; double-tapping the board or a card brings the board forward into focus view.
+  const wallLastTapRef = useRef<{ time: number; x: number; y: number } | null>(null);
   const handleWallClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (isBoardChromeControl(e.target)) return;
     e.stopPropagation();
     e.preventDefault();
+    const now = Date.now();
+    const prev = wallLastTapRef.current;
+    const isDoubleTap = prev !== null && now - prev.time < 360 && Math.hypot(e.clientX - prev.x, e.clientY - prev.y) <= 48;
+    if (!isDoubleTap) {
+      wallLastTapRef.current = { time: now, x: e.clientX, y: e.clientY };
+      return;
+    }
+    wallLastTapRef.current = null;
     const cardEl = (e.target as HTMLElement).closest<HTMLElement>('[data-node-id]');
     const node = cardEl ? placedNodes.find(n => n.nodeId === cardEl.dataset.nodeId) : undefined;
     if (node && cardEl) {

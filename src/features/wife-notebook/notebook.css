@@ -16,23 +16,58 @@
     inset -12px 0 24px rgba(0, 0, 0, 0.68);
 }
 
-/* Cold War chalkboard surface: lives on the zoom plane, so keep it to one image + a flat frame (no blur, no gradients) */
+/* Cold War chalkboard surface: fixed 1800x1200 GPU-scaled layer (no CSS zoom)
+   wrapped in a physical muted dark brown wooden frame. */
 .notebook-board-surface {
+  position: relative;
   background-color: var(--notebook-canvas);
-  /* One opaque 2400x1600 full-board image (no tiling, base colour baked in) so chalk never repeats in a grid and stays sharp at 2x */
-  background-image: url('./assets/chalkboard-board.webp');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  outline: 14px solid var(--notebook-frame);
-  box-shadow:
-    0 0 0 15px rgba(148, 163, 184, 0.14),
-    0 40px 90px rgba(0, 0, 0, 0.75);
 }
 
-/* Focus view pushes the wall back: dim veil fades in (opacity only), lamp tube goes soft.
-   The blur is switched once per mode change on a tiny element, never animated per frame. */
+.notebook-board-frame {
+  position: absolute;
+  inset: -28px;
+  border-radius: 5px;
+  background-color: #362419;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(16, 9, 4, 0.24) 0px,
+      rgba(16, 9, 4, 0.24) 3px,
+      transparent 3px,
+      transparent 11px,
+      rgba(96, 68, 46, 0.14) 11px,
+      rgba(96, 68, 46, 0.14) 15px,
+      transparent 15px,
+      transparent 29px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(116, 84, 58, 0.32) 0%,
+      rgba(54, 36, 25, 0.08) 12%,
+      rgba(26, 16, 10, 0.16) 88%,
+      rgba(12, 7, 4, 0.55) 100%
+    );
+  border-width: 5px;
+  border-style: solid;
+  border-color: #543b29 #38251a #1f130c #3d291d;
+  box-shadow:
+    inset 0 1px 0 rgba(164, 128, 96, 0.22),
+    inset 0 -2px 4px rgba(10, 5, 2, 0.65),
+    0 14px 28px rgba(0, 0, 0, 0.72);
+}
+
+.notebook-board-recess {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-shadow:
+    inset 0 0 0 3px rgba(12, 7, 4, 0.78),
+    inset 0 6px 14px rgba(0, 0, 0, 0.55);
+}
+
+/* Focus view pushes the detective office wall and overhead lamp back into shadow behind the board. */
 .notebook-wall-veil {
-  background-color: rgba(2, 3, 5, 0.62);
+  background-color: rgba(2, 3, 5, 0.72);
   opacity: 0;
   transition: opacity 360ms ease-out;
   will-change: opacity;
@@ -42,15 +77,11 @@
   opacity: 1;
 }
 
-[data-board-mode='focus'] .notebook-lamp-tube {
-  filter: blur(3px);
-}
-
-/* Screen-fixed edge falloff (lit solely by overhead lamp); never repaints during pan/zoom */
+/* Subtle screen-fixed edge vignette; never repaints during pan/zoom */
 .notebook-board-shade {
   background-image:
-    linear-gradient(to top, rgba(4, 6, 9, 0.88) 0%, rgba(4, 6, 9, 0.36) 24%, transparent 55%),
-    radial-gradient(ellipse 96% 86% at 50% 10%, transparent 38%, rgba(4, 6, 9, 0.78) 100%);
+    linear-gradient(to top, rgba(4, 6, 9, 0.62) 0%, rgba(4, 6, 9, 0.18) 20%, transparent 45%),
+    radial-gradient(ellipse 98% 88% at 50% 45%, transparent 56%, rgba(4, 6, 9, 0.52) 100%);
 }
 
 /* Crisp font rendering and cool-gray physical paper texture for pinned evidence cards */
