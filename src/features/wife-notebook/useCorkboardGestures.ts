@@ -14,24 +14,35 @@ export function formatCorkboardTransform(viewport: CorkboardViewport, settledZoo
   return `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
 }
 
+/** Absolute GPU transform for the fixed-size chalkboard surface (never uses CSS zoom, so zooming never invalidates GPU tiles). */
+export function formatSurfaceTransform(viewport: CorkboardViewport): string {
+  const tx = Math.round(-viewport.x * viewport.zoom * 100) / 100;
+  const ty = Math.round(-viewport.y * viewport.zoom * 100) / 100;
+  const scale = Math.round(viewport.zoom * 10000) / 10000;
+  return `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+}
+
 const DOUBLE_TAP_ZOOM = MAX_ZOOM;
 
 export interface UseCorkboardGesturesOptions {
   initialViewport?: CorkboardViewport;
   /** Single tap on empty board space; receives the tapped point in board coordinates. */
   onTapBackground?: (worldPoint: { x: number; y: number }) => void;
+  /** Double tap on empty board space; overrides the default 1x/2x zoom toggle when provided. */
+  onDoubleTapBackground?: (worldPoint: { x: number; y: number }) => void;
   /** Ignore pan, pinch and wheel input (e.g. wall overview mode). */
   locked?: boolean;
   /** Skip animated camera moves (prefers-reduced-motion). */
   reducedMotion?: boolean;
   planeRef?: React.RefObject<HTMLDivElement | null>;
-  /** Board surface plane rendered under the fixed lamp; mirrors every planeRef transform. */
+  /** Board surface plane rendered under the fixed lamp; scales purely on GPU without CSS zoom. */
   surfaceRef?: React.RefObject<HTMLDivElement | null>;
   boardRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   const onTapBackground = options?.onTapBackground;
+  const onDoubleTapBackground = options?.onDoubleTapBackground;
   const planeRef = options?.planeRef;
   const surfaceRef = options?.surfaceRef;
   const boardRef = options?.boardRef;
@@ -51,26 +62,30 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   // (zero layout/React cost) and commits crisp CSS zoom once the gesture settles.
   const viewportRef = useRef(viewport);
   const settledZoomRef = useRef(viewport.zoom);
+  settledZoomRef.current = viewport.zoom;
   const frameRef = useRef<number | null>(null);
   const wheelSettleTimerRef = useRef<number | null>(null);
   const pendingCommitRef = useRef(false);
 
   const applyPlaneTransform = useCallback((next: CorkboardViewport, activeGesture = false) => {
     const plane = planeRef?.current;
-    if (!plane) return;
-    let transform: string;
-    if (activeGesture) {
-      const tx = Math.round(-next.x * next.zoom * 100) / 100;
-      const ty = Math.round(-next.y * next.zoom * 100) / 100;
-      const relScale = settledZoomRef.current > 0
-        ? Math.round((next.zoom / settledZoomRef.current) * 10000) / 10000
-        : 1;
-      transform = `translate3d(${tx}px, ${ty}px, 0) scale(${relScale})`;
-    } else {
-      transform = formatCorkboardTransform(next, settledZoomRef.current);
+    if (plane) {
+      let transform: string;
+      if (activeGesture) {
+        const tx = Math.round(-next.x * next.zoom * 100) / 100;
+        const ty = Math.round(-next.y * next.zoom * 100) / 100;
+        const relScale = settledZoomRef.current > 0
+          ? Math.round((next.zoom / settledZoomRef.current) * 10000) / 10000
+          : 1;
+        transform = `translate3d(${tx}px, ${ty}px, 0) scale(${relScale})`;
+      } else {
+        transform = formatCorkboardTransform(next, settledZoomRef.current);
+      }
+      plane.style.transform = transform;
     }
-    plane.style.transform = transform;
-    if (surfaceRef?.current) surfaceRef.current.style.transform = transform;
+    if (surfaceRef?.current) {
+      surfaceRef.current.style.transform = formatSurfaceTransform(next);
+    }
   }, [planeRef, surfaceRef]);
 
   const flushViewportCommit = useCallback(() => {
@@ -83,9 +98,12 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       wheelSettleTimerRef.current = null;
     }
     pendingCommitRef.current = false;
-    settledZoomRef.current = viewportRef.current.zoom;
-    applyPlaneTransform(viewportRef.current, false);
-    commitViewport(viewportRef.current);
+    const next = viewportRef.current;
+    // Keep planeRef scaled against the still-committed DOM zoom until React commits both
+    // the new CSS zoom and the settled transform together (prevents a 1-frame scale flash).
+    const zoomChanged = Math.abs(next.zoom - settledZoomRef.current) >= 0.0005;
+    applyPlaneTransform(next, zoomChanged);
+    commitViewport(next);
   }, [applyPlaneTransform]);
 
   const scheduleViewportUpdate = useCallback((update: React.SetStateAction<CorkboardViewport>, commitToReact: boolean) => {
@@ -99,9 +117,10 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       const shouldCommit = pendingCommitRef.current || !planeRef?.current;
       pendingCommitRef.current = false;
       if (shouldCommit) {
-        settledZoomRef.current = viewportRef.current.zoom;
-        applyPlaneTransform(viewportRef.current, false);
-        commitViewport(viewportRef.current);
+        const next = viewportRef.current;
+        const zoomChanged = Math.abs(next.zoom - settledZoomRef.current) >= 0.0005;
+        applyPlaneTransform(next, zoomChanged);
+        commitViewport(next);
       } else {
         applyPlaneTransform(viewportRef.current, true);
       }
@@ -332,23 +351,27 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
         x: cam.x + (e.clientX - rect.left - rect.width / 2) / cam.zoom,
         y: cam.y + (e.clientY - rect.top - rect.height / 2) / cam.zoom,
       };
-      onTapBackground?.(point);
       const now = Date.now();
       if (now - lastTapTime.current < 320 && !lockedRef.current) {
-        // Double tap: zoom in to 2x (or back out to 1x), keeping the tapped spot under the finger.
-        const zoom = cam.zoom >= DOUBLE_TAP_ZOOM - 0.1 ? 1.0 : DOUBLE_TAP_ZOOM;
-        const keep = cam.zoom / zoom;
-        animateTo({
-          x: point.x - (point.x - cam.x) * keep,
-          y: point.y - (point.y - cam.y) * keep,
-          zoom,
-        }, reducedMotionRef.current ? 0 : 280);
         lastTapTime.current = 0;
+        if (onDoubleTapBackground) {
+          onDoubleTapBackground(point);
+        } else {
+          // Default double tap: zoom in to 2x (or back out to 1x), keeping the tapped spot under the finger.
+          const zoom = cam.zoom >= DOUBLE_TAP_ZOOM - 0.1 ? 1.0 : DOUBLE_TAP_ZOOM;
+          const keep = cam.zoom / zoom;
+          animateTo({
+            x: point.x - (point.x - cam.x) * keep,
+            y: point.y - (point.y - cam.y) * keep,
+            zoom,
+          }, reducedMotionRef.current ? 0 : 280);
+        }
       } else {
+        onTapBackground?.(point);
         lastTapTime.current = now;
       }
     }
-  }, [animateTo, flushViewportCommit, onTapBackground]);
+  }, [animateTo, flushViewportCommit, onDoubleTapBackground, onTapBackground]);
 
   // Capture touch pointers before card drag handlers. One owner for the entire pinch,
   // including the remaining finger after the first finger lifts.

@@ -19,7 +19,8 @@ export const CARD_WIDTH = 210;
 export const COLUMN_GAP = 40;
 export const CORKBOARD_ROW_HEIGHT = 220;
 export const CORKBOARD_VERTICAL_GAP = 40;
-export const INITIAL_BASE_Y = 100;
+/** Vertically centers the first row of cards (~120px tall) at CANVAS_HEIGHT / 2. */
+export const INITIAL_BASE_Y = Math.round(CANVAS_HEIGHT / 2 - 60);
 /** Auto-placed rows hold up to 6 cards so the wide board fills sideways before downwards. */
 export const MAX_ROW_COLUMNS = 6;
 

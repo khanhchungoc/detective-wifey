@@ -81,9 +81,9 @@ async function tapCard(page: Page, nodeId: string): Promise<void> {
   const vp = page.viewportSize();
   if (!vp) throw new Error('No viewport');
   const card = page.locator(`[data-node-id="${nodeId}"]`);
-  // The board opens in wall view: the first tap on a card only zooms in to it.
+  // The board opens in wall view: double-tapping a card brings the board forward into focus view.
   if (await page.locator('[data-board-mode="wall"]').count()) {
-    await card.click();
+    await card.dblclick();
     await expect(page.locator('[data-board-mode="focus"]')).toBeVisible();
     await waitForCardToSettle(card);
   }

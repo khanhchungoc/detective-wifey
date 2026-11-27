@@ -194,7 +194,7 @@ describe('corkboard mobile gesture ownership', () => {
     expect(updates).toEqual([{ x: 950, y: 970, zoom: 1 }]);
   });
 
-  it('mirrors every plane transform onto the board surface layer so the chalkboard pans and zooms with the cards', () => {
+  it('drives the board surface with absolute GPU scale so the chalkboard pans and zooms without CSS zoom re-raster', () => {
     updates.length = 0;
     const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
     const surface = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
@@ -209,11 +209,12 @@ describe('corkboard mobile gesture ownership', () => {
     handlers.onPointerMove(pointer(1, 250, 330));
 
     flushFrame();
-    expect(surface.style.transform).toBe(plane.style.transform);
+    expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
     expect(surface.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
 
     handlers.onPointerUp(pointer(1, 250, 330));
-    expect(surface.style.transform).toBe(plane.style.transform);
+    expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0)');
+    expect(surface.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
   });
 
   it('reports single background taps in board coordinates so the notebook can tell board from wall', () => {
@@ -250,6 +251,22 @@ describe('corkboard mobile gesture ownership', () => {
     expect(updates[updates.length - 1]).toEqual({ x: 900, y: 900, zoom: 1 });
   });
 
+  it('invokes onDoubleTapBackground when provided instead of toggling 2x zoom', () => {
+    const doubleTaps: { x: number; y: number }[] = [];
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 600, zoom: 1 },
+      onDoubleTapBackground: point => doubleTaps.push(point),
+    });
+    const tap = () => {
+      handlers.onPointerDown(pointer(1, 300, 400));
+      handlers.onPointerUp(pointer(1, 300, 400));
+    };
+    tap();
+    tap();
+    expect(doubleTaps).toEqual([{ x: 1000, y: 700 }]);
+    expect(updates).toHaveLength(0);
+  });
+
   it('ignores pan, pinch and wheel input while locked (wall view)', () => {
     const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
     const { containerProps: handlers } = useCorkboardGestures({
@@ -267,7 +284,7 @@ describe('corkboard mobile gesture ownership', () => {
     expect(updates).toHaveLength(0);
   });
 
-  it('flies the camera on the GPU plane and commits the target viewport once on arrival', () => {
+  it('flies the camera on the GPU plane, scales surface absolutely, and keeps plane relative scale until React commits the new zoom', () => {
     vi.spyOn(performance, 'now').mockReturnValue(0);
     const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
     const surface = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
@@ -278,7 +295,9 @@ describe('corkboard mobile gesture ownership', () => {
     });
     animateTo({ x: 400, y: 500, zoom: 1 }, 400);
     flushFrame(200);
-    expect(surface.style.transform).toBe(plane.style.transform);
+    expect(plane.style.transform).toContain('scale(');
+    expect(surface.style.transform).toContain('scale(');
+    expect(surface.style.transform).not.toBe(plane.style.transform);
     expect(updates).toHaveLength(0);
 
     // Input is ignored mid-flight so a stray drag cannot fight the animation.
@@ -287,7 +306,9 @@ describe('corkboard mobile gesture ownership', () => {
 
     flushFrame(400);
     expect(updates).toEqual([{ x: 400, y: 500, zoom: 1 }]);
-    expect(plane.style.transform).toBe('translate3d(-400px, -500px, 0)');
+    // Surface uses absolute zoom (1), while plane retains scale(5) until React commits zoom: 1 atomically.
+    expect(surface.style.transform).toBe('translate3d(-400px, -500px, 0) scale(1)');
+    expect(plane.style.transform).toBe('translate3d(-400px, -500px, 0) scale(5)');
     vi.restoreAllMocks();
   });
 
