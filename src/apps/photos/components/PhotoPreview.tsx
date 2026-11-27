@@ -37,7 +37,8 @@ export const PhotoPreview: React.FC<PhotoPreviewProps> = ({
         <img
           src={imageSrc}
           alt={title}
-          className="w-full h-full object-cover"
+          draggable={false}
+          className="w-full h-full object-cover select-none"
           style={transformStyle}
           loading="lazy"
         />

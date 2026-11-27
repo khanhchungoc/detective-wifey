@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { IoImages } from 'react-icons/io5';
 import type { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
 import { readPhotosData } from './data';
 import { PhotoGridView } from './components/PhotoGridView';
-import { PhotoLightboxView } from './components/PhotoLightboxView';
+import { PhotoLightboxView, type PhotoOriginDelta } from './components/PhotoLightboxView';
 import { PhotoInfoDrawer } from './components/PhotoInfoDrawer';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { UniversalEvidenceModal, type UniversalEvidenceItem } from '../../features/investigation';
 import photosIcon from './assets/photos-icon.svg';
+
+const LIGHTBOX_HEADER_HEIGHT = 56;
 
 export const PhotosApp: React.FC<VirtualAppProps> = ({
   caseData,
@@ -18,7 +21,9 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
 }) => {
   const photosData = useMemo(() => readPhotosData(caseData.appsData?.photos), [caseData.appsData?.photos]);
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const [activePhotoId, setActivePhotoId] = useState<string | null>(null);
+  const [originDelta, setOriginDelta] = useState<PhotoOriginDelta | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isViewingHidden, setIsViewingHidden] = useState(false);
   const [evidenceItem, setEvidenceItem] = useState<UniversalEvidenceItem | null>(null);
@@ -53,6 +58,33 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     return () => clearTimeout(timer);
   }, [toastMessage]);
 
+  // Measure tapped thumbnail once on open for iOS Photos hero zoom
+  const handleSelectPhoto = useCallback((id: string, originElement?: HTMLElement | null) => {
+    const rootRect = rootRef.current?.getBoundingClientRect();
+    const tileRect = originElement?.getBoundingClientRect();
+    if (rootRect && tileRect && rootRect.width > 0 && rootRect.height > 0 && tileRect.width > 0) {
+      const stageCenterX = rootRect.left + rootRect.width / 2;
+      const stageCenterY = rootRect.top + LIGHTBOX_HEADER_HEIGHT + (rootRect.height - LIGHTBOX_HEADER_HEIGHT) / 2;
+      const tileCenterX = tileRect.left + tileRect.width / 2;
+      const tileCenterY = tileRect.top + tileRect.height / 2;
+      const scale = Math.max(0.2, Math.min(0.95, tileRect.width / rootRect.width));
+      setOriginDelta({
+        dx: tileCenterX - stageCenterX,
+        dy: tileCenterY - stageCenterY,
+        scale,
+      });
+    } else {
+      setOriginDelta(null);
+    }
+    setActivePhotoId(id);
+    setIsInfoOpen(false);
+  }, []);
+
+  const handleCloseLightbox = useCallback(() => {
+    setActivePhotoId(null);
+    setIsInfoOpen(false);
+  }, []);
+
   // Root swipe-back handler
   const handleRootBack = useCallback(() => {
     if (isInfoOpen) {
@@ -86,84 +118,97 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
   }, [onRequestUnlock, lockChallengeKey]);
 
   return (
-    <div
-      {...rootSwipeHandlers}
-      className="relative flex flex-col h-full w-full bg-[#000000] text-white select-none font-sans overflow-hidden"
-    >
-      {/* Photo Library Grid View */}
-      <PhotoGridView
-        photos={publicPhotos}
-        hiddenPhotos={hiddenPhotos}
-        hasHiddenPhotos={photosData.hasHiddenPhotos}
-        isHiddenUnlocked={isHiddenUnlocked}
-        caseId={caseData.caseId}
-        husbandName={caseData.husbandName}
-        onSelectPhoto={(id) => {
-          setActivePhotoId(id);
-          setIsInfoOpen(false);
-        }}
-        onRequestUnlock={handleRequestUnlock}
-        onTriggerEvidence={handleTriggerEvidence}
-        onShowToast={showToast}
-        isViewingHidden={isViewingHidden}
-        onToggleViewHidden={setIsViewingHidden}
-      />
-
-      {/* Forensic Lightbox View (When photo selected) */}
-      {selectedPhoto && (
-        <PhotoLightboxView
-          photo={selectedPhoto}
+    <MotionConfig reducedMotion="user">
+      <div
+        ref={rootRef}
+        {...rootSwipeHandlers}
+        className="relative flex flex-col h-full w-full bg-[#000000] text-white select-none font-sans overflow-hidden"
+      >
+        {/* Photo Library Grid View */}
+        <PhotoGridView
+          photos={publicPhotos}
+          hiddenPhotos={hiddenPhotos}
+          hasHiddenPhotos={photosData.hasHiddenPhotos}
+          isHiddenUnlocked={isHiddenUnlocked}
           caseId={caseData.caseId}
           husbandName={caseData.husbandName}
-          onBack={() => {
-            setActivePhotoId(null);
-            setIsInfoOpen(false);
-          }}
-          onToggleInfo={() => setIsInfoOpen((prev) => !prev)}
-          isInfoOpen={isInfoOpen}
+          onSelectPhoto={handleSelectPhoto}
+          onRequestUnlock={handleRequestUnlock}
           onTriggerEvidence={handleTriggerEvidence}
           onShowToast={showToast}
+          isViewingHidden={isViewingHidden}
+          onToggleViewHidden={setIsViewingHidden}
         />
-      )}
 
-      {/* Photo Info & EXIF Drawer */}
-      {selectedPhoto && (
-        <PhotoInfoDrawer
-          photo={selectedPhoto}
-          caseId={caseData.caseId}
-          husbandName={caseData.husbandName}
-          isOpen={isInfoOpen}
-          onClose={() => setIsInfoOpen(false)}
-          onNavigateToGrid={() => {
-            setIsInfoOpen(false);
-            setActivePhotoId(null);
-          }}
-          onTriggerEvidence={handleTriggerEvidence}
-          onShowToast={showToast}
-        />
-      )}
+        {/* Forensic Lightbox View (When photo selected) */}
+        <AnimatePresence>
+          {selectedPhoto && (
+            <PhotoLightboxView
+              key={selectedPhoto.id}
+              photo={selectedPhoto}
+              caseId={caseData.caseId}
+              husbandName={caseData.husbandName}
+              onBack={handleCloseLightbox}
+              onToggleInfo={() => setIsInfoOpen((prev) => !prev)}
+              isInfoOpen={isInfoOpen}
+              onTriggerEvidence={handleTriggerEvidence}
+              onShowToast={showToast}
+              originDelta={originDelta}
+            />
+          )}
+        </AnimatePresence>
 
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#1C1C1E]/95 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-          {toastMessage}
-        </div>
-      )}
+        {/* Photo Info & EXIF Drawer */}
+        <AnimatePresence>
+          {selectedPhoto && isInfoOpen && (
+            <PhotoInfoDrawer
+              key={`info-${selectedPhoto.id}`}
+              photo={selectedPhoto}
+              caseId={caseData.caseId}
+              husbandName={caseData.husbandName}
+              isOpen={true}
+              onClose={() => setIsInfoOpen(false)}
+              onNavigateToGrid={() => {
+                setIsInfoOpen(false);
+                setActivePhotoId(null);
+              }}
+              onTriggerEvidence={handleTriggerEvidence}
+              onShowToast={showToast}
+            />
+          )}
+        </AnimatePresence>
 
-      {/* Universal Evidence Modal */}
-      {evidenceItem && (
-        <UniversalEvidenceModal
-          isOpen={Boolean(evidenceItem)}
-          item={evidenceItem}
-          onPinEvidence={(suspect) => {
-            onTagSuspect(suspect, 'photos', evidenceItem.source);
-            setEvidenceItem(null);
-            showToast('Đã ghim bằng chứng vào Sổ tay thám tử');
-          }}
-          onClose={() => setEvidenceItem(null)}
-        />
-      )}
-    </div>
+        {/* Toast Notification */}
+        <AnimatePresence>
+          {toastMessage && (
+            <motion.div
+              key={toastMessage}
+              initial={{ opacity: 0, y: -10, scale: 0.94, x: '-50%' }}
+              animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
+              exit={{ opacity: 0, y: -8, scale: 0.94, x: '-50%' }}
+              transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-16 left-1/2 z-50 px-4 py-2 rounded-full bg-[#1C1C1E]/95 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shadow-2xl"
+            >
+              {toastMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Universal Evidence Modal */}
+        {evidenceItem && (
+          <UniversalEvidenceModal
+            isOpen={Boolean(evidenceItem)}
+            item={evidenceItem}
+            onPinEvidence={(suspect) => {
+              onTagSuspect(suspect, 'photos', evidenceItem.source);
+              setEvidenceItem(null);
+              showToast('Đã ghim bằng chứng vào Sổ tay thám tử');
+            }}
+            onClose={() => setEvidenceItem(null)}
+          />
+        )}
+      </div>
+    </MotionConfig>
   );
 };
 
