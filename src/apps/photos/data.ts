@@ -311,19 +311,16 @@ export function buildPhotoEvidenceItem(
   const location = photo.locationTag || photo.exif.locationName;
   const rawTimestamp = photo.timestamp || photo.date;
 
-  let subtitle = photo.date;
-  let snippet = photo.description || photo.title;
-  if (mode === 'lightbox') {
-    subtitle = location ? `${photo.date} • ${location}` : photo.date;
-    snippet = photo.description || photo.title;
-  } else if (mode === 'exif') {
+  let subtitle = location ? `${photo.date} • ${location}` : photo.date;
+  let snippet = '';
+  if (mode === 'exif') {
     const dateLabel = formattedDate || photo.date;
     subtitle = `${dateLabel} • ${photo.exif.locationName}`;
     snippet = `EXIF [${photo.exif.device}] ${dateLabel} tại ${photo.exif.locationName}. Thông số: ISO ${photo.exif.iso}, tiêu cự ${photo.exif.focalLength}mm, ${photo.exif.aperture}, ${photo.exif.shutterSpeed}.`;
   }
 
   return {
-    title: photo.title,
+    title: photo.exif.filename || photo.title,
     subtitle,
     snippet,
     suspectToTag: photo.suspectName || husbandName,
@@ -333,7 +330,7 @@ export function buildPhotoEvidenceItem(
       caseId,
       recordId: photo.id,
       clueRefId: photo.clueRefId,
-      title: photo.title,
+      title: photo.exif.filename || photo.title,
       subtitle,
       snippet,
       kind: 'photo',

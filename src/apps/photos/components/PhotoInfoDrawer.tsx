@@ -179,13 +179,6 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
             </button>
           </div>
 
-          {/* Caption Header */}
-          <div className="border-b border-white/10 pb-3">
-            <p className="text-ios-subheadline text-slate-300">
-              {photo.caption || photo.description || 'Thêm chú thích'}
-            </p>
-          </div>
-
           {/* Date, Time & Filename */}
           <div className="space-y-1">
             <p className="text-ios-subheadline font-semibold text-white">{formattedDate}</p>

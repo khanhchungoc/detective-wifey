@@ -111,8 +111,8 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
     {
       nodeId: 'node_record_photo_dinner',
       type: 'record_clue',
-      label: 'Ảnh cơm niêu 19:45 (Phố Cổ)',
-      subtitle: 'EXIF 19:45 tại Phố Cổ, góc bàn lộ chén trà và đôi đũa thứ hai',
+      label: 'IMG_9518.HEIC',
+      subtitle: '15/10 19:45 • Phố Cổ, Hoàn Kiếm, Hà Nội',
       sourceAppId: 'photos',
       recordRefId: 'photo_dinner_claypot',
       clueRefId: 'CLUE-PHOT-05',
