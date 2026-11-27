@@ -78,7 +78,8 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(html).toContain('data-lockscreen-notif-peek="true"');
     expect(html).toContain('data-lockscreen-flashlight="true"');
     expect(html).toContain('data-lockscreen-camera="true"');
-    expect(html).toContain('data-lockscreen-home-bar="true"');
+    expect(html).not.toContain('data-lockscreen-home-bar');
+    expect(html).toContain('touch-action:none');
     expect(html).toContain('Vuốt lên để mở');
     expect(html).not.toContain('Lén quét FaceID / Vuốt lên để mở khóa');
     expect(html).toContain('tabular-nums');

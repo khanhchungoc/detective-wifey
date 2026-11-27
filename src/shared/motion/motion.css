@@ -13,6 +13,7 @@
   --app-origin-y: 70%;
   --app-scale-x: .16;
   --app-scale-y: .08;
+  --app-card-radius: 44px;
   view-transition-name: none;
 }
 /* Keep launcher icons visible beneath the dimmed scrim so swiping back to home reveals the home screen */
@@ -51,6 +52,8 @@ html:is([data-motion='open'], [data-motion='close'])::view-transition-new(root) 
 ::view-transition-group(phone-app-grid),
 ::view-transition-group(phone-dock-apps) { z-index: 5; }
 ::view-transition-group(phone-app) { z-index: 10; }
+/* Static radius (not animated) so the app card reads as a rounded card while flying. */
+::view-transition-old(phone-app), ::view-transition-new(phone-app) { border-radius: var(--app-card-radius); overflow: hidden; }
 ::view-transition-group(system-status), ::view-transition-group(system-home) { z-index: 40; }
 ::view-transition-group(notification-banner),
 ::view-transition-group(phone-sheet), ::view-transition-group(evidence-modal),
@@ -87,7 +90,8 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
   to { transform: translate3d(0, 0, 0) scale(1); }
 }
 @keyframes ios-app-out {
-  from { transform: translate3d(0, 0, 0) scale(1); }
+  /* Swipe-home replays the lifted finger pose (--lift-*); a tap-close starts at rest. */
+  from { transform: translate3d(var(--lift-tx, 0px), var(--lift-ty, 0px), 0) scale(var(--lift-scale, 1)); }
   to { transform: translate3d(var(--app-dx, 0px), var(--app-dy, 0px), 0) scale(var(--app-scale-x), var(--app-scale-y)); }
 }
 @keyframes ios-app-fade-in { from { opacity: 0; } to { opacity: 1; } }

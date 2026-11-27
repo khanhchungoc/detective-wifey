@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { handoffSwipe } from '../motion/transition';
+import { handoffLift } from '../motion/transition';
+
+/** Lifted app card corner; motion.css owns the value so the close snapshot matches. */
+const LIFT_RADIUS = 'var(--app-card-radius)';
 
 type GestureSurfaceEvent = {
   currentTarget?: EventTarget | null;
@@ -138,6 +141,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     lifted = false;
     element.style.transform = '';
     element.style.willChange = '';
+    element.style.borderRadius = '';
     if (animate && wasLifted && element.animate && !reducedMotion) {
       settling?.cancel();
       const anim = element.animate(
@@ -220,6 +224,7 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
     if (!lifted) {
       lifted = true;
       surface.style.willChange = 'transform';
+      surface.style.borderRadius = LIFT_RADIUS;
     }
     const progress = Math.min(1, upward / 260);
     scale = Number((1 - progress * 0.28).toFixed(4));
@@ -257,8 +262,8 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
       lastTriggered = endTime;
       const draggedSurface = surface;
       const wasLifted = lifted;
+      const pose = { x: tx, y: ty, scale };
       stopFrame();
-      if (draggedSurface && wasLifted) paint();
       startCoords = null;
       lastCoords = null;
       surface = null;
@@ -269,21 +274,17 @@ export function createSwipeHomeEngine(options: UseSwipeHomeOptions): SwipeHomeEn
       if (stopProp) {
         stopProp();
       }
+      const release = () => {
+        if (!draggedSurface) return;
+        draggedSurface.style.transform = '';
+        draggedSurface.style.willChange = '';
+        draggedSurface.style.borderRadius = '';
+      };
       if (draggedSurface && wasLifted) {
-        // Keep the lifted/shrunken app card for ViewTransition capture so it throws directly into its icon.
-        handoffSwipe(
-          0,
-          () => {
-            draggedSurface.style.transform = '';
-            draggedSurface.style.willChange = '';
-          },
-          () => options.onHome(),
-        );
+        // Close keyframe replays the finger pose, then flies the card into its icon.
+        handoffLift(pose, release, () => options.onHome());
       } else {
-        if (draggedSurface) {
-          draggedSurface.style.transform = '';
-          draggedSurface.style.willChange = '';
-        }
+        release();
         options.onHome();
       }
       return true;
