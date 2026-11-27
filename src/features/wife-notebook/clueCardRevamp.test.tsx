@@ -414,30 +414,30 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           evidence: {
             caseId: 'case_01',
             recordId: 'tx_01',
-            clueRefId: 'CLUE-BANK-06',
+            clueRefId: 'CLUE-BANK-07',
             title: 'Giao dịch: Com Nieu Pho Co',
             snippet: '- 640.000 đ 15/10/2026 20:48\nCom Nieu Pho Co Thanh toan the',
           },
         },
         {
           suspectId: 'suspect_huong',
-          displayName: 'Giao dịch: Nguyen Thi Thu Huong',
+          displayName: 'Giao dịch: Bé Ngọc',
           sourceApp: 'banking' as const,
           timestamp: 1001,
           evidence: {
             caseId: 'case_01',
-            recordId: 'tx_02',
-            clueRefId: 'CLUE-BANK-06',
-            title: 'Giao dịch: Nguyen Thi Thu Huong',
-            snippet: '+ 160.000 đ 15/10/2026 12:40\nNguyen Thi Thu Huong Hoan phan trua 14/10',
+            recordId: 'tx_ngoc',
+            clueRefId: 'CLUE-BANK-07',
+            title: 'Giao dịch: Bé Ngọc',
+            snippet: '- 1.200.000 đ 15/10/2026 20:10\nCK',
           },
         },
       ];
 
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
       expect(nodes).toHaveLength(2);
-      expect(nodes.map(n => n.nodeId)).toEqual(['node_record_bank_receipt', 'node_bridge_name']);
-      expect(nodes.map(n => n.recordRefId)).toEqual(['tx_01', 'tx_02']);
+      expect(nodes.map(n => n.nodeId)).toEqual(['node_record_bank_receipt', 'node_banking_tx_ngoc']);
+      expect(nodes.map(n => n.recordRefId)).toEqual(['tx_01', 'tx_ngoc']);
     });
   });
 
@@ -586,10 +586,10 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           timestamp: 100,
           evidence: {
             caseId: 'hoang_01',
-            recordId: 'thread_tuan',
+            recordId: 'thread_tuan_dien',
             title: 'Anh Tuấn Thợ Điện',
             snippet: 'Áo anh em treo lên rồi, mai mang trả nhé.',
-            clueRefId: 'CLUE-ZOLA-07',
+            clueRefId: 'CLUE-ZOLA-10',
           },
         },
         {
@@ -599,7 +599,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           timestamp: 101,
           evidence: {
             caseId: 'hoang_01',
-            recordId: 'thread_tuan_m4',
+            recordId: 'thread_tuan_dien_m4',
             title: 'Tin nhắn: Anh Tuấn Thợ Điện',
             snippet: 'Anh xem giúp em bản xuất bị lệch chữ ở trang cuối với.',
             eventTime: '13/10 10:10',
@@ -612,7 +612,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           timestamp: 102,
           evidence: {
             caseId: 'hoang_01',
-            recordId: 'thread_tuan_m5',
+            recordId: 'thread_tuan_dien_m5',
             title: 'Tin nhắn: Anh Tuấn Thợ Điện',
             snippet: 'Đúng là em chọn nhầm vùng. Đủ trang rồi.',
             eventTime: '13/10 10:16',
@@ -624,7 +624,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const normalized = normalizeTaggedSuspects(legacyTags);
       expect(normalized).toHaveLength(1);
       expect(normalized[0].displayName).toBe('Anh Tuấn Thợ Điện');
-      expect(normalized[0].conversationId).toBe('thread_tuan');
+      expect(normalized[0].conversationId).toBe('thread_tuan_dien');
       expect(normalized[0].messages).toHaveLength(2);
       expect(normalized[0].messages![0].text).toBe('Anh xem giúp em bản xuất bị lệch chữ ở trang cuối với.');
       expect(normalized[0].messages![1].text).toBe('Đúng là em chọn nhầm vùng. Đủ trang rồi.');
@@ -638,7 +638,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     });
 
     it('keeps the Zola conversation and order connection speculative', () => {
-      for (const chatId of ['node_alias_tuan', 'node_record_zola_chat']) {
+      for (const chatId of ['node_alias_khoa', 'node_record_khoa_booking']) {
         const { newEdge } = createEdgeBetweenNodes(
           LEVEL_01_KNOWLEDGE_GRAPH, [], chatId, 'node_record_ecommerce_order',
         );

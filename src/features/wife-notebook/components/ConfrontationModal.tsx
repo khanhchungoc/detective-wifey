@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   IoScaleOutline,
@@ -15,7 +15,8 @@ import {
   IoChevronBackOutline,
   IoChevronForwardOutline,
 } from 'react-icons/io5';
-import type { ConfrontationSlot, VerdictType } from '../../../shared/contracts/case-schema';
+import type { ConfrontationSlot, EpilogueNotification, VerdictType } from '../../../shared/contracts/case-schema';
+import { NotificationBanner } from '../../../shell/components/NotificationBanner';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import {
   CHOICE_STAGGER_S,
@@ -36,6 +37,8 @@ export interface ConfrontationModalProps {
   isOpen: boolean;
   session?: ScriptedConfrontationState | null;
   evaluation?: ConfrontationEvaluationResult | null;
+  /** Hook into the next level, shown once as a banner after the ending resolves. */
+  epilogueNotification?: EpilogueNotification;
   maxStrikes: number;
   onSelectChoice?: (choiceId: string) => void;
   onContinueInvestigation: () => void;
@@ -145,6 +148,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
   isOpen,
   session,
   evaluation,
+  epilogueNotification,
   maxStrikes,
   onSelectChoice,
   onContinueInvestigation,
@@ -154,6 +158,13 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = Boolean(useReducedMotion());
+  const [isEpilogueDismissed, setIsEpilogueDismissed] = useState(false);
+  useEffect(() => {
+    if (!isOpen || session?.phase !== 'resolved') setIsEpilogueDismissed(false);
+  }, [isOpen, session?.phase]);
+  const epilogueToast = epilogueNotification && isOpen && session?.phase === 'resolved' && !isEpilogueDismissed
+    ? { toastId: 'epilogue', ...epilogueNotification }
+    : null;
 
   const isLockedCaught = session
     ? false
@@ -344,6 +355,11 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
             paddingBottom: 'max(12px, var(--phone-system-bottom, 14px))',
           }}
         >
+          <NotificationBanner
+            toast={epilogueToast}
+            onClose={() => setIsEpilogueDismissed(true)}
+            onClick={() => setIsEpilogueDismissed(true)}
+          />
           {/* TIER 1 (TOP): Dark Interrogation Stage + Top-Down Spotlight + Comic Hoang */}
           <section className="relative flex flex-col items-center shrink-0 bg-gradient-to-b from-[#080b0f] via-[#0b1017] to-[#080b0f] px-3 pt-1 pb-2 overflow-hidden">
             {/* Stage Overhead Spotlight Cone */}

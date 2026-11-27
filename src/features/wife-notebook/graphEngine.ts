@@ -183,16 +183,20 @@ export function createEdgeBetweenNodes(
     return { newEdge: null, isDuplicate: true };
   }
 
-  // Helper to find equivalent canonical node IDs (e.g. node_alias_tuan and node_record_zola_chat share recordRefId)
+  // A pinned card stands for every canonical node it can prove: its own id, its conversation,
+  // and each pinned message (one thread card may carry several graph records, e.g. wife 18:55 + 20:46).
   const getEquivalentNodeIds = (targetId: string): string[] => {
     const ids = [targetId];
-    const node = canonicalGraph.nodes.find(n => n.nodeId === targetId);
-    if (node?.recordRefId) {
-      for (const other of canonicalGraph.nodes) {
-        if (other.nodeId !== targetId && other.recordRefId === node.recordRefId && (!other.sourceAppId || !node.sourceAppId || other.sourceAppId === node.sourceAppId)) {
-          ids.push(other.nodeId);
-        }
-      }
+    const pinned = pinnedNodes?.find(n => n.nodeId === targetId);
+    const canonicalNode = canonicalGraph.nodes.find(n => n.nodeId === targetId);
+    const app = pinned?.sourceAppId ?? canonicalNode?.sourceAppId;
+    const refs = new Set<string>(
+      [pinned?.recordRefId, pinned?.conversationId, canonicalNode?.recordRefId,
+        ...(pinned?.messages?.map(message => message.recordId) ?? [])].filter((ref): ref is string => Boolean(ref)),
+    );
+    for (const other of canonicalGraph.nodes) {
+      if (other.nodeId === targetId || !other.recordRefId || !refs.has(other.recordRefId)) continue;
+      if (!other.sourceAppId || !app || other.sourceAppId === app) ids.push(other.nodeId);
     }
     return ids;
   };
@@ -211,24 +215,20 @@ export function createEdgeBetweenNodes(
     const target = pinnedNodes.find(node => node.nodeId === nodeBId);
     const content = (node?: CaseGraphNode) =>
       [node?.subtitle, ...(node?.messages?.map(message => message.text) ?? [])].filter(Boolean).join('\n');
-    // A conversation's other messages are not evidence until the player pins them.
-    if (canonical?.edgeId === 'edge_zola_dinner_receipt') {
-      const chat = source?.sourceAppId === 'internet-messaging' ? source : target;
-      const text = chat?.messages?.map(message => message.text).join('\n') ?? '';
-      if (!/com\s+nieu/i.test(text.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))) canonical = undefined;
-    }
-    const isPhoneOrder = (source?.sourceAppId === 'phone' && target?.sourceAppId === 'ecommerce') ||
-      (target?.sourceAppId === 'phone' && source?.sourceAppId === 'ecommerce');
-    if (isPhoneOrder) {
+    // An order is tied to a phone only when the pinned phone record shows the order's own number.
+    const orderCard = source?.sourceAppId === 'ecommerce' && target?.sourceAppId === 'phone' ? source
+      : target?.sourceAppId === 'ecommerce' && source?.sourceAppId === 'phone' ? target : undefined;
+    if (orderCard) {
       const phones = (node?: CaseGraphNode) => (content(node).match(/(?<!\d)(?:\+84|0)(?:[ .-]?\d){9}(?!\d)/g) ?? [])
         .map(phone => phone.replace(/[ .-]/g, '').replace(/^\+84/, '0'));
       const targetPhones = phones(target);
       if (phones(source).some(phone => targetPhones.includes(phone))) {
-        canonical = canonicalGraph.edges.find(edge => edge.edgeId === 'edge_order_phone') ?? {
-          edgeId: `shared_phone_${[nodeAId, nodeBId].sort().join('_')}`,
-          sourceNodeId: nodeAId, targetNodeId: nodeBId,
-          relationship: 'bridges_identity', isSmokingGun: false,
-        };
+        // Any phone record (contact or call) with the order's number backs the order's canonical phone bridge.
+        const orderIds = getEquivalentNodeIds(orderCard.nodeId);
+        canonical = canonicalGraph.edges.find(edge => edge.relationship === 'bridges_identity' && (
+          (orderIds.includes(edge.sourceNodeId) && canonicalGraph.nodes.find(n => n.nodeId === edge.targetNodeId)?.sourceAppId === 'phone') ||
+          (orderIds.includes(edge.targetNodeId) && canonicalGraph.nodes.find(n => n.nodeId === edge.sourceNodeId)?.sourceAppId === 'phone')
+        ));
       } else {
         canonical = undefined;
       }

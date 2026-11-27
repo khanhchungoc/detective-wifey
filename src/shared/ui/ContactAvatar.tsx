@@ -46,7 +46,11 @@ const groupNames = new Set([
   'Team Dev Technosoft',
   'Gia Đình Ngoại',
   'Cư dân tầng 8',
+  'Technosoft - Toàn công ty',
 ]);
+
+// Alias contacts show a neutral initial so the avatar never leaks the real person behind the alias.
+const initialAvatarNames = new Set(['Khoa BE']);
 
 const flowerShopNames = new Set(['Tiệm Hoa Tươi Mimosa']);
 const propertyOfficeNames = new Set(['Ban Quản Lý']);
@@ -67,7 +71,7 @@ const serviceNames = new Set([
   'Viettel CSKH',
 ]);
 
-for (const names of [groupNames, flowerShopNames, propertyOfficeNames, serviceNames]) {
+for (const names of [initialAvatarNames, groupNames, flowerShopNames, propertyOfficeNames, serviceNames]) {
   const normalized = [...names].map(normalize);
   names.clear();
   normalized.forEach((name) => names.add(name));
@@ -101,6 +105,14 @@ export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false
         className={classes}
         style={{ ...dimensions, backgroundImage: `url(${kindergartenChildAvatar})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
       />
+    );
+  }
+
+  if (initialAvatarNames.has(normalizedName)) {
+    return (
+      <span aria-hidden="true" className={`${classes} bg-[#D1D5DB] font-semibold text-[#4B5563]`} style={{ ...dimensions, fontSize: fluid ? undefined : size * 0.42 }}>
+        {name.trim().charAt(0).toLocaleUpperCase('vi')}
+      </span>
     );
   }
 

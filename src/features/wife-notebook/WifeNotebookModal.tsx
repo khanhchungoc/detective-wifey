@@ -9,6 +9,7 @@ import {
   IoScaleOutline,
 } from 'react-icons/io5';
 import { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
+import { resolveConversationId } from '../investigation/tagSuspect';
 import {
   createEdgeBetweenNodes,
   evaluateUnmaskedSuspects,
@@ -235,56 +236,11 @@ export function deriveNodesFromTaggedEvidence(
 
   for (const tag of taggedSuspects) {
     const rawConvId = tag.conversationId || tag.evidence?.conversationId || (tag.evidence?.kind === 'conversation' ? tag.evidence.recordId : undefined);
-    // Resolve conversationId from recordId if format is thread_tuan_m4 or chat:shop:message:1
-    let conversationId = rawConvId;
-    if (!conversationId && tag.evidence?.recordId) {
-      const rec = tag.evidence.recordId;
-      if (rec.startsWith('thread_')) {
-        const parts = rec.split('_');
-        if (parts.length >= 3) conversationId = `${parts[0]}_${parts[1]}`;
-        else conversationId = rec;
-      } else if (rec.startsWith('chat:')) {
-        const parts = rec.split(':');
-        if (parts.length >= 2) conversationId = parts[1];
-      }
-    }
+    // Resolve conversationId from recordId if format is thread_khoa_m4 or chat:shop:message:1
+    let conversationId = rawConvId ?? resolveConversationId(tag.sourceApp, tag.evidence?.recordId);
     const cleanedDisplayName = cleanLabel(tag.displayName);
-    if (!conversationId && tag.sourceApp === 'internet-messaging' && cleanedDisplayName === 'Anh Tuấn Thợ Điện') {
-      conversationId = 'thread_tuan';
-    }
-    if (!conversationId && (tag.sourceApp === 'messages' || tag.sourceApp === 'phone') && cleanedDisplayName === 'Anh Tuấn Thợ Điện') {
-      conversationId = 'sms_contact_10';
-    }
-
-    // 1. Try to match by exact recordId or conversationId first, then clueRefId.
-    // Invariant: Distinct records (e.g. tx_01 vs tx_02) sharing the same clueRefId must NOT collapse into one card.
-    let canonicalMatch = canonicalGraph.nodes.find(n =>
-      Boolean(tag.evidence?.recordId && n.sourceAppId === tag.sourceApp && n.recordRefId === tag.evidence.recordId),
-    );
-
-    if (!canonicalMatch && conversationId) {
-      canonicalMatch = canonicalGraph.nodes.find(n =>
-        Boolean(n.sourceAppId === tag.sourceApp && n.recordRefId === conversationId),
-      );
-    }
-
-    if (!canonicalMatch && tag.evidence?.clueRefId) {
-      canonicalMatch = canonicalGraph.nodes.find(n =>
-        Boolean(n.clueRefId === tag.evidence!.clueRefId && (!n.sourceAppId || n.sourceAppId === tag.sourceApp)),
-      );
-    }
-
-    // 2. If no record/clue match, match by label for person tags or conversation pins
-    // Invariant: Different apps maintain separate cards and never conflate into each other
-    if (!canonicalMatch && (!tag.evidence || conversationId || tag.isExplicitConversationPin)) {
-      canonicalMatch = canonicalGraph.nodes.find(n => {
-        const matchesLabel = n.label === cleanedDisplayName || n.nodeId === tag.suspectId;
-        if (!matchesLabel) return false;
-        // If the node has a sourceAppId, it must match the tag's sourceApp
-        if (n.sourceAppId && tag.sourceApp && n.sourceAppId !== tag.sourceApp) return false;
-        return true;
-      });
-    }
+    // Legacy contact tags carry no record id: resolve the thread from the visible contact name.
+    conversationId ??= resolveConversationId(tag.sourceApp, undefined, undefined, cleanedDisplayName);
 
     const label = (tag.conversationId || tag.isExplicitConversationPin || conversationId)
       ? (cleanedDisplayName || tag.evidence?.visibleAlias || tag.evidence?.title || 'Cuộc trò chuyện')
@@ -325,6 +281,39 @@ export function deriveNodesFromTaggedEvidence(
           m.eventTime = timeMatch[1];
         }
       }
+    }
+
+    // 1. Match the canonical graph node: the conversation itself, then any pinned message, then the
+    // record id. Distinct records (e.g. tx_01 vs tx_ngoc) sharing a clueRefId must NOT collapse into one card.
+    const inApp = (n: CaseGraphNode) => n.sourceAppId === tag.sourceApp;
+    let canonicalMatch = conversationId
+      ? canonicalGraph.nodes.find(n => inApp(n) && n.recordRefId === conversationId)
+      : undefined;
+    for (const m of incomingMessages) {
+      if (canonicalMatch) break;
+      canonicalMatch = canonicalGraph.nodes.find(n => inApp(n) && n.recordRefId === m.recordId);
+    }
+    if (!canonicalMatch && tag.evidence?.recordId) {
+      canonicalMatch = canonicalGraph.nodes.find(n => inApp(n) && n.recordRefId === tag.evidence!.recordId);
+    }
+
+    // A tag with its own record id is a distinct record even when it shares a clueRefId with a canonical node.
+    if (!canonicalMatch && !conversationId && !tag.evidence?.recordId && tag.evidence?.clueRefId) {
+      canonicalMatch = canonicalGraph.nodes.find(n =>
+        Boolean(n.clueRefId === tag.evidence!.clueRefId && (!n.sourceAppId || n.sourceAppId === tag.sourceApp)),
+      );
+    }
+
+    // 2. If no record/clue match, match by label for person tags or conversation pins
+    // Invariant: Different apps maintain separate cards and never conflate into each other
+    if (!canonicalMatch && (!tag.evidence || conversationId || tag.isExplicitConversationPin)) {
+      canonicalMatch = canonicalGraph.nodes.find(n => {
+        const matchesLabel = n.label === cleanedDisplayName || n.nodeId === tag.suspectId;
+        if (!matchesLabel) return false;
+        // If the node has a sourceAppId, it must match the tag's sourceApp
+        if (n.sourceAppId && tag.sourceApp && n.sourceAppId !== tag.sourceApp) return false;
+        return true;
+      });
     }
 
     const targetNodeId = canonicalMatch
@@ -1167,9 +1156,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         verdict: 'cheating',
         culpritSuspectId: 'suspect_huong',
         narrativeRoast:
-          'Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?',
+          'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
         overJealousRoast:
-          'Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?',
+          'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
       },
       suspectPool: [],
       lockChallenges: [],
@@ -1211,9 +1200,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         verdict: 'cheating',
         culpritSuspectId: 'suspect_huong',
         narrativeRoast:
-          'Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?',
+          'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
         overJealousRoast:
-          'Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?',
+          'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
       },
       suspectPool: [],
       lockChallenges: [],
@@ -1254,9 +1243,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         verdict: 'cheating',
         culpritSuspectId: 'suspect_huong',
         narrativeRoast:
-          'Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?',
+          'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
         overJealousRoast:
-          'Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?',
+          'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
       },
       suspectPool: [],
       lockChallenges: [],
@@ -1524,6 +1513,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
           isOpen={isConfronting}
           session={scriptedConfrontation}
           evaluation={confrontationEvaluation}
+          epilogueNotification={caseConfig?.epilogueNotification}
           maxStrikes={maxStrikes || caseConfig?.allowedStrikes || 5}
           onSelectChoice={handleSelectConfrontationChoice}
           onContinueInvestigation={handleCloseConfrontation}
