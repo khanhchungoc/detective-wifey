@@ -28,11 +28,11 @@ export async function clearStorageOnFirstLoad(page: Page): Promise<void> {
 
 /**
  * Walks the real start flow up to the phone lock screen:
- * "Chạm để bắt đầu" -> level card -> skip intro -> briefing "Mở điện thoại".
+ * "Bắt đầu" -> level card -> skip intro -> briefing "Mở điện thoại".
  */
 export async function openLevelToLockscreen(page: Page, caseId = 'case_01'): Promise<Locator> {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Chạm để bắt đầu' }).click();
+  await page.getByRole('button', { name: 'Bắt đầu' }).click();
   await page.locator(`[data-case-id="${caseId}"]`).click();
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
   const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });

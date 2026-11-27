@@ -118,7 +118,7 @@ describe('play lifecycle', () => {
     game.stop();
   });
 
-  it('keeps an unfinished save and offers Resume when its level is picked again', async () => {
+  it('starts fresh and clears an unfinished save when a level is picked from the hub', async () => {
     vi.useFakeTimers();
     const { repository } = setup();
     const session: ActiveSessionState = {
@@ -129,13 +129,13 @@ describe('play lifecycle', () => {
     repository.getActiveSession = vi.fn(async () => session);
     const { game } = setup(undefined, { repository });
     await game.initialize();
+    expect(game.getSnapshot().ongoingSession?.caseId).toBe('case_01');
     game.selectLevel(1);
-    expect(game.getSnapshot().resumableSession?.caseId).toBe('case_01');
-    expect(repository.clearActiveSession).not.toHaveBeenCalled();
-    game.resume();
-    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
-    game.selectLevel(1);
+    await vi.runAllTimersAsync();
+    expect(game.getSnapshot().ongoingSession).toBeNull();
     expect(game.getSnapshot().resumableSession).toBeNull();
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(0);
+    expect(repository.clearActiveSession).toHaveBeenCalled();
     game.stop();
   });
 
@@ -213,6 +213,37 @@ describe('save compatibility and ordering', () => {
     game.selectLevel(2);
     await new Promise(resolve => setTimeout(resolve, 0));
     expect(storage.has('detective:v1:case_02:corkboard_state')).toBe(false);
+    game.stop();
+  });
+
+  it('exposes ongoingSession for a saved level-2 game and restores it directly via resumeOngoing', async () => {
+    const savedLevel2: ActiveSessionState = {
+      schemaVersion: 1,
+      gameId: 'jealous_wife',
+      caseId: 'case_02',
+      levelNumber: 2,
+      activeApp: 'messages',
+      suspicionStrikes: 2,
+      taggedSuspects: [
+        { suspectId: 'tag_2', displayName: 'Bí Ẩn', sourceApp: 'messages', timestamp: 200 },
+      ],
+      unlockedChallenges: ['lock_2'],
+      elapsedSeconds: 120,
+      lastSavedAt: 200,
+    };
+    const { game, repository } = setup();
+    await repository.saveActiveSession(savedLevel2);
+    await game.initialize();
+
+    expect(game.getSnapshot().ongoingSession?.caseId).toBe('case_02');
+    expect(game.getSnapshot().ongoingSession?.levelNumber).toBe(2);
+    expect(game.resumeOngoing()).toBe(true);
+    expect(game.getSnapshot().caseConfig.caseId).toBe('case_02');
+    expect(game.getSnapshot().activeAppId).toBe('messages');
+    expect(game.getSnapshot().strikes).toBe(2);
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
+    expect(game.getSnapshot().ongoingSession).toBeNull();
+    expect(game.getSnapshot().resumableSession).toBeNull();
     game.stop();
   });
 });

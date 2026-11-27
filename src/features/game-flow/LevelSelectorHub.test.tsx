@@ -113,8 +113,8 @@ describe('LevelSelectorHub (US-036)', () => {
         />,
       );
 
-      // Responsive layout expanded beyond 480px
-      expect(html).toContain('max-w-5xl');
+      // Responsive flat darkroom workspace
+      expect(html).toContain('max-w-4xl');
       expect(html).toContain('lg:grid-cols-12');
       expect(html).toContain('lg:col-span-7');
       expect(html).toContain('lg:col-span-5');
@@ -128,27 +128,19 @@ describe('LevelSelectorHub (US-036)', () => {
       expect(html).toContain('aria-label="Chồng trước"');
       expect(html).toContain('aria-label="Chồng tiếp theo"');
 
-      // Authentic Case File Folder + bigger husband photo + stamp + structured fields
+      // Flat husband switcher + levels above fold + reference traits
       expect(html).toContain('data-case-folder-tab="true"');
-      expect(html).toContain('HỒ SƠ #01');
-      expect(html).toContain('data-case-folder="true"');
-      expect(html).toContain('bg-game-paper');
-      expect(html).toContain('border-game-paper-border');
-      expect(html).toContain('bg-game-film-frame');
-      expect(html).toContain('bg-game-tape');
-      expect(html).toContain('w-36 h-48 sm:w-44 sm:h-56');
-      expect(html).toContain('ĐANG THEO DÕI');
-      expect(html).toContain('Đối tượng');
-      expect(html).toContain('Nghề nghiệp');
+      expect(html).toContain('Hồ sơ #01');
+      expect(html).toContain('Đang theo dõi');
       expect(html).toContain('Hồ sơ tính cách');
-      expect(html).toContain('font-handwriting');
-      expect(html).toContain('text-ios-title-2');
       expect(html).toContain('Nguyễn Huy Hoàng');
       expect(html).toContain('29 tuổi');
       expect(html).toContain('Tech Lead · Technosoft (Hà Nội)');
       expect(html).toContain('Tự nhận sợ vợ số 1, nộp 90% lương');
       expect(html).toContain('Hay úp màn hình, mang máy vào nhà tắm');
       expect(html).not.toContain('Anh chỉ đi họp với đối tác thôi mà em.');
+      // Levels appear before secondary reference notes in DOM order
+      expect(html.indexOf('data-case-id="hoang_01"')).toBeLessThan(html.indexOf('data-husband-persona="true"'));
 
       // Accessibility & design guardrails
       expect(html).toContain('touch-action:pan-y');
@@ -170,7 +162,6 @@ describe('LevelSelectorHub (US-036)', () => {
       );
 
       expect(html).toContain('data-wife-profile="true"');
-      expect(html).toContain('bg-game-paper-slip');
       expect(html).toContain('Hồ sơ người vợ');
       expect(html).toContain('src="/assets/avatars/minhthu.png"');
       expect(html).toContain('alt="Lê Minh Thư"');
@@ -182,7 +173,7 @@ describe('LevelSelectorHub (US-036)', () => {
       expect(html).toContain('Chung cư CT2 An Bình City, Bắc Từ Liêm');
     });
 
-    it('renders coming-soon stamp, omits wife profile section, and hides level rows when husband.comingSoon is true', () => {
+    it('renders coming-soon status, omits wife profile section, and hides level rows when husband.comingSoon is true', () => {
       const html = renderToStaticMarkup(
         <LevelSelectorHub
           husbands={HUSBANDS}
@@ -192,11 +183,10 @@ describe('LevelSelectorHub (US-036)', () => {
         />,
       );
 
-      expect(html).toContain('HỒ SƠ #02');
+      expect(html).toContain('Hồ sơ #02');
       expect(html).toContain('Trần Quốc Tuấn');
       expect(html).toContain('38 tuổi');
       expect(html).toContain('data-coming-soon-stamp="true"');
-      expect(html).toContain('SẮP RA MẮT');
       expect(html).toContain('Sắp ra mắt');
       expect(html).not.toContain('data-wife-profile="true"');
       expect(html).not.toContain('Bữa trưa bí ẩn');

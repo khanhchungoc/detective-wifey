@@ -289,6 +289,32 @@ describe('corkboard mobile gesture ownership', () => {
     expect(onPinchOutAtMinZoom).toHaveBeenCalledTimes(1);
     handlers.onPointerUpCapture(pointer(4, 240, 300));
     handlers.onPointerUpCapture(pointer(3, 100, 300));
+
+    // After lifting fingers, pan and pinch remain unlocked (no stuck multiTouch state).
+    updates.length = 0;
+    handlers.onPointerDown(pointer(5, 200, 300));
+    handlers.onPointerMove(pointer(5, 240, 320));
+    flushFrame();
+    expect(updates).toHaveLength(1);
+    handlers.onPointerUp(pointer(5, 240, 320));
+  });
+
+  it('supports 1-gesture pinch-to-zoom directly from locked wall view', () => {
+    const onPinchInFromLocked = vi.fn();
+    const { containerProps: handlers, viewportRef } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 600, zoom: 0.2 },
+      locked: true,
+      onPinchInFromLocked,
+    });
+    handlers.onPointerDownCapture(pointer(1, 150, 300));
+    handlers.onPointerDownCapture(pointer(2, 250, 300));
+    // Spreading fingers apart (>8%) unlocks into focus view and zooms live in the same gesture.
+    handlers.onPointerMoveCapture(pointer(2, 450, 300));
+    flushFrame();
+    expect(onPinchInFromLocked).toHaveBeenCalledTimes(1);
+    expect(viewportRef.current.zoom).toBeCloseTo(0.6, 2);
+    handlers.onPointerUpCapture(pointer(2, 450, 300));
+    handlers.onPointerUpCapture(pointer(1, 150, 300));
   });
 
   it('ignores pan, pinch and wheel input while locked (wall view)', () => {
