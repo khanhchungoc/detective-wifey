@@ -23,6 +23,7 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
   const rootSwipeHandlers = useSwipeBack({
     onBack: onReturnHome,
     enabled: !selectedMail,
+    exitsApp: true,
   });
 
   const detailSwipeHandlers = useSwipeBack({

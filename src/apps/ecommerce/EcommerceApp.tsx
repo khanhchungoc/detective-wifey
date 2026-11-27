@@ -95,7 +95,7 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
       setStack(popView);
     } else onReturnHome();
   };
-  const swipe = useSwipeBack({ onBack: back, enabled: !evidence && !selectedOrder });
+  const swipe = useSwipeBack({ onBack: back, enabled: !evidence && !selectedOrder, exitsApp: stack.length <= 1 });
   const selectTab = (tab: EcommerceTab) => {
     saveScroll();
     setStack([{ screen: tab }]);

@@ -118,6 +118,27 @@ describe('play lifecycle', () => {
     game.stop();
   });
 
+  it('keeps an unfinished save and offers Resume when its level is picked again', async () => {
+    vi.useFakeTimers();
+    const { repository } = setup();
+    const session: ActiveSessionState = {
+      schemaVersion: 1, gameId: 'jealous_wife', caseId: 'case_01', levelNumber: 1, activeApp: 'home',
+      suspicionStrikes: 3, taggedSuspects: [{ suspectId: 'tag_1', displayName: 'Anh Tuấn Thợ Điện',
+        sourceApp: 'internet-messaging', timestamp: 1 }], unlockedChallenges: [], elapsedSeconds: 0, lastSavedAt: 1,
+    };
+    repository.getActiveSession = vi.fn(async () => session);
+    const { game } = setup(undefined, { repository });
+    await game.initialize();
+    game.selectLevel(1);
+    expect(game.getSnapshot().resumableSession?.caseId).toBe('case_01');
+    expect(repository.clearActiveSession).not.toHaveBeenCalled();
+    game.resume();
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
+    game.selectLevel(1);
+    expect(game.getSnapshot().resumableSession).toBeNull();
+    game.stop();
+  });
+
   it('loads another husband using the active husband identity', () => {
     vi.useFakeTimers();
     const initial = { ...loadCaseByLevel(1), husbandId: 'fixture-husband' };

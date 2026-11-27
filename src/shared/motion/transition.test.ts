@@ -167,27 +167,33 @@ describe('motion navigation safety', () => {
     await Promise.resolve();
   });
 
-  it('resets a swipe-home lift before capture and replays its pose as close keyframe variables', async () => {
+  it('keeps a swipe-home lift in the capture, replays its pose as sling variables, then restores', async () => {
+    let commit = () => {};
     let finish = () => {};
     const vars = new Map<string, string>();
+    const dataset: Record<string, string> = {};
     const style = { setProperty: (k: string, v: string) => vars.set(k, v), removeProperty: (k: string) => vars.delete(k) };
     const restore = vi.fn();
     vi.stubGlobal('window', { matchMedia: () => ({ matches: false }) });
-    vi.stubGlobal('document', { documentElement: { dataset: {}, style }, startViewTransition: () => {
-      expect(restore).toHaveBeenCalledOnce();
+    vi.stubGlobal('document', { documentElement: { dataset, style }, startViewTransition: (callback: () => void) => {
+      expect(restore).not.toHaveBeenCalled();
       expect(vars.get('--lift-tx')).toBe('12px');
       expect(vars.get('--lift-ty')).toBe('-140px');
       expect(vars.get('--lift-scale')).toBe('0.8');
+      expect(dataset.lift).toBe('');
+      commit = callback;
       return { skipTransition: vi.fn(), ready: Promise.resolve(), finished: new Promise<void>(resolve => { finish = resolve; }) };
     } });
     handoffLift({ x: 12, y: -140, scale: 0.8 }, restore, () => transition('close', () => {}));
-    expect(restore).not.toHaveBeenCalled();
     await Promise.resolve();
+    expect(restore).not.toHaveBeenCalled();
+    commit();
     expect(restore).toHaveBeenCalledOnce();
     finish();
     await Promise.resolve();
     await Promise.resolve();
     expect(vars.has('--lift-tx')).toBe(false);
+    expect(dataset.lift).toBeUndefined();
   });
 
   it('restores a lift immediately when navigation starts no transition', () => {

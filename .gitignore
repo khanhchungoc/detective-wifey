@@ -4,3 +4,5 @@ node_modules/
 package-stage/
 .github/memory/
 docs/
+playwright-report/
+test-results/

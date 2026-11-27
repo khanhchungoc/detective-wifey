@@ -137,17 +137,8 @@ export function NotebookTab({
     const cancelled = event.type !== 'pointerup';
     active.moved ||= isFloatingDrag(dx, dy);
     suppressClick.current = active.moved || cancelled;
-    if (!active.moved && !cancelled) {
-      if (event.pointerType === 'touch') {
-        suppressClick.current = true;
-        settling.current?.cancel();
-        event.currentTarget.dataset.edge = 'right';
-        event.currentTarget.dataset.floating = 'false';
-        if (open) onClose?.();
-        else onOpen();
-      }
-      return;
-    }
+    // A tap opens from onClick: opening on touch pointerup let the follow-up click land on the board backdrop and close it.
+    if (!active.moved && !cancelled) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const velocity = floatingVelocity(active.samples, { x: event.clientX / active.scaleX, y: event.clientY / active.scaleY, time: event.timeStamp });
     const button = event.currentTarget;
