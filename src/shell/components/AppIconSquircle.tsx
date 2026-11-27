@@ -128,7 +128,7 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
         </div>
 
         {badgeCount > 0 && !isGrayedOut && (
-          <span className="absolute -top-[6px] -right-[8px] z-10 box-border flex h-[24px] min-w-[24px] items-center justify-center rounded-full bg-[#D70015] px-[6px] text-[16px] font-normal leading-none text-white tabular-nums [font-family:-apple-system,BlinkMacSystemFont,'Helvetica_Neue',sans-serif] pointer-events-none shadow-sm">
+          <span className="phone-app-badge absolute -top-[6px] -right-[8px] z-10 box-border flex h-[24px] min-w-[24px] items-center justify-center rounded-full bg-[#D70015] px-[6px] text-[16px] font-normal leading-none text-white tabular-nums [font-family:-apple-system,BlinkMacSystemFont,'Helvetica_Neue',sans-serif] pointer-events-none shadow-sm">
             {badgeCount}
           </span>
         )}

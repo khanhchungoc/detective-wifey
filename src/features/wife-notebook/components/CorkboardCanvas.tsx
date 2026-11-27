@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useLayoutEffect, useMemo, useState, useRef } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import {
   IoNavigateOutline,
   IoGlassesOutline,
@@ -37,111 +37,68 @@ function getCardTiltDeg(nodeId: string): number {
   return ((Math.abs(hash) % 29) - 14) / 10;
 }
 
+const LAMP_IGNITION = { duration: 850, offsets: [0, 0.18, 0.34, 0.55, 0.72, 1] };
+const LAMP_LIGHT_IGNITION = [0.12, 0.95, 0.22, 1, 0.55, 1];
+const LAMP_VEIL_IGNITION = [0.65, 0.04, 0.58, 0, 0.34, 0];
+/** Ambient flicker: a 420ms stutter every ~8.9s, compressed into the front of one looping animation. */
+const LAMP_AMBIENT_PERIOD = 8920;
+const LAMP_AMBIENT_OFFSETS = [0, 0.22, 0.48, 0.72, 1].map(offset => offset * 420 / LAMP_AMBIENT_PERIOD);
+const LAMP_LIGHT_AMBIENT = [1, 0.45, 0.94, 0.62, 1];
+const LAMP_VEIL_AMBIENT = [0, 0.42, 0.05, 0.28, 0];
+
+/**
+ * One fixed set of lamp layers; the flicker is pure opacity WAAPI (compositor) with no React state.
+ * Swapping layer trees mid-open used to re-rasterize full-board gradients right as the player
+ * started dragging, which stuttered the board open/close and card drags.
+ */
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active = true }: { active?: boolean }) {
   const prefersReducedMotion = useReducedMotion();
-  const [phase, setPhase] = useState<'ignition' | 'ambient'>('ignition');
-  const [animReady, setAnimReady] = useState(false);
+  const washRef = useRef<HTMLDivElement>(null);
+  const veilRef = useRef<HTMLDivElement>(null);
+  const tubeRef = useRef<HTMLDivElement>(null);
 
-  // Defer lamp flicker motion until after the board slide-in completes so frame 1 stays 120Hz smooth.
   useEffect(() => {
-    if (!active || prefersReducedMotion) {
-      setAnimReady(false);
-      return;
-    }
-    const timer = window.setTimeout(() => setAnimReady(true), 400);
-    return () => window.clearTimeout(timer);
+    const wash = washRef.current, veil = veilRef.current, tube = tubeRef.current;
+    if (!active || prefersReducedMotion || !wash?.animate || !veil || !tube) return;
+    const running: Animation[] = [];
+    const play = (element: HTMLElement, values: number[], offsets: number[], options: KeyframeAnimationOptions) => {
+      const animation = element.animate(values.map((opacity, i) => ({ opacity, offset: offsets[i] })), { easing: 'linear', ...options });
+      running.push(animation);
+      return animation;
+    };
+    // Start after the board slide-in so its first frames stay smooth.
+    const timer = window.setTimeout(() => {
+      const ignition = { duration: LAMP_IGNITION.duration, fill: 'backwards' as const };
+      const ignite = play(wash, LAMP_LIGHT_IGNITION, LAMP_IGNITION.offsets, ignition);
+      play(tube, LAMP_LIGHT_IGNITION, LAMP_IGNITION.offsets, ignition);
+      play(veil, LAMP_VEIL_IGNITION, LAMP_IGNITION.offsets, ignition);
+      ignite.onfinish = () => {
+        const ambient = { duration: LAMP_AMBIENT_PERIOD, iterations: Infinity, delay: LAMP_AMBIENT_PERIOD - 420 };
+        play(wash, [...LAMP_LIGHT_AMBIENT, 1], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
+        play(tube, [...LAMP_LIGHT_AMBIENT, 1], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
+        play(veil, [...LAMP_VEIL_AMBIENT, 0], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
+      };
+    }, 400);
+    return () => {
+      window.clearTimeout(timer);
+      for (const animation of running) animation.cancel();
+    };
   }, [active, prefersReducedMotion]);
-
-  const tubeEl = (
-    <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
-  );
-
-  const boardWashEl = (
-    <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_0%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
-  );
-
-  const roomDimmerEl = (
-    <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
-  );
-
-  if (prefersReducedMotion || !animReady) {
-    return (
-      <>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-          {boardWashEl}
-        </div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center"
-        >
-          {tubeEl}
-        </div>
-      </>
-    );
-  }
-
-  const sharedTransition =
-    phase === 'ignition'
-      ? { duration: 0.85, times: [0, 0.18, 0.34, 0.55, 0.72, 1], ease: 'linear' as const }
-      : {
-          duration: 0.42,
-          times: [0, 0.22, 0.48, 0.72, 1],
-          ease: 'linear' as const,
-          repeat: Infinity,
-          repeatDelay: 8.5,
-        };
 
   return (
     <>
       {/* Single overhead light wash across the entire board, synced 1:1 with lamp flicker */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0"
-        initial={phase === 'ignition' ? { opacity: 0.12 } : false}
-        animate={
-          phase === 'ignition'
-            ? { opacity: [0.12, 0.95, 0.22, 1, 0.55, 1] }
-            : { opacity: [1, 0.45, 0.94, 0.62, 1] }
-        }
-        transition={sharedTransition}
-      >
-        {boardWashEl}
-      </motion.div>
-
-      {/* Global board & card dimming veil inversely synced to the single overhead lamp */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[25]"
-        initial={phase === 'ignition' ? { opacity: 0.65 } : false}
-        animate={
-          phase === 'ignition'
-            ? { opacity: [0.65, 0.04, 0.58, 0, 0.34, 0] }
-            : { opacity: [0, 0.42, 0.05, 0.28, 0] }
-        }
-        transition={sharedTransition}
-      >
-        {roomDimmerEl}
-      </motion.div>
-
+      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-0" style={{ willChange: 'opacity' }}>
+        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_0%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
+      </div>
+      {/* Global board & card dimming veil inversely synced to the single overhead lamp (hidden at rest) */}
+      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[25]" style={{ opacity: 0, willChange: 'opacity' }}>
+        <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
+      </div>
       {/* Overhead fluorescent tube */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center"
-        initial={phase === 'ignition' ? { opacity: 0.12 } : false}
-        animate={
-          phase === 'ignition'
-            ? { opacity: [0.12, 0.95, 0.22, 1, 0.55, 1] }
-            : { opacity: [1, 0.45, 0.94, 0.62, 1] }
-        }
-        transition={sharedTransition}
-        onAnimationComplete={() => {
-          if (phase === 'ignition') {
-            setPhase('ambient');
-          }
-        }}
-      >
-        {tubeEl}
-      </motion.div>
+      <div ref={tubeRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center" style={{ willChange: 'opacity' }}>
+        <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
+      </div>
     </>
   );
 });
@@ -478,11 +435,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   aria-hidden="true"
                   className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#D4B44C]/80 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
                 />
-                <div className={`relative h-5 w-5 rounded-full border flex items-center justify-center transition-transform duration-150 ${
-                  isSelected || hasContradiction || (isUnmasked && isAlias)
-                    ? 'bg-gradient-to-br from-[#FB7185] via-[#E11D48] to-[#881337] border-[#FDA4AF]/75'
-                    : 'bg-gradient-to-br from-[#CBD5E1] via-[#64748B] to-[#1E293B] border-[#E2E8F0]/75'
-                } ${
+                <div className={`relative h-5 w-5 rounded-full border flex items-center justify-center transition-transform duration-150 bg-gradient-to-br from-[#FB7185] via-[#E11D48] to-[#881337] border-[#FDA4AF]/75 ${
                   isDraggingThis ? 'scale-110 shadow-[0_6px_12px_rgba(0,0,0,0.7)]' : 'shadow-[0_3px_6px_rgba(0,0,0,0.6)]'
                 }`}>
                   <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
@@ -590,7 +543,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   )}
                 </div>
               ) : (
-                /* Top Bar: Yellow Sticky Note Title on Left, Separated Film-Framed Avatar + App Icon on Right, and Action Buttons */
+                /* Top Bar: Yellow Sticky Note Title on Left, Film-Framed Avatar with App Icon Badge on Right, and Action Buttons */
                 <div className={`relative min-h-[36px] ${hasBody ? 'pb-1.5' : 'pb-0.5'}`}>
                   <div
                     className="relative -ml-3.5 -mt-1 flex min-w-0 items-center justify-between gap-2 w-[calc(100%+14px)]"
@@ -610,27 +563,27 @@ const CorkboardContents = memo(function CorkboardContents({
                       </h4>
                     </div>
 
-                    {(avatarName || sourceApp) && (
-                      <div className="flex shrink-0 items-center gap-1.5">
-                        {avatarName && (
-                          <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
-                            <ContactAvatar name={avatarName} size={32} shape="square" />
-                          </span>
-                        )}
-                        {sourceApp && (
-                          <span
-                            className={`flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-[5px] text-white shadow-xs ring-1 ring-black/10 ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
-                            title={sourceApp.displayName}
-                            role="img"
-                            aria-label={sourceApp.displayName}
-                          >
-                            {sourceApp.iconAsset ? (
-                              <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
-                            ) : <sourceApp.icon className="h-3.5 w-3.5" />}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    {(avatarName || sourceApp) && (() => {
+                      // Source app shows as a small badge on the profile picture's top-right corner (alone when there is no picture).
+                      const appIcon = sourceApp && (
+                        <span
+                          className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-6 w-6 rounded-[5px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                          title={sourceApp.displayName}
+                          role="img"
+                          aria-label={sourceApp.displayName}
+                        >
+                          {sourceApp.iconAsset ? (
+                            <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
+                          ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'} />}
+                        </span>
+                      );
+                      return avatarName ? (
+                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
+                          <ContactAvatar name={avatarName} size={32} shape="square" />
+                          {appIcon}
+                        </span>
+                      ) : appIcon;
+                    })()}
                   </div>
 
                   {/* Card-level Action Buttons: Exactly two buttons [Đến chat] and [Xóa] */}

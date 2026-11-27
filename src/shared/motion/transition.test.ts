@@ -180,12 +180,11 @@ describe('motion navigation safety', () => {
       expect(vars.get('--lift-tx')).toBe('12px');
       expect(vars.get('--lift-ty')).toBe('-140px');
       expect(vars.get('--lift-scale')).toBe('0.8');
-      expect(vars.get('--lift-radius')).toBe('44px');
       expect(dataset.lift).toBe('');
       commit = callback;
       return { skipTransition: vi.fn(), ready: Promise.resolve(), finished: new Promise<void>(resolve => { finish = resolve; }) };
     } });
-    handoffLift({ x: 12, y: -140, scale: 0.8, radius: 44 }, restore, () => transition('close', () => {}));
+    handoffLift({ x: 12, y: -140, scale: 0.8 }, restore, () => transition('close', () => {}));
     await Promise.resolve();
     expect(restore).not.toHaveBeenCalled();
     commit();
@@ -199,7 +198,7 @@ describe('motion navigation safety', () => {
 
   it('restores a lift immediately when navigation starts no transition', () => {
     const restore = vi.fn();
-    handoffLift({ x: 0, y: -60, scale: 0.9, radius: 30 }, restore, () => {});
+    handoffLift({ x: 0, y: -60, scale: 0.9 }, restore, () => {});
     expect(restore).toHaveBeenCalledOnce();
   });
 
