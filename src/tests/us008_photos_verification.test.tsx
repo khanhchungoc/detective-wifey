@@ -140,8 +140,9 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
     expect(html).toContain('13/10/2026 21:30');
     expect(html).toContain('aria-label="Thông tin ảnh"');
 
-    // Forensic Magnifier tool for reflection clue
-    expect(html).toContain('Bật kính lúp');
+    // Zero-spoiler lightbox: no magnifier button or forensic callout box
+    expect(html).not.toContain('Bật kính lúp');
+    expect(html).not.toContain('Phát hiện chi tiết pháp y');
 
     // Unnecessary bottom toolbar features removed
     expect(html).not.toContain('aria-label="Chia sẻ"');

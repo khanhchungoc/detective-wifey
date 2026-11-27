@@ -1,11 +1,5 @@
 import type { PhotoArtwork } from './data';
 
-export interface HotspotCoordinates {
-  x: number;
-  y: number;
-  zoomLevel: number;
-}
-
 export interface PhotoExif {
   device: string;
   format: string;
@@ -37,9 +31,6 @@ export interface PhotoItem {
   highResUrl?: string;
   locationTag?: string;
   isHiddenAlbum: boolean;
-  hasForensicHotspot: boolean;
-  hotspotCoordinates?: HotspotCoordinates;
-  hotspotClueDescription?: string;
   isVideo: boolean;
   duration?: string;
   exif: PhotoExif;
