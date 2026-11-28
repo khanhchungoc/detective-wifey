@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import { animate, AnimatePresence, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import {
   IoBackspaceOutline,
@@ -7,7 +7,6 @@ import {
   IoCardOutline,
   IoChatbubbleEllipsesOutline,
   IoChevronBack,
-  IoFlashlightOutline,
   IoLockClosedOutline,
   IoLockOpenOutline,
   IoMoon,
@@ -427,7 +426,6 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
   const swipeStartRef = useRef<{ x: number; y: number; id: number } | null>(null);
   const swipeLastRef = useRef<{ dx: number; dy: number } | null>(null);
   const dragY = useMotionValue(0);
-  const [flashlightOn, setFlashlightOn] = useState(false);
   const hasPasscode = Boolean(config.passcode);
   const isScanning = state.mode === 'scanning';
   const batteryRatio = parseBatteryRatio(config.batteryPercent);
@@ -585,21 +583,6 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black/70 via-black/25 to-transparent pointer-events-none"
       />
-
-      {onBack && state.mode === 'lockscreen' && (
-        <button
-          type="button"
-          data-lockscreen-back="true"
-          aria-label="Quay lại"
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={onBack}
-          style={{ top: 'max(14px, env(safe-area-inset-top, 0px))' }}
-          className="touch-target-min absolute left-3 z-20 inline-flex items-center gap-1 rounded-full bg-slate-950/55 border border-white/15 px-3 py-1.5 text-ios-footnote font-medium text-white/90 hover:bg-slate-900/75 active:scale-95 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-        >
-          <IoChevronBack aria-hidden="true" className="w-4 h-4" />
-          <span>Quay lại</span>
-        </button>
-      )}
 
       <AnimatePresence mode="wait">
         {state.mode === 'passcode' ? (
@@ -853,24 +836,21 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                 </div>
               ) : null}
 
-              {/* Bottom: iOS Flashlight & Camera quick actions + quiet unlock trigger + Home bar */}
+              {/* Bottom: Back & Camera quick actions + quiet unlock trigger */}
               <div className="flex flex-col items-center gap-3">
                 <div className="w-full flex items-center justify-between px-3">
                   <motion.button
                     type="button"
-                    aria-label="Đèn pin"
-                    aria-pressed={flashlightOn}
-                    data-lockscreen-flashlight="true"
-                    onClick={() => setFlashlightOn(prev => !prev)}
-                    whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
+                    aria-label="Quay lại"
+                    data-lockscreen-back="true"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={onBack}
+                    disabled={!onBack}
+                    whileTap={shouldReduceMotion || !onBack ? undefined : { scale: 0.92 }}
                     transition={SNAP_SPRING}
-                    className={`touch-target-min w-12 h-12 rounded-full border flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${
-                      flashlightOn
-                        ? 'bg-white/90 text-slate-950 border-white'
-                        : 'bg-slate-950/50 text-white border-white/15 hover:bg-slate-900/70'
-                    }`}
+                    className="touch-target-min w-12 h-12 rounded-full bg-slate-950/50 border border-white/15 text-white hover:bg-slate-900/70 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:opacity-40"
                   >
-                    <IoFlashlightOutline aria-hidden="true" className="w-5 h-5" />
+                    <IoChevronBack aria-hidden="true" className="w-5 h-5" />
                   </motion.button>
 
                   <AnimatePresence mode="wait" initial={false}>
