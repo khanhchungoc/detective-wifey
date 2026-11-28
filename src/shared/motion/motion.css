@@ -1,11 +1,11 @@
 /* Canonical project iOS curves. Snapshot layers never intercept gestures. */
 :root {
   --ease-ios-spring: cubic-bezier(.32, .72, 0, 1);
-  --ease-sheet-fluid: cubic-bezier(.22, .61, .36, 1);
+  --ease-sheet-fluid: cubic-bezier(.25, .1, .25, 1);
   --ease-ios-default: cubic-bezier(.4, 0, .2, 1);
   --ease-ios-in-out: cubic-bezier(.42, 0, .58, 1);
-  --ios-sheet-open-duration: .38s;
-  --ios-sheet-close-duration: .3s;
+  --ios-sheet-open-duration: .28s;
+  --ios-sheet-close-duration: .24s;
   --ios-app-open-duration: .48s;
   --ios-app-close-duration: .5s;
   --ios-app-duration: var(--ios-app-open-duration);

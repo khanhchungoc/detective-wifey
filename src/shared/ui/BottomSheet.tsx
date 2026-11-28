@@ -89,8 +89,8 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
   useLayoutEffect(() => {
     if (suspended) return;
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    closeRef.current?.focus();
-    return () => previous?.focus();
+    closeRef.current?.focus({ preventScroll: true });
+    return () => previous?.focus({ preventScroll: true });
   }, [suspended]);
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -127,8 +127,8 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
         aria-modal={!suspended}
         aria-labelledby={titleId}
         onKeyDown={handleKeyDown}
-        style={{ backfaceVisibility: 'hidden' }}
-        className="ios-sheet flex max-h-[90%] min-h-0 flex-col rounded-t-[24px] bg-white text-[#111827] shadow-2xl will-change-transform"
+        style={{ backfaceVisibility: 'hidden', contain: 'layout paint' }}
+        className="ios-sheet flex max-h-[90%] min-h-0 flex-col rounded-t-[24px] bg-white text-[#111827] shadow-2xl transform-gpu will-change-transform"
       >
         <header
           className="shrink-0 px-4 pb-2 pt-3"

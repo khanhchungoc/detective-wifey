@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { StoryEvidenceTarget } from '../../../features/investigation';
 import type { UniversalEvidenceItem } from '../../../features/investigation';
@@ -166,7 +166,7 @@ export function EcommerceOrderDetailDrawer({
 
   const swipe = useSwipeBack({ onBack: requestClose });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const panel = panelRef.current;
     const backdrop = backdropRef.current;
     const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
@@ -183,10 +183,10 @@ export function EcommerceOrderDetailDrawer({
       animsRef.current = anims;
     }
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    closeRef.current?.focus();
+    closeRef.current?.focus({ preventScroll: true });
     return () => {
       cancelAnims();
-      previous?.focus();
+      previous?.focus({ preventScroll: true });
     };
   }, []);
 
@@ -195,8 +195,8 @@ export function EcommerceOrderDetailDrawer({
       <section
         {...swipe}
         ref={panelRef}
-        style={{ backfaceVisibility: 'hidden' }}
-        className="ecommerce-sheet will-change-transform"
+        style={{ backfaceVisibility: 'hidden', contain: 'layout paint' }}
+        className="ecommerce-sheet transform-gpu will-change-transform"
         role="dialog"
         aria-modal="true"
         aria-labelledby="ecommerce-invoice-title"
