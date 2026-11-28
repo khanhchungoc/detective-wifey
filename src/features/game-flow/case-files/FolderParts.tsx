@@ -167,26 +167,120 @@ export function paperEdgeMaskStyle(
   return style;
 }
 
-/** Organic deckled clip-path for the top-left index tab on husband case folders. */
-export function folderTabClip(variant = 0): string {
+/** Build a single continuous deckled cardstock path for a manila folder with a top-left index tab. */
+function buildDeckledFolderPath(
+  w: number,
+  h: number,
+  inset: number,
+  amp: number,
+  seed: number,
+): string {
+  const tabH = 30;
+  const tabW = 148;
+  const cTR = 5.5;
+  const cBR = 5;
+  const cBL = 5.5;
+  const pts: Array<[number, number]> = [];
+  let step = 1;
+  const jitter = (scale = 1) => {
+    const n = paperNoise(seed, step++);
+    const nick = n > 0.88 ? (n - 0.88) * 6.5 : 0;
+    return inset + (n * amp + nick) * scale;
+  };
+
+  // Tab left edge (rising from body top-left) & worn left shoulder
+  pts.push([jitter(0.7), tabH]);
+  pts.push([jitter(0.7), 11 + jitter(0.4)]);
+  pts.push([4.5 + jitter(0.5), 4 + jitter(0.4)]);
+  pts.push([11 + jitter(0.5), jitter(0.8)]);
+
+  // Tab top edge (left -> right)
+  const tabTopSteps = 8;
+  for (let i = 1; i < tabTopSteps; i += 1) {
+    const t = i / tabTopSteps;
+    const x = 11 + (tabW - 22) * t;
+    pts.push([x, jitter(0.9)]);
+  }
+
+  // Tab right worn shoulder & slope down into folder body top
+  pts.push([tabW - 11 - jitter(0.5), jitter(0.8)]);
+  pts.push([tabW - 4.5 - jitter(0.5), 4 + jitter(0.4)]);
+  pts.push([tabW - jitter(0.5), 11 + jitter(0.4)]);
+  pts.push([tabW + 5, tabH + jitter(0.6)]);
+
+  // Folder body top edge (tab right -> top-right corner)
+  const bodyTopSteps = 14;
+  for (let i = 1; i <= bodyTopSteps; i += 1) {
+    const t = i / bodyTopSteps;
+    const x = tabW + 5 + (w - tabW - 5 - cTR) * t;
+    const edgeFade = i === bodyTopSteps ? 0.5 : 1;
+    pts.push([x, tabH + jitter(edgeFade)]);
+  }
+  pts.push([w - cTR * 0.35 - inset, tabH + cTR * 0.35 + inset]);
+
+  // Right edge (top -> bottom)
+  const sideSteps = 30;
+  for (let i = 0; i <= sideSteps; i += 1) {
+    const t = i / sideSteps;
+    const y = tabH + cTR + (h - tabH - cTR - cBR) * t;
+    const edgeFade = i === 0 || i === sideSteps ? 0.5 : 1;
+    pts.push([w - jitter(edgeFade), y]);
+  }
+  pts.push([w - cBR * 0.35 - inset, h - cBR * 0.35 - inset]);
+
+  // Bottom edge (right -> left)
+  const bottomSteps = 22;
+  for (let i = 0; i <= bottomSteps; i += 1) {
+    const t = i / bottomSteps;
+    const x = w - cBR - (w - cBR - cBL) * t;
+    const edgeFade = i === 0 || i === bottomSteps ? 0.5 : 1;
+    pts.push([x, h - jitter(edgeFade)]);
+  }
+  pts.push([cBL * 0.35 + inset, h - cBL * 0.35 - inset]);
+
+  // Left edge (bottom -> tab base)
+  for (let i = 0; i <= sideSteps; i += 1) {
+    const t = i / sideSteps;
+    const y = h - cBL - (h - cBL - tabH) * t;
+    const edgeFade = i === 0 || i === sideSteps ? 0.5 : 1;
+    pts.push([jitter(edgeFade), y]);
+  }
+
+  return `M${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join('L')}Z`;
+}
+
+/**
+ * Static fibrous deckled-paper alpha mask for a unified husband folder (body + top-left tab
+ * cut from one continuous sheet of cardstock, zero seam between tab and body).
+ */
+export function husbandFolderMaskStyle(variant = 0): React.CSSProperties {
+  const key = `folder:${variant % 4}`;
+  const cached = PAPER_MASK_CACHE.get(key);
+  if (cached) return cached;
+
   const seed = (variant % 4) * 19 + 11;
-  const j = (step: number, max = 1.4) => (paperNoise(seed, step) * max).toFixed(1);
-  const pts = [
-    `0% 100%`,
-    `${j(1, 1.2)}px 68%`,
-    `${j(2, 1.1)}px 34%`,
-    `calc(4px + ${j(3, 1.0)}px) calc(14% + ${j(4, 0.9)}px)`,
-    `calc(10px + ${j(5, 1.0)}px) ${j(6, 1.3)}px`,
-    `28% ${j(7, 1.4)}px`,
-    `52% ${j(8, 1.3)}px`,
-    `74% ${j(9, 1.5)}px`,
-    `calc(100% - 10px - ${j(10, 1.0)}px) ${j(11, 1.2)}px`,
-    `calc(100% - 4px - ${j(12, 1.0)}px) calc(15% + ${j(13, 0.9)}px)`,
-    `calc(100% - ${j(14, 1.1)}px) 36%`,
-    `calc(100% - ${j(15, 1.2)}px) 70%`,
-    `100% 100%`,
-  ];
-  return `polygon(${pts.join(', ')})`;
+  const W = 360;
+  const H = 560;
+  const outerFringe = buildDeckledFolderPath(W, H, 0.2, 1.8, seed + 31);
+  const innerCore = buildDeckledFolderPath(W, H, 1.1, 1.7, seed);
+
+  const maskSvg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">` +
+    `<path d="${outerFringe}" fill="#000" fill-opacity="0.58"/>` +
+    `<path d="${innerCore}" fill="#000"/>` +
+    `</svg>`;
+  const uri = svgUri(maskSvg);
+
+  const style: React.CSSProperties = {
+    WebkitMaskImage: uri,
+    maskImage: uri,
+    WebkitMaskSize: '100% 100%',
+    maskSize: '100% 100%',
+    WebkitMaskRepeat: 'no-repeat',
+    maskRepeat: 'no-repeat',
+  };
+  PAPER_MASK_CACHE.set(key, style);
+  return style;
 }
 
 /**

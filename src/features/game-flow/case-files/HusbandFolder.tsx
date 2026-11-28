@@ -10,8 +10,7 @@ import {
   RedactionBar,
   RubberStamp,
   Staple,
-  folderTabClip,
-  paperEdgeMaskStyle,
+  husbandFolderMaskStyle,
 } from './FolderParts';
 import { husbandCardOpacity, husbandCardTransform, husbandCardZIndex } from './usePager';
 
@@ -67,41 +66,27 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
         isActive && !comingSoon ? 'cursor-pointer' : ''
       }`}
     >
-      <div
-        data-case-folder-tab="true"
-        className="relative z-10 -mb-[2px] ml-2 flex h-8 w-fit items-center bg-game-manila px-4 text-ios-caption-1 uppercase tracking-wider text-game-ink"
-        style={{
-          clipPath: folderTabClip(index),
-        }}
-      >
-        <PaperSurface worn={false} />
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              'linear-gradient(to bottom, rgba(255,249,236,0.34) 0px, rgba(118,82,30,0.14) 3px, transparent 10px)',
-          }}
-        />
-        <span className={`relative ${INK_TEXT}`}>{caseCode}</span>
-        <span
-          aria-hidden="true"
-          style={{ opacity: isActive ? 0 : 0.45 }}
-          className="pointer-events-none absolute inset-0 bg-game-backdrop transition-opacity duration-300"
-        />
-      </div>
+      {/* Soft ambient shadow behind the unified cardstock folder body without per-frame filter cost. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-[2px] bottom-[2px] top-[34px] rounded-[4px] shadow-[0_16px_30px_-10px_rgba(0,0,0,0.72)]"
+      />
 
-      <div className="relative flex min-h-0 flex-1 flex-col">
-        {/* Soft ambient shadow behind the masked cardstock body without per-frame filter cost. */}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-[2px] rounded-[4px] shadow-[0_16px_30px_-10px_rgba(0,0,0,0.72)]"
-        />
+      {/* Tab and folder body are ONE continuous masked cardstock sheet: one paper colour, one grain, zero seam. */}
+      <div
+        style={husbandFolderMaskStyle(index)}
+        className="relative flex min-h-0 flex-1 flex-col rounded-[4px] bg-game-manila"
+      >
+        <PaperSurface />
+
         <div
-          style={paperEdgeMaskStyle(index, { sharpTopLeft: true })}
-          className="relative flex min-h-0 flex-1 flex-col gap-3 rounded-[4px] rounded-tl-none bg-game-manila p-4"
+          data-case-folder-tab="true"
+          className="relative flex h-8 w-[41%] min-w-[7.5rem] shrink-0 items-center justify-center px-3 text-ios-caption-1 uppercase tracking-wider text-game-ink"
         >
-          <PaperSurface />
+          <span className={`relative ${INK_TEXT}`}>{caseCode}</span>
+        </div>
+
+        <div className="relative flex min-h-0 flex-1 flex-col gap-3 p-4">
           <Staple className="absolute left-3 top-2.5 h-3 w-8 -rotate-12" />
           <CoffeeRing className="absolute -bottom-3 -right-3 h-24 w-24 rotate-12" />
 
@@ -144,13 +129,13 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
               </>
             )}
           </div>
-
-          <span
-            aria-hidden="true"
-            style={{ opacity: isActive ? 0 : 0.45 }}
-            className="pointer-events-none absolute inset-0 bg-game-backdrop transition-opacity duration-300"
-          />
         </div>
+
+        <span
+          aria-hidden="true"
+          style={{ opacity: isActive ? 0 : 0.45 }}
+          className="pointer-events-none absolute inset-0 bg-game-backdrop transition-opacity duration-300"
+        />
       </div>
     </div>
   );
