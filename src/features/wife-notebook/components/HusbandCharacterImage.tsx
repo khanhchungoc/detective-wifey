@@ -24,11 +24,11 @@ export interface HusbandCharacterImageProps {
 }
 
 const MOOD_DESCRIPTIONS: Record<HusbandMood, string> = {
-  confident: 'Hoàng khoanh tay điềm tĩnh tự tin chối tội dưới ánh đèn thẩm vấn',
-  smug: 'Hoàng nhếch mép cười cợt kệch cỡm khi thiếu chứng cứ',
-  surprised: 'Hoàng giật mình phân bua dưới ánh đèn thẩm vấn',
-  nervous: 'Hoàng toát mồ hôi lúng túng kéo cổ áo bao biện',
-  broken: 'Hoàng cúi đầu bật khóc chắp tay suy sụp xin tha',
+  confident: 'Thịnh khoanh tay điềm tĩnh tự tin chối tội dưới ánh đèn thẩm vấn',
+  smug: 'Thịnh nhếch mép cười cợt kệch cỡm khi thiếu chứng cứ',
+  surprised: 'Thịnh giật mình phân bua dưới ánh đèn thẩm vấn',
+  nervous: 'Thịnh toát mồ hôi lúng túng kéo cổ áo bao biện',
+  broken: 'Thịnh cúi đầu bật khóc chắp tay suy sụp xin tha',
 };
 
 const SPOTLIGHT_ACCENT: Record<HusbandMood, { beam: string; rim: string }> = {
@@ -45,7 +45,7 @@ function resolveComicMood(mood: HusbandMood): ConfrontationMood {
 }
 
 /**
- * Noir Comic Portrait of Husband Hoàng in a dark interrogation room with overhead spotlight.
+ * Noir Comic Portrait of Husband Thịnh in a dark interrogation room with overhead spotlight.
  * Animates exclusively compositor-safe `transform` and `opacity`, honoring `useReducedMotion()`.
  */
 export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({

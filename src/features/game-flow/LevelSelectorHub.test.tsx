@@ -25,8 +25,8 @@ const HUSBANDS: HusbandProfile[] = [
   {
     husbandId: 'hoang',
     caseCode: 'HỒ SƠ #01',
-    displayName: 'Nguyễn Huy Hoàng',
-    age: 29,
+    displayName: 'Nguyễn Huy Thịnh',
+    age: 31,
     occupation: 'Tech Lead · Technosoft (Hà Nội)',
     teaserQuote: 'Anh chỉ đi họp với đối tác thôi mà em.',
     personaTraits: ['Hay úp màn hình, mang máy vào nhà tắm'],
@@ -120,14 +120,14 @@ describe('LevelSelectorHub husband stage', () => {
     expect(html).not.toContain('Chọn màn');
     expect(html).toContain('aria-label="Tắt âm thanh"');
     expect(html).not.toContain('>Mở hồ sơ<');
-    expect(html).toContain('aria-label="Mở hồ sơ Nguyễn Huy Hoàng"');
+    expect(html).toContain('aria-label="Mở hồ sơ Nguyễn Huy Thịnh"');
     expect(html).toMatch(/role="button"[^>]*tabindex="0"|tabindex="0"[^>]*role="button"/);
     expect(html).not.toContain('>Đổi hồ sơ<');
     expect(html).toContain('data-husband-id="hoang"');
     expect(html).not.toContain('data-husband-id="tuan"');
     expect(html).toContain('HỒ SƠ #01');
     expect(html).toContain('Đang theo dõi');
-    expect(html).toContain('Nguyễn Huy Hoàng');
+    expect(html).toContain('Nguyễn Huy Thịnh');
     expect(html).toContain('/assets/avatars/hoang.png');
     expect(html).toContain('aria-label="Chồng trước"');
     expect(html).toContain('aria-label="Chồng tiếp theo"');

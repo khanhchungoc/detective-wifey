@@ -105,7 +105,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
       : DEFAULT_CLOUD_DOCS;
 
   const currentUser = messagingData.currentUser || {
-    name: 'Nguyễn Huy Hoàng',
+    name: 'Nguyễn Huy Thịnh',
     handle: 'hoang_tech88',
     avatarInitials: 'H',
     statusText: 'Đang làm việc...',

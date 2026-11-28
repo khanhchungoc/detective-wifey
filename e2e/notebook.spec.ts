@@ -80,7 +80,7 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await confirm.getByRole('button', { name: /!/ }).click();
     const interrogation = page.getByRole('dialog', { name: /Đối chất · / });
     await expect(interrogation).toBeVisible();
-    await expect(interrogation.locator('[data-choice-id="open_ask"]')).toContainText('Hoàng, anh có gì giấu tôi không');
+    await expect(interrogation.locator('[data-choice-id="open_ask"]')).toContainText('Thịnh, anh có gì giấu tôi không');
     await expect(interrogation.locator('[data-choice-id="open_offer"]')).toContainText('Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật');
 
     // The interrogation can be closed without picking a line.

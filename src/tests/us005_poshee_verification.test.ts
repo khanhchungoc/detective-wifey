@@ -56,7 +56,7 @@ describe('US-005 Ecommerce read-only investigation', () => {
     expect(gift.totalAmount).toBe('489.000đ');
     expect(gift.items[0].quantity).toBe(1);
     expect(gift.clueRefId).toBe('CLUE-POSH-05');
-    expect(bag.suspectName).toBe('Nguyễn Huy Hoàng');
+    expect(bag.suspectName).toBe('Nguyễn Huy Thịnh');
     expect(bag.suspectId).toBe('husband_hoang');
     const legacy = normalizeEcommerceData({ orders: [{ orderId: 'legacy', title: 'Legacy item' }] })!.orders[0];
     expect(legacy.orderDate).toBeUndefined();

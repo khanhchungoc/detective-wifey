@@ -309,7 +309,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                 item={{
                   title: evidenceName,
                   snippet: msg.text,
-                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Hoàng)' : 'Vợ')),
+                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Thịnh)' : 'Vợ')),
                   subtitle: msgTime,
                   kind: image ? 'photo' : 'message',
                   conversationId: thread.threadId,

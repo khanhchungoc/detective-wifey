@@ -135,7 +135,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
   suspectsOnBoard = [],
   selectedSuspectId,
   getSourceApp,
-  husbandName = 'Hoàng',
+  husbandName = 'Thịnh',
   onSelectSuspect,
   onConfirmConfront,
   onCancel,

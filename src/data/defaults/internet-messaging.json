@@ -1,7 +1,7 @@
 {
   "unreadBadge": 4,
   "currentUser": {
-    "name": "Nguyễn Huy Hoàng",
+    "name": "Nguyễn Huy Thịnh",
     "handle": "hoang_tech88",
     "avatarInitials": "H",
     "statusText": "Đang làm việc..."
@@ -15,7 +15,7 @@
       "unreadCount": 0,
       "isPinned": false,
       "messages": [
-        { "id": "la_1", "sender": "them", "text": "Anh Hoàng ơi, đã tổng hợp xong danh sách liên hoan quý 3 rồi nhé.", "time": "14:10" },
+        { "id": "la_1", "sender": "them", "text": "Anh Thịnh ơi, đã tổng hợp xong danh sách liên hoan quý 3 rồi nhé.", "time": "14:10" },
         { "id": "la_2", "sender": "me", "text": "Ok em, quỹ team còn dư bao nhiêu?", "time": "14:15" },
         { "id": "la_3", "sender": "them", "text": "Lan Anh: Quỹ team còn đủ cho đợt này anh nhé.", "time": "14:30" }
       ]

@@ -23,7 +23,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
   const mockCaseConfig: CaseConfig = {
     caseId: 'case_01',
     husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandName: 'Thịnh',
     levelNumber: 1,
     allowedStrikes: 5,
     groundTruth: {
@@ -690,7 +690,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           suspectsOnBoard={[{ id: 'suspect_huong', displayName: 'Pinned contact' }]}
           selectedSuspectId="suspect_huong"
           preflight={lowPf}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -722,7 +722,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           suspectsOnBoard={[{ id: 'suspect_huong', displayName: 'Pinned contact' }]}
           selectedSuspectId="suspect_huong"
           preflight={{ ...highPf, accusedSuspectAlias: 'SECRET_ALIAS' }}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -761,7 +761,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           suspectsOnBoard={suspects}
           getSourceApp={() => ({ displayName: 'Zola', iconAsset: '/zola.svg', icon: () => null, themeGradient: 'from-blue-500 to-blue-600' })}
           selectedSuspectId={null} // Step 1
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -803,7 +803,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           preflight={pf}
           suspectsOnBoard={suspects}
           selectedSuspectId={null}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -847,7 +847,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           preflight={pf}
           suspectsOnBoard={suspects}
           selectedSuspectId={null}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -867,7 +867,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           preflight={pf}
           suspectsOnBoard={suspects}
           selectedSuspectId="suspect_huong"
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -899,7 +899,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           suspectsOnBoard={[{ id: 'suspect_lan_anh', displayName: 'Pinned contact' }]}
           preflight={wrongSuspectPf}
           selectedSuspectId="suspect_lan_anh"
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -926,7 +926,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         <ConfrontationConfirmModal
           isOpen={true}
           preflight={pf}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,

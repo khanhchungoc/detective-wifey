@@ -1,7 +1,7 @@
 {
   "caseId": "case_03",
   "husbandId": "husband_hoang",
-  "husbandName": "Hoàng",
+  "husbandName": "Thịnh",
   "levelNumber": 3,
   "allowedStrikes": 3,
   "groundTruth": {
@@ -84,7 +84,7 @@
       "posts": [
         {
           "id": "post_1",
-          "author": "Hoàng Nguyễn (CEO)",
+          "author": "Thịnh Nguyễn (CEO)",
           "time": "Hôm qua",
           "content": "Tròn 5 năm gắn bó với sự nghiệp (15/09). PIN thẻ và các tài khoản quan trọng luôn đặt theo ngày này: 1509."
         }

@@ -76,7 +76,7 @@
     },
     {
       "callId": "call_friend",
-      "contactName": "Tuấn Đụt",
+      "contactName": "Tuấn Chó",
       "contactId": "contact_5",
       "phoneNumber": "0977112233",
       "timestamp": "14/10/2026 12:20",
@@ -185,7 +185,7 @@
     {
       "callId": "call_history_25",
       "contactId": "contact_5",
-      "contactName": "Tuấn Đụt",
+      "contactName": "Tuấn Chó",
       "phoneNumber": "0977112233",
       "timestamp": "05/10/2026 09:20",
       "direction": "outgoing",
@@ -257,7 +257,7 @@
     {
       "callId": "call_history_17",
       "contactId": "contact_5",
-      "contactName": "Tuấn Đụt",
+      "contactName": "Tuấn Chó",
       "phoneNumber": "0977112233",
       "timestamp": "28/09/2026 18:05",
       "direction": "missed",
@@ -383,7 +383,7 @@
     {
       "callId": "call_history_3",
       "contactId": "contact_5",
-      "contactName": "Tuấn Đụt",
+      "contactName": "Tuấn Chó",
       "phoneNumber": "0977112233",
       "timestamp": "21/09/2026 18:15",
       "direction": "outgoing",
@@ -445,7 +445,7 @@
     },
     {
       "contactId": "contact_5",
-      "displayName": "Tuấn Đụt",
+      "displayName": "Tuấn Chó",
       "primaryPhone": "0977112233"
     },
     {

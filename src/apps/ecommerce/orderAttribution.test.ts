@@ -24,7 +24,7 @@ it('keeps delivery names, phone numbers and addresses consistent across all leve
       expect(order.recipientPhone).toBe(phoneFor('Mẹ Ở Quê'));
       expect(order.shippingAddress).toBe(countryside);
     } else if (order.suspectId === caseConfig.husbandId) {
-      expect(order.recipientName).toBe('Nguyễn Huy Hoàng');
+      expect(order.recipientName).toBe('Nguyễn Huy Thịnh');
       expect(order.recipientPhone).toBe('0901236789');
       expect(order.shippingAddress).toBe(home);
     } else if (order.suspectId === 'suspect_huong') {

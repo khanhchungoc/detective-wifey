@@ -9,7 +9,7 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_01',
     husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandName: 'Thịnh',
     levelNumber: 1,
     levelTitle: 'MÀN 1: Điện thoại ngoài phòng tắm',
     storySnippet: 'Độ khó: Dễ (5 lượt nghi ngờ • 0 khóa PIN). 23:45, chồng đang tắm, điện thoại 8% pin cắm sạc ngoài phòng. Màn hình sáng lên hai lần...',
@@ -19,7 +19,7 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_02',
     husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandName: 'Thịnh',
     levelNumber: 2,
     levelTitle: 'MÀN 2: Tin Nhắn Người Lạ',
     storySnippet: 'Độ khó: Vừa (4 Strikes • 1 Khóa PIN). Xuất hiện chuyển khoản 1.000 VNĐ kèm lời nhắn trên Ngân hàng.',
@@ -29,7 +29,7 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_03',
     husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandName: 'Thịnh',
     levelNumber: 3,
     levelTitle: 'MÀN 3: Quỹ Đen Bí Ẩn',
     storySnippet: 'Độ khó: Khó (3 Strikes • 2 Khóa PIN). Cần hoàn thành Màn 2 để mở khóa.',

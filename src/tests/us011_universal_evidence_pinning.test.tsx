@@ -281,7 +281,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     const mockCase: CaseConfig = {
       caseId: 'case_01',
       husbandId: 'husband_hoang',
-      husbandName: 'Hoàng',
+      husbandName: 'Thịnh',
       levelNumber: 1,
       allowedStrikes: 5,
       groundTruth: {

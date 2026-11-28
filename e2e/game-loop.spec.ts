@@ -168,7 +168,7 @@ test.describe('Level 1 main game loop', () => {
     await connectCards(page, 'node_record_wife_alibi', 'node_record_bank_receipt');
     await expect(keyProgress(page)).toHaveAttribute('aria-label', /3\/3 mắt xích/);
 
-    // Confront Hoàng and accuse the right person, backing each beat with its string.
+    // Confront Thịnh and accuse the right person, backing each beat with its string.
     const interrogation = await startConfrontation(page, 'suspect_huong');
     await choose(interrogation, 'open_ask');
     await choose(interrogation, 'khoa_shared_phone');
@@ -208,7 +208,7 @@ test.describe('Level 1 main game loop', () => {
     await choose(interrogation, 'open_ask');
     await choose(interrogation, 'khoa_shared_phone');
 
-    // Lose outcome: Hoàng deflects, only "return to investigation" is offered, no verdict roast.
+    // Lose outcome: Thịnh deflects, only "return to investigation" is offered, no verdict roast.
     await expect(interrogation.getByText(/Khoa là dev backend, nhắn việc với anh suốt/)).toBeVisible();
     await expect(interrogation.getByText(/Mất 1 lượt nghi ngờ/)).toBeVisible();
     await expect(interrogation.getByRole('button', { name: /Tạo thẻ Roast/ })).toHaveCount(0);

@@ -178,7 +178,7 @@ export function createScriptedConfrontation({
 
   return {
     phase: 'opening',
-    husbandName: caseConfig.husbandName || 'Hoàng',
+    husbandName: caseConfig.husbandName || 'Thịnh',
     husbandMood: 'confident',
     husbandLine: null,
     lastWifeLine: null,

@@ -9,7 +9,7 @@ import type { AppCaseContext } from '../shared/contracts/app-contracts';
 
 const mockCaseContext: AppCaseContext = {
   caseId: 'case_test_01',
-  husbandName: 'Nguyễn Huy Hoàng',
+  husbandName: 'Nguyễn Huy Thịnh',
   levelNumber: 1,
   suspectPool: [],
   lockChallenges: [],

@@ -16,7 +16,7 @@ const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
   { index: 4, names: ['Mai Lễ Tân'] }, // Casual side-angle lobby selfie.
   { index: 5, names: ['Mẹ Ở Quê', 'Mẹ'] }, // Her garden and vegetables.
   { index: 6, names: ['Vợ'] }, // Candid adult couple photo.
-  { index: 7, names: ['Tuấn Đụt'] }, // Amateur football team photo from a distance.
+  { index: 7, names: ['Tuấn Chó'] }, // Amateur football team photo from a distance.
   { index: 8, names: ['Nam Dev'] }, // Cat photo beside a laptop.
   { index: 9, names: ['Bách Dev'] }, // Anime developer avatar.
   { index: 10, names: ['Anh Bách QLDA - Ban Quản Lý Toà Nhà'] }, // Distant team gathering photo.

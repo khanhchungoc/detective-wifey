@@ -15,7 +15,7 @@ describe('case-supplied photo library', () => {
     { id: 'private', title: 'Riêng tư', isLocked: true, photos: [{ id: 'private-photo', title: 'Nội dung đã khóa' }] },
   ];
   const render = (payload: unknown) => renderToStaticMarkup(createElement(PhotosApp, {
-    caseData: { caseId: 'case', husbandName: 'Hoàng', levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: { photos: payload } },
+    caseData: { caseId: 'case', husbandName: 'Thịnh', levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: { photos: payload } },
     onReturnHome: vi.fn(), onTagSuspect: vi.fn(), onRequestUnlock: vi.fn(), unlockedChallenges: new Set<string>(),
   }));
 
@@ -54,13 +54,13 @@ describe('case-supplied photo library', () => {
 
   it('pins an everyday photo with imageSrc onto the Corkboard', () => {
     const photo = readPhotosData(loadCase('case_01').appsData.photos).photos.find(item => item.id === 'photo_0')!;
-    const evidence = buildPhotoEvidenceItem(photo, 'case_01', 'Hoàng', 'exif');
+    const evidence = buildPhotoEvidenceItem(photo, 'case_01', 'Thịnh', 'exif');
     expect(evidence.source?.recordId).toBe('photo_0');
     expect(evidence.source?.imageSrc).toBeTruthy();
 
     const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [{
       suspectId: 'tag_photo_1',
-      displayName: 'Hoàng',
+      displayName: 'Thịnh',
       sourceApp: 'photos',
       timestamp: 1,
       evidence: evidence.source,
@@ -100,7 +100,7 @@ describe('case-supplied photo library', () => {
       prevPhoto: state.photos[0],
       nextPhoto: state.photos[2],
       caseId: 'case_01',
-      husbandName: 'Hoàng',
+      husbandName: 'Thịnh',
       onBack: vi.fn(),
       onToggleInfo: vi.fn(),
       isInfoOpen: false,

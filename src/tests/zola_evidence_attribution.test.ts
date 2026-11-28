@@ -77,7 +77,7 @@ describe('Messaging evidence attribution and source preservation', () => {
     });
   });
 
-  it('attributes husband alibi messages to Chồng (Nguyễn Huy Hoàng) in thread with Vợ', () => {
+  it('attributes husband alibi messages to Chồng (Nguyễn Huy Thịnh) in thread with Vợ', () => {
     const wifeThread: MessagingThread = {
       threadId: 'thread_wife',
       contactName: 'Vợ',
@@ -104,8 +104,8 @@ describe('Messaging evidence attribution and source preservation', () => {
     const isMe = true;
     const suspectToTag = wifeThread.contactName !== 'Vợ'
       ? wifeThread.contactName
-      : (isMe ? 'Chồng (Nguyễn Huy Hoàng)' : 'Vợ');
+      : (isMe ? 'Chồng (Nguyễn Huy Thịnh)' : 'Vợ');
 
-    expect(suspectToTag).toBe('Chồng (Nguyễn Huy Hoàng)');
+    expect(suspectToTag).toBe('Chồng (Nguyễn Huy Thịnh)');
   });
 });

@@ -22,7 +22,7 @@ function resolveFallbackCaseConfig(
   return caseConfig ?? {
     caseId: caseId || 'case_01',
     husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandName: 'Thịnh',
     levelNumber: 1,
     allowedStrikes: maxStrikes || 5,
     groundTruth: {

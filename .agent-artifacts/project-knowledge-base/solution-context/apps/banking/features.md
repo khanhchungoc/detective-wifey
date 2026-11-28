@@ -14,7 +14,7 @@ timestamp: "2026-10-15T21:05:00+07:00"
 
 ## 1. Functional Overview
 
-The dashboard shortcut and bottom tab are labeled **Tiết kiệm**. Hoàng Level 1 includes two read-only online savings deposits: 30.000.000 đ for 6 months and 50.000.000 đ for 12 months. Case-defined `vaults[].details` provides term, annual rate, opening date, maturity date, and interest payout text. Savings cards and opening deposit records use the existing 380 ms long-press evidence flow; pinned savings retain the displayed terms and source record ID.
+The dashboard shortcut and bottom tab are labeled **Tiết kiệm**. Thịnh Level 1 includes two read-only online savings deposits: 30.000.000 đ for 6 months and 50.000.000 đ for 12 months. Case-defined `vaults[].details` provides term, annual rate, opening date, maturity date, and interest payout text. Savings cards and opening deposit records use the existing 380 ms long-press evidence flow; pinned savings retain the displayed terms and source record ID.
 
 Techcornbank acts as the financial forensic epicenter. In viral Vietnamese relationship scandals, bank transfer memo fields are famously repurposed as secret chat rooms when blocked on messaging apps. It also exposes secret allowances (*Sugar Mommy*), dining receipts, and hidden stashes (*"quỹ đen"*).
 

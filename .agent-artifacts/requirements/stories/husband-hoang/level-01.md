@@ -13,12 +13,12 @@ level: 1
 
 ### 1.1. Liên kết Hồ sơ Người Chồng & Người Vợ (SSOT)
 - **Hồ sơ Người Chồng, Ảnh đại diện gốc, Mỏ neo Người Vợ & Nhân vật cố định**: Tái sử dụng từ [husband-profile.md](husband-profile.md) (không định nghĩa lặp lại tại đây).
-- **Hành vi Khả nghi Kích hoạt Cơn Ghen Ở Màn 1**: 23:45 thứ Năm 15/10/2026, Hoàng vào tắm. Lần đầu tiên anh để điện thoại ngoài phòng vì máy còn 8% pin phải cắm sạc. Màn hình khóa có hai thông báo chưa đọc: một từ "Anh Tuấn Thợ Điện" (22:58), một từ "Khoa BE" (23:41).
+- **Hành vi Khả nghi Kích hoạt Cơn Ghen Ở Màn 1**: 23:45 thứ Năm 15/10/2026, Thịnh vào tắm. Lần đầu tiên anh để điện thoại ngoài phòng vì máy còn 8% pin phải cắm sạc. Màn hình khóa có hai thông báo chưa đọc: một từ "Anh Tuấn Thợ Điện" (22:58), một từ "Khoa BE" (23:41).
 
 ### 1.2. Chất liệu Trào phúng & Bản chất Vụ việc
 - **Nguồn cảm hứng**: Meme "lưu số bồ là Anh Tuấn Thợ Điện" trên TikTok / *Tâm sự Eva*, chiêu "đặt hộ đồng nghiệp lấy mã Freeship Extra", hành vi thật của app nhắn tin: tên danh bạ đã lưu hiện thay tên thật trong nhóm chat.
-- **Bản chất Câu chuyện**: Hoàng quen Thu Hương (25 tuổi, Marketing Executive, vào Technosoft 08/09) từ 15/09. Anh lưu số Hương thành đồng nghiệp nam "Khoa BE"; cách xưng `anh - em` của một đồng nghiệp trẻ giữ cho vỏ bọc tự nhiên. Ngày 12/10 Hoàng đặt váy lụa size S kèm thiệp "15/09 - 15/10 ♡", để tên Hương làm người nhận nhằm có sẵn cớ "đặt hộ". Chiều D, Team Dev hủy họp sprint vì sếp Hùng bay Đà Nẵng. Hoàng không báo vợ, hẹn Hương ăn tối kỷ niệm 1 tháng tại Cơm Niêu Phố Cổ, rồi hai lần nói dối vợ là đang họp. Cùng chiều đó, vợ anh vừa biết mình có thai 6 tuần và đang đợi anh về để nói.
-- **Cú lừa thiết kế**: "Anh Tuấn Thợ Điện" là thợ điện thật ở quê, đang bí mật lắp bình nóng lạnh làm quà sinh nhật mẹ Hoàng (18/10). Người chơi bắt ghen theo meme sẽ bị trừ lượt và nhận roast.
+- **Bản chất Câu chuyện**: Thịnh quen Thu Hương (25 tuổi, Marketing Executive, vào Technosoft 08/09) từ 15/09. Anh lưu số Hương thành đồng nghiệp nam "Khoa BE"; cách xưng `anh - em` của một đồng nghiệp trẻ giữ cho vỏ bọc tự nhiên. Ngày 12/10 Thịnh đặt váy lụa size S kèm thiệp "15/09 - 15/10 ♡", để tên Hương làm người nhận nhằm có sẵn cớ "đặt hộ". Chiều D, Team Dev hủy họp sprint vì sếp Hùng bay Đà Nẵng. Thịnh không báo vợ, hẹn Hương ăn tối kỷ niệm 1 tháng tại Cơm Niêu Phố Cổ, rồi hai lần nói dối vợ là đang họp. Cùng chiều đó, vợ anh vừa biết mình có thai 6 tuần và đang đợi anh về để nói.
+- **Cú lừa thiết kế**: "Anh Tuấn Thợ Điện" là thợ điện thật ở quê, đang bí mật lắp bình nóng lạnh làm quà sinh nhật mẹ Thịnh (18/10). Người chơi bắt ghen theo meme sẽ bị trừ lượt và nhận roast.
 - **Storyboard & Sơ đồ Dòng thời gian**: Xem [level-01-storyboard.md](level-01-storyboard.md).
 
 ---
@@ -51,7 +51,7 @@ level: 1
 | `thread_mai` / `contact_8` | người | `internet-messaging`, `ecommerce`, `phone` | Mai Lễ Tân / người nhận "Đỗ Thị Mai" | Vào bộ chọn (bẫy nghi ngờ) | `contact_8` | `suspect_mai` |
 | `thread_wife` / `contact_9` | người | `internet-messaging`, `phone` | Vợ | Mỏ neo, loại trừ | `contact_9` | `char_wife` |
 | `thread_family` / `contact_0` | người | `internet-messaging`, `phone`, `ecommerce` | Mẹ Ở Quê / người nhận "Nguyễn Thị Hòa" | Bề trên, loại trừ | `contact_0` | `char_mom` |
-| `thread_friend` / `contact_5` | người | `internet-messaging`, `phone` | Tuấn Đụt | Bạn thân, loại trừ | `contact_5` | `char_best_friend` |
+| `thread_friend` / `contact_5` | người | `internet-messaging`, `phone` | Tuấn Chó | Bạn thân, loại trừ | `contact_5` | `char_best_friend` |
 | `thread_dev` / `contact_3` | nhóm / người | `internet-messaging`, `phone` | Team Dev Technosoft / Nam Dev / Bách Dev | Đồng nghiệp, loại trừ | `contact_3` | `char_boss` |
 | `thread_building` / `contact_11` | nhóm / dịch vụ | `internet-messaging`, `phone` | Cư dân tầng 12 / Ban Quản Lý | Dịch vụ tòa nhà, loại trừ | `contact_11` | Ban quản lý |
 | `sms_gym` | dịch vụ | `messages` | California Fitness | Dịch vụ, loại trừ | `sms_gym` | Phòng gym |
@@ -79,7 +79,7 @@ level: 1
 - **Ghen nhầm Mai Lễ Tân**:
   > *"Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình."*
 - **Bị Giật Lại Máy (hết 5 lượt nghi ngờ)**:
-  > *"Hoàng bước ra từ phòng tắm, giật lại máy: 'Em soi máy anh hay kiểm kê cả công ty đấy? Mai anh còn đi làm!'"*
+  > *"Thịnh bước ra từ phòng tắm, giật lại máy: 'Em soi máy anh hay kiểm kê cả công ty đấy? Mai anh còn đi làm!'"*
 
 ### 3.3. Thang Ngụy biện Khi Đối chất Sớm ("Chối bay chối biến")
 
@@ -96,7 +96,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 
 | Nhịp / Giai đoạn | Chủ đề (`topic`) | Lựa chọn chính (`slot` / `requiredEdgeIds`) | Phản ứng Nhánh True (`onTrue`) | Phản ứng Nhánh False / Bẫy nghi ngờ (`onFalse` - `smug`) |
 |---|---|---|---|---|
-| **Nhịp 1 (`opening`)** | Mở màn | `left` (`open_ask`): *"Hoàng, anh có gì giấu tôi không?"* / `right` (`open_offer`): *"Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật."* | `confident`: *"Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?"* | - |
+| **Nhịp 1 (`opening`)** | Mở màn | `left` (`open_ask`): *"Thịnh, anh có gì giấu tôi không?"* / `right` (`open_offer`): *"Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật."* | `confident`: *"Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?"* | - |
 | **Nhịp 2 (`beat_khoa_identity`)** | Khoa BE là ai? | `up` (`khoa_shared_phone`, `['edge_order_phone']`): *"Dev backend nào mà dùng chung số 0988886677 với người nhận váy lụa size S?"* | `nervous`: *"Khoa... Khoa là dev mới bên anh. Nó nhờ anh đặt hộ váy cho người yêu nên để số nó thôi!"* | Thiếu cạnh: *"Khoa là dev backend, nhắn việc với anh suốt. Em ghen cả với đàn ông à?"*. `left` (`tuan_herring`): *"Thợ điện nào nửa đêm dặn 'không để bà ấy biết'?"* -> roast thợ điện. `right` (`thao_herring`): *"Thảo PT đợi anh tối nay là sao?"* -> roast Thảo. Trừ 1 strike khi thoát |
 | **Nhịp 3 (`beat_dress_recipient`)** | Váy size S gửi cho ai? | `up` (`dress_legal_name`, `['edge_order_name']`): *"Người nhận váy là Nguyễn Thị Thu Hương. Nhóm công ty ghim rõ: Hương - Marketing. 'Khoa' của anh mặc váy size S à? Tôi mặc size M."* | `nervous`: *"À... Hương bên Marketing nhờ anh áp mã Freeship Extra thôi. Anh với nó chỉ là đồng nghiệp!"* | Thiếu cạnh: *"Váy với thiệp thì sao? Shop giao nhầm, em định bắt ghen cả shipper à?"*. `left` (`mai_herring`): *"Lẵng hoa gửi Đỗ Thị Mai là sao?"* -> roast Mai. `right` (`ngoc_herring`): *"Bé Ngọc dặn anh 'đừng kể gì' là chuyện gì?"* -> roast Ngọc. Trừ 1 strike khi thoát |
 | **Nhịp 4 (`beat_meeting_alibi`)** | Tối nay anh thật sự ở đâu? | `up` (`alibi_card_swipe`, `['edge_alibi_contradiction']`): *"20:46 anh nhắn sếp Hùng đang chốt nốt. 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Mà sếp Hùng bay Đà Nẵng từ 6 giờ."* | `broken`: *"Anh xin lỗi... không có họp nào cả. Anh đi ăn với Hương. Mới một tháng thôi, anh sai rồi..."* -> mở khóa `ending` | Thiếu cạnh: *"Anh họp tới khuya, cả Team Dev làm chứng. Em định gọi hỏi từng người à?"*. `down` (`lan_anh_herring`): *"8 giờ tối anh chuyển tiền cho Lan Anh làm gì?"* -> roast Lan Anh. Trừ 1 strike khi thoát |
@@ -183,7 +183,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 | `edge_order_name` | `node_record_ecommerce_order` | `node_bridge_name` | `bridges_identity` | `true` | `order_01` / `msg_company_pin` | Tên người nhận `Nguyễn Thị Thu Hương` khớp tên trong tin ghim HR (có dấu, so khớp không phân biệt hoa thường) | `order_01` + `msg_company_pin` | Người nhận váy là Hương phòng Marketing | Đạt: tên khớp. Không đạt: ghim `order_03` (Đỗ Thị Mai) hoặc `order_02` (Nguyễn Bảo Ngọc) | *"À... Hương bên Marketing nhờ anh áp mã Freeship Extra thôi. Anh với nó chỉ là đồng nghiệp!"* |
 | `edge_name_suspect` | `node_bridge_name` | `node_suspect_huong` | `bridges_identity` | `false` | `msg_company_pin` / `suspect_huong` | Tên pháp lý và chức danh nhân sự | `msg_company_pin` | Xác định nghi phạm thật | Tự động sau `edge_order_name` hoặc `edge_group_name` | - |
 | `edge_alibi_contradiction` | `node_record_wife_alibi` | `node_record_bank_receipt` | `contradicts_alibi` | `true` | `msg_wife_2046` / `tx_01` | Cùng ngày 15/10: 20:46 khai đang họp, 20:48 quẹt thẻ tại quán ăn | `msg_wife_2046` + `tx_01` | Lời khai họp là giả | Đạt: đúng cặp tin 20:46 và `tx_01`. Không đạt: ghép `msg_wife_2046` với `tx_ngoc` (20:10) hoặc `tx_lan_anh` (20:30) vì chuyển khoản online không chứng minh vị trí | *"Anh xin lỗi... không có họp nào cả. Anh đi ăn với Hương. Mới một tháng thôi, anh sai rồi..."* |
-| `edge_meeting_cancelled` | `node_record_dev_cancel` | `node_record_wife_1855` | `contradicts_alibi` | `false` | `msg_dev_cancel` / `msg_wife_1855` | Họp dời sang thứ Hai lúc 17:30 (Hoàng đã trả lời "Ok ông 👍"), 18:55 vẫn khai họp | `msg_dev_cancel` + `msg_wife_1855` | Hoàng biết không có họp | Đạt: ghim đủ hai tin. Không đạt: ghim tin 09:05 về bản fix cart | *"Thì... lịch dời nhưng anh với Nam vẫn ngồi lại làm tiếp mà!"* |
+| `edge_meeting_cancelled` | `node_record_dev_cancel` | `node_record_wife_1855` | `contradicts_alibi` | `false` | `msg_dev_cancel` / `msg_wife_1855` | Họp dời sang thứ Hai lúc 17:30 (Thịnh đã trả lời "Ok ông 👍"), 18:55 vẫn khai họp | `msg_dev_cancel` + `msg_wife_1855` | Thịnh biết không có họp | Đạt: ghim đủ hai tin. Không đạt: ghim tin 09:05 về bản fix cart | *"Thì... lịch dời nhưng anh với Nam vẫn ngồi lại làm tiếp mà!"* |
 | `edge_booking_receipt` | `node_record_khoa_booking` | `node_record_bank_receipt` | `occurred_at` | `false` | `msg_khoa_booking` / `tx_01` | Bàn 7h30 cùng tối; thanh toán 20:48 cùng tối D | `msg_khoa_booking` + `tx_01` | Bữa tối có thể là cuộc hẹn với "Khoa BE" (gợi hướng, không tự chứng minh) | Đạt: cùng ngày D. Không đạt: ghép với `tx_lunch` ngày 13/10 | - |
 | `edge_dinner_slot` | `node_record_wife_1855` | `node_timeline_dinner` | `occurred_at` | `false` | `msg_wife_1855` / - | Mốc tối D | `msg_wife_1855` | Neo khung giờ | - | - |
 
@@ -208,7 +208,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 |---|---|---|
 | Anh Tuấn Thợ Điện | Thông báo 22:58 "không để bà ấy biết đâu"; chuyển "Coc" 1,5tr lúc 15:30 | Luồng Mẹ 13/10 (bình nóng lạnh hỏng), luồng Tuấn 13/10 (lắp làm bất ngờ dịp sinh nhật mẹ), đơn bình nóng lạnh gửi Nguyễn Thị Hòa = SĐT Mẹ |
 | Bé Ngọc KTX | Bản xem trước 20:13 "Nhớ là a đừng kể gì nha 🙊"; nhận 1,2tr lúc 20:10 nội dung "CK" | Đọc trọn luồng: trượt Vĩ mô, "mẹ mà biết thì e toi", tiền học lại |
-| Lan Anh Kế Toán | Nhận 500k lúc 20:30 giữa buổi tối, nội dung "CK" | Luồng Lan Anh: quỹ sinh nhật anh Hùng, Hoàng "ứng luôn cho cả nhóm" |
+| Lan Anh Kế Toán | Nhận 500k lúc 20:30 giữa buổi tối, nội dung "CK" | Luồng Lan Anh: quỹ sinh nhật anh Hùng, Thịnh "ứng luôn cho cả nhóm" |
 | Thảo PT California | 18:20 "A tới chưa? E đợi a nãy giờ 😤" | Luồng Thảo 13/10 chốt buổi đánh giá cột sống 18:00; SMS California Fitness 19:05 báo vắng mặt |
 | Mai Lễ Tân | Đơn lẵng hoa sáp người nhận "Đỗ Thị Mai" kèm thiệp sinh nhật | Luồng Lan Anh 14/10 dặn để tên Mai nhận; chat shop hoa: thiệp "Chúc mừng sinh nhật! - Team Dev"; luồng Mai: hoa cất kho tới thứ Hai |
 
@@ -235,6 +235,6 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
    python -B .agents/skills/level-designer/scripts/sync_clues.py validate --file ".agent-artifacts/requirements/stories/husband-hoang/level-01.md"
    ```
 2. Clue IDs dùng trong màn: `CLUE-ZOLA-01`, `CLUE-ZOLA-08`, `CLUE-ZOLA-09`, `CLUE-ZOLA-10`, `CLUE-ZOLA-11`, `CLUE-POSH-05`, `CLUE-POSH-06`, `CLUE-BANK-07`, `CLUE-PHONE-01`, `CLUE-MSG-02`.
-3. Kết quả đọc duyệt ngữ nghĩa: đã đi xuôi dòng thời gian và ngược từ hai thông báo; không có bản ghi sau 23:45 D; giờ hai thông báo trùng giờ tin trong luồng; số `0988886677` chỉ thuộc "Khoa BE" và người nhận `order_01`; xưng hô `em - anh` với thợ điện và `con - mẹ` với Mẹ đã kiểm. Khoảng trống có chủ đích: vị trí Hoàng 18:00 - 19:20 không được app nào ghi.
+3. Kết quả đọc duyệt ngữ nghĩa: đã đi xuôi dòng thời gian và ngược từ hai thông báo; không có bản ghi sau 23:45 D; giờ hai thông báo trùng giờ tin trong luồng; số `0988886677` chỉ thuộc "Khoa BE" và người nhận `order_01`; xưng hô `em - anh` với thợ điện và `con - mẹ` với Mẹ đã kiểm. Khoảng trống có chủ đích: vị trí Thịnh 18:00 - 19:20 không được app nào ghi.
 4. Khoảng trống runtime đã biết: `edge_group_name` không nối được trên Bảng Điều tra vì cả nhóm `thread_company` là một thẻ; cạnh này không bắt buộc. `edge_order_name` và `edge_alias_group` vẫn chạy từ thẻ nhóm.
 5. Ca kiểm tra bàn giao cho đọc duyệt triển khai: ca đạt/không đạt ở bảng Edges; bộ chọn nghi phạm không lộ tên thật trước `edge_order_phone`; tên người gửi trong nhóm hiện theo danh bạ; thông báo hậu kết `+1.000 đ` chỉ hiện sau bước `ending` (cần xác nhận runtime hỗ trợ thông báo hậu kết).

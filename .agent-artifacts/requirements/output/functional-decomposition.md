@@ -99,7 +99,7 @@ Single source of truth for confirmed delivery epics and user story slices, parti
 
 ---
 
-## epic-04-detective-case-stories-level-content - Level 0 Tutorial & Husband Hoàng Level 1 Case Content (Release 1 / MVP)
+## epic-04-detective-case-stories-level-content - Level 0 Tutorial & Husband Thịnh Level 1 Case Content (Release 1 / MVP)
 
 - **Initiative**: N/A
 - **Source Elicitation Session**: [elicitation/2026-10-13-jealous-wife-detective-game.md](elicitation/2026-10-13-jealous-wife-detective-game.md)
@@ -111,7 +111,7 @@ Single source of truth for confirmed delivery epics and user story slices, parti
 
 | Story ID | Story Title | User Goal | Slicing Rationale |
 |---|---|---|---|
-| `us-027` | Husband Hoàng Level 1 Case Implementation ("Cơn ghen lúc nửa đêm") | As a **Player**, I want to play Husband Hoàng's Level 1 case ("Cơn ghen lúc nửa đêm") loaded with authentic suspects, subtle forensic clues across 4 active apps, and comedic excuse/roast reactions so that I can experience the MVP detective gameplay loop. | Sized $\le 1$ week. Translates canonical level story spec (`requirements/stories/husband-hoang/level-01.md`) into production JSON configuration (`src/data/cases/hoang/level_01.json`), mounts 4 active apps (`internet-messaging`, `ecommerce`, `banking`, `comms`), integrates 5 suspects, attaches 3 core smoking-gun clues, and configures roast dialogues. |
+| `us-027` | Husband Thịnh Level 1 Case Implementation ("Cơn ghen lúc nửa đêm") | As a **Player**, I want to play Husband Thịnh's Level 1 case ("Cơn ghen lúc nửa đêm") loaded with authentic suspects, subtle forensic clues across 4 active apps, and comedic excuse/roast reactions so that I can experience the MVP detective gameplay loop. | Sized $\le 1$ week. Translates canonical level story spec (`requirements/stories/husband-hoang/level-01.md`) into production JSON configuration (`src/data/cases/hoang/level_01.json`), mounts 4 active apps (`internet-messaging`, `ecommerce`, `banking`, `comms`), integrates 5 suspects, attaches 3 core smoking-gun clues, and configures roast dialogues. |
 | `us-034` | Level 0 Practice Case Content | As a **Player**, I want a dedicated practice investigation that supports the introductory lessons and an independent final deduction. | Status: `Confirmed`; Change Type: `New Story`; Scope Class: `In Baseline` following 2026-10-21 scope approval; Depends On: `us-001` and separately approved Level 0 narrative/clue design. SMART: one declarative case dataset using existing app views; content must support guided capture, a first connection, hint practice, a distinct final deduction, and confrontation feedback. Slicing: content/scenario integration separate from mechanisms. Exact content and implementation sizing remain dependent on the accepted level-design review; this row is not a delivery estimate. |
 
 ### Open Slicing Questions
@@ -143,7 +143,7 @@ Single source of truth for confirmed delivery epics and user story slices, parti
 
 ---
 
-## epic-06-husband-hoang-level-2-case - Husband Hoàng Level 2 Case Implementation (Release 2)
+## epic-06-husband-hoang-level-2-case - Husband Thịnh Level 2 Case Implementation (Release 2)
 
 - **Initiative**: N/A
 - **Source Elicitation Session**: [elicitation/2026-10-13-jealous-wife-detective-game.md](elicitation/2026-10-13-jealous-wife-detective-game.md)
@@ -155,14 +155,14 @@ Single source of truth for confirmed delivery epics and user story slices, parti
 
 | Story ID | Story Title | User Goal | Slicing Rationale |
 |---|---|---|---|
-| `us-028` | Husband Hoàng Level 2 Case Implementation ("Tình cũ không rủ cũng tới") | As a **Player**, I want to play Husband Hoàng's Level 2 case with escalating cheat sophistication, 5–6 mounted apps, and a 4-digit PIN lock challenge so that I can experience deeper detective deduction. | Sized $\le 1$ week. Content configuration slice for Level 2 (4 strikes, 1 lock challenge, 5–6 mounted apps). Dependent on Level Designer spec. |
+| `us-028` | Husband Thịnh Level 2 Case Implementation ("Tình cũ không rủ cũng tới") | As a **Player**, I want to play Husband Thịnh's Level 2 case with escalating cheat sophistication, 5–6 mounted apps, and a 4-digit PIN lock challenge so that I can experience deeper detective deduction. | Sized $\le 1$ week. Content configuration slice for Level 2 (4 strikes, 1 lock challenge, 5–6 mounted apps). Dependent on Level Designer spec. |
 
 ### Open Slicing Questions
 - None.
 
 ---
 
-## epic-07-husband-hoang-level-3-case - Husband Hoàng Level 3 Case Implementation (Release 3)
+## epic-07-husband-hoang-level-3-case - Husband Thịnh Level 3 Case Implementation (Release 3)
 
 - **Initiative**: N/A
 - **Source Elicitation Session**: [elicitation/2026-10-13-jealous-wife-detective-game.md](elicitation/2026-10-13-jealous-wife-detective-game.md)
@@ -174,7 +174,7 @@ Single source of truth for confirmed delivery epics and user story slices, parti
 
 | Story ID | Story Title | User Goal | Slicing Rationale |
 |---|---|---|---|
-| `us-029` | Husband Hoàng Level 3 Case Implementation ("Bẫy tiểu tam công sở") | As a **Player**, I want to play Husband Hoàng's Level 3 case with corporate workplace affairs, 8–11 mounted apps, and dual polymorphic security challenges so that I can master advanced cross-app evidence chaining. | Sized $\le 1$ week. Content configuration slice for Level 3 (3 strikes, 2 lock challenges, 8–11 mounted apps). Dependent on Level Designer spec. |
+| `us-029` | Husband Thịnh Level 3 Case Implementation ("Bẫy tiểu tam công sở") | As a **Player**, I want to play Husband Thịnh's Level 3 case with corporate workplace affairs, 8–11 mounted apps, and dual polymorphic security challenges so that I can master advanced cross-app evidence chaining. | Sized $\le 1$ week. Content configuration slice for Level 3 (3 strikes, 2 lock challenges, 8–11 mounted apps). Dependent on Level Designer spec. |
 
 ### Open Slicing Questions
 - None.

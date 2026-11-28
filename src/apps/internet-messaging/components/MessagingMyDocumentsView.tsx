@@ -382,7 +382,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                                   5.000.000 VNĐ
                                 </div>
                                 <div className="text-ios-caption-2 text-slate-500">
-                                  Người nộp: Nguyễn Huy Hoàng
+                                  Người nộp: Nguyễn Huy Thịnh
                                 </div>
                               </div>
                               <div className="text-ios-caption-2 text-[#52525B] flex justify-between">

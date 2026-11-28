@@ -490,7 +490,7 @@ export function evaluateConfrontation({
   cluesFound: explicitCluesFound,
   rngRoll,
 }: ConfrontationEvaluationParams): ConfrontationEvaluationResult {
-  const husbandName = caseConfig.husbandName || 'Hoàng';
+  const husbandName = caseConfig.husbandName || 'Thịnh';
   const groundTruth = caseConfig.groundTruth;
   const culpritId = groundTruth.culpritSuspectId;
 

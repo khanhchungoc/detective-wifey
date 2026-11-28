@@ -37,9 +37,9 @@ export function buildHusbandProfiles(): HusbandProfile[] {
     {
       husbandId: 'husband_hoang',
       caseCode: 'HỒ SƠ #01',
-      displayName: 'Nguyễn Huy Hoàng',
-      fullName: 'Nguyễn Huy Hoàng',
-      age: 29,
+      displayName: 'Thịnh Doom',
+      fullName: 'Nguyễn Huy Thịnh',
+      age: 31,
       occupation: 'Tech Lead · Technosoft (Hà Nội)',
       teaserQuote: '"Sợ vợ số 1, lương nộp 90%, nhưng hay úp màn hình và kêu OT fix bug."',
       personaTraits: [

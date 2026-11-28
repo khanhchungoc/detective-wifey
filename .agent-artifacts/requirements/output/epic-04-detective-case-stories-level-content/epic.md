@@ -1,16 +1,16 @@
 ---
 type: Requirement Epic
 status: draft
-description: "Release 1 case content for the optional Level 0 tutorial and Husband Hoàng Level 1, with separately approved narrative and clue designs."
+description: "Release 1 case content for the optional Level 0 tutorial and Husband Thịnh Level 1, with separately approved narrative and clue designs."
 tags: [requirement, epic, case-stories, level-content, narrative-integration, declarative-cases]
 timestamp: "2026-10-15T09:48:00+07:00"
 ---
 
-# Epic 04: Level 0 Tutorial & Husband Hoàng Level 1 Case Content (Release 1)
+# Epic 04: Level 0 Tutorial & Husband Thịnh Level 1 Case Content (Release 1)
 
 ## Summary
 
-This epic governs **Release 1 (MVP)** declarative content for the optional Level 0 practice case and Husband Hoàng Level 1. Existing Level 1 scope still translates `requirements/stories/husband-hoang/level-01.md` into `src/data/cases/hoang/level_01.json`, with its existing suspect cast, evidence chain and comedic endings. Level 0 is a separate dataset; its exact narrative and clues require a separate level-design review before implementation.
+This epic governs **Release 1 (MVP)** declarative content for the optional Level 0 practice case and Husband Thịnh Level 1. Existing Level 1 scope still translates `requirements/stories/husband-hoang/level-01.md` into `src/data/cases/hoang/level_01.json`, with its existing suspect cast, evidence chain and comedic endings. Level 0 is a separate dataset; its exact narrative and clues require a separate level-design review before implementation.
 
 ## Business Value
 
@@ -21,7 +21,7 @@ This epic governs **Release 1 (MVP)** declarative content for the optional Level
 
 ## High-Level Requirements
 
-- Implementation of Husband Hoàng Level 1 ("Cơn ghen lúc nửa đêm") JSON dataset matching `src/data/cases/hoang/level_01.json` specifications: 4 active apps (`internet-messaging`, `banking`, `ecommerce`, `comms`), 5 suspects, 3 core smoking-gun evidence cards, and 5-strike limit.
+- Implementation of Husband Thịnh Level 1 ("Cơn ghen lúc nửa đêm") JSON dataset matching `src/data/cases/hoang/level_01.json` specifications: 4 active apps (`internet-messaging`, `banking`, `ecommerce`, `comms`), 5 suspects, 3 core smoking-gun evidence cards, and 5-strike limit.
 - Configuration of 5 distinct suspect profiles (`suspect_huong`, `suspect_lan_anh`, `suspect_thao`, `suspect_ngoc`, `suspect_mai`) with disguised contact cards and avatar assets.
 - Packaging of forensic clue metadata across active apps adhering to the Subtle Clues Invariant (Zero Obvious Spoilers).
 - Integration of tiered confrontation excuse dialogues ("Chối bay chối biến") and comedic roast narratives for victory, over-jealous fail states, and caught-snooping restarts.
@@ -45,7 +45,7 @@ Players can immediately immerse themselves in a fully realized, culturally reson
 
 ## User Stories
 
-* [US-027 - Husband Hoàng Level 1 Case Implementation ("Cơn ghen lúc nửa đêm")](us-027-husband-hoang-level-1-case-implementation.md) - *Status: planned*
+* [US-027 - Husband Thịnh Level 1 Case Implementation ("Cơn ghen lúc nửa đêm")](us-027-husband-hoang-level-1-case-implementation.md) - *Status: planned*
 * [US-034 - Level 0 Practice Case Content](us-034-level-0-practice-case-content.md) - *Status: draft; shared revision-2 ASCII approved; implementation depends on separate level-design approval*.
 
 ## GUI Specifications
@@ -66,7 +66,7 @@ Players can immediately immerse themselves in a fully realized, culturally reson
 
 ## Citations
 
-* [Husband Hoàng Level 1 Design Spec](../../stories/husband-hoang/level-01.md)
+* [Husband Thịnh Level 1 Design Spec](../../stories/husband-hoang/level-01.md)
 * [Clue Ideas Inventory](../../stories/clues/clue-ideas-inventory.md)
 * [Apps & Features Architecture](../../../project-knowledge-base/solution-context/architecture/apps-features-architecture.md)
 * [Level 0 Tutorial & Sixth Sense Discovery](../elicitation/2026-10-21-level-0-tutorial-sixth-sense.md)

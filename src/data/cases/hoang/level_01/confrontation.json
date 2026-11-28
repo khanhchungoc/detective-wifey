@@ -3,7 +3,7 @@
     {
       "choiceId": "open_ask",
       "slot": "left",
-      "wifeLine": "Hoàng, anh có gì giấu tôi không?",
+      "wifeLine": "Thịnh, anh có gì giấu tôi không?",
       "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
       "husbandMood": "confident"
     },

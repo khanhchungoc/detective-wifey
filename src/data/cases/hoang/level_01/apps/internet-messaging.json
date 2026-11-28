@@ -1,6 +1,6 @@
 {
   "currentUser": {
-    "name": "Nguyễn Huy Hoàng",
+    "name": "Nguyễn Huy Thịnh",
     "handle": "hoang_tech88",
     "avatarInitials": "H",
     "statusText": ""
@@ -1034,7 +1034,7 @@
     },
     {
       "threadId": "thread_friend",
-      "contactName": "Tuấn Đụt",
+      "contactName": "Tuấn Chó",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 21:34",
       "unreadCount": 0,
@@ -2355,7 +2355,7 @@
   "timelinePosts": [
     {
       "id": "timeline_football",
-      "author": "Tuấn Đụt",
+      "author": "Tuấn Chó",
       "avatarInitials": "T",
       "timestamp": "14/10/2026 12:00",
       "content": "Chủ nhật đá hiệp đầu rồi về quê. Nhớ mang đúng màu áo đội.",
@@ -2416,7 +2416,7 @@
     },
     {
       "id": "contact_5",
-      "name": "Tuấn Đụt",
+      "name": "Tuấn Chó",
       "phone": "0977112233",
       "section": "T",
       "avatarGradient": "from-slate-400 to-slate-600",

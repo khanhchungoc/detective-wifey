@@ -9,7 +9,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 
 ## Người dùng, mục tiêu và bối cảnh
 
-- Người chơi (Người Vợ) có thể bấm "Đối chất" bất kỳ lúc nào từ Sổ Tay Bắt Ghen để thẩm vấn Chồng Hoàng theo từng nhịp hỏi cung (`confrontationScript`) hoặc chấm điểm bậc thang tự động ở các màn dự phòng.
+- Người chơi (Người Vợ) có thể bấm "Đối chất" bất kỳ lúc nào từ Sổ Tay Bắt Ghen để thẩm vấn Chồng Thịnh theo từng nhịp hỏi cung (`confrontationScript`) hoặc chấm điểm bậc thang tự động ở các màn dự phòng.
 - Hệ thống tự động đối chiếu các mối nối canonical đã giải mã trên Bảng Manh Mối (`requiredEdgeIds`) và nghi phạm đang chọn với dữ liệu sự thật (`groundTruth`).
 - Nền tảng: Ứng dụng web trong khung điện thoại giả lập (`max-w-[480px] h-[100dvh]`, kiểm chuẩn mobile `390x844`); hiển thị dưới dạng phòng hỏi cung phủ toàn phần (`z-index: 80`, nền tối `#080b0f` / `#0b1017`).
 - Tham chiếu User Story: [US-016](../us-016-anytime-confrontation-hub-dynamic-excuse-engine.md).
@@ -17,9 +17,9 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 
 ## Nguồn đối chiếu
 
-- [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md): Mục 3.3 phòng thẩm vấn 3 tầng, đèn spotlight, Comic Hoàng và bộ chọn COD Cold War.
+- [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md): Mục 3.3 phòng thẩm vấn 3 tầng, đèn spotlight, Comic Thịnh và bộ chọn COD Cold War.
 - [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md): Mục 2.4 state machine đối chất theo nhịp và fallback bậc thang.
-- [Màn chơi Chồng Hoàng Màn 1](../../epic-04-detective-case-stories-level-content/us-027-husband-hoang-level-1-case-implementation.md): Mục 5 kịch bản đối chất 4 nhịp và lời thoại thú tội.
+- [Màn chơi Chồng Thịnh Màn 1](../../epic-04-detective-case-stories-level-content/us-027-husband-hoang-level-1-case-implementation.md): Mục 5 kịch bản đối chất 4 nhịp và lời thoại thú tội.
 - [Biên bản khám phá](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md): Tự động đánh giá đồ thị, không gắp thẻ thủ công, phạt 1 vạch nghi ngờ khi đối chất thất bại.
 - Thành phần mã nguồn thực tế: `WifeNotebookModal.tsx`, `confrontationEngine.ts`, `ConfrontationModal.tsx`, `HusbandCharacterImage.tsx`, `confrontationMotion.ts`, `graphEngine.ts`, `level01Fixture.ts`.
 
@@ -30,9 +30,9 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 | M0-A | Chọn nghi phạm: Chưa lột mặt nạ | Khay Polaroid, vỏ bọc "Anh Tuấn Thợ Điện", ảnh túi đồ nghề, con dấu "NGHI PHẠM" |
 | M0-B | Chọn nghi phạm: ĐÃ LỘT MẶT NẠ | Thẻ Polaroid chuyển hóa: tên thật "Nguyễn Thị Thu Hương", ảnh chân dung nữ, nhãn `Vỏ bọc: "Anh Tuấn Thợ Điện"` (`IoGlassesOutline`), manh mối `Trùng SĐT 0988886677` (`IoCallOutline`), dấu "ĐÃ LỘT MẶT NẠ" |
 | M0-C | Xác nhận đối chất (Darkroom Casefile Dossier) | Tập hồ sơ niêm phong tối (`FILE 01`), 2 thẻ Polaroid giấy lạnh dập ghim nối chỉ đỏ đối đầu, thước đo tỉ lệ thành công, các cặp **Mắt xích suy luận (Linkage Bridges)**, nút dấu mộc đỏ "MÀY DÁM LỪA BÀ!" |
-| M1 | Phòng thẩm vấn: Nhịp 1 Mở màn & Nhịp 2..N Chất vấn (COD Cold War D-Pad) | Sân khấu tối `#080b0f` + spotlight chiếu đỉnh + Comic Hoàng (`confident` -> `nervous`), thanh tiến độ `- • -`, thẻ thoại, cụm chữ thập D-Pad quanh tâm ngắm SVG (`up`/`left`/`right`/`down`) |
-| M2 | Nhánh False: Thiếu chứng cứ / Bẫy nghi ngờ (`smug` & Khóa kết tội) | Comic Hoàng cười cợt (`smug`), khóa hoàn toàn lựa chọn kết tội (`canAccuse = false`), cảnh báo trừ 1 lượt nghi ngờ khi rút lui, chỉ hiện nút "Quay lại điều tra" |
-| M3 | Nhánh True Cuối -> Bước `End` (`broken` -> Phán quyết & Roast 3 sao) | Comic Hoàng suy sụp khóc xin tha (`broken`), mở khóa lựa chọn kết cục (`Ly hôn` / `Tha thứ`), đóng dấu phán quyết theo `groundTruth.verdict`, 3 sao, danh hiệu Vợ, Roast Card và qua màn |
+| M1 | Phòng thẩm vấn: Nhịp 1 Mở màn & Nhịp 2..N Chất vấn (COD Cold War D-Pad) | Sân khấu tối `#080b0f` + spotlight chiếu đỉnh + Comic Thịnh (`confident` -> `nervous`), thanh tiến độ `- • -`, thẻ thoại, cụm chữ thập D-Pad quanh tâm ngắm SVG (`up`/`left`/`right`/`down`) |
+| M2 | Nhánh False: Thiếu chứng cứ / Bẫy nghi ngờ (`smug` & Khóa kết tội) | Comic Thịnh cười cợt (`smug`), khóa hoàn toàn lựa chọn kết tội (`canAccuse = false`), cảnh báo trừ 1 lượt nghi ngờ khi rút lui, chỉ hiện nút "Quay lại điều tra" |
+| M3 | Nhánh True Cuối -> Bước `End` (`broken` -> Phán quyết & Roast 3 sao) | Comic Thịnh suy sụp khóc xin tha (`broken`), mở khóa lựa chọn kết cục (`Ly hôn` / `Tha thứ`), đóng dấu phán quyết theo `groundTruth.verdict`, 3 sao, danh hiệu Vợ, Roast Card và qua màn |
 
 ---
 
@@ -98,9 +98,9 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 | |                                            | |
 | |   +-------------+        +-------------+   | |
 | |   | (Pin đỏ)    |        | (Pin đỏ)    |   | |
-| |   | [Ảnh Hoàng] |══Chỉ đỏ| [Ảnh Bồ/Vỏ] |   | |
+| |   | [Ảnh Thịnh] |══Chỉ đỏ| [Ảnh Bồ/Vỏ] |   | |
 | |   |             |        | [NGHI PHẠM] |   | |
-| |   | Hoàng       |        | Thu Hương   |   | |
+| |   | Thịnh       |        | Thu Hương   |   | |
 | |   +-------------+        +-------------+   | |
 | |                                            | |
 | |  TỈ LỆ THÀNH CÔNG (ÁP LỰC KẾT TỘI)         | |
@@ -135,15 +135,15 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 | [X]            ĐỐI CHẤT · HOÀNG      [Scale 0/5]|
 |                 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄                 |
 |              ╱   (Spotlight)    ╲              |
-|             ╱  [ Comic Hoàng ]   ╲             |
+|             ╱  [ Comic Thịnh ]   ╲             |
 |            ╱ (confident / nervous)╲            |
 |------------------------------------------------|
 |                  -  •  -  -  -                 |
 |           ANH TUẤN THỢ ĐIỆN LÀ AI?             |
 |  +------------------------------------------+  |
-|  | Vợ: "Hoàng, anh có gì lừa dối tôi không?"|  |
+|  | Vợ: "Thịnh, anh có gì lừa dối tôi không?"|  |
 |  |------------------------------------------|  |
-|  | Hoàng                    Khoanh tay, tự tin |
+|  | Thịnh                    Khoanh tay, tự tin |
 |  | "Lừa dối gì? Anh họp tới tối mịt mới về, |  |
 |  | giờ chỉ muốn đi ngủ..."                  |  |
 |  +------------------------------------------+  |
@@ -157,7 +157,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 +------------------------------------------------+
 ```
 
-- **Tầng trên**: Sân khấu phòng hỏi cung tối (`#080b0f` / `#0b1017`), đèn spotlight chiếu từ đỉnh xuống Comic Hoàng (`HusbandCharacterImage` với nhịp thở nhẹ và giật lùi `POP` khi trúng chứng cứ).
+- **Tầng trên**: Sân khấu phòng hỏi cung tối (`#080b0f` / `#0b1017`), đèn spotlight chiếu từ đỉnh xuống Comic Thịnh (`HusbandCharacterImage` với nhịp thở nhẹ và giật lùi `POP` khi trúng chứng cứ).
 - **Tầng giữa**: Thanh tiến độ tối giản `- • -` co giãn theo tổng số nhịp (`totalSteps`), chủ đề nhịp (`topic`) và thẻ thoại đối đáp.
 - **Tầng dưới**: Cụm chọn câu hỏi chữ thập COD Cold War quanh tâm ngắm SVG `44x44px`, các nút hướng `up`/`left`/`right`/`down` đạt `>= 44x44px`, hỗ trợ phím mũi tên `ArrowUp`/`ArrowRight`/`ArrowDown`/`ArrowLeft` trên desktop, chuyển cụm bằng spring `SNAP` (không overshoot).
 
@@ -170,7 +170,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 | [X]            ĐỐI CHẤT · HOÀNG      [Scale 1/5]|
 |                 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄                 |
 |              ╱   (Spotlight)    ╲              |
-|             ╱  [ Comic Hoàng ]   ╲             |
+|             ╱  [ Comic Thịnh ]   ╲             |
 |            ╱  (smug - cười cợt)   ╲            |
 |------------------------------------------------|
 |                  -  •  -  -  -                 |
@@ -178,7 +178,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |  +------------------------------------------+  |
 |  | Vợ: "Thảo PT nhắn riêng cho anh..."      |  |
 |  |------------------------------------------|  |
-|  | Hoàng                  Nhếch mép, thách thức|
+|  | Thịnh                  Nhếch mép, thách thức|
 |  | "Người ta nhắc anh mang phiếu đánh giá   |  |
 |  | cột sống. Em bắt được lưng đau, chưa bắt |  |
 |  | được người tình."                        |  |
@@ -195,7 +195,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 ```
 
 - Kích hoạt khi chọn phương án bẫy nghi ngờ (red herring), cáo buộc sai nghi phạm, hoặc chọn mũi chất vấn nhưng chưa nối đủ cạnh `requiredEdgeIds` trên Sổ tay.
-- Hoàng chuyển sang biểu cảm `smug` kệch cỡm, khóa hoàn toàn `canAccuse = false` (tuyệt đối không hiển thị nút kết tội / tha thứ / thẻ Roast).
+- Thịnh chuyển sang biểu cảm `smug` kệch cỡm, khóa hoàn toàn `canAccuse = false` (tuyệt đối không hiển thị nút kết tội / tha thứ / thẻ Roast).
 - Khi bấm `[ QUAY LẠI ĐIỀU TRA ]` hoặc đóng phòng đối chất, hệ thống trừ đúng 1 lượt nghi ngờ (nếu chạm mốc tối đa thì kích hoạt trạng thái bị phát hiện US-014).
 
 ---
@@ -207,7 +207,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 | [X]            ĐỐI CHẤT · HOÀNG      [Scale 0/5]|
 |                 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄                 |
 |              ╱   (Spotlight)    ╲              |
-|             ╱  [ Comic Hoàng ]   ╲             |
+|             ╱  [ Comic Thịnh ]   ╲             |
 |            ╱ (broken - suy sụp)   ╲            |
 |------------------------------------------------|
 |                  -  -  -  -  •                 |
@@ -215,7 +215,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 |  +------------------------------------------+  |
 |  | Vợ: "Ký đơn đi. Tôi không sống với..."   |  |
 |  |------------------------------------------|  |
-|  | Hoàng                    Cúi đầu, nhận tội  |
+|  | Thịnh                    Cúi đầu, nhận tội  |
 |  | "Vợ ơi, anh van em... cho anh một cơ hội |  |
 |  | thôi mà!"                                |  |
 |  +------------------------------------------+  |
@@ -234,7 +234,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 +------------------------------------------------+
 ```
 
-- Khi vượt qua nhịp chứng cứ then chốt cuối cùng, Hoàng sụp đổ (`broken`), mở khóa bước `ending` (`canAccuse = true`) trên D-Pad (ví dụ: `end_divorce` bên trái, `end_forgive` bên phải).
+- Khi vượt qua nhịp chứng cứ then chốt cuối cùng, Thịnh sụp đổ (`broken`), mở khóa bước `ending` (`canAccuse = true`) trên D-Pad (ví dụ: `end_divorce` bên trái, `end_forgive` bên phải).
 - Sau khi chọn phán quyết, hệ thống đóng dấu kết quả bằng spring `POP` phù hợp `groundTruth.verdict` (`BẮT QUẢ TANG NGOẠI TÌNH` / `VẠCH TRẦN SUGAR DADDY` / `MINH OAN CHỒNG VÔ TỘI`), trao 3 sao (`★★★`), danh hiệu Vợ, lời Roast tổng kết, nút `[ TẠO THẺ ROAST KHOE MXH ]` (US-017) và nút qua màn (US-018).
 - *(Lưu ý tương thích ngược: Các màn chưa khai báo `confrontationScript` như Màn 2 và Màn 3 tự động hiển thị giao diện đánh giá bậc thang dự phòng 0 / 1-2 / 3 sao).*
 
