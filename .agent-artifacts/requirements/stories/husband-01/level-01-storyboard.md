@@ -32,7 +32,7 @@ level: 1
 | `suspect_06` | Đỗ Thị Mai | 24 tuổi, Nữ | Lễ tân sảnh tòa nhà Minh An | Nhỏ hơn 5 tuổi; `a` - `e` | "Mai Lễ Tân" (`contact_009`, SĐT `0988990011`) | Lịch sự dịch vụ, `ạ` cuối câu, 🙏 | Bẫy nghi ngờ (Vô tội) |
 | `contact_wife` | Trần Minh Thư | 28 tuổi, Nữ | Vợ hợp pháp, kế toán | Nhỏ hơn 1 tuổi; `anh` - `em` | "Vợ" (`contact_010`, SĐT `0900112233`) | Quan tâm, nhẹ nhàng; ngày D có chuyện vui muốn nói | Nhân vật mỏ neo (người chơi) |
 | `contact_mom` | Nguyễn Thị Hòa | 56 tuổi, Nữ | Mẹ ruột Thịnh ở quê, sinh nhật 18/10 | Bề trên; Thịnh xưng `con` gọi `mẹ` | "Mẹ Ở Quê" (`contact_001`, SĐT `0915220011`) | Chính tả chuẩn, không viết tắt, hay dặn "đừng mua gì tốn kém" | Sinh hoạt / Giải oan thợ điện |
-| `contact_dev` | Nam Dev và Bách Dev | 30 và 27 tuổi, Nam | Đồng nghiệp Team Dev Technosoft | Nam ngang hàng (`ông - tôi`); Bách nhỏ hơn (`a - e`) | "Team Dev Technosoft" (nhóm), "Nam Dev" (`contact_004`) | Tiếng lóng dev, viết tắt, `ae` | Sinh hoạt công việc / Phá ngoại phạm |
+| `contact_dev` | Nam Dev và Bách Chut | 30 và 27 tuổi, Nam | Đồng nghiệp Team Dev Technosoft | Nam ngang hàng (`ông - tôi`); Bách nhỏ hơn (`a - e`) | "Team Dev Technosoft" (nhóm), "Nam Dev" (`contact_004`) | Tiếng lóng dev, viết tắt, `ae` | Sinh hoạt công việc / Phá ngoại phạm |
 | `contact_hr` | Phòng Nhân sự Technosoft | - | Tài khoản HR trong nhóm toàn công ty | Lịch sự hành chính | "HR Technosoft" trong nhóm "Technosoft - Toàn công ty" | Văn phong thông báo | Nguồn tên pháp lý của Hương |
 | `contact_friend` | Tuấn Chó (Nguyễn Tuấn) | 29 tuổi (1997), Nam | Bạn thân | Kém Thịnh 2 tuổi nhưng thân, vẫn xưng `tôi - ông` | "Tuấn Chó" (`contact_006`) | Suồng sã, bóng đá | Sinh hoạt bạn bè |
 

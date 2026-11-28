@@ -48,12 +48,12 @@ Tin của `contact_011` hiển thị theo tên danh bạ "Khoa BE" (đúng hành
 - 14/10 16:00 - Ban Hành chính: "Thứ 7 này vệ sinh điều hòa tầng 9, mọi người dọn bàn giúp nhé."
 - D 10:05 - Khoa BE: "Team MKT nhờ cả nhà share bài ra mắt app ShopNow giúp nha 🙏" (`msg_012_0004`, `CLUE-ZOLA-08`)
 - D 10:20 - HR Technosoft: "Cảm ơn Hương nha 🙌 Đã share!" (trả lời tin 10:05, `msg_012_0005`)
-- D 10:22 - Bách Dev: "Đã share 👍"
+- D 10:22 - Bách Chut: "Đã share 👍"
 - D 11:00 - Ban Hành chính: "Bãi xe B1 sáng mai sơn lại vạch, mọi người gửi xe B2 nhé."
 
 ### `thread_002` - Team Dev Technosoft (nhóm: Thịnh, Nam, Bách; tắt thông báo)
 
-Người gửi hiện theo tên danh bạ (`senderContactId`: Nam Dev `contact_004`, Bách Dev `contact_014`).
+Người gửi hiện theo tên danh bạ (`senderContactId`: Nam Dev `contact_004`, Bách Chut `contact_014`).
 
 - D 09:05 - Nam: "Bản fix cart lên staging rùi nhé ae."
 - D 09:12 - Thịnh: "Nhờ ae test thêm case update quantity nhé."
@@ -259,7 +259,7 @@ Mỏ neo đối chiếu: vợ mặc size M ([husband-profile.md](husband-profile
 | `call_002` | D 21:05 | Ban Quản Lý | Đến | 51 |
 | `call_001` | D 23:20 | Khoa BE | Đi | 96 (`CLUE-PHONE-01`) |
 
-Danh bạ 32 mục: 17 mục gốc dưới đây cộng 15 bạn bè từ [friend-aliases.md](../friend-aliases.md) (`contact_019` - `contact_033`, chỉ sinh hoạt). 17 mục gốc (số đầy đủ hiện trong thẻ liên hệ; thêm California Fitness `19006868` và Thông tin gói cước `191` để mỗi luồng SMS có liên hệ): Vợ `0900112233`; Mẹ Ở Quê `0915220011`; Bé Ngọc KTX `0922334455`; Nam Dev `0933445566`; Bách Dev `0933778899`; Thảo PT California `0944556677`; Tuấn Chó `0977112233`; Lan Anh Kế Toán `0966778899`; Mai Lễ Tân `0988990011`; Khoa BE `0988886677`; Ban Quản Lý `0243556677`; Anh Tuấn Thợ Điện `0912345801`; Giao Nước `0904556677`; Giao Hàng `0905667788`; Tổng đài nhà mạng `18008098`. Không ghi chú, ảnh thật hay nhãn quan hệ trên "Khoa BE".
+Danh bạ 32 mục: 17 mục gốc dưới đây cộng 15 bạn bè từ [friend-aliases.md](../friend-aliases.md) (`contact_019` - `contact_033`, chỉ sinh hoạt). 17 mục gốc (số đầy đủ hiện trong thẻ liên hệ; thêm California Fitness `19006868` và Thông tin gói cước `191` để mỗi luồng SMS có liên hệ): Vợ `0900112233`; Mẹ Ở Quê `0915220011`; Bé Ngọc KTX `0922334455`; Nam Dev `0933445566`; Bách Chut `0933778899`; Thảo PT California `0944556677`; Tuấn Chó `0977112233`; Lan Anh Kế Toán `0966778899`; Mai Lễ Tân `0988990011`; Khoa BE `0988886677`; Ban Quản Lý `0243556677`; Anh Tuấn Thợ Điện `0912345801`; Giao Nước `0904556677`; Giao Hàng `0905667788`; Tổng đài nhà mạng `18008098`. Không ghi chú, ảnh thật hay nhãn quan hệ trên "Khoa BE".
 
 ## 6. `messages` - SMS (một luồng cho mỗi liên hệ Phone)
 

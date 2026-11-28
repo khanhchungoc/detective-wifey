@@ -52,7 +52,7 @@ level: 1
 | `thread_005` / `contact_010` | người | `internet-messaging`, `phone` | Vợ | Mỏ neo, loại trừ | `contact_010` | `char_wife` |
 | `thread_010` / `contact_001` | người | `internet-messaging`, `phone`, `ecommerce` | Mẹ Ở Quê / người nhận "Nguyễn Thị Hòa" | Bề trên, loại trừ | `contact_001` | `char_mom` |
 | `thread_006` / `contact_006` | người | `internet-messaging`, `phone` | Tuấn Chó | Bạn thân, loại trừ | `contact_006` | `char_best_friend` |
-| `thread_002` / `contact_004` | nhóm / người | `internet-messaging`, `phone` | Team Dev Technosoft / Nam Dev / Bách Dev | Đồng nghiệp, loại trừ | `contact_004` | `char_boss` |
+| `thread_002` / `contact_004` | nhóm / người | `internet-messaging`, `phone` | Team Dev Technosoft / Nam Dev / Bách Chut | Đồng nghiệp, loại trừ | `contact_004` | `char_boss` |
 | `thread_001` / `contact_012` | nhóm / dịch vụ | `internet-messaging`, `phone` | Cư dân tầng 12 / Ban Quản Lý | Dịch vụ tòa nhà, loại trừ | `contact_012` | Ban quản lý |
 | `thread_015` | dịch vụ | `messages` | California Fitness | Dịch vụ, loại trừ | `thread_015` | Phòng gym |
 | `shopchat_004`, `shopchat_002`, `shopchat_003` | người bán | `ecommerce` | Lụa Satin / Hoa Sáp Xinh / Điện Máy Nhà Mình | Người bán, loại trừ | theo shop | Người bán |

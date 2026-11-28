@@ -256,7 +256,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     const unknown = renderToStaticMarkup(<ContactAvatar name="Bách" size={44} />);
     expect(unknown).not.toContain('background-image');
     expect(unknown).toContain('>B<');
-    expect(renderToStaticMarkup(<ContactAvatar name="Bách Dev" size={44} />)).not.toBe(renderToStaticMarkup(<ContactAvatar name="Mai Lễ Tân" size={44} />));
+    expect(renderToStaticMarkup(<ContactAvatar name="Bách Chut" size={44} />)).not.toBe(renderToStaticMarkup(<ContactAvatar name="Mai Lễ Tân" size={44} />));
     expect(renderToStaticMarkup(<ContactAvatar name="Nguyễn Thị Thu Hương" size={44} />)).toContain('background-image');
     expect(renderToStaticMarkup(<ContactAvatar name="Anh Tuấn Thợ Điện" size={44} />)).toContain('background-image');
   });
