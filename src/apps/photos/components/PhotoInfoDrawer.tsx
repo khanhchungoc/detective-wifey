@@ -158,9 +158,13 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
         animate={{ y: 0 }}
         exit={{ y: '100%', transition: prefersReducedMotion ? { duration: 0 } : SHEET_CLOSE_TRANSITION }}
         transition={prefersReducedMotion ? { duration: 0 } : SHEET_OPEN_TRANSITION}
-        style={{ y: sheetY, willChange: 'transform' }}
-        className="relative max-h-[85%] bg-[#000000] text-white rounded-t-3xl shadow-2xl border-t border-white/10 flex flex-col overflow-hidden"
+        style={{ willChange: 'transform', backfaceVisibility: 'hidden', contain: 'layout paint' }}
+        className="relative max-h-[85%] flex flex-col overflow-hidden"
       >
+        <motion.div
+          style={{ y: sheetY, willChange: 'transform', backfaceVisibility: 'hidden' }}
+          className="flex min-h-0 flex-1 flex-col bg-[#000000] text-white rounded-t-3xl shadow-2xl border-t border-white/10 overflow-hidden"
+        >
         {/* Top Grab Handle (Drag-Down to Dismiss) */}
         <div
           className="pt-3 pb-2 flex justify-center items-center shrink-0 cursor-grab active:cursor-grabbing"
@@ -281,6 +285,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
             </div>
           </StoryEvidenceTarget>
         </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
