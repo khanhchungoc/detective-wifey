@@ -837,9 +837,14 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
         </div>
       )}
 
-      {/* Pairing Banner Indicator */}
+      {/* Pairing Banner Indicator: sits under the stats pill (36px tall at the system top inset) and lets taps
+          fall through to the cards below; only the cancel button takes pointer events. */}
       {activePairing.sourceNodeId && (
-        <div className="absolute top-3 left-3 right-3 z-40 flex items-center justify-between rounded-[6px] bg-[#0D1219]/95 border border-[#E11D48]/55 p-2.5 px-3.5 text-ios-caption-1 font-semibold text-[#F1F5F9] shadow-2xl">
+        <div
+          data-pairing-banner
+          style={{ top: 'calc(max(6px, var(--phone-system-top, 59px)) + 50px)' }}
+          className="pointer-events-none absolute left-3 right-3 z-40 flex items-center justify-between rounded-[6px] bg-[#0D1219]/95 border border-[#E11D48]/55 p-2.5 px-3.5 text-ios-caption-1 font-semibold text-[#F1F5F9] shadow-2xl"
+        >
           <span className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#E11D48] animate-pulse shrink-0" />
             <span className="font-sans uppercase tracking-wide">ĐANG NỐI DÂY: Chạm thẻ thứ hai để kết nối...</span>
@@ -847,7 +852,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
           <button
             type="button"
             onClick={onCancelPairing}
-            className="flex items-center gap-1 rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] px-2.5 py-1 text-ios-caption-2 text-white active:scale-95 cursor-pointer"
+            className="pointer-events-auto flex items-center gap-1 rounded-[4px] bg-[#E11D48] hover:bg-[#BE123C] px-2.5 py-1 text-ios-caption-2 text-white active:scale-95 cursor-pointer"
           >
             <IoCloseOutline className="text-base" /> Huỷ
           </button>
