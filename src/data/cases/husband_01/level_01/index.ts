@@ -1,4 +1,5 @@
 import type { CaseConfig } from '../../../../shared/contracts/case-schema';
+import { husband01Master } from '../master';
 import meta from './meta.json';
 import confrontationScript from './confrontation.json';
 import internetMessaging from './apps/internet-messaging.json';
@@ -16,6 +17,7 @@ import teamCollaboration from './apps/team-collaboration.json';
 
 const level01 = {
   ...meta,
+  husband: husband01Master.husband,
   confrontationScript,
   appsData: {
     'internet-messaging': internetMessaging,

@@ -1,0 +1,17 @@
+[
+  {
+    "personId": "person_001",
+    "legalName": "Trần Minh Thư",
+    "shortName": "Minh Thư",
+    "gender": "female",
+    "birthYear": 1998,
+    "role": "wife",
+    "occupation": "Kế toán · Vợ hợp pháp",
+    "phones": ["0900112233"],
+    "anchors": [
+      "Áo/váy size M · Giày size 37",
+      "Chung cư An Bình, 18 ngõ 68 Trung Kính",
+      "Nhận 90% lương chồng ngày 10 hàng tháng"
+    ]
+  }
+]
