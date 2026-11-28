@@ -33,7 +33,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
   onReturnHome: _onReturnHome,
   onOpenMyDocuments,
 }) => {
-  const [activeTab, setActiveTab] = useMotionState<'priority' | 'other'>('priority', 'fade');
+  const [activeTab, setActiveTab] = useState<'priority' | 'other'>('priority');
   const [searchQuery, setSearchQuery] = useState('');
   const [evidenceSheetThread, setEvidenceSheetThread] = useMotionState<MessagingThread | null>(null, 'sheet');
 

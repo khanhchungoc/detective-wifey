@@ -1,5 +1,5 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useMemo, type ComponentType } from 'react';
+import { useMemo, useState, type ComponentType } from 'react';
 import {
   IoCard,
   IoCardOutline,
@@ -49,8 +49,8 @@ const tabs: { id: BankingTab; label: string; icon: ComponentType<{ className?: s
 export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlock, unlockedChallenges }: VirtualAppProps) {
   const rawData: unknown = caseData.appsData?.banking;
   const data = useMemo(() => readBankingData(rawData), [rawData]);
-  const [activeTab, setActiveTab] = useMotionState<BankingTab>('home', 'fade');
-  const [filter, setFilter] = useMotionState<TransactionFilter>('all', 'fade');
+  const [activeTab, setActiveTab] = useState<BankingTab>('home');
+  const [filter, setFilter] = useState<TransactionFilter>('all');
   const [selectedTx, setSelectedTx] = useMotionState<BankingTransaction | null>(null, 'sheet');
   const [selectedVaultId, setSelectedVaultId] = useMotionState<string | null>(null, 'navigation');
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');

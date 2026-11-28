@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { useMotionState } from '../../shared/motion/useMotionState';
 import { readMessagingData } from './data';
 import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
 import { getAppBrand } from '../../shared/branding';
@@ -112,7 +111,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
     statusText: 'Đang làm việc...',
   };
 
-  const [activeTab, setActiveTab] = useMotionState<MessagingTab>('messages', 'fade');
+  const [activeTab, setActiveTab] = useState<MessagingTab>('messages');
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [showCloudDrawer, setShowCloudDrawer] = useState(false);
   const detailLayerRef = useRef<HTMLDivElement>(null);

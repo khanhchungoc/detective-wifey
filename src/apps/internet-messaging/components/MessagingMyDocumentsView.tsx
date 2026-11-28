@@ -23,9 +23,9 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
   onSwipeProgress,
   onSwipeEnd,
 }) => {
-  const [activeCategory, setActiveCategory] = useMotionState<CategoryTab>('all', 'fade');
+  const [activeCategory, setActiveCategory] = useState<CategoryTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showSearch, setShowSearch] = useMotionState(false, 'fade');
+  const [showSearch, setShowSearch] = useState(false);
   const [likedDocIds, setLikedDocIds] = useState<Record<string, boolean>>({});
   const [evidenceSheetDoc, setEvidenceSheetDoc] = useMotionState<MessagingCloudDocument | null>(null, 'sheet');
   const [toastMessage, setToastMessage] = useState<string | null>(null);

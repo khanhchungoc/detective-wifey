@@ -20,19 +20,9 @@ export function tabShapeLeft(index: number, total: number): string {
   return index === 0 || total <= 1 ? '0px' : `calc(${span} * ${index / (total - 1)})`;
 }
 
-/** The part of the tab not covered by the tab in front: where the label sits and the button taps. */
+/** The bounds of a sheet's real index tab, aligned with sheetClip(index, total). */
 export function tabButtonBox(index: number, total: number): { left: string; width: string } {
-  if (index === 0 || total <= 1) return { left: '0px', width: TAB_W };
-  const step = `calc(${span} / ${total - 1})`;
-  return { left: `calc(${tabShapeLeft(index, total)} + ${TAB_W} - ${step})`, width: step };
-}
-
-/**
- * Tap and label area of a TURNED sheet's tab. Turned tabs stack the other way (higher index in
- * front), so each one shows its left `step` and nothing spills onto the tab beside it.
- */
-export function tabTurnedBox(index: number, total: number): { left: string; width: string } {
-  return { left: tabShapeLeft(index, total), width: total <= 1 ? TAB_W : `calc(${span} / ${total - 1})` };
+  return { left: tabShapeLeft(index, total), width: TAB_W };
 }
 
 /** Clip outline of a sheet whose box starts at the tab top: sheet body plus its tab, one silhouette. */
@@ -57,6 +47,3 @@ export function sheetClip(index: number, total: number): string {
   ];
   return `polygon(${pts.join(', ')})`;
 }
-
-/** Outline of the free-standing tab of a turned sheet (open at the bottom, tucked behind the sheet in front). */
-export const TURNED_TAB_CLIP = `polygon(0 100%, 0 ${SHOULDER_Y}, ${SHOULDER_X} 0, calc(100% - ${SHOULDER_X}) 0, 100% ${SHOULDER_Y}, 100% 100%)`;

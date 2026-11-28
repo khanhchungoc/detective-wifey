@@ -1,5 +1,6 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { transition } from '../../shared/motion/transition';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { IoBagHandle, IoSearchOutline, IoCameraOutline } from 'react-icons/io5';
 import type { AppDefinition, VirtualAppProps } from '../../shared/contracts/app-contracts';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
@@ -39,10 +40,10 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
     () => resolveMarketplaceData(caseData.appsData?.ecommerce),
     [caseData]
   );
-  const [stack, setStack] = useMotionState<EcommerceView[]>([{ screen: 'home' }], 'navigation');
-  const [orderFilter, setOrderFilter] = useMotionState<OrderFilter>('all', 'fade');
-  const [notificationFilter, setNotificationFilter] = useMotionState<NotificationFilter>('all', 'fade');
-  const [activeChatsOnly, setActiveChatsOnly] = useMotionState(false, 'fade');
+  const [stack, setStack] = useState<EcommerceView[]>([{ screen: 'home' }]);
+  const [orderFilter, setOrderFilter] = useState<OrderFilter>('all');
+  const [notificationFilter, setNotificationFilter] = useState<NotificationFilter>('all');
+  const [activeChatsOnly, setActiveChatsOnly] = useState(false);
   const [selectedOrder, setSelectedOrder] = useMotionState<EcommerceOrder | null>(null, 'sheet');
   const [evidence, setEvidence] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
   const scrollPositions = useRef(new Map<string, number>());
@@ -75,7 +76,7 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
   };
   const push = (next: EcommerceView) => {
     saveScroll();
-    setStack((s) => [...s, next]);
+    transition('push', () => setStack((s) => [...s, next]));
   };
   const openOrders = (filter: OrderFilter = 'all') => {
     setOrderFilter(filter);
@@ -92,7 +93,7 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
     }
     if (stack.length > 1) {
       saveScroll();
-      setStack(popView);
+      transition('pop', () => setStack(popView));
     } else onReturnHome();
   };
   const swipe = useSwipeBack({ onBack: back, enabled: !evidence && !selectedOrder && stack.length > 1 });
@@ -106,6 +107,8 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
       setEvidence(resolveEvidenceAttribution(item, caseData.suspectPool)),
   };
   const root = view.screen === 'home' || view.screen === 'notifications' || view.screen === 'profile';
+  const showTabs = root || view.screen === 'orders';
+  const activeTab: EcommerceTab = view.screen === 'orders' ? 'profile' : (view.screen as EcommerceTab);
   const selectedChat = view.screen === 'thread' ? data?.chats.find((c) => c.shopId === view.shopId) : undefined;
 
   return (
@@ -176,9 +179,9 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
             </>
           )}
         </main>
-        {root && (
+        {showTabs && (
           <EcommerceTabs
-            active={view.screen as EcommerceTab}
+            active={activeTab}
             onSelect={selectTab}
             unread={data?.unreadBadge}
           />

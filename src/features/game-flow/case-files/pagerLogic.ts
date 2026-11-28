@@ -92,28 +92,35 @@ export function evaluateLevelCardClick(
   return { action: 'select', feedback: null };
 }
 
-/** Gap between consecutive sheets turning for one tab tap (seconds). */
-export const SHEET_FLIP_STAGGER_S = 0.07;
+export const STACK_ACTIVE_Z = 30;
+export const STACK_BACK_BASE_Z = 20;
+export const STACK_MAX_Z_OFFSET = 15;
+export const STACK_MAX_DEPTH = 3;
+export const STACK_Y_STEP_PX = 2;
+export const STACK_SCALE_STEP = 0.014;
+export const STACK_SHADE_STEP = 0.06;
 
-export interface SheetFlip {
-  sheet: number;
-  /** Target state: true = turned over (out of the way), false = back on the stack. */
-  flipped: boolean;
-  /** Turn order, 0 first; multiply by the stagger for the start delay. */
-  order: number;
+export interface SheetRestPose {
+  zIndex: number;
+  y: number;
+  scale: number;
+  shade: number;
 }
 
 /**
- * Binder model: sheets before the current one are flipped over. Moving forward from `from` to `to`
- * flips sheets from..to-1 in ascending order; moving back flips sheets to..from-1 back in reverse
- * (nearest the current sheet first).
+ * Physical manila-folder stack depth: active sheet sits in front (z 30, y 0, scale 1);
+ * deeper sheets sit behind in distance order with subtle offset, scale, and ink shade.
  */
-export function planSheetFlips(from: number, to: number): SheetFlip[] {
-  const plan: SheetFlip[] = [];
-  if (to > from) {
-    for (let sheet = from; sheet < to; sheet += 1) plan.push({ sheet, flipped: true, order: sheet - from });
-  } else if (to < from) {
-    for (let sheet = from - 1; sheet >= to; sheet -= 1) plan.push({ sheet, flipped: false, order: from - 1 - sheet });
+export function resolveSheetRestPose(index: number, activeIndex: number): SheetRestPose {
+  const dist = Math.abs(index - activeIndex);
+  if (dist === 0) {
+    return { zIndex: STACK_ACTIVE_Z, y: 0, scale: 1, shade: 0 };
   }
-  return plan;
+  const depth = Math.min(dist, STACK_MAX_DEPTH);
+  return {
+    zIndex: STACK_BACK_BASE_Z - Math.min(dist, STACK_MAX_Z_OFFSET),
+    y: depth * STACK_Y_STEP_PX,
+    scale: 1 - depth * STACK_SCALE_STEP,
+    shade: depth * STACK_SHADE_STEP,
+  };
 }
