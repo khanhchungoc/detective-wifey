@@ -31,12 +31,12 @@ describe('US-003 Internet Messaging App Module Suite', () => {
     assert.equal(thread.suspectId, '', 'No author metadata leaks the real identity');
     assert.equal(thread.unreadCount, 0, 'Unread counts never steer the player');
     assert.equal(thread.systemBanner, '', 'No disappearing-message shortcut');
-    assert.equal(thread.messages.length, 13);
-    assert.equal(thread.lastMessage, 'Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty.');
+    assert.equal(thread.messages.length, 18, 'Work chatter keeps the alias thread ordinary');
+    assert.equal(thread.lastMessage, 'A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.');
     const reservation = thread.messages.find(message => message.id === 'msg_khoa_booking');
     assert.ok(reservation);
     assert.ok((reservation.timestamp || reservation.time).includes('15/10') && (reservation.timestamp || reservation.time).includes('17:40'));
-    assert.equal(reservation.text, 'E book bàn 7h30 rồi nhé a. Tầng 2 như lần trước.');
+    assert.equal(reservation.text, 'Ok a, e book bàn 7h30 chỗ hôm trước nhé.');
     assert.equal(reservation.clueRefId, 'CLUE-ZOLA-01');
     const wife = data.threads!.find(thread => thread.threadId === 'thread_wife');
     assert.ok(wife);

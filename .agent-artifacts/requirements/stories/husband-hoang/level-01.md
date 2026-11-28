@@ -67,7 +67,7 @@ level: 1
 
 ### 3.2. Lời Roasting Kết thúc Vụ án
 - **Chiến thắng Bắt ghen (`narrativeRoast`)**:
-  > *"Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?"*
+  > *"Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?"*
 - **Ghen nhầm Anh Tuấn Thợ Điện (`overJealousRoast` mặc định)**:
   > *"Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?"*
 - **Ghen nhầm Bé Ngọc**:
@@ -141,7 +141,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 - **Toast ID**: `toast_02`
   - **Ứng dụng Nguồn**: `internet-messaging`
   - **Tiêu đề Người gửi**: `Tin nhắn • 23:41`
-  - **Nội dung Rút gọn**: `"Khoa BE: Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty."`
+  - **Nội dung Rút gọn**: `"Khoa BE: A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha."`
   - **Thời gian Trì hoãn**: 5 giây
 - **Lời giới thiệu màn (`storySnippet`, đề xuất cho dev)**: *"Độ khó: Dễ (5 lượt nghi ngờ • 0 khóa PIN). 23:45, chồng đang tắm, điện thoại 8% pin cắm sạc ngoài phòng. Màn hình sáng lên hai lần..."*
 
@@ -164,7 +164,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 | `node_bridge_phone` | `bridge_id` | SĐT: 0988886677 | `phone` / `contact_10` | - | `false` |
 | `node_bridge_name` | `bridge_id` | Nguyễn Thị Thu Hương - Marketing Executive | `internet-messaging` / `msg_company_pin` | `CLUE-ZOLA-08` | `false` |
 | `node_record_ecommerce_order` | `record_clue` | Váy lụa be size S + thiệp "15/09 - 15/10" | `ecommerce` / `order_01` | `CLUE-POSH-05` | `false` |
-| `node_record_khoa_booking` | `record_clue` | Khoa BE: book bàn 7h30, tầng 2 | `internet-messaging` / `msg_khoa_booking` | `CLUE-ZOLA-01` | `false` |
+| `node_record_khoa_booking` | `record_clue` | Khoa BE: book bàn 7h30, chỗ hôm trước | `internet-messaging` / `msg_khoa_booking` | `CLUE-ZOLA-01` | `false` |
 | `node_record_dev_cancel` | `record_clue` | Team Dev 17:30: họp dời sang T2 | `internet-messaging` / `msg_dev_cancel` | `CLUE-ZOLA-09` | `false` |
 | `node_record_wife_1855` | `record_clue` | Báo vợ 18:55: "họp sprint với cả team" | `internet-messaging` / `msg_wife_1855` | `CLUE-ZOLA-09` | `false` |
 | `node_record_wife_alibi` | `record_clue` | Báo vợ 20:46: "sếp Hùng đang chốt nốt" | `internet-messaging` / `msg_wife_2046` | `CLUE-ZOLA-09` | `false` |
@@ -198,7 +198,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 ## 6. Lộ trình Phá án & Bảng Điều tra Nối dây
 
 - **Đường suy luận chính**:
-  1. Hai thông báo trên màn hình khóa. Người chơi theo meme mở "Anh Tuấn Thợ Điện" trước, đọc trọn luồng và luồng Mẹ để giải oan. Người tò mò mở "Khoa BE" thấy hẹn "chỗ cũ, tầng 2" và "Vừa in luôn".
+  1. Hai thông báo trên màn hình khóa. Người chơi theo meme mở "Anh Tuấn Thợ Điện" trước, đọc trọn luồng và luồng Mẹ để giải oan. Người tò mò mở "Khoa BE" chỉ thấy trao đổi công việc, hẹn "khao" ở "chỗ hôm trước" và "Vừa lắm a"; phải đối chiếu với đơn váy và thiệp mới thấy nghĩa.
   2. Mua sắm: đơn váy size S giao sảnh công ty, người nhận `Nguyễn Thị Thu Hương`, SĐT `0988886677`. So với mỏ neo vợ size M. Đối chiếu SĐT với danh bạ "Khoa BE" -> **SG1** (`edge_order_phone`).
   3. Nhóm "Technosoft - Toàn công ty": tin ghim HR có tên thật + chức danh; "Khoa BE" đăng việc Marketing, HR gọi là "Hương" -> **SG2** (`edge_order_name`).
   4. Chat vợ 20:46 "sếp Hùng đang chốt nốt" + ngân hàng 20:48 quẹt thẻ COM NIEU PHO CO -> **SG3** (`edge_alibi_contradiction`). Bằng chứng cộng thêm: Team Dev 17:30 hủy họp, sếp bay Đà Nẵng.

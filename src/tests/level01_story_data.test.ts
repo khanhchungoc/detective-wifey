@@ -41,8 +41,9 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(level01.deviceMetadata).toEqual({ narrativeTime: '23:45', batteryPercent: '8%', carrierTag: '5G', pwaThemeColor: '#0f172a' });
     expect(new Set(level01.activeAppIds)).toEqual(new Set(Object.keys(data)));
     expect(messaging.threads!.map(item => item.threadId)).toEqual([
-      'thread_khoa', 'thread_tuan_dien', 'thread_wife', 'thread_friend', 'thread_lan_anh', 'thread_ngoc',
-      'thread_thao', 'thread_family', 'thread_dev', 'thread_mai', 'thread_company', 'thread_building',
+      // Muted group chatter after 23:41 keeps the alias thread from sitting on top.
+      'thread_building', 'thread_dev', 'thread_khoa', 'thread_tuan_dien', 'thread_wife', 'thread_friend', 'thread_lan_anh',
+      'thread_ngoc', 'thread_thao', 'thread_family', 'thread_mai', 'thread_company',
     ]);
     expect(messaging.otherThreads!.map(item => item.threadId)).toEqual(['thread_carrier']);
     expect(banking.transactions.filter(row => !row.id.startsWith('tx_history_'))).toHaveLength(20);

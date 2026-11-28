@@ -1164,7 +1164,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         verdict: 'cheating',
         culpritSuspectId: 'suspect_huong',
         narrativeRoast:
-          'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
+          'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
         overJealousRoast:
           'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
       },
@@ -1208,7 +1208,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         verdict: 'cheating',
         culpritSuspectId: 'suspect_huong',
         narrativeRoast:
-          'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
+          'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
         overJealousRoast:
           'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
       },
@@ -1251,7 +1251,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         verdict: 'cheating',
         culpritSuspectId: 'suspect_huong',
         narrativeRoast:
-          'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
+          'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
         overJealousRoast:
           'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
       },

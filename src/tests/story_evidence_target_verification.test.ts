@@ -21,11 +21,11 @@ describe('Story JSON Data Ingestion & Evidence Long-Press Target Suite', () => {
     const booking = khoa.messages.find((m) => m.id === 'msg_khoa_booking');
     assert.ok(booking);
     assert.ok(at(booking).includes('15/10') && at(booking).includes('17:40'));
-    assert.ok(booking.text.includes('7h30') && booking.text.includes('Tầng 2'), 'Booking must keep its time and floor');
+    assert.ok(booking.text.includes('7h30') && booking.text.includes('chỗ hôm trước'), 'Booking must keep its time and repeat venue');
     assert.equal(booking.clueRefId, 'CLUE-ZOLA-01');
     assert.ok(!booking.text.toLowerCase().includes('váy'), 'Chat never names the dress');
     assert.ok(khoa.messages.every((m) => !m.locationData), 'No location shortcut survives');
-    assert.equal(khoa.messages[khoa.messages.length - 1].text, 'Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty.');
+    assert.equal(khoa.messages[khoa.messages.length - 1].text, 'A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.');
     assert.equal(khoa.messages[khoa.messages.length - 1].clueRefId, '', 'Trigger notification is context, not a separate clue');
 
     // The real electrician is an innocent decoy whose notification is explained by other chats.
@@ -43,7 +43,7 @@ describe('Story JSON Data Ingestion & Evidence Long-Press Target Suite', () => {
     const dev = threads.find((t) => t.threadId === 'thread_dev')!;
     const cancel = dev.messages.find((m) => m.id === 'msg_dev_cancel')!;
     assert.ok(cancel.text.includes('họp sprint tối nay dời sang T2'));
-    assert.equal(cancel.senderName, 'Nam');
+    assert.equal(cancel.senderContactId, 'contact_3', 'Group sender resolves to the saved contact (Nam Dev)');
     assert.ok(!cancel.text.startsWith('Nam:'), 'Group text carries no sender prefix');
     const wife = threads.find((t) => t.threadId === 'thread_wife')!;
     const early = wife.messages.find((m) => m.id === 'msg_wife_1855')!;

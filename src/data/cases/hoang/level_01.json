@@ -7,7 +7,7 @@
   "groundTruth": {
     "verdict": "cheating",
     "culpritSuspectId": "suspect_huong",
-    "narrativeRoast": "Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?",
+    "narrativeRoast": "Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?",
     "overJealousRoast": "Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?"
   },
   "confrontationScript": {
@@ -230,7 +230,7 @@
       "toastId": "toast_02",
       "sourceAppId": "internet-messaging",
       "senderTitle": "Tin nhắn • 23:41",
-      "snippetBody": "Khoa BE: Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty.",
+      "snippetBody": "Khoa BE: A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.",
       "triggerDelaySeconds": 5
     }
   ],
@@ -249,6 +249,256 @@
       },
       "threads": [
         {
+          "threadId": "thread_building",
+          "contactName": "Cư dân tầng 12 CT2",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 23:45",
+          "unreadCount": 2,
+          "historyPriority": "regular",
+          "isGroup": true,
+          "memberCount": 64,
+          "messages": [
+            {
+              "id": "thread_building_history_0",
+              "time": "21/09/2026 08:00",
+              "sender": "them",
+              "text": "Tối nay vệ sinh bể nước, mọi người chủ động trữ một ít.",
+              "timestamp": "21/09/2026 08:00",
+              "senderName": "Ban quản lý"
+            },
+            {
+              "id": "thread_building_history_1",
+              "time": "21/09/2026 08:08",
+              "sender": "me",
+              "text": "Nhà em đã nhận thông tin, cảm ơn ban quản lý.",
+              "timestamp": "21/09/2026 08:08"
+            },
+            {
+              "id": "thread_building_history_2",
+              "time": "25/09/2026 17:30",
+              "sender": "them",
+              "text": "Ai để quên ô ở thang máy em gửi quầy bảo vệ nhé.",
+              "timestamp": "25/09/2026 17:30",
+              "senderName": "Căn 1202"
+            },
+            {
+              "id": "thread_building_history_3",
+              "time": "25/09/2026 17:38",
+              "sender": "them",
+              "text": "Ô của nhà em, em xuống lấy ngay.",
+              "timestamp": "25/09/2026 17:38",
+              "senderName": "Căn 1208"
+            },
+            {
+              "id": "thread_building_history_4",
+              "time": "30/09/2026 09:10",
+              "sender": "them",
+              "text": "Đã mở đăng ký thẻ xe tháng tới.",
+              "timestamp": "30/09/2026 09:10",
+              "senderName": "Ban quản lý"
+            },
+            {
+              "id": "thread_building_history_5",
+              "time": "30/09/2026 09:20",
+              "sender": "me",
+              "text": "Em đăng ký lại một xe máy như cũ.",
+              "timestamp": "30/09/2026 09:20"
+            },
+            {
+              "id": "thread_building_history_6",
+              "time": "06/10/2026 14:00",
+              "sender": "them",
+              "text": "Hành lang đã thay bóng đèn, vui lòng báo nếu còn vị trí tối.",
+              "timestamp": "06/10/2026 14:00",
+              "senderName": "Ban quản lý"
+            },
+            {
+              "id": "thread_building_history_7",
+              "time": "06/10/2026 14:08",
+              "sender": "me",
+              "text": "Tầng 12 sáng bình thường rồi ạ.",
+              "timestamp": "06/10/2026 14:08"
+            },
+            {
+              "id": "thread_building_0",
+              "sender": "them",
+              "text": "Sáng thứ bảy bảo trì thang B từ 9h đến 11h.",
+              "time": "15/10/2026 07:45",
+              "senderName": "Ban quản lý",
+              "timestamp": "15/10/2026 07:45"
+            },
+            {
+              "id": "thread_building_1",
+              "sender": "them",
+              "text": "Thang A vẫn hoạt động chứ ạ?",
+              "time": "15/10/2026 07:52",
+              "senderName": "Căn 1204",
+              "timestamp": "15/10/2026 07:52"
+            },
+            {
+              "id": "thread_building_2",
+              "sender": "them",
+              "text": "Vâng, thang A hoạt động bình thường.",
+              "time": "15/10/2026 08:00",
+              "senderName": "Ban quản lý",
+              "timestamp": "15/10/2026 08:00"
+            },
+            {
+              "id": "thread_building_late_0",
+              "sender": "them",
+              "text": "Xe biển 29X1-468.xx đang chắn lối hầm B1, chủ xe xuống dời giúp ạ",
+              "time": "15/10/2026 23:42",
+              "timestamp": "15/10/2026 23:42",
+              "senderName": "Căn 1208"
+            },
+            {
+              "id": "thread_building_late_1",
+              "sender": "them",
+              "text": "Bảo vệ đang liên hệ chủ xe ạ.",
+              "time": "15/10/2026 23:45",
+              "timestamp": "15/10/2026 23:45",
+              "senderName": "Ban quản lý"
+            }
+          ],
+          "isMuted": true
+        },
+        {
+          "threadId": "thread_dev",
+          "contactName": "Team Dev Technosoft",
+          "avatarGradient": "from-slate-400 to-slate-600",
+          "timestamp": "15/10/2026 23:44",
+          "unreadCount": 2,
+          "historyPriority": "regular",
+          "isGroup": true,
+          "memberCount": 3,
+          "messages": [
+            {
+              "id": "thread_dev_history_0",
+              "time": "22/09/2026 09:10",
+              "sender": "them",
+              "text": "Nhờ mn check lại phần xử lý cart nhé.",
+              "timestamp": "22/09/2026 09:10",
+              "senderContactId": "contact_3"
+            },
+            {
+              "id": "thread_dev_history_1",
+              "time": "22/09/2026 09:20",
+              "sender": "me",
+              "text": "Tách riêng case out of stock rùi test lại nhé.",
+              "timestamp": "22/09/2026 09:20"
+            },
+            {
+              "id": "thread_dev_history_2",
+              "time": "26/09/2026 14:00",
+              "sender": "them",
+              "text": "Bản test đã có log lỗi chi tiết rùi a.",
+              "timestamp": "26/09/2026 14:00",
+              "senderContactId": "contact_13"
+            },
+            {
+              "id": "thread_dev_history_3",
+              "time": "26/09/2026 14:12",
+              "sender": "me",
+              "text": "Cảm ơn, chiều mik check phần timeout.",
+              "timestamp": "26/09/2026 14:12"
+            },
+            {
+              "id": "thread_dev_history_4",
+              "time": "01/10/2026 10:00",
+              "sender": "them",
+              "text": "Máy test đang update, tạm dùng máy còn lại nhé mn.",
+              "timestamp": "01/10/2026 10:00",
+              "senderContactId": "contact_3"
+            },
+            {
+              "id": "thread_dev_history_5",
+              "time": "01/10/2026 10:06",
+              "sender": "me",
+              "text": "Ừ, nhớ lưu config cũ nhé.",
+              "timestamp": "01/10/2026 10:06"
+            },
+            {
+              "id": "thread_dev_history_6",
+              "time": "07/10/2026 15:05",
+              "sender": "them",
+              "text": "Đã bổ sung case empty cart rùi a.",
+              "timestamp": "07/10/2026 15:05",
+              "senderContactId": "contact_13"
+            },
+            {
+              "id": "thread_dev_history_7",
+              "time": "07/10/2026 15:15",
+              "sender": "me",
+              "text": "Ổn rùi, thêm validate số lượng âm nữa e.",
+              "timestamp": "07/10/2026 15:15"
+            },
+            {
+              "id": "thread_dev_0",
+              "sender": "them",
+              "text": "Bản fix cart lên staging rùi nhé ae.",
+              "time": "15/10/2026 09:05",
+              "timestamp": "15/10/2026 09:05",
+              "senderContactId": "contact_3"
+            },
+            {
+              "id": "thread_dev_1",
+              "sender": "me",
+              "text": "Nhờ ae test thêm case update quantity nhé.",
+              "time": "15/10/2026 09:12",
+              "timestamp": "15/10/2026 09:12"
+            },
+            {
+              "id": "thread_dev_2",
+              "sender": "them",
+              "text": "E confirm hết bug cũ rùi a.",
+              "time": "15/10/2026 14:10",
+              "timestamp": "15/10/2026 14:10",
+              "senderContactId": "contact_13"
+            },
+            {
+              "id": "msg_dev_cancel",
+              "sender": "them",
+              "text": "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae.",
+              "time": "15/10/2026 17:30",
+              "clueRefId": "CLUE-ZOLA-09",
+              "timestamp": "15/10/2026 17:30",
+              "senderContactId": "contact_3"
+            },
+            {
+              "id": "thread_dev_4",
+              "sender": "me",
+              "text": "Ok ông 👍",
+              "time": "15/10/2026 17:32",
+              "timestamp": "15/10/2026 17:32"
+            },
+            {
+              "id": "thread_dev_5",
+              "sender": "them",
+              "text": "Ngon, về sớm 🎉",
+              "time": "15/10/2026 17:33",
+              "timestamp": "15/10/2026 17:33",
+              "senderContactId": "contact_13"
+            },
+            {
+              "id": "thread_dev_late_0",
+              "sender": "them",
+              "text": "Ae ơi staging lại lỗi giỏ hàng, mai sáng check giúp nhé",
+              "time": "15/10/2026 23:43",
+              "timestamp": "15/10/2026 23:43",
+              "senderContactId": "contact_3"
+            },
+            {
+              "id": "thread_dev_late_1",
+              "sender": "them",
+              "text": "Ok a, e note lại rồi",
+              "time": "15/10/2026 23:44",
+              "timestamp": "15/10/2026 23:44",
+              "senderContactId": "contact_13"
+            }
+          ],
+          "isMuted": true
+        },
+        {
           "threadId": "thread_khoa",
           "contactName": "Khoa BE",
           "avatarGradient": "from-slate-400 to-slate-600",
@@ -259,92 +509,127 @@
             {
               "id": "thread_khoa_0",
               "sender": "them",
-              "text": "A ơi file banner e gửi a check giúp phần CTA nhé",
+              "text": "A ơi landing page bị lỗi form đăng ký, a xem giúp e với",
               "time": "12/10/2026 09:40",
               "timestamp": "12/10/2026 09:40"
             },
             {
               "id": "thread_khoa_1",
               "sender": "me",
-              "text": "Ok e, trưa a xem.",
+              "text": "Ok e, gửi a link với ảnh lỗi nhé.",
               "time": "12/10/2026 09:52",
               "timestamp": "12/10/2026 09:52"
             },
             {
               "id": "thread_khoa_2",
               "sender": "them",
+              "text": "E gửi qua mail rồi a. Phần CTA trên banner a check giúp luôn nhé",
+              "time": "12/10/2026 09:55",
+              "timestamp": "12/10/2026 09:55"
+            },
+            {
+              "id": "thread_khoa_3",
+              "sender": "me",
+              "text": "Fix xong form rồi, e test lại nhé.",
+              "time": "12/10/2026 14:20",
+              "timestamp": "12/10/2026 14:20"
+            },
+            {
+              "id": "thread_khoa_4",
+              "sender": "them",
+              "text": "Chạy ok rồi a, cảm ơn a.",
+              "time": "12/10/2026 14:35",
+              "timestamp": "12/10/2026 14:35"
+            },
+            {
+              "id": "thread_khoa_5",
+              "sender": "them",
               "text": "Trưa nay a ăn gì? E order cơm bên dưới luôn nha",
               "time": "13/10/2026 12:10",
               "timestamp": "13/10/2026 12:10"
             },
             {
-              "id": "thread_khoa_3",
+              "id": "thread_khoa_6",
               "sender": "me",
               "text": "Cho a 1 suất như hôm trc.",
               "time": "13/10/2026 12:12",
               "timestamp": "13/10/2026 12:12"
             },
             {
-              "id": "thread_khoa_4",
+              "id": "thread_khoa_7",
               "sender": "them",
-              "text": "Thứ 5 tròn 1 tháng đó a 🥹",
+              "text": "Thứ 5 tròn 1 tháng rồi đó a. A nhớ vụ khao nhé",
               "time": "14/10/2026 21:12",
               "timestamp": "14/10/2026 21:12"
             },
             {
-              "id": "thread_khoa_5",
+              "id": "thread_khoa_8",
               "sender": "me",
-              "text": "Tối đó a vướng họp sprint rồi e 😞",
+              "text": "Tối đó a vướng họp sprint rồi e.",
               "time": "14/10/2026 21:15",
               "timestamp": "14/10/2026 21:15"
             },
             {
-              "id": "thread_khoa_6",
+              "id": "thread_khoa_9",
               "sender": "them",
-              "text": "Vâng ạ 😔",
+              "text": "Vâng, để hôm khác ạ.",
               "time": "14/10/2026 21:16",
               "timestamp": "14/10/2026 21:16"
             },
             {
-              "id": "thread_khoa_7",
+              "id": "thread_khoa_10",
+              "sender": "them",
+              "text": "Bản build sáng nay lên staging chưa a? Bên e cần chụp màn hình làm bài đăng",
+              "time": "15/10/2026 09:30",
+              "timestamp": "15/10/2026 09:30"
+            },
+            {
+              "id": "thread_khoa_11",
               "sender": "me",
-              "text": "Họp hủy rồi. Tối nay chỗ cũ nhé?",
+              "text": "Lên rồi e.",
+              "time": "15/10/2026 09:41",
+              "timestamp": "15/10/2026 09:41"
+            },
+            {
+              "id": "thread_khoa_12",
+              "sender": "me",
+              "text": "Họp hủy rồi. Tối nay khao luôn nhé?",
               "time": "15/10/2026 17:35",
               "timestamp": "15/10/2026 17:35"
             },
             {
               "id": "msg_khoa_booking",
               "sender": "them",
-              "text": "E book bàn 7h30 rồi nhé a. Tầng 2 như lần trước.",
+              "text": "Ok a, e book bàn 7h30 chỗ hôm trước nhé.",
               "time": "15/10/2026 17:40",
-              "clueRefId": "CLUE-ZOLA-01",
-              "timestamp": "15/10/2026 17:40"
+              "timestamp": "15/10/2026 17:40",
+              "clueRefId": "CLUE-ZOLA-01"
             },
             {
-              "id": "thread_khoa_9",
+              "id": "thread_khoa_14",
               "sender": "them",
-              "text": "E tới rồi, a lên thẳng tầng 2 nha",
+              "text": "E tới rồi a.",
               "time": "15/10/2026 19:20",
               "timestamp": "15/10/2026 19:20"
             },
             {
-              "id": "thread_khoa_10",
+              "id": "thread_khoa_15",
               "sender": "them",
-              "text": "Vừa in luôn a ạ, khéo chọn ghê 🥹",
+              "text": "Vừa lắm a, cảm ơn a nha.",
               "time": "15/10/2026 21:30",
               "timestamp": "15/10/2026 21:30"
             },
             {
-              "id": "thread_khoa_11",
+              "id": "thread_khoa_16",
               "sender": "me",
-              "text": "Về cẩn thận nhé e.",
+              "text": "Ok e, mai gặp.",
               "time": "15/10/2026 21:32",
               "timestamp": "15/10/2026 21:32"
             },
             {
-              "id": "thread_khoa_12",
+              "id": "thread_khoa_17",
               "sender": "them",
-              "text": "Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty.",
+              "text": "A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.",
               "time": "15/10/2026 23:41",
               "timestamp": "15/10/2026 23:41"
             }
@@ -2097,125 +2382,6 @@
           ]
         },
         {
-          "threadId": "thread_dev",
-          "contactName": "Team Dev Technosoft",
-          "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 17:33",
-          "unreadCount": 0,
-          "historyPriority": "regular",
-          "isGroup": true,
-          "memberCount": 3,
-          "messages": [
-            {
-              "id": "thread_dev_history_0",
-              "time": "22/09/2026 09:10",
-              "sender": "them",
-              "text": "Nhờ mn check lại phần xử lý cart nhé.",
-              "timestamp": "22/09/2026 09:10",
-              "senderName": "Nam"
-            },
-            {
-              "id": "thread_dev_history_1",
-              "time": "22/09/2026 09:20",
-              "sender": "me",
-              "text": "Tách riêng case out of stock rùi test lại nhé.",
-              "timestamp": "22/09/2026 09:20"
-            },
-            {
-              "id": "thread_dev_history_2",
-              "time": "26/09/2026 14:00",
-              "sender": "them",
-              "text": "Bản test đã có log lỗi chi tiết rùi a.",
-              "timestamp": "26/09/2026 14:00",
-              "senderName": "Bách"
-            },
-            {
-              "id": "thread_dev_history_3",
-              "time": "26/09/2026 14:12",
-              "sender": "me",
-              "text": "Cảm ơn, chiều mik check phần timeout.",
-              "timestamp": "26/09/2026 14:12"
-            },
-            {
-              "id": "thread_dev_history_4",
-              "time": "01/10/2026 10:00",
-              "sender": "them",
-              "text": "Máy test đang update, tạm dùng máy còn lại nhé mn.",
-              "timestamp": "01/10/2026 10:00",
-              "senderName": "Nam"
-            },
-            {
-              "id": "thread_dev_history_5",
-              "time": "01/10/2026 10:06",
-              "sender": "me",
-              "text": "Ừ, nhớ lưu config cũ nhé.",
-              "timestamp": "01/10/2026 10:06"
-            },
-            {
-              "id": "thread_dev_history_6",
-              "time": "07/10/2026 15:05",
-              "sender": "them",
-              "text": "Đã bổ sung case empty cart rùi a.",
-              "timestamp": "07/10/2026 15:05",
-              "senderName": "Bách"
-            },
-            {
-              "id": "thread_dev_history_7",
-              "time": "07/10/2026 15:15",
-              "sender": "me",
-              "text": "Ổn rùi, thêm validate số lượng âm nữa e.",
-              "timestamp": "07/10/2026 15:15"
-            },
-            {
-              "id": "thread_dev_0",
-              "sender": "them",
-              "text": "Bản fix cart lên staging rùi nhé ae.",
-              "time": "15/10/2026 09:05",
-              "senderName": "Nam",
-              "timestamp": "15/10/2026 09:05"
-            },
-            {
-              "id": "thread_dev_1",
-              "sender": "me",
-              "text": "Nhờ ae test thêm case update quantity nhé.",
-              "time": "15/10/2026 09:12",
-              "timestamp": "15/10/2026 09:12"
-            },
-            {
-              "id": "thread_dev_2",
-              "sender": "them",
-              "text": "E confirm hết bug cũ rùi a.",
-              "time": "15/10/2026 14:10",
-              "senderName": "Bách",
-              "timestamp": "15/10/2026 14:10"
-            },
-            {
-              "id": "msg_dev_cancel",
-              "sender": "them",
-              "text": "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae.",
-              "time": "15/10/2026 17:30",
-              "senderName": "Nam",
-              "clueRefId": "CLUE-ZOLA-09",
-              "timestamp": "15/10/2026 17:30"
-            },
-            {
-              "id": "thread_dev_4",
-              "sender": "me",
-              "text": "Ok ông 👍",
-              "time": "15/10/2026 17:32",
-              "timestamp": "15/10/2026 17:32"
-            },
-            {
-              "id": "thread_dev_5",
-              "sender": "them",
-              "text": "Ngon, về sớm 🎉",
-              "time": "15/10/2026 17:33",
-              "senderName": "Bách",
-              "timestamp": "15/10/2026 17:33"
-            }
-          ]
-        },
-        {
           "threadId": "thread_mai",
           "contactName": "Mai Lễ Tân",
           "avatarGradient": "from-slate-400 to-slate-600",
@@ -2372,104 +2538,8 @@
               "senderName": "Ban Hành chính",
               "timestamp": "15/10/2026 11:00"
             }
-          ]
-        },
-        {
-          "threadId": "thread_building",
-          "contactName": "Cư dân tầng 12 CT2",
-          "avatarGradient": "from-slate-400 to-slate-600",
-          "timestamp": "15/10/2026 08:00",
-          "unreadCount": 0,
-          "historyPriority": "regular",
-          "isGroup": true,
-          "memberCount": 64,
-          "messages": [
-            {
-              "id": "thread_building_history_0",
-              "time": "21/09/2026 08:00",
-              "sender": "them",
-              "text": "Tối nay vệ sinh bể nước, mọi người chủ động trữ một ít.",
-              "timestamp": "21/09/2026 08:00",
-              "senderName": "Ban quản lý"
-            },
-            {
-              "id": "thread_building_history_1",
-              "time": "21/09/2026 08:08",
-              "sender": "me",
-              "text": "Nhà em đã nhận thông tin, cảm ơn ban quản lý.",
-              "timestamp": "21/09/2026 08:08"
-            },
-            {
-              "id": "thread_building_history_2",
-              "time": "25/09/2026 17:30",
-              "sender": "them",
-              "text": "Ai để quên ô ở thang máy em gửi quầy bảo vệ nhé.",
-              "timestamp": "25/09/2026 17:30",
-              "senderName": "Căn 1202"
-            },
-            {
-              "id": "thread_building_history_3",
-              "time": "25/09/2026 17:38",
-              "sender": "them",
-              "text": "Ô của nhà em, em xuống lấy ngay.",
-              "timestamp": "25/09/2026 17:38",
-              "senderName": "Căn 1208"
-            },
-            {
-              "id": "thread_building_history_4",
-              "time": "30/09/2026 09:10",
-              "sender": "them",
-              "text": "Đã mở đăng ký thẻ xe tháng tới.",
-              "timestamp": "30/09/2026 09:10",
-              "senderName": "Ban quản lý"
-            },
-            {
-              "id": "thread_building_history_5",
-              "time": "30/09/2026 09:20",
-              "sender": "me",
-              "text": "Em đăng ký lại một xe máy như cũ.",
-              "timestamp": "30/09/2026 09:20"
-            },
-            {
-              "id": "thread_building_history_6",
-              "time": "06/10/2026 14:00",
-              "sender": "them",
-              "text": "Hành lang đã thay bóng đèn, vui lòng báo nếu còn vị trí tối.",
-              "timestamp": "06/10/2026 14:00",
-              "senderName": "Ban quản lý"
-            },
-            {
-              "id": "thread_building_history_7",
-              "time": "06/10/2026 14:08",
-              "sender": "me",
-              "text": "Tầng 12 sáng bình thường rồi ạ.",
-              "timestamp": "06/10/2026 14:08"
-            },
-            {
-              "id": "thread_building_0",
-              "sender": "them",
-              "text": "Sáng thứ bảy bảo trì thang B từ 9h đến 11h.",
-              "time": "15/10/2026 07:45",
-              "senderName": "Ban quản lý",
-              "timestamp": "15/10/2026 07:45"
-            },
-            {
-              "id": "thread_building_1",
-              "sender": "them",
-              "text": "Thang A vẫn hoạt động chứ ạ?",
-              "time": "15/10/2026 07:52",
-              "senderName": "Căn 1204",
-              "timestamp": "15/10/2026 07:52"
-            },
-            {
-              "id": "thread_building_2",
-              "sender": "them",
-              "text": "Vâng, thang A hoạt động bình thường.",
-              "time": "15/10/2026 08:00",
-              "senderName": "Ban quản lý",
-              "timestamp": "15/10/2026 08:00"
-            }
-          ]
+          ],
+          "isMuted": true
         }
       ],
       "otherThreads": [

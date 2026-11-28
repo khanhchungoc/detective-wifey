@@ -30,7 +30,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       verdict: 'cheating',
       culpritSuspectId: 'suspect_huong',
       narrativeRoast:
-        'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
+        'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
       overJealousRoast:
         'Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?',
     },
