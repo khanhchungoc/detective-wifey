@@ -33,9 +33,11 @@ test.describe('Phone Shell @smoke', () => {
     await swipeUpHome(page);
     await expect(page.locator('[data-app-surface]')).toBeHidden();
 
-    // Launch Comms (Phone) and return via swipe-right back from root
+    // Launch Comms (Phone): swipe-right from root must NOT exit to home; swipe-up returns home
     await launchApp(page, 'phone');
     await swipeRightBack(page);
+    await expect(page.locator('[data-app-surface]')).toBeVisible();
+    await swipeUpHome(page);
     await expect(page.locator('[data-app-surface]')).toBeHidden();
 
     expect(errors).toEqual([]);

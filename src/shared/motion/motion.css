@@ -154,6 +154,8 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-banner-out { to { transform: translateY(-120%); opacity: 0; } }
 @keyframes ios-dialog-in { from { transform: scale(.94); opacity: 0; } }
 @keyframes ios-dialog-out { to { transform: scale(.94); opacity: 0; } }
+::view-transition-old(app-content) { animation: none; opacity: 1; }
+::view-transition-new(app-content) { animation: ios-app-fade-in .18s var(--ease-ios-default) both; }
 ::view-transition-group(phone-content) { background-color: #000000; }
 html[data-motion='push']::view-transition-new(phone-content) { animation-name: ios-push; }
 html[data-motion='push']::view-transition-old(phone-content) { animation-name: ios-under; }
