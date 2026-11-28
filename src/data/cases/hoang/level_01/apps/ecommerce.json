@@ -1,0 +1,1224 @@
+{
+  "unreadBadge": 0,
+  "cartCount": 0,
+  "chatUnreadCount": 0,
+  "browsingPatterns": [],
+  "recentSearches": [
+    {
+      "id": "search_0",
+      "text": "bình nóng lạnh 20l"
+    },
+    {
+      "id": "search_1",
+      "text": "váy lụa be"
+    },
+    {
+      "id": "search_2",
+      "text": "hoa sáp sinh nhật"
+    },
+    {
+      "id": "search_3",
+      "text": "túi rác vừa"
+    },
+    {
+      "id": "search_4",
+      "text": "bàn phím không dây"
+    }
+  ],
+  "orders": [
+    {
+      "orderId": "order_bag",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Đồ Gia Dụng",
+      "orderDate": "14/10/2026 17:42",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "in_transit",
+      "totalAmount": "39.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Túi rác",
+          "variantName": "cỡ vừa",
+          "price": "39.000đ",
+          "quantity": 1
+        }
+      ],
+      "timestamp": "14/10/2026 17:42"
+    },
+    {
+      "orderId": "order_polo",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Áo Polo",
+      "orderDate": "14/10/2026 18:00",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "cancelled",
+      "totalAmount": "0 đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Áo polo nam",
+          "variantName": "xanh, L",
+          "price": "0 đ",
+          "quantity": 1
+        }
+      ],
+      "timestamp": "14/10/2026 18:00"
+    },
+    {
+      "orderId": "order_03",
+      "suspectId": "suspect_mai",
+      "suspectName": "Đỗ Thị Mai",
+      "shopName": "Hoa Sáp Xinh",
+      "orderDate": "14/10/2026 15:20",
+      "recipientName": "Đỗ Thị Mai",
+      "recipientPhone": "0988990011",
+      "shippingAddress": "Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội",
+      "status": "completed",
+      "totalAmount": "350.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Lẵng hoa sáp",
+          "variantName": "mẫu vàng",
+          "price": "350.000đ",
+          "quantity": 1
+        }
+      ],
+      "clueRefId": "CLUE-POSH-06",
+      "timestamp": "14/10/2026 15:20"
+    },
+    {
+      "orderId": "order_heater",
+      "shopName": "Điện Máy Nhà Mình",
+      "orderDate": "13/10/2026 09:30",
+      "recipientName": "Nguyễn Thị Hòa",
+      "recipientPhone": "0915220011",
+      "shippingAddress": "Xóm 3, xã Yên Phong, huyện Ý Yên, Nam Định",
+      "status": "in_transit",
+      "totalAmount": "2.390.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Bình nóng lạnh 20L",
+          "variantName": "trắng",
+          "price": "2.390.000đ",
+          "quantity": 1
+        }
+      ],
+      "clueRefId": "CLUE-POSH-06",
+      "timestamp": "13/10/2026 09:30"
+    },
+    {
+      "orderId": "order_01",
+      "suspectId": "suspect_huong",
+      "suspectName": "Nguyễn Thị Thu Hương",
+      "shopName": "Lụa Satin",
+      "orderDate": "12/10/2026 20:10",
+      "recipientName": "Nguyễn Thị Thu Hương",
+      "recipientPhone": "0988886677",
+      "shippingAddress": "Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội",
+      "status": "completed",
+      "totalAmount": "489.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Set váy lụa công sở",
+          "variantName": "be, size S",
+          "price": "489.000đ",
+          "quantity": 1
+        }
+      ],
+      "clueRefId": "CLUE-POSH-05",
+      "timestamp": "12/10/2026 20:10"
+    },
+    {
+      "orderId": "order_02",
+      "suspectId": "suspect_ngoc",
+      "suspectName": "Nguyễn Bảo Ngọc",
+      "shopName": "Đèn học",
+      "orderDate": "10/10",
+      "recipientName": "Nguyễn Bảo Ngọc",
+      "recipientPhone": "0922334455",
+      "shippingAddress": "Phòng 305, nhà B2, KTX An Hòa, 16 ngõ 165 Xuân Thủy, Hà Nội",
+      "status": "completed",
+      "totalAmount": "179.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Đèn học",
+          "variantName": "trắng",
+          "price": "179.000đ",
+          "quantity": 1
+        }
+      ],
+      "timestamp": "10/10"
+    },
+    {
+      "orderId": "order_coffee",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Cà Phê",
+      "orderDate": "10/10",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": "140.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Cà phê hạt",
+          "variantName": "500g",
+          "price": "140.000đ",
+          "quantity": 1
+        }
+      ],
+      "timestamp": "10/10"
+    },
+    {
+      "orderId": "order_04",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Bàn Phím",
+      "orderDate": "09/10",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": "690.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Bàn phím cơ",
+          "variantName": "nâu",
+          "price": "690.000đ",
+          "quantity": 1
+        }
+      ],
+      "timestamp": "09/10"
+    },
+    {
+      "orderId": "order_cable",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Đồ Dùng",
+      "orderDate": "08/10",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": "25.000đ",
+      "paymentMethod": "Thanh toán trực tuyến",
+      "items": [
+        {
+          "productTitle": "Dây rút",
+          "variantName": "túi 100 chiếc",
+          "price": "25.000đ",
+          "quantity": 1
+        }
+      ],
+      "timestamp": "08/10"
+    },
+    {
+      "orderId": "order_history_13",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Gia Dụng",
+      "orderDate": "03/10",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 49000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Móc phơi quần áo",
+          "variantName": "bộ 10 chiếc",
+          "price": 49000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "03/10"
+    },
+    {
+      "orderId": "order_history_12",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Vườn Nhà",
+      "orderDate": "02/10",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 29000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Đất trồng cây",
+          "variantName": "túi 2kg",
+          "price": 29000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "02/10"
+    },
+    {
+      "orderId": "order_history_11",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Bàn Phím",
+      "orderDate": "01/10",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 65000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Miếng lót chuột",
+          "variantName": "xám",
+          "price": 65000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "01/10"
+    },
+    {
+      "orderId": "order_history_10",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Cà Phê",
+      "orderDate": "30/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 35000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Túi lọc cà phê",
+          "variantName": "bộ 50 túi",
+          "price": 35000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "30/09"
+    },
+    {
+      "orderId": "order_history_9",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Thể Thao",
+      "orderDate": "29/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 65000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Bình nước",
+          "variantName": "750ml",
+          "price": 65000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "29/09"
+    },
+    {
+      "orderId": "order_history_8",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Phụ Kiện",
+      "orderDate": "28/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 189000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Giá đỡ laptop",
+          "variantName": "nhôm",
+          "price": 189000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "28/09"
+    },
+    {
+      "orderId": "order_history_7",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Văn Phòng",
+      "orderDate": "27/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 72000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Giấy in A4",
+          "variantName": "ram 500 tờ",
+          "price": 72000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "27/09"
+    },
+    {
+      "orderId": "order_history_6",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Thể Thao",
+      "orderDate": "26/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 25000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Dây giày bóng đá",
+          "variantName": "xanh",
+          "price": 25000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "26/09"
+    },
+    {
+      "orderId": "order_history_5",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Đồ Bếp",
+      "orderDate": "25/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 89000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Hộp đựng thực phẩm",
+          "variantName": "bộ 3 hộp",
+          "price": 89000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "25/09"
+    },
+    {
+      "orderId": "order_history_4",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Gia Dụng",
+      "orderDate": "24/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 39000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Khăn lau bếp",
+          "variantName": "bộ 4 chiếc",
+          "price": 39000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "24/09"
+    },
+    {
+      "orderId": "order_history_3",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Nhà Sách",
+      "orderDate": "23/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 145000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Sách kỹ thuật",
+          "variantName": "bìa mềm",
+          "price": 145000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "23/09"
+    },
+    {
+      "orderId": "order_history_2",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Phụ Kiện",
+      "orderDate": "22/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 79000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Cáp sạc USB-C",
+          "variantName": "dài 1m",
+          "price": 79000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "22/09"
+    },
+    {
+      "orderId": "order_history_1",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Thể Thao",
+      "orderDate": "21/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 59000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Tất thể thao",
+          "variantName": "bộ 3 đôi",
+          "price": 59000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "21/09"
+    },
+    {
+      "orderId": "order_history_0",
+      "suspectId": "husband_hoang",
+      "suspectName": "Nguyễn Huy Hoàng",
+      "shopName": "Gia Dụng",
+      "orderDate": "20/09",
+      "recipientName": "Nguyễn Huy Hoàng",
+      "recipientPhone": "0901236789",
+      "shippingAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Hà Nội",
+      "status": "completed",
+      "totalAmount": 125000,
+      "paymentMethod": "Số dư ví mua sắm",
+      "items": [
+        {
+          "productTitle": "Bột giặt",
+          "variantName": "túi 2kg",
+          "price": 125000,
+          "quantity": 1
+        }
+      ],
+      "timestamp": "20/09"
+    }
+  ],
+  "chats": [
+    {
+      "shopId": "seller_polo",
+      "shopName": "Áo Polo",
+      "date": "14/10",
+      "timestamp": "14/10/2026 18:30",
+      "lastMessage": "Dạ shop xác nhận hoàn 89.000đ.",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_polo_history_0",
+          "text": "Shop có bảng kích cỡ áo không?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:00"
+        },
+        {
+          "id": "seller_polo_history_1",
+          "text": "Dạ anh xem số đo vai và ngực trong ảnh cuối.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:03"
+        },
+        {
+          "id": "seller_polo_history_2",
+          "text": "Màu xanh có dễ phai khi giặt không?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:06"
+        },
+        {
+          "id": "seller_polo_history_3",
+          "text": "Anh giặt riêng lần đầu và tránh ngâm lâu nhé.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:09"
+        },
+        {
+          "id": "seller_polo_history_4",
+          "text": "Mình cần xem lại kích cỡ rồi đặt sau.",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:12"
+        },
+        {
+          "id": "seller_polo_history_5",
+          "text": "Dạ anh cần tư vấn thêm cứ nhắn shop.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:15"
+        },
+        {
+          "id": "seller_polo_m0",
+          "sender": "shop",
+          "text": "Màu xanh hết L, anh đổi màu không?",
+          "time": "18:20",
+          "date": "14/10"
+        },
+        {
+          "id": "seller_polo_m1",
+          "sender": "user",
+          "text": "Thôi hủy giúp mình.",
+          "time": "18:25",
+          "date": "14/10"
+        },
+        {
+          "id": "seller_polo_m2",
+          "sender": "shop",
+          "text": "Dạ shop xác nhận hoàn 89.000đ.",
+          "time": "18:30",
+          "date": "14/10"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_hoa",
+      "shopName": "Hoa Sáp Xinh",
+      "date": "14/10",
+      "timestamp": "14/10/2026 15:22",
+      "lastMessage": "Dạ, giao sảnh Minh An sáng thứ 5 ạ.",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_hoa_m0",
+          "sender": "user",
+          "text": "Thiệp ghi giúp: Chúc mừng sinh nhật! - Team Dev",
+          "time": "15:18",
+          "date": "14/10"
+        },
+        {
+          "id": "seller_hoa_m1",
+          "sender": "shop",
+          "text": "Dạ, giao sảnh Minh An sáng thứ 5 ạ.",
+          "time": "15:22",
+          "date": "14/10"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_dienmay",
+      "shopName": "Điện Máy Nhà Mình",
+      "date": "13/10",
+      "timestamp": "13/10/2026 09:35",
+      "lastMessage": "Dạ, bên em gọi bác Hòa trước 30 phút ạ.",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_dienmay_m0",
+          "sender": "user",
+          "text": "Shop giao về quê giúp mình, gọi số người nhận trước khi tới nhé.",
+          "time": "09:28",
+          "date": "13/10"
+        },
+        {
+          "id": "seller_dienmay_m1",
+          "sender": "shop",
+          "text": "Dạ, bên em gọi bác Hòa trước 30 phút ạ.",
+          "time": "09:35",
+          "date": "13/10"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_satin",
+      "shopName": "Lụa Satin",
+      "date": "12/10",
+      "timestamp": "12/10/2026 20:17",
+      "lastMessage": "Dạ, shop để thiệp trong hộp, không in ngoài kiện.",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_satin_history_0",
+          "text": "Shop có bảng kích cỡ kèm số đo không?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:00"
+        },
+        {
+          "id": "seller_satin_history_1",
+          "text": "Dạ có, anh chọn theo vòng ngực và vai trong ảnh hướng dẫn.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:03"
+        },
+        {
+          "id": "seller_satin_history_2",
+          "text": "Vải có cần giặt riêng lần đầu không?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:06"
+        },
+        {
+          "id": "seller_satin_history_3",
+          "text": "Dạ nên giặt tay và phơi nơi thoáng.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:09"
+        },
+        {
+          "id": "seller_satin_history_4",
+          "text": "Shop đóng hộp cứng hay túi vậy?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:12"
+        },
+        {
+          "id": "seller_satin_history_5",
+          "text": "Dạ sản phẩm được đóng hộp, bên ngoài là túi vận chuyển.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:15"
+        },
+        {
+          "id": "seller_satin_m0",
+          "sender": "user",
+          "text": "Mẫu be còn S không shop?",
+          "time": "20:10",
+          "date": "12/10"
+        },
+        {
+          "id": "seller_satin_m1",
+          "sender": "shop",
+          "text": "Còn anh nhé.",
+          "time": "20:12",
+          "date": "12/10"
+        },
+        {
+          "id": "seller_satin_m2",
+          "sender": "user",
+          "text": "Gửi kèm thiệp ghi giúp mình: 15/09 - 15/10 ♡",
+          "time": "20:15",
+          "date": "12/10",
+          "clueRefId": "CLUE-POSH-05"
+        },
+        {
+          "id": "seller_satin_m3",
+          "sender": "shop",
+          "text": "Dạ, shop để thiệp trong hộp, không in ngoài kiện.",
+          "time": "20:17",
+          "date": "12/10",
+          "clueRefId": "CLUE-POSH-05"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_keyboard",
+      "shopName": "Bàn Phím",
+      "date": "09/10",
+      "timestamp": "09/10/2026 12:25",
+      "lastMessage": "Dạ được ạ.",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_keyboard_history_0",
+          "text": "Bàn phím có kèm đầu thu không shop?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:00"
+        },
+        {
+          "id": "seller_keyboard_history_1",
+          "text": "Dạ có đầu thu trong ngăn hộp.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:03"
+        },
+        {
+          "id": "seller_keyboard_history_2",
+          "text": "Máy tính không có Bluetooth vẫn dùng được chứ?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:06"
+        },
+        {
+          "id": "seller_keyboard_history_3",
+          "text": "Dạ dùng đầu thu là được anh nhé.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:09"
+        },
+        {
+          "id": "seller_keyboard_history_4",
+          "text": "Pin có sẵn hay phải mua thêm?",
+          "sender": "user",
+          "date": "18/09",
+          "time": "10:12"
+        },
+        {
+          "id": "seller_keyboard_history_5",
+          "text": "Bên em có sẵn pin theo máy ạ.",
+          "sender": "shop",
+          "date": "18/09",
+          "time": "10:15"
+        },
+        {
+          "id": "seller_keyboard_m0",
+          "sender": "user",
+          "text": "Bản này ghép được hai máy không?",
+          "time": "12:20",
+          "date": "09/10"
+        },
+        {
+          "id": "seller_keyboard_m1",
+          "sender": "shop",
+          "text": "Dạ được ạ.",
+          "time": "12:25",
+          "date": "09/10"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_history_0",
+      "shopName": "Gia Dụng",
+      "lastMessage": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+      "date": "22/09",
+      "timestamp": "22/09/2026 18:30",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_history_0_0",
+          "sender": "user",
+          "text": "Shop còn bột giặt không?",
+          "date": "22/09",
+          "time": "18:00"
+        },
+        {
+          "id": "seller_history_0_1",
+          "sender": "shop",
+          "text": "Dạ bên em còn hàng ạ.",
+          "date": "22/09",
+          "time": "18:05"
+        },
+        {
+          "id": "seller_history_0_2",
+          "sender": "user",
+          "text": "Địa chỉ giao ở nhà, ban ngày có thể gửi quầy bảo vệ nhé.",
+          "date": "22/09",
+          "time": "18:10"
+        },
+        {
+          "id": "seller_history_0_3",
+          "sender": "shop",
+          "text": "Dạ anh ghi chú vào đơn để bên vận chuyển liên hệ.",
+          "date": "22/09",
+          "time": "18:15"
+        },
+        {
+          "id": "seller_history_0_4",
+          "sender": "user",
+          "text": "Mình nhận được đủ hàng rồi, cảm ơn shop.",
+          "date": "22/09",
+          "time": "18:20"
+        },
+        {
+          "id": "seller_history_0_5",
+          "sender": "shop",
+          "text": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+          "date": "22/09",
+          "time": "18:25"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_history_1",
+      "shopName": "Thể Thao",
+      "lastMessage": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+      "date": "23/09",
+      "timestamp": "23/09/2026 18:30",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_history_1_0",
+          "sender": "user",
+          "text": "Shop còn tất thể thao không?",
+          "date": "23/09",
+          "time": "18:00"
+        },
+        {
+          "id": "seller_history_1_1",
+          "sender": "shop",
+          "text": "Dạ bên em còn hàng ạ.",
+          "date": "23/09",
+          "time": "18:05"
+        },
+        {
+          "id": "seller_history_1_2",
+          "sender": "user",
+          "text": "Địa chỉ giao ở nhà, ban ngày có thể gửi quầy bảo vệ nhé.",
+          "date": "23/09",
+          "time": "18:10"
+        },
+        {
+          "id": "seller_history_1_3",
+          "sender": "shop",
+          "text": "Dạ anh ghi chú vào đơn để bên vận chuyển liên hệ.",
+          "date": "23/09",
+          "time": "18:15"
+        },
+        {
+          "id": "seller_history_1_4",
+          "sender": "user",
+          "text": "Mình nhận được đủ hàng rồi, cảm ơn shop.",
+          "date": "23/09",
+          "time": "18:20"
+        },
+        {
+          "id": "seller_history_1_5",
+          "sender": "shop",
+          "text": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+          "date": "23/09",
+          "time": "18:25"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_history_2",
+      "shopName": "Phụ Kiện",
+      "lastMessage": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+      "date": "24/09",
+      "timestamp": "24/09/2026 18:30",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_history_2_0",
+          "sender": "user",
+          "text": "Shop còn cáp sạc không?",
+          "date": "24/09",
+          "time": "18:00"
+        },
+        {
+          "id": "seller_history_2_1",
+          "sender": "shop",
+          "text": "Dạ bên em còn hàng ạ.",
+          "date": "24/09",
+          "time": "18:05"
+        },
+        {
+          "id": "seller_history_2_2",
+          "sender": "user",
+          "text": "Địa chỉ giao ở nhà, ban ngày có thể gửi quầy bảo vệ nhé.",
+          "date": "24/09",
+          "time": "18:10"
+        },
+        {
+          "id": "seller_history_2_3",
+          "sender": "shop",
+          "text": "Dạ anh ghi chú vào đơn để bên vận chuyển liên hệ.",
+          "date": "24/09",
+          "time": "18:15"
+        },
+        {
+          "id": "seller_history_2_4",
+          "sender": "user",
+          "text": "Mình nhận được đủ hàng rồi, cảm ơn shop.",
+          "date": "24/09",
+          "time": "18:20"
+        },
+        {
+          "id": "seller_history_2_5",
+          "sender": "shop",
+          "text": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+          "date": "24/09",
+          "time": "18:25"
+        }
+      ]
+    },
+    {
+      "shopId": "seller_history_3",
+      "shopName": "Vườn Nhà",
+      "lastMessage": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+      "date": "25/09",
+      "timestamp": "25/09/2026 18:30",
+      "unreadCount": 0,
+      "messages": [
+        {
+          "id": "seller_history_3_0",
+          "sender": "user",
+          "text": "Shop còn đất trồng cây không?",
+          "date": "25/09",
+          "time": "18:00"
+        },
+        {
+          "id": "seller_history_3_1",
+          "sender": "shop",
+          "text": "Dạ bên em còn hàng ạ.",
+          "date": "25/09",
+          "time": "18:05"
+        },
+        {
+          "id": "seller_history_3_2",
+          "sender": "user",
+          "text": "Địa chỉ giao ở nhà, ban ngày có thể gửi quầy bảo vệ nhé.",
+          "date": "25/09",
+          "time": "18:10"
+        },
+        {
+          "id": "seller_history_3_3",
+          "sender": "shop",
+          "text": "Dạ anh ghi chú vào đơn để bên vận chuyển liên hệ.",
+          "date": "25/09",
+          "time": "18:15"
+        },
+        {
+          "id": "seller_history_3_4",
+          "sender": "user",
+          "text": "Mình nhận được đủ hàng rồi, cảm ơn shop.",
+          "date": "25/09",
+          "time": "18:20"
+        },
+        {
+          "id": "seller_history_3_5",
+          "sender": "shop",
+          "text": "Cảm ơn anh, anh cần hỗ trợ cứ nhắn lại nhé.",
+          "date": "25/09",
+          "time": "18:25"
+        }
+      ]
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notice_heater",
+      "type": "order",
+      "title": "Đơn hàng đang giao",
+      "snippet": "Đơn order_heater đang trên đường giao tới Nam Định.",
+      "timestamp": "15/10/2026 14:00",
+      "orderId": "order_heater"
+    },
+    {
+      "id": "notice_order_03",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Đơn order_03 đã giao thành công.",
+      "timestamp": "15/10/2026 11:37",
+      "orderId": "order_03"
+    },
+    {
+      "id": "notice_order_01",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Đơn order_01 đã giao thành công.",
+      "timestamp": "15/10/2026 11:36",
+      "orderId": "order_01"
+    },
+    {
+      "id": "notice_bag",
+      "type": "order",
+      "title": "Đơn túi rác đang giao",
+      "snippet": "Túi rác cỡ vừa dự kiến giao 16/10.",
+      "timestamp": "15/10/2026 09:00",
+      "orderId": "order_bag"
+    },
+    {
+      "id": "notice_polo",
+      "type": "order",
+      "title": "Đã hoàn tiền áo polo",
+      "snippet": "Đơn order_polo đã hoàn 89.000đ về phương thức thanh toán ban đầu.",
+      "timestamp": "14/10/2026 19:10",
+      "orderId": "order_polo"
+    },
+    {
+      "id": "notice_keyboard",
+      "type": "order",
+      "title": "Nhắc đánh giá bàn phím",
+      "snippet": "Bạn đã dùng bàn phím mới? Chia sẻ nhận xét với cửa hàng.",
+      "timestamp": "14/10/2026 10:00",
+      "orderId": "order_04"
+    },
+    {
+      "id": "notice_general_3",
+      "type": "promo",
+      "title": "Gợi ý mua lại",
+      "snippet": "Kiểm tra các sản phẩm thiết yếu thường mua.",
+      "timestamp": "07/10",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_8",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Móc phơi quần áo đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "05/10",
+      "orderId": "order_history_13",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_9",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Đất trồng cây đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "04/10",
+      "orderId": "order_history_12",
+      "isPinned": false
+    },
+    {
+      "id": "notice_general_2",
+      "type": "promo",
+      "title": "Nhắc đánh giá sản phẩm",
+      "snippet": "Bạn có thể đánh giá bình nước vừa nhận.",
+      "timestamp": "03/10",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_10",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Miếng lót chuột đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "03/10",
+      "orderId": "order_history_11",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_11",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Túi lọc cà phê đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "02/10",
+      "orderId": "order_history_10",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_12",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Bình nước đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "01/10",
+      "orderId": "order_history_9",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_13",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Giá đỡ laptop đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "30/09",
+      "orderId": "order_history_8",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_14",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Giấy in A4 đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "29/09",
+      "orderId": "order_history_7",
+      "isPinned": false
+    },
+    {
+      "id": "notice_general_1",
+      "type": "security",
+      "title": "Thông tin tài khoản",
+      "snippet": "Đã cập nhật địa chỉ nhận hàng mặc định.",
+      "timestamp": "28/09",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_15",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Dây giày bóng đá đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "28/09",
+      "orderId": "order_history_6",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_16",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Hộp đựng thực phẩm đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "27/09",
+      "orderId": "order_history_5",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_17",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Khăn lau bếp đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "26/09",
+      "orderId": "order_history_4",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_18",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Sách kỹ thuật đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "25/09",
+      "orderId": "order_history_3",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_19",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Cáp sạc USB-C đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "24/09",
+      "orderId": "order_history_2",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_20",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Tất thể thao đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "23/09",
+      "orderId": "order_history_1",
+      "isPinned": false
+    },
+    {
+      "id": "notice_general_0",
+      "type": "promo",
+      "title": "Ưu đãi phí vận chuyển",
+      "snippet": "Mã giảm phí vận chuyển cho đồ gia dụng.",
+      "timestamp": "22/09",
+      "isPinned": false
+    },
+    {
+      "id": "notice_history_21",
+      "type": "order",
+      "title": "Đơn hàng đã giao",
+      "snippet": "Bột giặt đã giao thành công. Bạn có thể kiểm tra thông tin trong đơn mua.",
+      "timestamp": "22/09",
+      "orderId": "order_history_0",
+      "isPinned": false
+    }
+  ]
+}

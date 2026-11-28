@@ -5,8 +5,8 @@ import {
   IoPeopleOutline,
   IoStorefrontOutline,
 } from 'react-icons/io5';
-import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.jpg';
-import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.jpg';
+import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.webp';
+import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.webp';
 
 const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
   { index: 0, names: ['Anh Tuấn Thợ Điện'] }, // Anonymous electrician tools preserve the alias mystery.

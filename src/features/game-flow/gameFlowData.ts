@@ -7,9 +7,9 @@ import type {
   PhoneLockscreenConfig,
   WifeProfile,
 } from '../../shared/contracts/game-flow';
-import wifeMinhThuUrl from './assets/wife-minh-thu.jpg';
+import wifeMinhThuUrl from './assets/wife-minh-thu.webp';
 // 3:4 head-and-shoulders dossier portrait (not the phone wallpaper).
-import hoangPortraitUrl from './assets/hoang-dossier-portrait.jpg';
+import hoangPortraitUrl from './assets/hoang-dossier-portrait.webp';
 
 const WIFE_MINH_THU: WifeProfile = {
   displayName: 'Trần Minh Thư',

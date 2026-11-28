@@ -6,7 +6,7 @@ import {
   IoPhonePortraitOutline,
 } from 'react-icons/io5';
 import type { CaseBriefingData } from '../../shared/contracts/game-flow';
-import startupHeroUrl from './assets/startup-hero.jpg';
+import startupHeroUrl from './assets/startup-hero.webp';
 import { CTA_PRIMARY, CTA_SECONDARY } from './case-files/ctaStyles';
 import {
   INK_TEXT,

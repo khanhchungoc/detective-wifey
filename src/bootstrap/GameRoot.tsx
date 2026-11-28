@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PhoneShell } from '../shell';
-import hoangWallpaperUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
+import hoangWallpaperUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.webp';
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
 import { LocalStorageAdapter, type GameStateRepository } from '../features/session';
 import { PlaySession } from '../features/play-session';
 import { SharedPinLockpad } from '../features/locks';
-import { WifeNotebookModal } from '../features/wife-notebook';
+
+const WifeNotebookModal = lazy(() =>
+  import('../features/wife-notebook').then(m => ({ default: m.WifeNotebookModal })),
+);
 import {
   GameStartupScreen,
   LevelSelectorHub,
@@ -261,6 +264,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               overlays={<>
                 <AnchoredOverlay key={caseConfig.caseId} open={notebookOpen} anchorSelector="[data-notebook-tab]"
                   label="Bảng bằng chứng" onClose={() => setOpenNotebookCase(null)}>
+                <Suspense fallback={null}>
                 <WifeNotebookModal
                   caseId={caseConfig.caseId}
                   caseTitle={caseTitle}
@@ -285,6 +289,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   onConfrontationVictory={game.recordConfrontationVerdict}
                   onNextLevel={game.forgiveAndAdvanceLevel}
                 />
+                </Suspense>
                 </AnchoredOverlay>
                 {briefingRecallOpen && (
                   <LevelContextBriefing
