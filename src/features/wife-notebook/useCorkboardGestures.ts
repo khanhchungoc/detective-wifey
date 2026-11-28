@@ -158,7 +158,8 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     minAllowedZoom: number;
   } | null>(null);
   const pinchClosedRef = useRef(false);
-  const lastTapTime = useRef(0);
+  const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
+  const captureTapStart = useRef<{ pointerId: number; x: number; y: number; moved: boolean; onCard: boolean } | null>(null);
   const touchPointers = useRef(new Map<number, { clientX: number; clientY: number }>());
   const multiTouch = useRef(false);
   const [isPinching, setIsPinching] = useState(false);
@@ -333,7 +334,9 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     e.stopPropagation();
     const rawDx = e.clientX - dragStart.current.x;
     const rawDy = e.clientY - dragStart.current.y;
-    if (!dragStart.current.moved && Math.hypot(rawDx, rawDy) > 6) {
+    const moveThreshold = e.pointerType === 'touch' ? 12 : 6;
+    if (!dragStart.current.moved) {
+      if (Math.hypot(rawDx, rawDy) <= moveThreshold) return;
       dragStart.current.moved = true;
       e.currentTarget.setPointerCapture(e.pointerId);
     }
@@ -372,13 +375,14 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
         y: cam.y + (e.clientY - rect.top - rect.height / 2) / cam.zoom,
       };
       const now = Date.now();
-      if (now - lastTapTime.current < 320 && !lockedRef.current) {
-        lastTapTime.current = 0;
+      const prevTap = lastTap.current;
+      if (prevTap && now - prevTap.time < 350 && Math.hypot(e.clientX - prevTap.x, e.clientY - prevTap.y) <= 44 && !lockedRef.current) {
+        lastTap.current = null;
         if (onDoubleTapBackground) {
           onDoubleTapBackground(point);
         } else {
-          // Default double tap: zoom in to 2x (or back out to 1x), keeping the tapped spot under the finger.
-          const zoom = cam.zoom >= DOUBLE_TAP_ZOOM - 0.1 ? 1.0 : DOUBLE_TAP_ZOOM;
+          // Default double tap: zoom out to 1x when zoomed in (> 1.15x), otherwise zoom in to DOUBLE_TAP_ZOOM.
+          const zoom = cam.zoom > 1.15 ? 1.0 : DOUBLE_TAP_ZOOM;
           const keep = cam.zoom / zoom;
           animateTo({
             x: point.x - (point.x - cam.x) * keep,
@@ -388,7 +392,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
         }
       } else {
         onTapBackground?.(point);
-        lastTapTime.current = now;
+        lastTap.current = { time: now, x: e.clientX, y: e.clientY };
       }
     }
   }, [animateTo, flushViewportCommit, onDoubleTapBackground, onTapBackground]);
@@ -396,9 +400,17 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   // Capture touch pointers before card drag handlers. One owner for the entire pinch,
   // including the remaining finger after the first finger lifts.
   const handleTouchPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== 'touch' || animationFrameRef.current !== null) return;
+    if (animationFrameRef.current !== null) return;
+    const target = e.target as HTMLElement;
+    if (e.button === 0 && !multiTouch.current && !lockedRef.current && !target.closest('button, .corkboard-control-dock, .corkboard-drawer')) {
+      const onCard = Boolean(target.closest('.corkboard-node-card'));
+      captureTapStart.current = onCard
+        ? { pointerId: e.pointerId, x: e.clientX, y: e.clientY, moved: false, onCard: true }
+        : null;
+    }
+    if (e.pointerType !== 'touch') return;
     if (lockedRef.current && !onPinchInFromLocked) return;
-    if ((e.target as HTMLElement).closest('button, .corkboard-control-dock, .corkboard-drawer')) return;
+    if (target.closest('button, .corkboard-control-dock, .corkboard-drawer')) return;
     if (e.isPrimary && !multiTouch.current) {
       touchPointers.current.clear();
     }
@@ -406,7 +418,8 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     if (touchPointers.current.size < 2) return;
     e.stopPropagation();
     isDragging.current = false;
-    lastTapTime.current = 0;
+    lastTap.current = null;
+    captureTapStart.current = null;
     multiTouch.current = true;
     pinchClosedRef.current = false;
     setIsPinching(true);
@@ -431,6 +444,12 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   };
 
   const handleTouchPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (captureTapStart.current && captureTapStart.current.pointerId === e.pointerId) {
+      const slop = e.pointerType === 'touch' ? 12 : 6;
+      if (Math.hypot(e.clientX - captureTapStart.current.x, e.clientY - captureTapStart.current.y) > slop) {
+        captureTapStart.current.moved = true;
+      }
+    }
     if (!touchPointers.current.has(e.pointerId)) return;
     touchPointers.current.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
     if (!multiTouch.current) return;
@@ -465,6 +484,37 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
   };
 
   const handleTouchPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    const cap = captureTapStart.current;
+    if (cap && cap.pointerId === e.pointerId) {
+      captureTapStart.current = null;
+      // When zoomed in all the way, cards cover almost the entire viewport; allow double-tapping a card to zoom back out.
+      if (!multiTouch.current && !lockedRef.current && cap.onCard && !cap.moved && viewportRef.current.zoom > 1.15) {
+        const now = Date.now();
+        const prevTap = lastTap.current;
+        if (prevTap && now - prevTap.time < 350 && Math.hypot(e.clientX - prevTap.x, e.clientY - prevTap.y) <= 44) {
+          const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+          const cam = viewportRef.current;
+          const point = {
+            x: cam.x + (e.clientX - rect.left - rect.width / 2) / cam.zoom,
+            y: cam.y + (e.clientY - rect.top - rect.height / 2) / cam.zoom,
+          };
+          lastTap.current = null;
+          onTapBackground?.(point);
+          if (onDoubleTapBackground) {
+            onDoubleTapBackground(point);
+          } else {
+            const keep = cam.zoom / 1.0;
+            animateTo({
+              x: point.x - (point.x - cam.x) * keep,
+              y: point.y - (point.y - cam.y) * keep,
+              zoom: 1.0,
+            }, reducedMotionRef.current ? 0 : 280);
+          }
+        } else {
+          lastTap.current = { time: now, x: e.clientX, y: e.clientY };
+        }
+      }
+    }
     touchPointers.current.delete(e.pointerId);
     if (!multiTouch.current) return;
     e.stopPropagation();
@@ -523,7 +573,8 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       onPointerCancel: () => {
         const wasMoved = isDragging.current && dragStart.current.moved;
         isDragging.current = false;
-        lastTapTime.current = 0;
+        lastTap.current = null;
+        captureTapStart.current = null;
         if (wasMoved && planeRef?.current) {
           flushViewportCommit();
         }

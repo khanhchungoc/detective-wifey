@@ -130,7 +130,7 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
     // Prevent browser context menu and allow desktop right-click to trigger evidence modal
     e.preventDefault();
     e.stopPropagation();
-    if (!disabled) {
+    if (!disabled && !isLongPressTriggeredRef.current) {
       clearTimer();
       triggerEvidence();
     }

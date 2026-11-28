@@ -17,7 +17,6 @@ import { usePwa } from './usePwa';
 import { useNavigationGuard } from './useNavigationGuard';
 import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
-import { useSwipeBack } from '../shared/gestures/useSwipeBack';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
 import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
@@ -216,7 +215,6 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   }, [incomingNotification]);
 
   const shellGesturesEnabled = activeAppId !== 'home' && !notebookOpen && !controlCenterOpen && !sheetOpen;
-  const shellAppSwipeHandlers = useSwipeBack({ onBack: onReturnHome, enabled: shellGesturesEnabled });
   const shellHomeSwipeHandlers = useSwipeHome({
     onHome: onReturnHome,
     enabled: shellGesturesEnabled,
@@ -414,14 +412,12 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           className="absolute inset-0 z-10 flex flex-col overflow-hidden shadow-2xl"
           style={{
             display: activeAppId === 'home' ? 'none' : undefined,
-            backgroundColor: appTheme,
+            backgroundColor: bottomTheme,
             ...(isIOS ? { paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
             touchAction: 'pan-y',
           }}
-          // The whole card slides on swipe-back so the app background never stays behind as a bar.
-          {...shellAppSwipeHandlers}
         >
-          <div data-app-status-background aria-hidden="true" className="shrink-0" style={{ height: 'var(--phone-system-top)' }} />
+          <div data-app-status-background aria-hidden="true" className="shrink-0" style={{ height: 'var(--phone-system-top)', backgroundColor: appTheme }} />
           <div data-app-viewport tabIndex={-1} className="relative min-h-0 flex-1 flex flex-col overflow-hidden outline-none" style={{ touchAction: 'pan-y' }}>
             <AppErrorBoundary
               onErrorFallback={() => {

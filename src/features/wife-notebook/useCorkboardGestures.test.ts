@@ -418,5 +418,48 @@ describe('corkboard mobile gesture ownership', () => {
     expect(panned.x).toBeGreaterThan(900);
     expect(panned.y).toBeLessThan(900);
   });
+
+  it('zooms back out to 1.0 when double-tapping background at max zoom even with slight touch jitter', () => {
+    updates.length = 0;
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 2.0 },
+    });
+
+    // First tap with 8px touch jitter (within 12px touch slop)
+    handlers.onPointerDown(pointer(1, 200, 300));
+    handlers.onPointerMove(pointer(1, 206, 305));
+    handlers.onPointerUp(pointer(1, 206, 305));
+
+    // Second tap shortly after
+    handlers.onPointerDown(pointer(2, 204, 302));
+    handlers.onPointerUp(pointer(2, 204, 302));
+    flushFrame();
+
+    expect(updates[updates.length - 1]).toMatchObject({ zoom: 1.0 });
+  });
+
+  it('zooms back out to 1.0 when double-tapping a card while zoomed in all the way', () => {
+    updates.length = 0;
+    const onTapBackground = vi.fn();
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 2.0 },
+      onTapBackground,
+    });
+    const cardPointer = (id: number, x: number, y: number) => {
+      const ev = pointer(id, x, y);
+      ev.target = { closest: (selector: string) => selector.includes('.corkboard-node-card') ? {} : null } as unknown as EventTarget;
+      return ev;
+    };
+
+    handlers.onPointerDownCapture(cardPointer(1, 200, 300));
+    handlers.onPointerUpCapture(cardPointer(1, 200, 300));
+    handlers.onPointerDownCapture(cardPointer(2, 205, 304));
+    handlers.onPointerUpCapture(cardPointer(2, 205, 304));
+    flushFrame();
+
+    expect(onTapBackground).toHaveBeenCalledTimes(1);
+    expect(updates[updates.length - 1]).toMatchObject({ zoom: 1.0 });
+  });
 });
+
 

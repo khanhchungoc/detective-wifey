@@ -13,22 +13,13 @@ import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/in
 export const RideHailingApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const rideData = readAppData(caseData.appsData?.['ride-hailing'] || {});
   const trips = rideData.trips || [];
   const [selectedTrip, setSelectedTrip] = useMotionState<(typeof trips)[number] | null>(null, 'sheet');
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const handleBack = () => {
-    if (selectedTrip) {
-      setSelectedTrip(null);
-    } else {
-      onReturnHome();
-    }
-  };
-
-  const swipeHandlers = useSwipeBack({ onBack: handleBack, exitsApp: !selectedTrip });
+  const swipeHandlers = useSwipeBack({ onBack: () => setSelectedTrip(null), enabled: Boolean(selectedTrip) });
 
   return (
     <div

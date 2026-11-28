@@ -1432,17 +1432,16 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
             <button
               type="button"
               onPointerDown={(e) => {
-                // Keep left-edge swipe-back from intercepting taps on the close button.
+                // Keep left-edge swipe-back and bottom swipe-home from intercepting taps on the close button.
                 e.stopPropagation();
               }}
-              onPointerUp={(e) => {
-                if (e.pointerType === 'touch' && e.isPrimary) {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  onClose();
-                }
+              onTouchStart={(e) => {
+                e.stopPropagation();
               }}
-              onClick={onClose}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
               aria-label="Đóng sổ tay của vợ"
               title="Quay lại màn hình chính"
               className="group pointer-events-auto relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[6px] border border-slate-700/85 bg-[#0D1219]/[0.96] text-[#F1F5F9] shadow-[0_10px_24px_rgba(0,0,0,0.72),inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-slate-800 transition-colors cursor-pointer touch-manipulation"

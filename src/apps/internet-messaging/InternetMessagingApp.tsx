@@ -15,7 +15,6 @@ import { MessagingDiscoverView } from './components/MessagingDiscoverView';
 import { MessagingTimelineView } from './components/MessagingTimelineView';
 import { MessagingMyDocumentsView } from './components/MessagingMyDocumentsView';
 import { MessagingThread, MessagingContact, MessagingCloudDocument } from './types';
-import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 
 const DEFAULT_CONTACTS: MessagingContact[] = [
   {
@@ -124,19 +123,12 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
 
   const isDetailActive = Boolean(selectedThreadId || showCloudDrawer);
 
-  const swipeHandlers = useSwipeBack({
-    onBack: onReturnHome,
-    enabled: !isDetailActive,
-    exitsApp: true,
-  });
-
   const handleTag = (suspectName: string, source?: EvidenceSource) => {
     onTagSuspect(suspectName, 'internet-messaging', source);
   };
 
   return (
     <div
-      {...swipeHandlers}
       className="flex flex-col h-full w-full bg-[#FFFFFF] text-[#0F172A] select-none font-sans overflow-hidden min-h-[44px]"
     >
       {/* Viewport Content */}
