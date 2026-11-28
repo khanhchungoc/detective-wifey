@@ -1,0 +1,167 @@
+{
+  "caseId": "case_00",
+  "husbandId": "husband_01",
+  "levelNumber": 0,
+  "allowedStrikes": 5,
+  "groundTruth": {
+    "verdict": "cheating",
+    "culpritSuspectId": "suspect_01",
+    "narrativeRoast": "Tùng Gara nào mà tên là Lê Ngọc Vy ở 45 Nguyễn Khang, 20:25 còn ngồi Góc Phố uống nước trong khi anh bảo đang ngồi công ty fix lỗi? Lần sau sửa xe nhớ xóa luôn ghi chú danh bạ nhé!",
+    "overJealousRoast": "Chị Hằng lớn hơn anh một tuổi, làm in thẻ nhân viên cho công ty. Em đọc lại tin nhắn xin file PDF đi, oan cho người ta quá!"
+  },
+  "suspectPool": [
+    {
+      "suspectId": "suspect_01",
+      "personId": "person_027",
+      "contactId": "contact_l0_001",
+      "initialDiscoveredApp": "messages"
+    },
+    {
+      "suspectId": "suspect_02",
+      "personId": "person_028",
+      "contactId": "contact_l0_002",
+      "initialDiscoveredApp": "phone"
+    }
+  ],
+  "lockChallenges": [],
+  "deviceMetadata": {
+    "narrativeTime": "22:15",
+    "batteryPercent": "54%",
+    "carrierTag": "5G",
+    "pwaThemeColor": "#0f172a"
+  },
+  "activeAppIds": [
+    "internet-messaging",
+    "banking",
+    "ecommerce",
+    "phone",
+    "messages",
+    "ride-hailing",
+    "web-browser",
+    "photos",
+    "personal-notes",
+    "email",
+    "professional-network",
+    "team-collaboration"
+  ],
+  "grayedOutAppIds": [
+    "internet-messaging",
+    "banking",
+    "ecommerce",
+    "ride-hailing",
+    "web-browser",
+    "personal-notes",
+    "email",
+    "professional-network",
+    "team-collaboration"
+  ],
+  "notifications": [
+    {
+      "toastId": "toast_001",
+      "sourceAppId": "messages",
+      "senderTitle": "Tin nhắn • 22:10",
+      "snippetBody": "Tùng Gara: Áo khoác anh để quên em cất rồi, mai rảnh em gửi lại nhé.",
+      "triggerDelaySeconds": 2
+    }
+  ],
+  "knowledgeGraph": {
+    "nodes": [
+      {
+        "nodeId": "node_suspect_01",
+        "type": "suspect",
+        "label": "Lê Ngọc Vy (Quản lý ca quán Góc Phố)",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_suspect_02",
+        "type": "suspect",
+        "label": "Đỗ Thanh Hằng (Đối tác In Ấn)",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_alias_tung",
+        "type": "alias",
+        "label": "Tùng Gara",
+        "sourceAppId": "messages",
+        "recordRefId": "thread_l0_001",
+        "clueRefId": "CLUE-ZOLA-01",
+        "unmasksToSuspectId": "node_suspect_01",
+        "isInitialDisguise": true
+      },
+      {
+        "nodeId": "node_bridge_phone_vy",
+        "type": "bridge_id",
+        "label": "SĐT 0933112244 / Ghi chú Lê Ngọc Vy - 45 Nguyễn Khang",
+        "sourceAppId": "phone",
+        "recordRefId": "contact_l0_001",
+        "clueRefId": "CLUE-PHONE-02",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_record_zola_tung",
+        "type": "record_clue",
+        "label": "Tin nhắn \"Tùng Gara\" hẹn ngồi tầng 2 & nhắc áo khoác để quên",
+        "sourceAppId": "messages",
+        "recordRefId": "msg_l0_001_04",
+        "clueRefId": "CLUE-ZOLA-01",
+        "unmasksToSuspectId": "node_suspect_01",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_record_phone_contact",
+        "type": "record_clue",
+        "label": "Danh bạ \"Tùng Gara\" (0933112244) ghi chú \"Lê Ngọc Vy - 45 Nguyễn Khang\" & cuộc gọi 20:12",
+        "sourceAppId": "phone",
+        "recordRefId": "contact_l0_001",
+        "clueRefId": "CLUE-PHONE-02",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_record_zola_alibi",
+        "type": "record_clue",
+        "label": "Tin nhắn 20:10 gửi Vợ: \"Anh đang ngồi công ty fix lỗi gấp\"",
+        "sourceAppId": "messages",
+        "recordRefId": "msg_l0_002_05",
+        "clueRefId": "CLUE-ZOLA-07",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_record_photo_cafe",
+        "type": "record_clue",
+        "label": "Ảnh bàn 2 ly nước lúc 20:25 tại Góc Phố Coffee (45 Nguyễn Khang)",
+        "sourceAppId": "photos",
+        "recordRefId": "photo_l0_001",
+        "clueRefId": "CLUE-PHOT-05",
+        "isInitialDisguise": false
+      },
+      {
+        "nodeId": "node_timeline_2010_2025",
+        "type": "timeline_slot",
+        "label": "Khung giờ 20:10 - 20:25 tối 12/09",
+        "isInitialDisguise": false
+      }
+    ],
+    "edges": [
+      {
+        "edgeId": "edge_l0_alias_identity",
+        "sourceNodeId": "node_record_zola_tung",
+        "targetNodeId": "node_record_phone_contact",
+        "relationship": "bridges_identity",
+        "isSmokingGun": true,
+        "explanationRoastHint": "À... Vy là người quen gần công ty, anh lưu nhầm tên thôi!"
+      },
+      {
+        "edgeId": "edge_l0_alibi_photo",
+        "sourceNodeId": "node_record_zola_alibi",
+        "targetNodeId": "node_record_photo_cafe",
+        "relationship": "contradicts_alibi",
+        "isSmokingGun": true,
+        "explanationRoastHint": "Anh xin lỗi vợ... tối nay anh không ngồi công ty mà ra 45 Nguyễn Khang gặp Vy."
+      }
+    ],
+    "requiredSmokingGunEdgeIds": [
+      "edge_l0_alias_identity",
+      "edge_l0_alibi_photo"
+    ]
+  }
+}

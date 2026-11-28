@@ -26,9 +26,10 @@ describe('buildLockscreenConfig narrative clock', () => {
 });
 
 describe('buildLevelCards', () => {
-  it('puts a not-yet-playable Màn 0 guide file before the real cases', () => {
+  it('puts a playable Màn 0 guide file before the real cases', () => {
     const cards = buildLevelCards(getAvailableLevels('husband_01'), 1, {});
-    expect(cards[0]).toMatchObject({ levelNumber: 0, isGuide: true, comingSoon: true });
+    expect(cards[0]).toMatchObject({ caseId: 'case_00', levelNumber: 0, isGuide: true, unlocked: true });
+    expect(cards[0].comingSoon).toBeFalsy();
     expect(cards.slice(1).map((c) => c.levelNumber)).toEqual([1, 2, 3]);
     expect(cards.filter((c) => c.levelNumber === 1)).toHaveLength(1);
   });

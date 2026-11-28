@@ -29,7 +29,7 @@ export interface AppCaseContext {
   caseId: string;
   /** Phone owner identity. Apps read names from here, never hard-code them. */
   husband: HusbandMaster;
-  levelNumber: 1 | 2 | 3;
+  levelNumber: 0 | 1 | 2 | 3;
   suspectPool: Suspect[];
   lockChallenges: Array<Omit<LockChallenge, 'expectedAnswer'>>;
   appsData: Record<string, unknown>;

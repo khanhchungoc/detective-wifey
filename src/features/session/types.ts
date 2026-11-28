@@ -5,7 +5,7 @@ export interface ActiveSessionState {
   schemaVersion: number;
   gameId: string;
   caseId: string;
-  levelNumber: 1 | 2 | 3;
+  levelNumber: 0 | 1 | 2 | 3;
   activeApp: AppId | 'home';
   suspicionStrikes: number;
   taggedSuspects: Array<{

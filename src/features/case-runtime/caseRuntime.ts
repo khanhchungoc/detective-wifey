@@ -8,6 +8,15 @@ import { husband01Master } from '../../data/cases/husband_01/master';
  */
 export const LEVEL_CATALOG: LevelMetadata[] = [
   {
+    caseId: 'case_00',
+    husbandId: 'husband_01',
+    levelNumber: 0,
+    levelTitle: 'MÀN 0 (HƯỚNG DẪN): Bữa cà phê tăng ca',
+    storySnippet: 'Độ khó: Hướng dẫn (An toàn • 0 khóa PIN). 22:15, chồng vừa về nhà sau khi báo ngồi công ty fix lỗi. Màn hình sáng lên tin nhắn lạ từ "Tùng Gara"...',
+    allowedStrikes: 5,
+    unlockRequirementLevel: 0,
+  },
+  {
     caseId: 'case_01',
     husbandId: 'husband_01',
     levelNumber: 1,
@@ -64,12 +73,12 @@ export function validateCaseConfig(config: CaseConfig): { isValid: boolean; erro
     return { isValid: false, error: 'Dữ liệu màn chơi không hợp lệ. Vui lòng tải lại trang!' };
   }
 
-  if (config.levelNumber < 1 || config.levelNumber > 3) {
+  if (config.levelNumber < 0 || config.levelNumber > 3) {
     return { isValid: false, error: 'Dữ liệu màn chơi không hợp lệ. Vui lòng tải lại trang!' };
   }
 
   // Enforce strike boundaries per level
-  const expectedStrikes = config.levelNumber === 1 ? 5 : config.levelNumber === 2 ? 4 : 3;
+  const expectedStrikes = config.levelNumber <= 1 ? 5 : config.levelNumber === 2 ? 4 : 3;
   if (config.allowedStrikes !== expectedStrikes) {
     return {
       isValid: false,
@@ -175,10 +184,10 @@ export function loadCase(caseId: string): CaseConfig {
 }
 
 /**
- * Loads a case configuration by level number (1..3).
+ * Loads a case configuration by level number (0..3).
  */
 export function loadCaseByLevel(levelNumber: number, husbandId: string = 'husband_01'): CaseConfig {
-  if (levelNumber < 1 || levelNumber > 3) {
+  if (levelNumber < 0 || levelNumber > 3) {
     throw new Error('Không tìm thấy màn chơi yêu cầu.');
   }
 

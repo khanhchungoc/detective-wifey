@@ -1,0 +1,112 @@
+{
+  "albums": [
+    {
+      "id": "album_l0_001",
+      "title": "Ảnh gần đây",
+      "isLocked": false,
+      "photos": [
+        {
+          "id": "photo_l0_001",
+          "title": "Bàn nước tối cuối tuần",
+          "date": "12/09",
+          "timestamp": "12/09/2026 20:25",
+          "locationTag": "Góc Phố Coffee - 45 Nguyễn Khang, Cầu Giấy",
+          "description": "12/09 20:25 - Hai ly nước trên bàn gỗ sát cửa sổ tầng 2, góc ghế vắt chiếc áo khoác nam.",
+          "clueRefId": "CLUE-PHOT-05",
+          "exif": {
+            "locationName": "Góc Phố Coffee - 45 Nguyễn Khang, Cầu Giấy",
+            "streetLabels": [
+              "P. Yên Hòa",
+              "NGUYỄN KHANG",
+              "TRUNG KÍNH"
+            ],
+            "filename": "IMG_9025.HEIC"
+          }
+        },
+        {
+          "id": "photo_l0_002",
+          "title": "Góc bàn làm việc",
+          "date": "12/09",
+          "timestamp": "12/09/2026 11:10",
+          "locationTag": "Văn phòng Technosoft - 28 Duy Tân",
+          "description": "12/09 11:10 - Màn hình code và cốc cà phê sữa đá buổi sáng thứ Bảy.",
+          "exif": {
+            "locationName": "Văn phòng Technosoft - 28 Duy Tân",
+            "streetLabels": [
+              "P. Dịch Vọng Hậu",
+              "DUY TÂN",
+              "PHẠM HÙNG"
+            ],
+            "filename": "IMG_9011.HEIC"
+          }
+        },
+        {
+          "id": "photo_l0_003",
+          "title": "Mâm cơm trưa ở nhà",
+          "date": "12/09",
+          "timestamp": "12/09/2026 12:15",
+          "locationTag": "Chung cư An Bình - Trung Kính",
+          "description": "12/09 12:15 - Bữa trưa canh bí đỏ và thịt rang vợ nấu.",
+          "exif": {
+            "locationName": "Chung cư An Bình - Trung Kính",
+            "streetLabels": [
+              "P. Trung Hòa",
+              "TRUNG KÍNH",
+              "VŨ PHẠM HÀM"
+            ],
+            "filename": "IMG_9012.HEIC"
+          }
+        },
+        {
+          "id": "photo_l0_004",
+          "title": "Đôi giày đá bóng mới",
+          "date": "11/09",
+          "timestamp": "11/09/2026 18:40",
+          "locationTag": "Chung cư An Bình - Trung Kính",
+          "description": "11/09 18:40 - Đôi giày sân cỏ nhân tạo mới mở hộp.",
+          "exif": {
+            "locationName": "Chung cư An Bình - Trung Kính",
+            "streetLabels": [
+              "P. Trung Hòa",
+              "TRUNG KÍNH",
+              "VŨ PHẠM HÀM"
+            ],
+            "filename": "IMG_8940.HEIC"
+          }
+        },
+        {
+          "id": "photo_l0_005",
+          "title": "Vườn rau ở quê",
+          "date": "10/09",
+          "timestamp": "10/09/2026 19:16",
+          "locationTag": "Quê nhà",
+          "description": "10/09 19:16 - Ảnh luống rau cải mẹ vừa gửi qua tin nhắn.",
+          "exif": {
+            "locationName": "Quê nhà",
+            "streetLabels": [
+              "QUÊ NHÀ"
+            ],
+            "filename": "IMG_8816.HEIC"
+          }
+        },
+        {
+          "id": "photo_l0_006",
+          "title": "Chậu húng quế ban công",
+          "date": "10/09",
+          "timestamp": "10/09/2026 07:30",
+          "locationTag": "Chung cư An Bình - Trung Kính",
+          "description": "10/09 07:30 - Chậu cây ngoài ban công vừa tưới nước.",
+          "exif": {
+            "locationName": "Chung cư An Bình - Trung Kính",
+            "streetLabels": [
+              "P. Trung Hòa",
+              "TRUNG KÍNH",
+              "VŨ PHẠM HÀM"
+            ],
+            "filename": "IMG_8807.HEIC"
+          }
+        }
+      ]
+    }
+  ]
+}

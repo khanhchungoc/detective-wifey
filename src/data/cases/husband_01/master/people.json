@@ -301,5 +301,42 @@
     "phones": [
       "0397158295"
     ]
+  },
+  {
+    "personId": "person_027",
+    "legalName": "Lê Ngọc Vy",
+    "shortName": "Ngọc Vy",
+    "gender": "female",
+    "birthYear": 2002,
+    "role": "suspect",
+    "occupation": "Quản lý ca quán Góc Phố",
+    "phones": [
+      "0933112244"
+    ],
+    "avatarIndex": 11
+  },
+  {
+    "personId": "person_028",
+    "legalName": "Đỗ Thanh Hằng",
+    "shortName": "Thanh Hằng",
+    "gender": "female",
+    "birthYear": 1994,
+    "role": "suspect",
+    "occupation": "Đối tác in ấn thẻ nhân viên",
+    "phones": [
+      "0944556611"
+    ],
+    "avatarIndex": 12
+  },
+  {
+    "personId": "person_029",
+    "legalName": "BQL CT2 An Bình",
+    "shortName": "BQL CT2",
+    "gender": "unknown",
+    "role": "service",
+    "occupation": "Ban quản lý chung cư An Bình",
+    "phones": [
+      "0243999888"
+    ]
   }
 ]

@@ -48,7 +48,7 @@ export interface NotificationToast {
 export interface LevelMetadata {
   caseId: string;
   husbandId: string;
-  levelNumber: 1 | 2 | 3;
+  levelNumber: 0 | 1 | 2 | 3;
   levelTitle: string;
   storySnippet: string;
   thumbnailAsset?: string;
@@ -143,7 +143,7 @@ export interface Person {
   personId: string;
   legalName: string;
   shortName?: string;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'unknown';
   birthYear?: number;
   role: PersonRole;
   orgId?: string;
@@ -186,7 +186,7 @@ export interface CaseConfig {
   husbandId: string;
   /** Phone owner identity, resolved from master data. The only source of the husband's names. */
   husband: HusbandMaster;
-  levelNumber: 1 | 2 | 3;
+  levelNumber: 0 | 1 | 2 | 3;
   allowedStrikes: number;
   groundTruth: GroundTruth;
   suspectPool: Suspect[];

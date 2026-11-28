@@ -63,7 +63,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   onStart,
 }) => {
   const isGuide = Boolean(level.isGuide);
-  const comingSoon = Boolean(level.comingSoon) && !isGuide;
+  const comingSoon = Boolean(level.comingSoon);
   const locked = !level.unlocked && !isGuide && !comingSoon;
   const stars = clamp(level.bestStars ?? 0, 0, 3);
   const paperTone = isGuide ? "bg-game-paper-slip" : "bg-game-manila";
@@ -228,14 +228,14 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 <span>{lockedFeedback}</span>
               </p>
             )}
-            {(isGuide || comingSoon) && (
+            {comingSoon && (
               <span
                 className={`inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-game-ink/60 text-ios-subheadline uppercase tracking-widest ${INK_TEXT_SOFT}`}
               >
                 Sắp có
               </span>
             )}
-            {isActive && !isGuide && !locked && !comingSoon && (
+            {isActive && !locked && !comingSoon && (
               <button
                 type="button"
                 data-case-id={level.caseId}
@@ -245,7 +245,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 }}
                 className={`${CTA_PRIMARY} w-full active:scale-[0.98]`}
               >
-                {isOngoing ? "Tiếp tục điều tra" : "Điều tra màn này"}
+                {isOngoing ? "Tiếp tục điều tra" : isGuide ? "Bắt đầu hướng dẫn" : "Điều tra màn này"}
               </button>
             )}
           </div>

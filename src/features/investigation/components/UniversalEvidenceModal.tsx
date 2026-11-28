@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { IoDocumentTextOutline, IoImageOutline, IoPinOutline } from 'react-icons/io5';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import type { UniversalEvidenceItem } from '../../../shared/contracts/evidence';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
@@ -58,9 +59,19 @@ export const UniversalEvidenceModal = ({
   const isShellTarget = portalTarget?.classList?.contains('phone-shell');
   const positionClass = isShellTarget || !portalTarget ? 'absolute inset-0' : 'fixed inset-0';
 
+  const renderFallbackIcon = () => (
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-game-elevated text-game-text-secondary">
+      {item.source?.imageSrc ? (
+        <IoImageOutline aria-hidden="true" className="h-[18px] w-[18px]" />
+      ) : (
+        <IoDocumentTextOutline aria-hidden="true" className="h-[18px] w-[18px]" />
+      )}
+    </div>
+  );
+
   const modalContent = (
     <div
-      className={`${positionClass} z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md select-none font-sans animate-fadeIn`}
+      className={`${positionClass} z-[60] flex items-center justify-center p-4 bg-black/45 select-none font-sans animate-fadeIn`}
       onClick={onClose}
     >
       <div
@@ -69,7 +80,7 @@ export const UniversalEvidenceModal = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="universal-evidence-title"
-        className="ios-evidence-modal animate-scaleUp w-full max-w-[340px] max-h-[calc(100%-2rem)] overflow-y-auto bg-[#F2F2F7] rounded-[26px] p-5 shadow-2xl flex flex-col gap-3.5"
+        className="ios-evidence-modal animate-scaleUp w-full max-w-[342px] max-h-[calc(100%-2rem)] overflow-y-auto rounded-2xl border border-white/10 bg-game-dossier p-5 text-game-text shadow-2xl flex flex-col gap-4"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={e => {
           if (e.key === 'Escape') {
@@ -85,19 +96,27 @@ export const UniversalEvidenceModal = ({
           }
         }}
       >
-        <div className="flex items-start gap-2.5">
-          {avatar !== undefined ? avatar : (hasContactVisual && profileName?.trim() ? <ContactAvatar name={profileName} size={44} /> : null)}
+        <div className="flex items-start gap-3">
+          {avatar !== undefined
+            ? avatar
+            : hasContactVisual && profileName?.trim()
+              ? <ContactAvatar name={profileName} size={40} />
+              : renderFallbackIcon()}
           <div className="min-w-0 flex-1">
-            <h3 id="universal-evidence-title" className="text-[17px] font-semibold text-black leading-snug break-words">
+            <h3 id="universal-evidence-title" className="text-ios-headline font-semibold text-game-text break-words">
               {item.title}
             </h3>
-            {subtitle && <p className="text-[13px] text-[#52525B] mt-0.5 break-words whitespace-pre-wrap">{subtitle}</p>}
+            {subtitle && (
+              <p className="mt-0.5 text-ios-footnote text-game-text-secondary break-words whitespace-pre-wrap">
+                {subtitle}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Photo Evidence Preview */}
         {item.source?.imageSrc && (
-          <div className="h-32 w-full rounded-xl overflow-hidden bg-[#1C1C1E] border border-black/10 shrink-0">
+          <div className="h-36 w-full shrink-0 overflow-hidden rounded-xl border border-white/10 bg-game-canvas">
             {item.source.imagePosition ? (
               <svg
                 viewBox="0 0 627 627"
@@ -125,19 +144,19 @@ export const UniversalEvidenceModal = ({
           </div>
         )}
 
-        {/* Evidence Snippet - direct on alert surface without nested box */}
+        {/* Evidence Snippet on elevated dossier surface */}
         {item.snippet && (
-          <div className="text-[15px] text-[#3C3C43] leading-relaxed whitespace-pre-line select-text max-h-52 overflow-y-auto px-0.5">
+          <div className="rounded-xl border border-white/10 bg-game-elevated p-3.5 text-ios-subheadline leading-relaxed text-game-text/90 whitespace-pre-line select-text max-h-52 overflow-y-auto">
             <EvidenceSnippet text={item.snippet} fieldIconsEnabled={kind === 'order'} />
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 pt-1">
+        <div className="flex items-center justify-between gap-3 pt-1">
           <button
             type="button"
             onClick={onClose}
-            className="w-full min-h-[44px] bg-[#E5E5EA] hover:bg-[#D1D1D6] active:scale-[0.98] text-black rounded-full font-semibold text-[15px] flex items-center justify-center transition-all"
+            className="touch-target-min min-h-[44px] border-0 bg-transparent px-2 text-ios-subheadline font-medium text-game-text-secondary hover:text-game-text active:opacity-75 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
           >
             <span>Bỏ qua</span>
           </button>
@@ -146,8 +165,9 @@ export const UniversalEvidenceModal = ({
             type="button"
             onClick={handlePin}
             disabled={!canPin}
-            className="w-full min-h-[44px] bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white rounded-full font-semibold text-[15px] flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+            className="touch-target-min min-h-[44px] min-w-[120px] inline-flex items-center justify-center gap-1.5 rounded-xl bg-game-crimson px-5 py-2.5 text-ios-subheadline font-semibold text-game-text active:scale-[0.98] active:opacity-85 transition-[transform,opacity] disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson/70"
           >
+            <IoPinOutline aria-hidden="true" className="h-[18px] w-[18px] shrink-0" />
             <span>Ghim</span>
           </button>
         </div>
@@ -157,5 +177,3 @@ export const UniversalEvidenceModal = ({
 
   return portalTarget ? createPortal(modalContent, portalTarget) : modalContent;
 };
-
-
