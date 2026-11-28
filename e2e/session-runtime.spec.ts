@@ -73,7 +73,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     await page.goto('/');
     await page.evaluate((key) => {
       const session = {
-        schemaVersion: 1,
+        schemaVersion: 2,
         gameId: 'jealous_wife',
         caseId: 'case_01',
         levelNumber: 1,
