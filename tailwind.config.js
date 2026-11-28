@@ -82,6 +82,8 @@ export default {
         handwriting: ['"Shantell Sans"', 'cursive', 'sans-serif'],
         // Printed case-file labels (pre-level dossier only). Slab serif with full Vietnamese coverage.
         dossier: ['Bitter', 'Georgia', 'serif'],
+        // Typewritten text on paper case files only (pre-level screens). Full Vietnamese coverage.
+        typewriter: ['"Xanh Mono"', 'Georgia', 'serif'],
       },
     },
   },

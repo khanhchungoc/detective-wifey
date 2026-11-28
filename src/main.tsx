@@ -15,6 +15,7 @@ import '@fontsource/inter/700.css';
 import '@fontsource/inter/800.css';
 
 // Self-hosted Shantell Sans for handwriting titles/notes (supports Vietnamese).
+import '@fontsource/xanh-mono/400.css';
 import '@fontsource/bitter/500.css';
 import '@fontsource/bitter/700.css';
 import '@fontsource/bitter/800.css';
