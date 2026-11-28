@@ -75,7 +75,7 @@ export const NotificationBanner: React.FC<NotificationBannerProps> = ({
   return (
     <div
       onClick={() => onClick(toast)}
-      className="ios-notification absolute left-3.5 right-3.5 z-[70] max-w-[440px] mx-auto glass-toast-light rounded-[22px] p-3 cursor-pointer shadow-[0_12px_32px_-4px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] border border-white/60 transition-transform active:scale-[0.98] select-none text-slate-900 animate-slideDown flex items-start gap-3"
+      className="ios-notification absolute left-3.5 right-3.5 z-[70] max-w-[440px] mx-auto glass-toast-light rounded-[22px] p-3 cursor-pointer transition-transform active:scale-[0.98] select-none text-slate-900 animate-slideDown flex items-start gap-3"
       style={{ top: 'calc(var(--phone-system-top, 59px) + 8px)' }}
       role="alert"
     >

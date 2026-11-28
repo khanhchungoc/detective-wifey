@@ -101,7 +101,8 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
     <div
       {...swipeHandlers}
       data-detail-layer
-      className="absolute inset-0 z-20 flex flex-col h-full w-full bg-[#E5ECEF] text-[#0F172A] select-none font-sans overflow-hidden shadow-2xl"
+      style={{ touchAction: 'pan-y', backfaceVisibility: 'hidden' }}
+      className="absolute inset-0 z-20 flex flex-col h-full w-full bg-[#E5ECEF] text-[#0F172A] select-none font-sans overflow-hidden shadow-2xl transform-gpu will-change-transform"
     >
       {/* 1. Header (Electric Blue #0088FF) */}
       <header className="h-14 bg-[#0088FF] text-white flex items-center justify-between px-2 shrink-0 shadow-xs z-10">

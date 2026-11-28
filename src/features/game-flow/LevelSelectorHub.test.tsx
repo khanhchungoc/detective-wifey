@@ -261,6 +261,25 @@ describe('physical manila-folder stack', () => {
     expect(stageAtTwo).toMatch(/data-level-tab="case_02"[^>]*z-index:30/);
     expect(stageAtTwo).toMatch(/data-level-tab="case_00"[^>]*z-index:18/);
   });
+
+  it('uses organic deckled paper edges and static masks without SVG turbulence filters', () => {
+    const hubHtml = renderHub();
+    const stageHtml = renderLevelStage(1);
+    expect(hubHtml).toContain('mask-image:url(');
+    expect(hubHtml).toContain('-webkit-mask-image:url(');
+    expect(stageHtml).toContain('mask-image:url(');
+    expect(stageHtml).toContain('-webkit-mask-image:url(');
+    expect(hubHtml).not.toContain('feTurbulence');
+    expect(stageHtml).not.toContain('feTurbulence');
+
+    // Every level sheet clip polygon has subdivided organic edges (> 30 vertices) and varies per sheet.
+    const polygons = stageHtml.match(/clip-path:polygon\([^;"]+/g) ?? [];
+    expect(polygons).toHaveLength(LEVELS.length);
+    for (const poly of polygons) {
+      expect(poly.split(',').length).toBeGreaterThan(30);
+    }
+    expect(polygons[0]).not.toBe(polygons[1]);
+  });
 });
 
 describe('case file helpers', () => {

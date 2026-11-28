@@ -345,13 +345,15 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     }
 
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    try {
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-    } catch {
-      // Ignore synthetic or unsupported pointer capture
-    }
 
     if (pointersRef.current.size >= 2) {
+      for (const id of pointersRef.current.keys()) {
+        try {
+          event.currentTarget.setPointerCapture?.(id);
+        } catch {
+          // Ignore synthetic or unsupported pointer capture
+        }
+      }
       gestureModeRef.current = 'pinch';
       wasPinchRef.current = true;
       movedRef.current = true;
@@ -416,6 +418,11 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     if (!movedRef.current && Math.hypot(dxTotal, dyTotal) > 8) {
       movedRef.current = true;
       setManipulating(true);
+      try {
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+      } catch {
+        // Ignore synthetic or unsupported pointer capture
+      }
     }
 
     if (gestureModeRef.current === 'pan' || viewRef.current.zoom > 1.05) {
