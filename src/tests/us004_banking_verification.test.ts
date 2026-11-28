@@ -15,6 +15,8 @@ import type { VirtualAppProps } from '../shared/contracts/app-contracts';
 import type { ActiveSessionState } from '../features/session';
 import type { CaseConfig } from '../shared/contracts/case-schema';
 
+import { useCaseFixtures } from './helpers/caseFixtures';
+
 afterEach(() => vi.unstubAllGlobals());
 
 function props(caseData: CaseConfig = loadCase('case_01')): VirtualAppProps {
@@ -22,6 +24,7 @@ function props(caseData: CaseConfig = loadCase('case_01')): VirtualAppProps {
 }
 
 describe('US-004 banking inspection', () => {
+  useCaseFixtures();
   it('launches with the approved brand, a masked balance, and no Home transaction feed', () => {
     const data = loadCase('case_01');
     const html = renderToStaticMarkup(createElement(BankingApp, props(data)));

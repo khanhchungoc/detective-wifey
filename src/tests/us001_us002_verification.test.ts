@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { describe, it } from 'vitest';
+import { afterAll, beforeAll, describe, it } from 'vitest';
+import { registerCaseFixtures, unregisterCaseFixtures } from './helpers/caseFixtures';
 import {
   loadCase,
   loadCaseByLevel,
@@ -15,6 +16,8 @@ import { readAppData as readBrowser } from '../apps/web-browser/data';
 import { readPhotosData } from '../apps/photos/data';
 
 describe('US-001 & US-002 acceptance suite', () => {
+  beforeAll(registerCaseFixtures);
+  afterAll(unregisterCaseFixtures);
   it('runs declarative schema, shell, and persistence gates', async () => {
 
 // -------------------------------------------------------------

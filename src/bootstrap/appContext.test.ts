@@ -6,6 +6,7 @@ import { APP_REGISTRY } from './appRegistry';
 import { createAppContext } from './appContext';
 import { loadCase } from '../features/case-runtime';
 import type { AppId } from '../shared/contracts/app-contracts';
+import { useCaseFixtures } from '../tests/helpers/caseFixtures';
 
 function renderAsync(element: React.ReactElement): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -26,6 +27,7 @@ function renderAsync(element: React.ReactElement): Promise<string> {
 }
 
 describe('app host projection', () => {
+  useCaseFixtures();
   it('registers Phone and Messages as distinct applications with legacy communication payload support', () => {
     expect(APP_REGISTRY.messages.component).not.toBe(APP_REGISTRY.phone.component);
     expect(APP_REGISTRY.messages.displayName).toBe('Tin nhắn');
@@ -43,7 +45,7 @@ describe('app host projection', () => {
     expect(source.lockChallenges.some(challenge => 'expectedAnswer' in challenge)).toBe(true);
   });
 
-  it('renders every registered app for every bundled level using only its public context', async () => {
+  it('renders every registered app for every bundled level and fixture level using only its public context', async () => {
     for (const caseId of ['case_01', 'case_02', 'case_03']) {
       const config = loadCase(caseId);
       for (const [appId, definition] of Object.entries(APP_REGISTRY)) {

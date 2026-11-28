@@ -69,8 +69,8 @@ const ProfileMenuRow: React.FC<ProfileMenuRowProps> = ({
 export const MessagingProfileView: React.FC<MessagingProfileViewProps> = ({
   currentUser = {
     name: 'Nguyễn Huy Thịnh',
-    handle: 'hoang_tech88',
-    avatarInitials: 'H',
+    handle: 'thinh_doom95',
+    avatarInitials: 'T',
     statusText: 'Đang làm việc...',
   },
   onOpenCloudDrawer,

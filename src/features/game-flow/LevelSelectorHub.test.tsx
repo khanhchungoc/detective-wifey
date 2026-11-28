@@ -15,6 +15,7 @@ import {
   resolvePagerTarget,
 } from './LevelSelectorHub';
 import { LevelStage } from './case-files/LevelStage';
+import { LevelFile } from './case-files/LevelFile';
 import { resolveSheetRestPose } from './case-files/pagerLogic';
 
 const RAW_EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
@@ -327,5 +328,48 @@ describe('case file helpers', () => {
       feedback: null,
     });
     expect(evaluateLevelCardClick(LEVELS[1], true, 0, 5000)).toEqual({ action: 'ignore', feedback: null });
+  });
+});
+
+describe('LevelFile coming soon', () => {
+  const comingSoonLevel: LevelCardItem = {
+    caseId: 'case_02',
+    husbandId: 'hoang',
+    levelNumber: 2,
+    levelTitle: 'Hồ sơ đang thu thập',
+    summary: 'Màn chơi đang được thiết kế.',
+    activeAppCount: 6,
+    allowedStrikes: 4,
+    unlocked: false,
+    comingSoon: true,
+  };
+
+  const renderFile = (level: LevelCardItem) =>
+    renderToStaticMarkup(
+      <LevelFile
+        level={level}
+        subjectPortraitUrl="/assets/avatars/hoang.png"
+        index={1}
+        total={3}
+        isActive
+        restPose={resolveSheetRestPose(1, 1)}
+        sheetRef={vi.fn()}
+        lockedFeedback={null}
+        isShaking={false}
+        onShakeDone={vi.fn()}
+        onFileTap={vi.fn()}
+        onStart={vi.fn()}
+      />,
+    );
+
+  it('shows the Sắp ra mắt stamp and no start button', () => {
+    const html = renderFile(comingSoonLevel);
+    expect(html).toContain('data-level-coming-soon="true"');
+    expect(html).toContain('Sắp ra mắt');
+    expect(html).not.toContain('data-case-id');
+  });
+
+  it('ignores clicks on a coming soon card', () => {
+    expect(evaluateLevelCardClick(comingSoonLevel, false, 0, 1000)).toEqual({ action: 'ignore', feedback: null });
   });
 });

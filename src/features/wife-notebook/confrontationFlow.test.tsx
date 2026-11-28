@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { case01, case02, case03 } from '../../data/cases';
+import { case01 } from '../../data/cases';
+import { case02Fixture as case02, case03Fixture as case03 } from '../../tests/helpers/caseFixtures';
 import type { CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
 import { LEVEL_01_KNOWLEDGE_GRAPH } from './level01Fixture';
 import {

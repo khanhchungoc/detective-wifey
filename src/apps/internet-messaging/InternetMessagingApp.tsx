@@ -106,8 +106,8 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
 
   const currentUser = messagingData.currentUser || {
     name: 'Nguyễn Huy Thịnh',
-    handle: 'hoang_tech88',
-    avatarInitials: 'H',
+    handle: 'thinh_doom95',
+    avatarInitials: 'T',
     statusText: 'Đang làm việc...',
   };
 

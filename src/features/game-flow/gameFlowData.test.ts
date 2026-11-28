@@ -32,6 +32,23 @@ describe('buildLevelCards', () => {
     expect(cards.slice(1).map((c) => c.levelNumber)).toEqual([1, 2, 3]);
     expect(cards.filter((c) => c.levelNumber === 1)).toHaveLength(1);
   });
+
+  it('marks Màn 2 and 3 as coming soon with no lock hint, and keeps Màn 1 playable', () => {
+    const cards = buildLevelCards(getAvailableLevels('husband_hoang'), 1, {});
+    for (const caseId of ['case_02', 'case_03']) {
+      const card = cards.find((c) => c.caseId === caseId);
+      expect(card?.comingSoon).toBe(true);
+      expect(card?.lockHint).toBeUndefined();
+    }
+    expect(cards.find((c) => c.caseId === 'case_01')?.comingSoon).toBeFalsy();
+  });
+
+  it('lists case_02 and case_03 as coming soon but ships no data for them', () => {
+    const levels = getAvailableLevels('husband_hoang');
+    expect(levels.filter((l) => l.comingSoon).map((l) => l.caseId)).toEqual(['case_02', 'case_03']);
+    expect(() => loadCase('case_02')).toThrow();
+    expect(() => loadCase('case_03')).toThrow();
+  });
 });
 
 describe('buildCaseBriefing', () => {

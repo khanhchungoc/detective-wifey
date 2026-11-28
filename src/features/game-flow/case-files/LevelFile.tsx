@@ -63,7 +63,8 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   onStart,
 }) => {
   const isGuide = Boolean(level.isGuide);
-  const locked = !level.unlocked && !isGuide;
+  const comingSoon = Boolean(level.comingSoon) && !isGuide;
+  const locked = !level.unlocked && !isGuide && !comingSoon;
   const stars = clamp(level.bestStars ?? 0, 0, 3);
   const paperTone = isGuide ? "bg-game-paper-slip" : "bg-game-manila";
 
@@ -73,6 +74,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
       data-level-file={level.caseId}
       data-level-unlocked={level.unlocked ? "true" : "false"}
       data-level-guide={isGuide ? "true" : undefined}
+      data-level-coming-soon={comingSoon ? "true" : undefined}
       inert={!isActive}
       aria-hidden={!isActive}
       onClick={isActive ? onFileTap : undefined}
@@ -136,12 +138,17 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 Hướng dẫn
               </RubberStamp>
             )}
+            {comingSoon && (
+              <RubberStamp tone="slate" className="-rotate-6">
+                Sắp ra mắt
+              </RubberStamp>
+            )}
             {locked && (
               <RubberStamp tone="red" className="-rotate-6">
                 Khóa
               </RubberStamp>
             )}
-            {!isGuide && !locked && (
+            {!isGuide && !locked && !comingSoon && (
               <div
                 className="flex items-center gap-0.5"
                 role="img"
@@ -222,14 +229,14 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 <span>{lockedFeedback}</span>
               </p>
             )}
-            {isGuide && (
+            {(isGuide || comingSoon) && (
               <span
                 className={`inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-game-ink/60 text-ios-subheadline uppercase tracking-widest ${INK_TEXT_SOFT}`}
               >
                 Sắp có
               </span>
             )}
-            {isActive && !isGuide && !locked && (
+            {isActive && !isGuide && !locked && !comingSoon && (
               <button
                 type="button"
                 data-case-id={level.caseId}

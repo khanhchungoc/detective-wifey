@@ -100,7 +100,8 @@ export function buildLevelCards(
       allowedStrikes: lvl.allowedStrikes,
       unlocked,
       bestStars: starRatings[lvl.caseId] ?? 0,
-      lockHint: unlocked ? undefined : `Hoàn thành Màn ${lvl.levelNumber - 1}`,
+      comingSoon: lvl.comingSoon,
+      lockHint: unlocked || lvl.comingSoon ? undefined : `Hoàn thành Màn ${lvl.levelNumber - 1}`,
     };
   });
 

@@ -79,7 +79,7 @@ describe('US-003 Internet Messaging App Module Suite', () => {
   it('supplies benign profile, cloud, timeline, secondary inbox and discovery content', () => {
     const data = readMessagingData(loadCase('case_01').appsData['internet-messaging']);
     assert.equal(data.currentUser?.name, 'Nguyễn Huy Thịnh');
-    assert.equal(data.currentUser?.handle, 'hoang_tech88');
+    assert.equal(data.currentUser?.handle, 'thinh_doom95');
     assert.equal(data.cloudDocuments!.length, 1);
     const document = data.cloudDocuments![0];
     assert.equal(document.fileName, 'quy_uoc_hook.txt');

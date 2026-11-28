@@ -3,7 +3,10 @@ import { PlaySession, type PlaySessionDependencies } from './playSession';
 import { loadCaseByLevel, getAvailableLevels } from '../case-runtime';
 import { SessionWriter, LocalStorageAdapter, type ActiveSessionState, type GameStateRepository } from '../session';
 import type { AppDefinition } from '../../shared/contracts/app-contracts';
+import { useCaseFixtures } from '../../tests/helpers/caseFixtures';
 import type { CaseConfig } from '../../shared/contracts/case-schema';
+
+useCaseFixtures();
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 

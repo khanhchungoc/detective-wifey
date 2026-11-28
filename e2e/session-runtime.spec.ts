@@ -113,7 +113,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('gates locked levels in the case file browser with a warning banner', async ({ page }) => {
+  test('shows later levels as coming soon in the case file browser', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
@@ -122,14 +122,12 @@ test.describe('Session & Case Runtime @smoke', () => {
     await page.locator('[data-husband-id="husband_hoang"]').click();
     await page.locator('[data-level-tab="case_02"]').click();
 
-    const locked = page.locator('[data-level-file="case_02"]');
-    await expect(locked).toHaveAttribute('data-level-unlocked', 'false');
-    // A locked file has no start button; tapping the file explains why.
-    await expect(locked.locator('[data-case-id]')).toHaveCount(0);
-    await locked.click();
-
-    await expect(page.getByRole('alert')).toHaveText('Bạn cần vượt qua màn chơi trước để mở khóa màn này');
-    // Still on the picker: no briefing or lock screen opened.
+    const comingSoon = page.locator('[data-level-file="case_02"]');
+    await expect(comingSoon).toHaveAttribute('data-level-coming-soon', 'true');
+    await expect(comingSoon).toContainText('Sắp ra mắt');
+    // A coming-soon file has no start button and tapping it opens nothing.
+    await expect(comingSoon.locator('[data-case-id]')).toHaveCount(0);
+    await comingSoon.click();
     await expect(page.getByRole('button', { name: /Bắt đầu điều tra/ })).toHaveCount(0);
     await expect(page.locator('[data-phone-lockscreen]')).toHaveCount(0);
 

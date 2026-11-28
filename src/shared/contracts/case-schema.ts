@@ -55,6 +55,8 @@ export interface LevelMetadata {
   thumbnailAsset?: string;
   allowedStrikes: number;
   unlockRequirementLevel: number;
+  /** Listed in the selector but has no bundled data yet; cannot be started. */
+  comingSoon?: boolean;
 }
 
 export type ConfrontationMood = 'confident' | 'smug' | 'nervous' | 'broken';
