@@ -697,9 +697,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   });
 
   const flightMs = prefersReducedMotion ? 0 : 420;
-  const suppressWallClickUntilRef = useRef(0);
+  const suppressNextWallClickRef = useRef(false);
   const enterWallView = useCallback(() => {
-    suppressWallClickUntilRef.current = performance.now() + 450;
+    suppressNextWallClickRef.current = true;
     handleDismissSelection();
     setBoardMode('wall');
     boardModeRef.current = 'wall';
@@ -739,7 +739,10 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     if (isBoardChromeControl(e.target)) return;
     e.stopPropagation();
     e.preventDefault();
-    if (performance.now() < suppressWallClickUntilRef.current) return;
+    if (suppressNextWallClickRef.current) {
+      suppressNextWallClickRef.current = false;
+      return;
+    }
     const cardEl = (e.target as HTMLElement).closest<HTMLElement>('[data-node-id]');
     const node = cardEl ? placedNodes.find(n => n.nodeId === cardEl.dataset.nodeId) : undefined;
     if (node && cardEl) {
@@ -761,6 +764,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
         // and 1-gesture pinch-to-zoom works directly from wall view.
         ...containerProps,
         onPointerDownCapture: (e: React.PointerEvent<HTMLDivElement>) => {
+          suppressNextWallClickRef.current = false;
           containerProps.onPointerDownCapture(e);
           if (!isBoardChromeControl(e.target)) e.stopPropagation();
         },
