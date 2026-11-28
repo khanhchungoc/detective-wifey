@@ -61,7 +61,6 @@ Players experience the full emotional arc of snooping, building a dossier, confr
 * [US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine ("Đối chất & Chối bay chối biến")](us-016-anytime-confrontation-hub-dynamic-excuse-engine.md) - *Status: drafted*
 * [US-017 - Shareable Comedic Roast Card Generation](us-017-shareable-comedic-roast-card-generation.md) - *Status: planned*
 * [US-018 - Level Progression Gating ("Tha thứ") & Local State Persistence](us-018-level-progression-gating-tha-thu-local-state-persistence.md) - *Status: planned*
-* [US-033 - Level 0 Guided Deduction & Completion](us-033-level-0-guided-deduction-completion.md) - *Status: draft; revision-2 ASCII approved*.
 
 ## GUI Specifications
 
@@ -71,7 +70,6 @@ Players experience the full emotional arc of snooping, building a dossier, confr
 
 * [`wireframe-us-015-corkboard-node-canvas.md`](./wireframes/wireframe-us-015-corkboard-node-canvas.md) - Mobile-Optimized 2A Detective Corkboard (Tap-to-Connect Red-String Graph Canvas)
 * [`wireframe-us-016-confrontation-hub.md`](./wireframes/wireframe-us-016-confrontation-hub.md) - Anytime Confrontation Hub & Dynamic Excuse Engine (Screen SSOT for US-016)
-* [Màn 0: nối thông tin và hoàn thành](wireframes/wireframe-level-0-deduction-completion.md) - *Status: signed-off, revision 2*.
 
 ## Diagrams
 
