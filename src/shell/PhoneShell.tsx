@@ -227,10 +227,16 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   });
 
   useEffect(() => {
-    document.querySelector('meta[name="theme-color"]')?.setAttribute(
-      'content', activeAppDefinition?.themeColor || deviceMetadata.pwaThemeColor || '#0f172a',
-    );
-  }, [activeAppDefinition, deviceMetadata.pwaThemeColor]);
+    const topChrome = notebookOpen
+      ? '#080b0f'
+      : activeAppDefinition?.themeColor || deviceMetadata.pwaThemeColor || '#0f172a';
+    const bottomChrome = notebookOpen
+      ? '#080b0f'
+      : activeAppDefinition?.bottomBarColor || activeAppDefinition?.themeColor || '#090d16';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', topChrome);
+    document.documentElement.style.backgroundColor = bottomChrome;
+    if (document.body) document.body.style.backgroundColor = bottomChrome;
+  }, [notebookOpen, activeAppDefinition, deviceMetadata.pwaThemeColor]);
 
   return (
     <div
@@ -339,6 +345,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                       <AppIconSquircle
                         app={app}
                         isGrayedOut={isGrayedOut}
+                        isOpen={activeAppId === app.appId}
                         onClick={() => {
                           if (isGrayedOut) {
                             onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
@@ -378,6 +385,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                         app={app}
                         hideLabel
                         isGrayedOut={isGrayedOut}
+                        isOpen={activeAppId === app.appId}
                         onClick={() => {
                           if (isGrayedOut) {
                             onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);

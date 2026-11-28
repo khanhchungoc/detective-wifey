@@ -115,19 +115,81 @@ export function EcommerceOrderDetailDrawer({
   onEvidence,
   onClose,
 }: EvidenceProps & { order: EcommerceOrder; onClose: () => void }) {
-  const swipe = useSwipeBack({ onBack: onClose });
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const drag = useRef<{ x: number; y: number } | null>(null);
+  const closingRef = useRef(false);
+  const animsRef = useRef<Animation[]>([]);
+
+  const cancelAnims = () => {
+    for (const anim of animsRef.current) anim.cancel();
+    animsRef.current = [];
+  };
+
+  const requestClose = () => {
+    if (closingRef.current) return;
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (reduced || !panel || typeof panel.animate !== 'function') {
+      onClose();
+      return;
+    }
+    closingRef.current = true;
+    cancelAnims();
+    panel.style.pointerEvents = 'none';
+    panel.style.transform = 'translate3d(0, 100%, 0)';
+    const panelAnim = panel.animate(
+      [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(0, 100%, 0)' }],
+      { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+    );
+    const anims: Animation[] = [panelAnim];
+    if (backdrop && typeof backdrop.animate === 'function') {
+      backdrop.style.opacity = '0';
+      anims.push(backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }));
+    }
+    animsRef.current = anims;
+    const finish = () => {
+      closingRef.current = false;
+      onClose();
+    };
+    void panelAnim.finished.then(finish, finish);
+  };
+
+  const swipe = useSwipeBack({ onBack: requestClose });
+
   useEffect(() => {
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (!reduced && panel && typeof panel.animate === 'function') {
+      const anims: Animation[] = [
+        panel.animate(
+          [{ transform: 'translate3d(0, 100%, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
+          { duration: 300, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' },
+        ),
+      ];
+      if (backdrop && typeof backdrop.animate === 'function') {
+        anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' }));
+      }
+      animsRef.current = anims;
+    }
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     closeRef.current?.focus();
-    return () => previous?.focus();
+    return () => {
+      cancelAnims();
+      previous?.focus();
+    };
   }, []);
+
   return (
-    <div className="ecommerce-sheet-backdrop" onClick={onClose}>
+    <div ref={backdropRef} className="ecommerce-sheet-backdrop will-change-[opacity]" onClick={requestClose}>
       <section
         {...swipe}
-        className="ecommerce-sheet"
+        ref={panelRef}
+        style={{ backfaceVisibility: 'hidden' }}
+        className="ecommerce-sheet will-change-transform"
         role="dialog"
         aria-modal="true"
         aria-labelledby="ecommerce-invoice-title"
@@ -135,7 +197,7 @@ export function EcommerceOrderDetailDrawer({
         onKeyDown={(e) => {
           if (e.key === 'Escape') {
             e.stopPropagation();
-            onClose();
+            requestClose();
           }
           if (e.key === 'Tab') {
             e.preventDefault();
@@ -161,14 +223,14 @@ export function EcommerceOrderDetailDrawer({
               e.clientY - start.y > 64 &&
               Math.abs(e.clientX - start.x) < (e.clientY - start.y) * 0.8
             )
-              onClose();
+              requestClose();
           }}
         >
           <span />
         </div>
         <div className="ecommerce-row ecommerce-sheet-header">
           <h2 id="ecommerce-invoice-title">Chi tiết đơn mua</h2>
-          <button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng chi tiết đơn">
+          <button ref={closeRef} type="button" onClick={requestClose} aria-label="Đóng chi tiết đơn">
             <IoClose />
           </button>
         </div>

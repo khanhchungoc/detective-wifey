@@ -27,8 +27,8 @@ import {
   parseNodeToTimelineEntries,
 } from './ClueTimelineRail';
 
-export const CARD_WIDTH = 210;
-export const PIN_OFFSET_X = 105;
+export const CARD_WIDTH = 176;
+export const PIN_OFFSET_X = 88;
 export const PIN_OFFSET_Y = 3;
 
 function getCardTiltDeg(nodeId: string): number {
@@ -54,13 +54,11 @@ function getProfileName(node: PlacedNode): string | undefined {
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
   return (
     <>
-      {/* Steady bright overhead light wash cast onto both wall and board without opening flash/flicker */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]">
-        <div className="h-full w-full bg-[radial-gradient(ellipse_115%_95%_at_50%_4%,rgba(235,244,255,0.34)_0%,rgba(176,198,228,0.16)_38%,rgba(148,163,184,0.05)_70%,transparent_96%)]" />
-      </div>
+      {/* Top-down directional cone of fluorescent light (flickers subtly only in zoomed-out wall view) */}
+      <div aria-hidden="true" className="notebook-lamp-cone pointer-events-none absolute inset-0 z-[14]" />
       {/* Bright overhead fluorescent tube glow aligned to the wall fixture behind the board */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[6.2%] md:top-[4.5%] z-[4] flex flex-col items-center">
-        <div className="notebook-lamp-tube h-[5px] w-[54%] md:w-[28%] max-w-[240px] md:max-w-[360px] rounded-full bg-[#F4F8FF]/95 shadow-[0_0_24px_10px_rgba(232,242,255,0.75),0_14px_48px_18px_rgba(186,214,250,0.42)]" />
+        <div className="notebook-lamp-tube h-[5px] w-[54%] md:w-[28%] max-w-[240px] md:max-w-[360px] rounded-full bg-[#F4F8FF]/95 shadow-[0_4px_18px_2px_rgba(232,242,255,0.78),0_14px_34px_6px_rgba(186,214,250,0.38)]" />
       </div>
     </>
   );
@@ -371,8 +369,8 @@ const CorkboardContents = memo(function CorkboardContents({
               }}
               className={`corkboard-node-card absolute cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 node.imageSrc
-                  ? 'rounded-[2px] border bg-[#f0ebe1] p-2 pt-3 pb-2.5'
-                  : 'corkboard-paper-card rounded-[3px] border p-2.5 pt-[16px]'
+                  ? 'rounded-[2px] border bg-[#f0ebe1] p-1.5 pt-2.5 pb-2'
+                  : 'corkboard-paper-card rounded-[3px] border p-2 pt-[14px]'
               } ${
                 isDraggingThis
                   ? 'z-30 border-[#DC2626] shadow-[0_24px_42px_rgba(0,0,0,0.72),0_10px_18px_rgba(0,0,0,0.45)] ring-2 ring-[#EF4444]/75'
@@ -412,11 +410,41 @@ const CorkboardContents = memo(function CorkboardContents({
               </div>
 
               {node.imageSrc ? (
-                /* Direct Polaroid Photo Pin (no aged-paper note background, full original aspect ratio) */
+                /* Polaroid Photo Pin; conversation-pinned images also include person name, avatar, and source app badge */
                 <div data-pinned-photo={node.nodeId} className="relative">
+                  {node.conversationId && (
+                    <div className="relative mb-1.5 -ml-2.5 flex min-w-0 items-center justify-between gap-1.5 w-[calc(100%+10px)]">
+                      <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1 py-0.5 pl-2 pr-2 -rotate-[1.5deg]">
+                        <h4 className="font-handwriting text-note-title text-slate-900 line-clamp-1">
+                          {isAlias && isUnmasked ? `[BÓC TRẦN] ${node.label}` : node.label}
+                        </h4>
+                      </div>
+                      {(avatarName || sourceApp) && (() => {
+                        const appIcon = sourceApp && (
+                          <span
+                            className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-5 w-5 rounded-[4px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                            title={sourceApp.displayName}
+                            role="img"
+                            aria-label={sourceApp.displayName}
+                          >
+                            {sourceApp.iconAsset ? (
+                              <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
+                            ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3 w-3'} />}
+                          </span>
+                        );
+                        return avatarName ? (
+                          <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[2px] pb-[4px] rotate-2">
+                            <ContactAvatar name={avatarName} size={26} shape="square" />
+                            {appIcon}
+                          </span>
+                        ) : appIcon;
+                      })()}
+                    </div>
+                  )}
+
                   {/* Floating Action Buttons when Polaroid is selected */}
                   <div
-                    className={`absolute right-1.5 top-1.5 h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
+                    className={`absolute right-1.5 ${node.conversationId ? 'top-9' : 'top-1.5'} h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
                     inert={!isSelected}
                   >
                     {node.sourceAppId && (
@@ -490,7 +518,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   {photoMeta && (
                     <div
                       data-pinned-photo-meta={node.nodeId}
-                      className="mt-2 space-y-0.5 px-0.5 font-handwriting text-note-meta text-slate-700 leading-snug"
+                      className="mt-1.5 space-y-0.5 px-0.5 font-handwriting text-note-meta text-slate-700 leading-snug"
                     >
                       {photoMeta.dateTimeText && (
                         <div className="flex items-start gap-1">
@@ -509,15 +537,15 @@ const CorkboardContents = memo(function CorkboardContents({
                 </div>
               ) : (
                 /* Top Bar: Yellow Sticky Note Title on Left, Film-Framed Avatar with App Icon Badge on Right, and Action Buttons */
-                <div className={`relative min-h-[36px] ${hasBody ? 'pb-1.5' : 'pb-0.5'}`}>
+                <div className={`relative min-h-[32px] ${hasBody ? 'pb-1' : 'pb-0.5'}`}>
                   <div
-                    className="relative -ml-3.5 -mt-1 flex min-w-0 items-center justify-between gap-2 w-[calc(100%+14px)]"
+                    className="relative -ml-3 -mt-1 flex min-w-0 items-center justify-between gap-1.5 w-[calc(100%+12px)]"
                     style={isSelected ? {
-                      WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
-                      maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
+                      WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 84 : 52}px), transparent calc(100% - ${node.sourceAppId ? 54 : 24}px))`,
+                      maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 84 : 52}px), transparent calc(100% - ${node.sourceAppId ? 54 : 24}px))`,
                     } : undefined}
                   >
-                    <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1.5 py-1 pl-2.5 pr-2.5 -rotate-[1.5deg]">
+                    <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1 py-0.5 pl-2 pr-2 -rotate-[1.5deg]">
                       {!avatarName && !sourceApp && (
                         <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
                       )}
@@ -532,19 +560,19 @@ const CorkboardContents = memo(function CorkboardContents({
                       // Source app shows as a small badge on the profile picture's top-right corner (alone when there is no picture).
                       const appIcon = sourceApp && (
                         <span
-                          className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-6 w-6 rounded-[5px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                          className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-5 w-5 rounded-[4px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
                           title={sourceApp.displayName}
                           role="img"
                           aria-label={sourceApp.displayName}
                         >
                           {sourceApp.iconAsset ? (
                             <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
-                          ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'} />}
+                          ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3 w-3'} />}
                         </span>
                       );
                       return avatarName ? (
-                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
-                          <ContactAvatar name={avatarName} size={32} shape="square" />
+                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[2px] pb-[4px] rotate-2">
+                          <ContactAvatar name={avatarName} size={26} shape="square" />
                           {appIcon}
                         </span>
                       ) : appIcon;
@@ -758,7 +786,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
           height={1376}
           alt=""
           draggable={false}
-          decoding="sync"
+          decoding="async"
           className="h-full w-full object-cover object-center"
         />
       </picture>
@@ -785,7 +813,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
               height={CANVAS_HEIGHT}
               alt=""
               draggable={false}
-              decoding="sync"
+              decoding="async"
               className="block h-full w-full select-none"
             />
           </div>
@@ -795,7 +823,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
       {/* Empty State Overlay: quiet, compact dark hint above the dock so the wooden-framed board stays unobstructed */}
       {placedNodes.length === 0 && (
         <div className="pointer-events-none absolute inset-x-4 bottom-24 z-20 flex justify-center">
-          <div className="flex max-w-[300px] items-center gap-2.5 rounded-[8px] border border-slate-700/60 bg-[#0D1219]/85 px-3.5 py-2.5 text-left shadow-xl backdrop-blur-sm">
+          <div className="flex max-w-[300px] items-center gap-2.5 rounded-[8px] border border-slate-700/60 bg-[#0D1219]/95 px-3.5 py-2.5 text-left shadow-xl">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[5px] border border-slate-700/70 bg-slate-800/80 text-[#FB7185] text-base">
               <IoBookOutline />
             </div>

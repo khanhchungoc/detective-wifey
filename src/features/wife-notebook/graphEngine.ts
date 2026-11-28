@@ -9,28 +9,28 @@ export const MAX_ZOOM = 2.0;
 
 /**
  * 3 columns centered horizontally on the 1800px canvas.
- * Card width = 210px. Gap = 40px. Total span = 710px.
- * Left & right margins = (1800 - 710) / 2 = 545px.
- * Column 0: 545 (center 650)
- * Column 1: 795 (center 900 - exact canvas center)
- * Column 2: 1045 (center 1150)
+ * Card width = 176px. Gap = 28px. Total span = 584px.
+ * Left & right margins = (1800 - 584) / 2 = 608px.
+ * Column 0: 608 (center 696)
+ * Column 1: 812 (center 900 - exact canvas center)
+ * Column 2: 1016 (center 1104)
  */
-export const CARD_WIDTH = 210;
-export const COLUMN_GAP = 40;
-export const CORKBOARD_ROW_HEIGHT = 220;
-export const CORKBOARD_VERTICAL_GAP = 40;
-/** Vertically centers the first row of cards (~120px tall) at CANVAS_HEIGHT / 2. */
-export const INITIAL_BASE_Y = Math.round(CANVAS_HEIGHT / 2 - 60);
+export const CARD_WIDTH = 176;
+export const COLUMN_GAP = 28;
+export const CORKBOARD_ROW_HEIGHT = 188;
+export const CORKBOARD_VERTICAL_GAP = 32;
+/** Vertically centers the first row of cards (~110px tall) at CANVAS_HEIGHT / 2. */
+export const INITIAL_BASE_Y = Math.round(CANVAS_HEIGHT / 2 - 55);
 /** Auto-placed rows hold up to 6 cards so the wide board fills sideways before downwards. */
 export const MAX_ROW_COLUMNS = 6;
 
 /**
- * Default fallback columns (centered at 900 with 40px gap).
- * Col 0: 545 (center 650)
- * Col 1: 795 (center 900 - canvas center)
- * Col 2: 1045 (center 1150)
+ * Default fallback columns (centered at 900 with 28px gap).
+ * Col 0: 608 (center 696)
+ * Col 1: 812 (center 900 - canvas center)
+ * Col 2: 1016 (center 1104)
  */
-export const CORKBOARD_COLUMNS_X = [545, 795, 1045] as const;
+export const CORKBOARD_COLUMNS_X = [608, 812, 1016] as const;
 
 /**
  * Calculates symmetric, centered X coordinates for `count` cards (1..3) in a row,
