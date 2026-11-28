@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PhoneShell } from '../shell';
-import hoangWallpaperUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.webp';
+import husbandWallpaperUrl from '../shell/assets/husband-01-technosoft-selfie-wallpaper-v3.webp';
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
@@ -95,7 +95,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     [caseConfig, caseTitle, activeHusband],
   );
   const lockscreenConfig = useMemo(
-    () => buildLockscreenConfig(caseConfig, hoangWallpaperUrl, (appId) => {
+    () => buildLockscreenConfig(caseConfig, husbandWallpaperUrl, (appId) => {
       const def = APP_REGISTRY[appId];
       return def ? { appName: def.displayName, iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
     }),
@@ -161,7 +161,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
             transition={stageTransition}
           >
             <GameStartupScreen
-              preloadAssets={[husbands[0].portraitUrl, hoangWallpaperUrl]}
+              preloadAssets={[husbands[0].portraitUrl, husbandWallpaperUrl]}
               hasOngoingGame={Boolean(state.ongoingSession)}
               ongoingLevelNumber={state.ongoingSession?.levelNumber}
               isMuted={isMuted}

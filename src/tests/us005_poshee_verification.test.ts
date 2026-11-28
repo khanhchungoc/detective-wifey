@@ -45,8 +45,8 @@ describe('US-005 Ecommerce read-only investigation', () => {
   it('preserves existing level order fields without inventing dates, quantity, totals or suspect', () => {
     const loaded = loadCase('case_01');
     const data = normalizeEcommerceData(loaded.appsData.ecommerce)!;
-    const gift = data.orders.find(order => order.orderId === 'order_01')!;
-    const bag = data.orders.find(order => order.orderId === 'order_bag')!;
+    const gift = data.orders.find(order => order.orderId === 'order_005')!;
+    const bag = data.orders.find(order => order.orderId === 'order_001')!;
     expect(gift.status).toBe('completed');
     expect(bag.status).toBe('in_transit');
     expect(gift.items[0].variantName).toBe('be, size S');
@@ -57,7 +57,7 @@ describe('US-005 Ecommerce read-only investigation', () => {
     expect(gift.items[0].quantity).toBe(1);
     expect(gift.clueRefId).toBe('CLUE-POSH-05');
     expect(bag.suspectName).toBe('Nguyễn Huy Thịnh');
-    expect(bag.suspectId).toBe('husband_hoang');
+    expect(bag.suspectId).toBe('husband_01');
     const legacy = normalizeEcommerceData({ orders: [{ orderId: 'legacy', title: 'Legacy item' }] })!.orders[0];
     expect(legacy.orderDate).toBeUndefined();
     expect(legacy.items[0].quantity).toBeUndefined();

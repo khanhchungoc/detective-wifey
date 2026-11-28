@@ -64,6 +64,7 @@ export interface ScriptedConfrontationState {
   choices: ActiveConfrontationChoice[];
   canAccuse: boolean;
   selectedEndingChoiceId: string | null;
+  selectedEndingOutcome: 'divorce' | 'forgive' | null;
   verdict: VerdictType;
   stars: 0 | 3;
   wifeTitle?: string;
@@ -192,6 +193,7 @@ export function createScriptedConfrontation({
     choices: toActiveChoices(script.opening),
     canAccuse: false,
     selectedEndingChoiceId: null,
+    selectedEndingOutcome: null,
     verdict: caseConfig.groundTruth.verdict,
     stars: 0,
     currentStrikes,
@@ -363,6 +365,7 @@ export function advanceScriptedConfrontation(
       ...state,
       phase: 'resolved',
       selectedEndingChoiceId: endingChoice.choiceId,
+      selectedEndingOutcome: endingChoice.outcome,
       hitSeq: state.hitSeq + 1,
       lastWifeLine: endingChoice.wifeLine,
       husbandLine: endingChoice.husbandLine,

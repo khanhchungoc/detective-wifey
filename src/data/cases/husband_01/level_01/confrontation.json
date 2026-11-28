@@ -1,14 +1,14 @@
 {
   "opening": [
     {
-      "choiceId": "open_ask",
+      "choiceId": "choice_001",
       "slot": "left",
       "wifeLine": "Thịnh, anh có gì giấu tôi không?",
       "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
       "husbandMood": "confident"
     },
     {
-      "choiceId": "open_offer",
+      "choiceId": "choice_002",
       "slot": "right",
       "wifeLine": "Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật.",
       "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
@@ -17,11 +17,11 @@
   ],
   "beats": [
     {
-      "beatId": "beat_khoa_identity",
+      "beatId": "beat_001",
       "topic": "Khoa BE là ai?",
       "choices": [
         {
-          "choiceId": "khoa_shared_phone",
+          "choiceId": "choice_003",
           "slot": "up",
           "wifeLine": "Dev backend nào mà dùng chung số 0988886677 với người nhận váy lụa size S?",
           "requiredEdgeIds": [
@@ -37,7 +37,7 @@
           }
         },
         {
-          "choiceId": "tuan_herring",
+          "choiceId": "choice_004",
           "slot": "left",
           "wifeLine": "Thợ điện nào nửa đêm dặn \"không để bà ấy biết\"?",
           "onFalse": {
@@ -46,7 +46,7 @@
           }
         },
         {
-          "choiceId": "thao_herring",
+          "choiceId": "choice_005",
           "slot": "right",
           "wifeLine": "Thảo PT đợi anh tối nay là sao?",
           "onFalse": {
@@ -57,11 +57,11 @@
       ]
     },
     {
-      "beatId": "beat_dress_recipient",
+      "beatId": "beat_002",
       "topic": "Váy size S gửi cho ai?",
       "choices": [
         {
-          "choiceId": "dress_legal_name",
+          "choiceId": "choice_006",
           "slot": "up",
           "wifeLine": "Người nhận váy là Nguyễn Thị Thu Hương. Nhóm công ty ghim rõ: Hương - Marketing. 'Khoa' của anh mặc váy size S à? Tôi mặc size M.",
           "requiredEdgeIds": [
@@ -77,7 +77,7 @@
           }
         },
         {
-          "choiceId": "mai_herring",
+          "choiceId": "choice_007",
           "slot": "left",
           "wifeLine": "Lẵng hoa gửi Đỗ Thị Mai là sao?",
           "onFalse": {
@@ -86,7 +86,7 @@
           }
         },
         {
-          "choiceId": "ngoc_herring",
+          "choiceId": "choice_008",
           "slot": "right",
           "wifeLine": "Bé Ngọc dặn anh \"đừng kể gì\" là chuyện gì?",
           "onFalse": {
@@ -97,11 +97,11 @@
       ]
     },
     {
-      "beatId": "beat_meeting_alibi",
+      "beatId": "beat_003",
       "topic": "Tối nay anh thật sự ở đâu?",
       "choices": [
         {
-          "choiceId": "alibi_card_swipe",
+          "choiceId": "choice_009",
           "slot": "up",
           "wifeLine": "20:46 anh nhắn sếp Hùng đang chốt nốt. 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Mà sếp Hùng bay Đà Nẵng từ 6 giờ.",
           "requiredEdgeIds": [
@@ -117,7 +117,7 @@
           }
         },
         {
-          "choiceId": "lan_anh_herring",
+          "choiceId": "choice_010",
           "slot": "down",
           "wifeLine": "8 giờ tối anh chuyển tiền cho Lan Anh làm gì?",
           "onFalse": {
@@ -130,14 +130,16 @@
   ],
   "ending": [
     {
-      "choiceId": "end_divorce",
+      "choiceId": "choice_011",
+      "outcome": "divorce",
       "slot": "left",
       "wifeLine": "Chiều nay tôi đi khám. Tôi có thai 6 tuần. Con tôi không cần một người bố nói dối. Ký đơn đi.",
       "husbandLine": "Vợ ơi... con mình? Anh van em, cho anh một cơ hội thôi!",
       "husbandMood": "broken"
     },
     {
-      "choiceId": "end_forgive",
+      "choiceId": "choice_012",
+      "outcome": "forgive",
       "slot": "right",
       "wifeLine": "Chiều nay tôi đi khám. Tôi có thai 6 tuần. Vì con, tôi cho anh một lần. Chặn số 'Khoa BE' ngay trước mặt tôi.",
       "husbandLine": "Anh chặn ngay. Anh thề với em và con, không có lần sau.",

@@ -9,7 +9,7 @@ import {
   unlockBySwipeUp,
 } from './helpers/phone';
 
-const SESSION_KEY = 'detective:v1:jealous_wife:session';
+const SESSION_KEY = 'detective:v2:jealous_wife:session';
 
 interface SavedSession {
   caseId: string;
@@ -97,7 +97,7 @@ test.describe('Session & Case Runtime @smoke', () => {
 
     await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
     await page.getByRole('button', { name: 'Bắt đầu' }).click();
-    await page.locator('[data-husband-id="husband_hoang"]').click();
+    await page.locator('[data-husband-id="husband_01"]').click();
     await page.locator('[data-level-tab="case_01"]').click();
 
     const caseCta = page.locator('[data-case-id="case_01"]');
@@ -119,7 +119,7 @@ test.describe('Session & Case Runtime @smoke', () => {
 
     await page.goto('/');
     await page.getByRole('button', { name: 'Bắt đầu' }).click();
-    await page.locator('[data-husband-id="husband_hoang"]').click();
+    await page.locator('[data-husband-id="husband_01"]').click();
     await page.locator('[data-level-tab="case_02"]').click();
 
     const comingSoon = page.locator('[data-level-file="case_02"]');

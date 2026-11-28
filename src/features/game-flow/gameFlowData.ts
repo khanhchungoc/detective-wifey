@@ -9,7 +9,7 @@ import type {
 } from '../../shared/contracts/game-flow';
 import wifeMinhThuUrl from './assets/wife-minh-thu.webp';
 // 3:4 head-and-shoulders dossier portrait (not the phone wallpaper).
-import hoangPortraitUrl from './assets/hoang-dossier-portrait.webp';
+import husbandPortraitUrl from './assets/husband-01-dossier-portrait.webp';
 
 const WIFE_MINH_THU: WifeProfile = {
   displayName: 'Trần Minh Thư',
@@ -35,7 +35,7 @@ export function formatNarrativeShortDate(date: Date): string {
 export function buildHusbandProfiles(): HusbandProfile[] {
   return [
     {
-      husbandId: 'husband_hoang',
+      husbandId: 'husband_01',
       caseCode: 'HỒ SƠ #01',
       displayName: 'Thịnh Doom',
       fullName: 'Nguyễn Huy Thịnh',
@@ -48,17 +48,17 @@ export function buildHusbandProfiles(): HusbandProfile[] {
         'Cửa miệng: "OT fix bug cho kịp sprint"',
       ],
       wifeProfile: WIFE_MINH_THU,
-      portraitUrl: hoangPortraitUrl,
+      portraitUrl: husbandPortraitUrl,
     },
     {
-      husbandId: 'husband_minh',
+      husbandId: 'husband_02',
       caseCode: 'HỒ SƠ #02',
       displayName: 'Trần Quang Minh',
       fullName: 'Trần Quang Minh',
       age: 34,
       occupation: 'Giám đốc Kinh doanh',
       teaserQuote: '"Hồ sơ đang được thu thập."',
-      portraitUrl: hoangPortraitUrl,
+      portraitUrl: husbandPortraitUrl,
       comingSoon: true,
     },
   ];
@@ -74,7 +74,7 @@ export function buildLevelCards(
   // Màn 0 is the in-phone guide. Its content is built later, so the file is visible but not playable.
   const guideCard: LevelCardItem = {
     caseId: 'case_00_guide',
-    husbandId: 'husband_hoang',
+    husbandId: 'husband_01',
     levelNumber: 0,
     levelTitle: 'Hướng dẫn điều tra',
     summary: GUIDE_CARD_TEASER,

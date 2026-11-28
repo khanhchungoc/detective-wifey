@@ -61,9 +61,9 @@ const VERDICT_STAMP_LABELS: Record<VerdictType, string> = {
   innocent: 'MINH OAN CHỒNG VÔ TỘI',
 };
 
-function getAdvanceLabel(verdict: VerdictType, endingChoiceId: string | null): string {
+function getAdvanceLabel(verdict: VerdictType, endingOutcome: 'divorce' | 'forgive' | null): string {
   if (verdict === 'innocent') return 'Làm lành & Qua màn';
-  if (endingChoiceId?.includes('divorce')) return 'Chốt hồ sơ & Qua màn';
+  if (endingOutcome === 'divorce') return 'Chốt hồ sơ & Qua màn';
   return 'Tha thứ & Qua màn';
 }
 
@@ -360,7 +360,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
             onClose={() => setIsEpilogueDismissed(true)}
             onClick={() => setIsEpilogueDismissed(true)}
           />
-          {/* TIER 1 (TOP): Dark Interrogation Stage + Top-Down Spotlight + Comic Hoang */}
+          {/* TIER 1 (TOP): Dark Interrogation Stage + Top-Down Spotlight + Comic husband */}
           <section className="relative flex flex-col items-center shrink-0 bg-gradient-to-b from-[#080b0f] via-[#0b1017] to-[#080b0f] px-3 pt-1 pb-2 overflow-hidden">
             {/* Stage Overhead Spotlight Cone */}
             <motion.div
@@ -672,7 +672,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
                     className="w-full min-h-[48px] rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.97] active:opacity-75 transition-[transform,opacity] duration-[85ms] text-white font-sans text-ios-subheadline font-semibold flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                   >
                     <IoLockOpenOutline className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span>{getAdvanceLabel(session.verdict, session.selectedEndingChoiceId)}</span>
+                    <span>{getAdvanceLabel(session.verdict, session.selectedEndingOutcome)}</span>
                   </button>
                 </motion.div>
               )}

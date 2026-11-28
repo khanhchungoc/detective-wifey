@@ -16,7 +16,7 @@ function setup(config?: CaseConfig, overrides: Partial<PlaySessionDependencies> 
     getActiveSession: vi.fn(async () => saved),
     saveActiveSession: vi.fn(async value => { saved = structuredClone(value); }),
     clearActiveSession: vi.fn(async () => { saved = null; }),
-    getPlayerProgress: vi.fn(async () => ({ schemaVersion: 1, unlockedHusbandId: 'husband_hoang',
+    getPlayerProgress: vi.fn(async () => ({ schemaVersion: 2, unlockedHusbandId: 'husband_01',
       unlockedLevel: 1 as const, bestStarRatings: {}, earnedWifeTitles: [], audioMutePreference: false })),
     savePlayerProgress: vi.fn(async () => {}),
   };
@@ -50,12 +50,12 @@ describe('play lifecycle', () => {
   it('keeps different records for one person and deduplicates repeated source records', async () => {
     vi.useFakeTimers();
     const { game, saved } = setup();
-    const source = { caseId: 'case_01', recordId: 'order_01', title: 'Đơn mua', snippet: 'Nội dung' };
+    const source = { caseId: 'case_01', recordId: 'order_005', title: 'Đơn mua', snippet: 'Nội dung' };
     game.tag('Nguyễn Thị Thu Hương', 'banking', { ...source, recordId: 'transfer_01' });
     game.tag('Nguyễn Thị Thu Hương', 'ecommerce', source);
     game.tag('Nguyễn Thị Thu Hương', 'ecommerce', source);
     await vi.runAllTimersAsync();
-    expect(saved()?.taggedSuspects.map(tag => tag.evidence?.recordId)).toEqual(['transfer_01', 'order_01']);
+    expect(saved()?.taggedSuspects.map(tag => tag.evidence?.recordId)).toEqual(['transfer_01', 'order_005']);
     game.stop();
   });
 
@@ -125,7 +125,7 @@ describe('play lifecycle', () => {
     vi.useFakeTimers();
     const { repository } = setup();
     const session: ActiveSessionState = {
-      schemaVersion: 1, gameId: 'jealous_wife', caseId: 'case_01', levelNumber: 1, activeApp: 'home',
+      schemaVersion: 2, gameId: 'jealous_wife', caseId: 'case_01', levelNumber: 1, activeApp: 'home',
       suspicionStrikes: 3, taggedSuspects: [{ suspectId: 'tag_1', displayName: 'Khoa BE',
         sourceApp: 'internet-messaging', timestamp: 1 }], unlockedChallenges: [], elapsedSeconds: 0, lastSavedAt: 1,
     };
@@ -163,7 +163,7 @@ describe('save compatibility and ordering', () => {
       await originalSave(value);
     });
     const writer = new SessionWriter(repository, 'jealous_wife');
-    const snapshot = (caseId: string): ActiveSessionState => ({ schemaVersion: 1, gameId: 'jealous_wife',
+    const snapshot = (caseId: string): ActiveSessionState => ({ schemaVersion: 2, gameId: 'jealous_wife',
       caseId, levelNumber: 1, activeApp: 'home', suspicionStrikes: 5, taggedSuspects: [],
       unlockedChallenges: [], elapsedSeconds: 0, lastSavedAt: 0 });
     const first = writer.save(snapshot('old-case'));
@@ -181,15 +181,15 @@ describe('save compatibility and ordering', () => {
     const storage = new Map<string, string>();
     vi.stubGlobal('localStorage', { getItem: (key: string) => storage.get(key) ?? null,
       setItem: (key: string, value: string) => storage.set(key, value), removeItem: (key: string) => storage.delete(key) });
-    const legacy: ActiveSessionState = { schemaVersion: 1, gameId: 'jealous_wife', caseId: 'case_01',
+    const legacy: ActiveSessionState = { schemaVersion: 2, gameId: 'jealous_wife', caseId: 'case_01',
       levelNumber: 1, activeApp: 'internet-messaging', suspicionStrikes: 4,
       taggedSuspects: [{ suspectId: 'tag_10', displayName: 'Tên cũ', sourceApp: 'internet-messaging', timestamp: 10 }],
       unlockedChallenges: ['legacy-lock'], elapsedSeconds: 45, lastSavedAt: 10 };
-    storage.set('detective:v1:jealous_wife:session', JSON.stringify(legacy));
+    storage.set('detective:v2:jealous_wife:session', JSON.stringify(legacy));
     const repository = new LocalStorageAdapter();
     expect(await repository.getActiveSession('jealous_wife')).toEqual(legacy);
     await repository.saveActiveSession(legacy);
-    expect(JSON.parse(storage.get('detective:v1:jealous_wife:session')!)).toMatchObject({ ...legacy, lastSavedAt: expect.any(Number) });
+    expect(JSON.parse(storage.get('detective:v2:jealous_wife:session')!)).toMatchObject({ ...legacy, lastSavedAt: expect.any(Number) });
     expect((await repository.getActiveSession('jealous_wife'))?.taggedSuspects[0]).not.toHaveProperty('evidence');
   });
 
@@ -204,24 +204,24 @@ describe('save compatibility and ordering', () => {
     const { game } = setup(undefined, { repository });
     game.tag('Khoa BE', 'internet-messaging');
     await new Promise(resolve => setTimeout(resolve, 0));
-    storage.set('detective:v1:case_01:corkboard_state', JSON.stringify({
-      placedNodes: [{ nodeId: 'node_alias_khoa', label: 'Khoa BE', x: 0, y: 0 }],
+    storage.set('detective:v2:case_01:corkboard_state', JSON.stringify({
+      placedNodes: [{ nodeId: 'node_alias_01', label: 'Khoa BE', x: 0, y: 0 }],
       edges: [{ edgeId: 'edge_order_name', sourceNodeId: 'a', targetNodeId: 'b', isCanonical: true, isSmokingGun: true }],
     }));
 
     await game.restart();
-    expect(storage.has('detective:v1:case_01:corkboard_state')).toBe(false);
+    expect(storage.has('detective:v2:case_01:corkboard_state')).toBe(false);
 
-    storage.set('detective:v1:case_02:corkboard_state', JSON.stringify({ placedNodes: [], edges: [{ edgeId: 'stale' }] }));
+    storage.set('detective:v2:case_02:corkboard_state', JSON.stringify({ placedNodes: [], edges: [{ edgeId: 'stale' }] }));
     game.selectLevel(2);
     await new Promise(resolve => setTimeout(resolve, 0));
-    expect(storage.has('detective:v1:case_02:corkboard_state')).toBe(false);
+    expect(storage.has('detective:v2:case_02:corkboard_state')).toBe(false);
     game.stop();
   });
 
   it('exposes ongoingSession for a saved level-2 game and restores it directly via resumeOngoing', async () => {
     const savedLevel2: ActiveSessionState = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       gameId: 'jealous_wife',
       caseId: 'case_02',
       levelNumber: 2,

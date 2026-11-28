@@ -2,18 +2,18 @@ import React from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { ConfrontationMood } from '../../../shared/contracts/case-schema';
 import { NARRATIVE_IN, NARRATIVE_OUT, POP, REDUCED_FADE } from '../confrontationMotion';
-import hoangConfidentSvg from '../assets/hoang-comic-confident.svg';
-import hoangSmugSvg from '../assets/hoang-comic-smug.svg';
-import hoangNervousSvg from '../assets/hoang-comic-nervous.svg';
-import hoangBrokenSvg from '../assets/hoang-comic-broken.svg';
+import husbandConfidentSvg from '../assets/husband-01-comic-confident.svg';
+import husbandSmugSvg from '../assets/husband-01-comic-smug.svg';
+import husbandNervousSvg from '../assets/husband-01-comic-nervous.svg';
+import husbandBrokenSvg from '../assets/husband-01-comic-broken.svg';
 
 export type HusbandMood = ConfrontationMood | 'surprised';
 
-export const HOANG_COMIC_ASSETS: Record<ConfrontationMood, string> = {
-  confident: hoangConfidentSvg,
-  smug: hoangSmugSvg,
-  nervous: hoangNervousSvg,
-  broken: hoangBrokenSvg,
+export const HUSBAND_COMIC_ASSETS: Record<ConfrontationMood, string> = {
+  confident: husbandConfidentSvg,
+  smug: husbandSmugSvg,
+  nervous: husbandNervousSvg,
+  broken: husbandBrokenSvg,
 };
 
 export interface HusbandCharacterImageProps {
@@ -56,7 +56,7 @@ export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({
 }) => {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const comicMood = resolveComicMood(mood);
-  const portraitSrc = HOANG_COMIC_ASSETS[comicMood];
+  const portraitSrc = HUSBAND_COMIC_ASSETS[comicMood];
   const accent = SPOTLIGHT_ACCENT[mood];
 
   return (

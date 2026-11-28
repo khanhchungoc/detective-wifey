@@ -1,43 +1,43 @@
 {
   "caseId": "case_01",
-  "husbandId": "husband_hoang",
+  "husbandId": "husband_01",
   "husbandName": "Thịnh",
   "levelNumber": 1,
   "allowedStrikes": 5,
   "groundTruth": {
     "verdict": "cheating",
-    "culpritSuspectId": "suspect_huong",
+    "culpritSuspectId": "suspect_01",
     "narrativeRoast": "Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?",
     "overJealousRoast": "Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?"
   },
   "suspectPool": [
     {
-      "suspectId": "suspect_huong",
+      "suspectId": "suspect_01",
       "displayName": "Nguyễn Thị Thu Hương · Marketing",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
-      "suspectId": "suspect_tuan_dien",
+      "suspectId": "suspect_02",
       "displayName": "Anh Tuấn Thợ Điện",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
-      "suspectId": "suspect_ngoc",
+      "suspectId": "suspect_03",
       "displayName": "Bé Ngọc KTX",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
-      "suspectId": "suspect_lan_anh",
+      "suspectId": "suspect_04",
       "displayName": "Lan Anh Kế Toán",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
-      "suspectId": "suspect_thao",
+      "suspectId": "suspect_05",
       "displayName": "Thảo PT California",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
-      "suspectId": "suspect_mai",
+      "suspectId": "suspect_06",
       "displayName": "Mai Lễ Tân",
       "initialDiscoveredApp": "internet-messaging"
     }
@@ -73,14 +73,14 @@
   ],
   "notifications": [
     {
-      "toastId": "toast_01",
+      "toastId": "toast_001",
       "sourceAppId": "internet-messaging",
       "senderTitle": "Tin nhắn • 22:58",
       "snippetBody": "Anh Tuấn Thợ Điện: Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu.",
       "triggerDelaySeconds": 3
     },
     {
-      "toastId": "toast_02",
+      "toastId": "toast_002",
       "sourceAppId": "internet-messaging",
       "senderTitle": "Tin nhắn • 23:41",
       "snippetBody": "Khoa BE: A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.",

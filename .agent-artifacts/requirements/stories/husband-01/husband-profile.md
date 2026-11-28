@@ -1,5 +1,5 @@
  ---
-husband: hoang
+husband: husband_01
 ---
 
 # Hồ sơ Nhân vật & Vũ trụ Cốt truyện - Người Chồng: Nguyễn Huy Thịnh
@@ -10,7 +10,7 @@ husband: hoang
 
 ## 1. Chân dung Người Chồng (Husband Persona & Avatar SSOT)
 
-- **Mã định danh (`husbandId`)**: `husband_hoang`
+- **Mã định danh (`husbandId`)**: `husband_01`
 - **Họ và Tên Pháp lý**: Nguyễn Huy Thịnh (không dấu trên Bank: `NGUYEN HUY THINH`)
 - **Biệt danh Thường gọi**: Thịnh Doom, Thịnh, Anh Thịnh IT
 - **Tuổi & Năm sinh**: 31 tuổi (sinh năm 1995)
@@ -21,7 +21,7 @@ husband: hoang
 - **Thói quen Ứng dụng & Lối sống (`lifestyleHabits`)**: Banking Techcombank kiểm tra lương thưởng và quỹ đen, Shopee áp mã Freeship Extra giao giờ hành chính, GrapCar đi làm, NetSurf đọc tin công nghệ/thể thao, ghi chú bảo dưỡng xe máy. Vỏ bọc ngụy trang bồ nhí ở Màn 1 là danh bạ đồng nghiệp nam "Khoa BE" (lập trình viên backend giả); "Anh Tuấn Thợ Điện" trong máy là thợ điện thật ở quê.
 - **Tính cách Đặc trưng**: Vẻ ngoài hiền lành, mẫu mực, luôn miệng khen cơm vợ nấu ngon nhất trần đời, tự nhận là người "sợ vợ số một thiên hạ", lương tháng nộp đủ 90% (31.500.000đ / 35.000.000đ). Tuy nhiên có tật xấu che giấu: hay úp màn hình điện thoại xuống mặt bàn mỗi khi ngồi cạnh vợ, hay mang máy vào phòng tắm "ngâm" hàng tiếng đồng hồ, và thường xuyên viện cớ "thức đêm ôm laptop fix bug giỏ hàng gấp cho kịp sprint".
 - **Ảnh Đại diện Chuẩn (`husbandAvatar`)**:
-  - **Đường dẫn Asset**: `src/shell/assets/hoang-technosoft-selfie-wallpaper.jpg`
+  - **Đường dẫn Asset**: `src/shell/assets/husband-01-technosoft-selfie-wallpaper.jpg`
   - **Mô tả Chân dung & Bối cảnh Ảnh**: Chân dung đời thường nam 31 tuổi, phong cách IT công sở, áo polo hoặc thun tối màu, đeo kính cận gọng mảnh, biểu cảm hiền lành, chụp tự nhiên tại văn phòng Technosoft.
   - **Cơ chế Avatar Hệ thống**: Tích hợp qua sprite sheet dùng chung `src/shared/assets/contact-avatar-persona-sheet.jpg` và component `ContactAvatar.tsx`.
 
@@ -31,13 +31,13 @@ husband: hoang
 
 *Dữ liệu mỏ neo giúp người chơi đối chiếu và phát hiện điểm bất thường (sai cỡ quần áo/giày, dị ứng món ăn, sai địa chỉ nhà, sai ngày kỷ niệm) mà không cần đoán mò:*
 
-- **Tên Hiển thị trong Máy Chồng**: "Vợ" (Contact ID: `contact_9`, SĐT: `0900112233`)
+- **Tên Hiển thị trong Máy Chồng**: "Vợ" (Contact ID: `contact_010`, SĐT: `0900112233`)
 - **Họ tên & Tuổi**: Trần Minh Thư, 28 tuổi (nhỏ hơn chồng 3 tuổi - xưng hô chuẩn: `anh` - `em`)
 - **Nghề nghiệp**: Nhân viên văn phòng / Kế toán
 - **Địa chỉ Nhà Chung**: Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Cầu Giấy, Hà Nội
-- **Kích cỡ Trang phục & Giày dép**: Áo/váy size M, giày size 37 (Tiểu tam Hương mặc size S: `order_01` váy lụa size S)
+- **Kích cỡ Trang phục & Giày dép**: Áo/váy size M, giày size 37 (Tiểu tam Hương mặc size S: `order_005` váy lụa size S)
 - **Sở thích & Dị ứng Đồ ăn/Thức uống**: Thích ăn cơm nhà nấu, thích canh nóng để phần; thói quen nhắc chồng về ăn cơm; không thích chồng nhậu nhẹt khuya.
-- **Mốc Kỷ niệm & Quy tắc Gia đình**: Nộp lương 90% (31.500.000đ) vào tài khoản chung của vợ mỗi ngày 10 hàng tháng (giao dịch `tx_home`); ngày kỷ niệm cưới được bảo lưu.
+- **Mốc Kỷ niệm & Quy tắc Gia đình**: Nộp lương 90% (31.500.000đ) vào tài khoản chung của vợ mỗi ngày 10 hàng tháng (giao dịch `tx_019`); ngày kỷ niệm cưới được bảo lưu.
 
 ---
 

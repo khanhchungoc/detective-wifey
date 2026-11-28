@@ -46,7 +46,7 @@ describe('Level 1 shared contacts and conversation images', () => {
   it('renders bundled images in separate ordinary messaging conversations with captions and alt text', () => {
     const data = readMessagingData(loadCase('case_01').appsData['internet-messaging']);
     const imageThreads = data.threads!.filter(thread => thread.messages.some(message => message.type === 'image'));
-    expect(imageThreads.map(thread => thread.threadId).sort()).toEqual(['thread_family', 'thread_friend']);
+    expect(imageThreads.map(thread => thread.threadId).sort()).toEqual(['thread_006', 'thread_010']);
     for (const thread of imageThreads) {
       const photo = thread.messages.find(message => message.type === 'image')!;
       const html = renderToStaticMarkup(createElement(MessagingChatThreadView, { thread, onBack: vi.fn(), onTagSuspect: vi.fn() }));

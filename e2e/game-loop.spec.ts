@@ -16,7 +16,7 @@ import {
  *   edge_order_phone          Shopee order  <-> late call to "Khoa BE" (same number)
  *   edge_order_name           Shopee order  <-> HR pinned welcome for "Nguyễn Thị Thu Hương" (company group)
  *   edge_alibi_contradiction  Zola "Chưa em, sếp Hùng đang chốt nốt." (20:46) <-> card swipe 20:48
- * and accusing the culprit, suspect_huong (alias "Khoa BE").
+ * and accusing the culprit, suspect_01 (alias "Khoa BE").
  */
 
 const WIN_CLUE_COUNT = 5;
@@ -169,14 +169,14 @@ test.describe('Level 1 main game loop', () => {
     await expect(keyProgress(page)).toHaveAttribute('aria-label', /3\/3 mắt xích/);
 
     // Confront Thịnh and accuse the right person, backing each beat with its string.
-    const interrogation = await startConfrontation(page, 'suspect_huong');
-    await choose(interrogation, 'open_ask');
-    await choose(interrogation, 'khoa_shared_phone');
+    const interrogation = await startConfrontation(page, 'suspect_01');
+    await choose(interrogation, 'choice_001');
+    await choose(interrogation, 'choice_003');
     await expect(interrogation.getByText(/Khoa là dev mới bên anh/)).toBeVisible();
-    await choose(interrogation, 'dress_legal_name');
+    await choose(interrogation, 'choice_006');
     await expect(interrogation.getByText(/Hương bên Marketing nhờ anh/)).toBeVisible();
-    await choose(interrogation, 'alibi_card_swipe');
-    await choose(interrogation, 'end_forgive');
+    await choose(interrogation, 'choice_009');
+    await choose(interrogation, 'choice_012');
 
     // Win outcome: verdict roast, share and advance actions, and no failure warning.
     await expect(interrogation.getByText(/Anh fix bug hay fix luôn lời khai/)).toBeVisible();
@@ -187,7 +187,7 @@ test.describe('Level 1 main game loop', () => {
 
     // Winning unlocks Level 2 in saved progress.
     await expect.poll(async () => page.evaluate(() => {
-      const raw = window.localStorage.getItem('detective:v1:jealous_wife:progress');
+      const raw = window.localStorage.getItem('detective:v2:jealous_wife:progress');
       return raw ? (JSON.parse(raw) as { unlockedLevel?: number }).unlockedLevel : undefined;
     })).toBe(2);
 
@@ -204,9 +204,9 @@ test.describe('Level 1 main game loop', () => {
     await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
 
     await openNotebook(page);
-    const interrogation = await startConfrontation(page, 'suspect_lan_anh');
-    await choose(interrogation, 'open_ask');
-    await choose(interrogation, 'khoa_shared_phone');
+    const interrogation = await startConfrontation(page, 'suspect_04');
+    await choose(interrogation, 'choice_001');
+    await choose(interrogation, 'choice_003');
 
     // Lose outcome: Thịnh deflects, only "return to investigation" is offered, no verdict roast.
     await expect(interrogation.getByText(/Khoa là dev backend, nhắn việc với anh suốt/)).toBeVisible();
@@ -221,7 +221,7 @@ test.describe('Level 1 main game loop', () => {
 
     // Losing must not unlock Level 2.
     const unlocked = await page.evaluate(() => {
-      const raw = window.localStorage.getItem('detective:v1:jealous_wife:progress');
+      const raw = window.localStorage.getItem('detective:v2:jealous_wife:progress');
       return raw ? (JSON.parse(raw) as { unlockedLevel?: number }).unlockedLevel : undefined;
     });
     expect(unlocked ?? 1).toBe(1);

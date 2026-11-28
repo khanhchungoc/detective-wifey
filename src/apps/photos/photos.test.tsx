@@ -48,14 +48,14 @@ describe('case-supplied photo library', () => {
     expect(photos).toHaveLength(16);
     expect(photos.some(photo => photo.id === 'photo_dinner_claypot')).toBe(false);
     expect(photos.some(photo => photo.clueRefId || photo.locationTag)).toBe(false);
-    expect(photos.find(photo => photo.id === 'photo_7')?.title).toBe('Bình nóng lạnh hỏng');
+    expect(photos.find(photo => photo.id === 'photo_003')?.title).toBe('Bình nóng lạnh hỏng');
     expect(photos.every(photo => !/15\/10.*(19|2[0-3]):/.test(photo.timestamp ?? ''))).toBe(true);
   });
 
   it('pins an everyday photo with imageSrc onto the Corkboard', () => {
-    const photo = readPhotosData(loadCase('case_01').appsData.photos).photos.find(item => item.id === 'photo_0')!;
+    const photo = readPhotosData(loadCase('case_01').appsData.photos).photos.find(item => item.id === 'photo_010')!;
     const evidence = buildPhotoEvidenceItem(photo, 'case_01', 'Thịnh', 'exif');
-    expect(evidence.source?.recordId).toBe('photo_0');
+    expect(evidence.source?.recordId).toBe('photo_010');
     expect(evidence.source?.imageSrc).toBeTruthy();
 
     const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [{

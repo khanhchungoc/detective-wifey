@@ -2,20 +2,20 @@
   "unreadBadge": 0,
   "channels": [
     {
-      "channelId": "ch_general",
+      "channelId": "channel_013",
       "channelName": "Team Dev Backend & Web",
       "lastMessage": "Sếp Hùng: Chiều nay 15h họp Sprint Retro nhé cả nhóm.",
       "messages": [
-        { "id": "df_tim_1", "sender": "Nam Dev", "text": "Task auth em đẩy lên staging rồi sếp nhé.", "time": "10:15" },
-        { "id": "df_tim_2", "sender": "Sếp Hùng", "text": "Ok em, chiều nay 15h họp Sprint Retro nhé cả nhóm.", "time": "10:30" }
+        { "id": "chmsg_013_0001", "sender": "Nam Dev", "text": "Task auth em đẩy lên staging rồi sếp nhé.", "time": "10:15" },
+        { "id": "chmsg_013_0002", "sender": "Sếp Hùng", "text": "Ok em, chiều nay 15h họp Sprint Retro nhé cả nhóm.", "time": "10:30" }
       ]
     },
     {
-      "channelId": "ch_watercooler",
+      "channelId": "channel_014",
       "channelName": "Trà Đá Chém Gió",
       "lastMessage": "Trang Tester: Trưa nay ai order trà sữa không?",
       "messages": [
-        { "id": "df_tim_3", "sender": "Trang Tester", "text": "Trưa nay ai order trà sữa không? Quán đang giảm giá 30% nè.", "time": "11:20" }
+        { "id": "chmsg_014_0001", "sender": "Trang Tester", "text": "Trưa nay ai order trà sữa không? Quán đang giảm giá 30% nè.", "time": "11:20" }
       ]
     }
   ]

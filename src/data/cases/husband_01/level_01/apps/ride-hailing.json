@@ -1,7 +1,7 @@
 {
   "trips": [
     {
-      "id": "food_coffee",
+      "id": "trip_001",
       "time": "14/10/2026 08:20",
       "cost": "29.000đ",
       "pickup": "Cà phê đen ít đá, giao Technosoft",
@@ -10,7 +10,7 @@
       "timestamp": "14/10/2026 08:20"
     },
     {
-      "id": "ride_cancel",
+      "id": "trip_002",
       "time": "13/10/2026 07:50",
       "cost": "0đ",
       "pickup": "Nhà",
@@ -19,7 +19,7 @@
       "timestamp": "13/10/2026 07:50"
     },
     {
-      "id": "ride_market",
+      "id": "trip_003",
       "time": "12/10/2026 16:30",
       "cost": "24.000đ",
       "pickup": "Nhà",
@@ -28,7 +28,7 @@
       "timestamp": "12/10/2026 16:30"
     },
     {
-      "id": "food_lunch",
+      "id": "trip_004",
       "time": "11/10/2026 11:45",
       "cost": "45.000đ",
       "pickup": "Cơm gà văn phòng, một phần, ít cay, giao Technosoft",
@@ -37,7 +37,7 @@
       "timestamp": "11/10/2026 11:45"
     },
     {
-      "id": "ride_home",
+      "id": "trip_005",
       "time": "10/10/2026 18:10",
       "cost": "41.000đ",
       "pickup": "Technosoft",
@@ -46,7 +46,7 @@
       "timestamp": "10/10/2026 18:10"
     },
     {
-      "id": "ride_work",
+      "id": "trip_006",
       "time": "10/10/2026 08:00",
       "cost": "38.000đ",
       "pickup": "Nhà",
@@ -55,7 +55,7 @@
       "timestamp": "10/10/2026 08:00"
     },
     {
-      "id": "trip_history_13",
+      "id": "trip_007",
       "time": "07/10/2026 08:00",
       "pickup": "Nhà",
       "dropoff": "Technosoft",
@@ -64,7 +64,7 @@
       "timestamp": "07/10/2026 08:00"
     },
     {
-      "id": "trip_history_12",
+      "id": "trip_008",
       "time": "05/10/2026 08:15",
       "pickup": "Nhà",
       "dropoff": "Sân bóng",
@@ -73,7 +73,7 @@
       "timestamp": "05/10/2026 08:15"
     },
     {
-      "id": "trip_history_11",
+      "id": "trip_009",
       "time": "03/10/2026 11:45",
       "pickup": "Cơm gà",
       "dropoff": "Technosoft",
@@ -82,7 +82,7 @@
       "timestamp": "03/10/2026 11:45"
     },
     {
-      "id": "trip_history_10",
+      "id": "trip_010",
       "time": "02/10/2026 17:00",
       "pickup": "Nhà",
       "dropoff": "Tiệm giặt là",
@@ -91,7 +91,7 @@
       "timestamp": "02/10/2026 17:00"
     },
     {
-      "id": "trip_history_9",
+      "id": "trip_011",
       "time": "30/09/2026 17:50",
       "pickup": "Technosoft",
       "dropoff": "Nhà",
@@ -100,7 +100,7 @@
       "timestamp": "30/09/2026 17:50"
     },
     {
-      "id": "trip_history_8",
+      "id": "trip_012",
       "time": "29/09/2026 08:00",
       "pickup": "Nhà",
       "dropoff": "Technosoft",
@@ -109,7 +109,7 @@
       "timestamp": "29/09/2026 08:00"
     },
     {
-      "id": "trip_history_7",
+      "id": "trip_013",
       "time": "27/09/2026 10:30",
       "pickup": "Tiệm bảo dưỡng xe",
       "dropoff": "Nhà",
@@ -118,7 +118,7 @@
       "timestamp": "27/09/2026 10:30"
     },
     {
-      "id": "trip_history_6",
+      "id": "trip_014",
       "time": "27/09/2026 09:00",
       "pickup": "Nhà",
       "dropoff": "Tiệm bảo dưỡng xe",
@@ -127,7 +127,7 @@
       "timestamp": "27/09/2026 09:00"
     },
     {
-      "id": "trip_history_5",
+      "id": "trip_015",
       "time": "26/09/2026 16:00",
       "pickup": "Nhà",
       "dropoff": "Siêu thị",
@@ -136,7 +136,7 @@
       "timestamp": "26/09/2026 16:00"
     },
     {
-      "id": "trip_history_4",
+      "id": "trip_016",
       "time": "25/09/2026 12:00",
       "pickup": "Cơm văn phòng",
       "dropoff": "Technosoft",
@@ -145,7 +145,7 @@
       "timestamp": "25/09/2026 12:00"
     },
     {
-      "id": "trip_history_3",
+      "id": "trip_017",
       "time": "23/09/2026 18:15",
       "pickup": "Technosoft",
       "dropoff": "Nhà",
@@ -154,7 +154,7 @@
       "timestamp": "23/09/2026 18:15"
     },
     {
-      "id": "trip_history_2",
+      "id": "trip_018",
       "time": "23/09/2026 08:10",
       "pickup": "Nhà",
       "dropoff": "Technosoft",
@@ -163,7 +163,7 @@
       "timestamp": "23/09/2026 08:10"
     },
     {
-      "id": "trip_history_1",
+      "id": "trip_019",
       "time": "21/09/2026 18:00",
       "pickup": "Technosoft",
       "dropoff": "Nhà",
@@ -172,7 +172,7 @@
       "timestamp": "21/09/2026 18:00"
     },
     {
-      "id": "trip_history_0",
+      "id": "trip_020",
       "time": "21/09/2026 08:00",
       "pickup": "Nhà",
       "dropoff": "Technosoft",

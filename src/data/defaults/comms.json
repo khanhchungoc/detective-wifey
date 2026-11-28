@@ -2,21 +2,21 @@
   "unreadBadge": 0,
   "calls": [
     {
-      "id": "df_c1",
+      "id": "call_047",
       "name": "Mẹ",
       "type": "incoming",
       "time": "18:20 - Hôm qua",
       "duration": "3 phút 15 giây"
     },
     {
-      "id": "df_c2",
+      "id": "call_048",
       "name": "Shipper Mua sắm (0971***333)",
       "type": "incoming",
       "time": "11:45 - Hôm qua",
       "duration": "28 giây"
     },
     {
-      "id": "df_c3",
+      "id": "call_049",
       "name": "Quán Cơm Thúy",
       "type": "outgoing",
       "time": "11:30 - 2 ngày trước",
@@ -25,13 +25,13 @@
   ],
   "sms": [
     {
-      "id": "df_sms_01",
+      "id": "sms_001",
       "sender": "VIETTEL_QC",
       "text": "Khuyen mai 20% gia tri the nap danh cho thue bao cua ban trong ngay hom nay.",
       "time": "09:00 - Hom qua"
     },
     {
-      "id": "df_sms_02",
+      "id": "sms_002",
       "sender": "EVN_HANOI",
       "text": "TB: Quy khach da thanh toan thanh cong tien dien thang voi so tien 650.000d. Cam on quy khach.",
       "time": "19:05 - Hom qua"

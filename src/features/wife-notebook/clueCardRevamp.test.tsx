@@ -73,16 +73,16 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
   });
 
   describe('Investigation Evidence Aggregation & Pinning', () => {
-    const caseId = 'case_hoang_01';
+    const caseId = 'case_01';
 
     it('pins identity-only conversation with empty body and isExplicitConversationPin: true', () => {
       const conversationSource: EvidenceSource = {
         caseId,
-        recordId: 'thread_thu_huong',
+        recordId: 'thread_901',
         title: 'Hương Em',
         snippet: '',
         kind: 'conversation',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         isExplicitConversationPin: true,
       };
@@ -94,7 +94,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const tagged = result.suspects[0];
       expect(tagged.displayName).toBe('Hương Em');
       expect(tagged.sourceApp).toBe('internet-messaging');
-      expect(tagged.conversationId).toBe('thread_thu_huong');
+      expect(tagged.conversationId).toBe('thread_901');
       expect(tagged.isExplicitConversationPin).toBe(true);
       expect(tagged.messages).toEqual([]);
       expect(tagged.evidence?.snippet).toBe('');
@@ -103,11 +103,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     it('aggregates multiple pinned messages from the same conversation into ONE clue card', () => {
       const conversationSource: EvidenceSource = {
         caseId,
-        recordId: 'thread_thu_huong',
+        recordId: 'thread_901',
         title: 'Hương Em',
         snippet: '',
         kind: 'conversation',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         isExplicitConversationPin: true,
       };
@@ -123,7 +123,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Em đợi anh ở khách sạn Metropole.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         eventTime: '12:10',
         eventDate: '28/09',
@@ -142,7 +142,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Đừng quên xóa tin nhắn nhé.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         eventTime: '12:15',
         eventDate: '28/09',
@@ -161,7 +161,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Em đợi anh ở sảnh.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         eventTime: '12:10',
       };
@@ -182,7 +182,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Tin nhắn trước đó.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
       };
 
@@ -193,11 +193,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       // Now pin conversation explicitly
       const conversationSource: EvidenceSource = {
         caseId,
-        recordId: 'thread_thu_huong',
+        recordId: 'thread_901',
         title: 'Hương Em',
         snippet: '',
         kind: 'conversation',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         isExplicitConversationPin: true,
       };
@@ -380,7 +380,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           displayName: 'Hương Em',
           sourceApp: 'internet-messaging' as const,
           timestamp: 100,
-          conversationId: 'thread_huong',
+          conversationId: 'thread_902',
           visibleAlias: 'Hương Em',
           isExplicitConversationPin: true,
           messages: [
@@ -388,7 +388,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           ],
           evidence: {
             caseId: 'case_1',
-            recordId: 'thread_huong',
+            recordId: 'thread_902',
             title: 'Hương Em',
             snippet: '',
           },
@@ -398,7 +398,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
       expect(nodes).toHaveLength(1);
       expect(nodes[0].visibleAlias).toBe('Hương Em');
-      expect(nodes[0].conversationId).toBe('thread_huong');
+      expect(nodes[0].conversationId).toBe('thread_902');
       expect(nodes[0].isExplicitConversationPin).toBe(true);
       expect(nodes[0].messages).toHaveLength(1);
       expect(nodes[0].messages![0].text).toBe('Gặp em nhé');
@@ -407,26 +407,26 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     it('derives separate nodes for distinct records sharing the same clueRefId', () => {
       const tagged = [
         {
-          suspectId: 'suspect_huong',
+          suspectId: 'suspect_01',
           displayName: 'Giao dịch: Com Nieu Pho Co',
           sourceApp: 'banking' as const,
           timestamp: 1000,
           evidence: {
             caseId: 'case_01',
-            recordId: 'tx_01',
+            recordId: 'tx_003',
             clueRefId: 'CLUE-BANK-07',
             title: 'Giao dịch: Com Nieu Pho Co',
             snippet: '- 640.000 đ 15/10/2026 20:48\nCom Nieu Pho Co Thanh toan the',
           },
         },
         {
-          suspectId: 'suspect_huong',
+          suspectId: 'suspect_01',
           displayName: 'Giao dịch: Bé Ngọc',
           sourceApp: 'banking' as const,
           timestamp: 1001,
           evidence: {
             caseId: 'case_01',
-            recordId: 'tx_ngoc',
+            recordId: 'tx_005',
             clueRefId: 'CLUE-BANK-07',
             title: 'Giao dịch: Bé Ngọc',
             snippet: '- 1.200.000 đ 15/10/2026 20:10\nCK',
@@ -436,19 +436,19 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
 
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
       expect(nodes).toHaveLength(2);
-      expect(nodes.map(n => n.nodeId)).toEqual(['node_record_bank_receipt', 'node_banking_tx_ngoc']);
-      expect(nodes.map(n => n.recordRefId)).toEqual(['tx_01', 'tx_ngoc']);
+      expect(nodes.map(n => n.nodeId)).toEqual(['node_record_bank_receipt', 'node_banking_tx_005']);
+      expect(nodes.map(n => n.recordRefId)).toEqual(['tx_003', 'tx_005']);
     });
   });
 
   describe('CorkboardCanvas & UnorganizedDrawer Wireframe Compliance', () => {
     const sampleConversationNode: CaseGraphNode = {
-      nodeId: 'node_huong',
+      nodeId: 'node_903',
       type: 'record_clue',
       label: 'Hương Em',
       sourceAppId: 'internet-messaging',
-      recordRefId: 'thread_huong',
-      conversationId: 'thread_huong',
+      recordRefId: 'thread_902',
+      conversationId: 'thread_902',
       visibleAlias: 'Hương Em',
       isExplicitConversationPin: true,
       messages: [
@@ -464,7 +464,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     };
 
     it.each([
-      { type: 'record_clue' as const, conversationId: 'thread_huong', sourceAppId: 'internet-messaging', hasAvatar: true },
+      { type: 'record_clue' as const, conversationId: 'thread_902', sourceAppId: 'internet-messaging', hasAvatar: true },
       { type: 'alias' as const, sourceAppId: 'internet-messaging', hasAvatar: true },
       { type: 'suspect' as const, sourceAppId: undefined, hasAvatar: true },
       { type: 'record_clue' as const, visibleAlias: 'Mẹ Ở Quê', sourceAppId: 'phone', hasAvatar: true },
@@ -532,7 +532,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           unmaskedSuspectIds={[]}
           activeContradictions={[]}
           selectedEdgeId={null}
-          selectedNodeId="node_huong"
+          selectedNodeId="node_903"
           onSelectNode={vi.fn()}
           onSelectCard={vi.fn()}
           onMoveNode={vi.fn()}
@@ -576,8 +576,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     it('collapses legacy separate message cards from the same person into EXACTLY ONE card', () => {
       // Recreate the exact 3 legacy tags from the user screenshot:
       // 1. Tag for Anh Tuấn Thợ Điện
-      // 2. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_tuan_m4)
-      // 3. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_tuan_m5)
+      // 2. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_903_m4)
+      // 3. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_903_m5)
       const legacyTags = [
         {
           suspectId: 'tag_1',
@@ -585,8 +585,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           sourceApp: 'internet-messaging' as const,
           timestamp: 100,
           evidence: {
-            caseId: 'hoang_01',
-            recordId: 'thread_tuan_dien',
+            caseId: 'case_01',
+            recordId: 'thread_004',
             title: 'Anh Tuấn Thợ Điện',
             snippet: 'Áo anh em treo lên rồi, mai mang trả nhé.',
             clueRefId: 'CLUE-ZOLA-10',
@@ -598,8 +598,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           sourceApp: 'internet-messaging' as const,
           timestamp: 101,
           evidence: {
-            caseId: 'hoang_01',
-            recordId: 'thread_tuan_dien_m4',
+            caseId: 'case_01',
+            recordId: 'thread_004_m4',
             title: 'Tin nhắn: Anh Tuấn Thợ Điện',
             snippet: 'Anh xem giúp em bản xuất bị lệch chữ ở trang cuối với.',
             eventTime: '13/10 10:10',
@@ -611,8 +611,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           sourceApp: 'internet-messaging' as const,
           timestamp: 102,
           evidence: {
-            caseId: 'hoang_01',
-            recordId: 'thread_tuan_dien_m5',
+            caseId: 'case_01',
+            recordId: 'thread_004_m5',
             title: 'Tin nhắn: Anh Tuấn Thợ Điện',
             snippet: 'Đúng là em chọn nhầm vùng. Đủ trang rồi.',
             eventTime: '13/10 10:16',
@@ -624,7 +624,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const normalized = normalizeTaggedSuspects(legacyTags);
       expect(normalized).toHaveLength(1);
       expect(normalized[0].displayName).toBe('Anh Tuấn Thợ Điện');
-      expect(normalized[0].conversationId).toBe('thread_tuan_dien');
+      expect(normalized[0].conversationId).toBe('thread_004');
       expect(normalized[0].messages).toHaveLength(2);
       expect(normalized[0].messages![0].text).toBe('Anh xem giúp em bản xuất bị lệch chữ ở trang cuối với.');
       expect(normalized[0].messages![1].text).toBe('Đúng là em chọn nhầm vùng. Đủ trang rồi.');
@@ -638,7 +638,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     });
 
     it('keeps the Zola conversation and order connection speculative', () => {
-      for (const chatId of ['node_alias_khoa', 'node_record_khoa_booking']) {
+      for (const chatId of ['node_alias_01', 'node_record_booking']) {
         const { newEdge } = createEdgeBetweenNodes(
           LEVEL_01_KNOWLEDGE_GRAPH, [], chatId, 'node_record_ecommerce_order',
         );

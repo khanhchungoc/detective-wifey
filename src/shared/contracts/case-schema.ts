@@ -95,6 +95,8 @@ export interface ConfrontationEndingChoice extends ConfrontationReply {
   choiceId: string;
   slot: ConfrontationSlot;
   wifeLine: string;
+  /** Author-set outcome; choice IDs are generic, so the UI cannot infer it from the ID. */
+  outcome: 'divorce' | 'forgive';
 }
 
 /** Beat 1 = opening; beats 2..N follow in order; the last lead's onTrue (broken) unlocks the ending. */

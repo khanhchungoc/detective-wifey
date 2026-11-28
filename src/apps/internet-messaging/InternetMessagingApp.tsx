@@ -17,21 +17,21 @@ import { MessagingThread, MessagingContact, MessagingCloudDocument } from './typ
 
 const DEFAULT_CONTACTS: MessagingContact[] = [
   {
-    id: 'c_bach',
+    id: 'contact_018',
     name: 'Anh Bách QLDA - Ban Quản Lý Toà Nhà',
     department: 'Phòng 402 - Toà Diamond',
     section: 'A',
     avatarGradient: 'from-slate-500 to-slate-700',
   },
   {
-    id: 'c_bao_ve',
+    id: 'contact_020',
     name: 'Bác Bảo Vệ Chung Cư',
     department: 'Trực ca đêm sảnh B',
     section: 'B',
     avatarGradient: 'from-blue-400 to-indigo-600',
   },
   {
-    id: 'c_lan_anh',
+    id: 'contact_021',
     name: 'Lan Anh Kế Toán',
     department: 'Phòng Tài Chính Kế Toán',
     section: 'L',
@@ -41,7 +41,7 @@ const DEFAULT_CONTACTS: MessagingContact[] = [
 
 const DEFAULT_CLOUD_DOCS: MessagingCloudDocument[] = [
   {
-    id: 'doc_hook',
+    id: 'doc_001',
     fileName: 'quy_uoc_hook.txt',
     date: '11/10/2026',
     fileSize: '1 KB',
@@ -50,7 +50,7 @@ const DEFAULT_CLOUD_DOCS: MessagingCloudDocument[] = [
     textMessage: 'Tên hook bắt đầu bằng use, theo camelCase. Ví dụ: useCart.',
   },
   {
-    id: 'doc_03',
+    id: 'doc_005',
     fileName: 'Bang_luong_thang_9_CTY.xlsx',
     date: '05/10/2026',
     fileSize: '320 KB',
@@ -61,7 +61,7 @@ const DEFAULT_CLOUD_DOCS: MessagingCloudDocument[] = [
 
 const DEFAULT_OTHER_THREADS: MessagingThread[] = [
   {
-    threadId: 'thread_viettel',
+    threadId: 'thread_036',
     contactName: 'Viettel CSKH',
     avatarGradient: 'from-red-500 to-rose-600',
     lastMessage: 'Viettel: Quý khách được tặng 50% giá trị thẻ nạp...',
@@ -70,7 +70,7 @@ const DEFAULT_OTHER_THREADS: MessagingThread[] = [
     isMuted: true,
     messages: [
       {
-        id: 'vtl_1',
+        id: 'msg_036_0001',
         sender: 'them',
         text: 'Viettel thông báo: Quý khách được tặng 50% giá trị thẻ nạp khi nạp qua Ví điện tử hôm nay.',
         time: '08:00',

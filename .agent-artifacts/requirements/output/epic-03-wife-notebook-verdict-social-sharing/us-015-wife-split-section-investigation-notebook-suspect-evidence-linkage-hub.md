@@ -30,7 +30,7 @@ As a jealous wife investigating suspicious traces across parody phone apps, I wa
 ### Definitions & Domain Rules
 
 - **System Scope 1C (End-to-End Declarative Graph)**: The case schema, authoring tools, and runtime engine operate on a unified Knowledge Graph (`CaseKnowledgeGraph`) composed of typed Nodes (`Suspect`, `Alias`, `BridgeIdentifier`, `RecordClue`, `TimelineSlot`) and typed Edges (`USES_ALIAS`, `BRIDGES_IDENTITY`, `OCCURRED_AT`, `CONTRADICTS_ALIBI`).
-- **Strict Zero-Spoiler Alias Resolution Invariant**: Long-pressing narrative content via `StoryEvidenceTarget` (380ms) pins only the raw observable node (e.g., alias handle `"Anh Tuấn Thợ Điện"`, phone number `0988886677`, order record `order_01`). The game engine strictly forbids exposing the culprit suspect identity (`suspect_huong`) upon pinning. The suspect profile node is only resolved and unmasked when the player links the mystery alias to verifiable bridge identifiers on the board.
+- **Strict Zero-Spoiler Alias Resolution Invariant**: Long-pressing narrative content via `StoryEvidenceTarget` (380ms) pins only the raw observable node (e.g., alias handle `"Anh Tuấn Thợ Điện"`, phone number `0988886677`, order record `order_005`). The game engine strictly forbids exposing the culprit suspect identity (`suspect_01`) upon pinning. The suspect profile node is only resolved and unmasked when the player links the mystery alias to verifiable bridge identifiers on the board.
 - **Mobile 2A Corkboard UX Paradigm**: The 2D node-link canvas operates inside the mobile portrait container (393px × 852px viewport) using:
   1. *Isolated Panning/Zooming*: Panning is handled via single-touch drag on empty canvas. Two-finger pinch gestures zoom the canvas continuously centered around the dynamic touch midpoint between 0.5x (macro overview) and 2.0x (close-up inspection) with boundary dampening. Panning and zooming gestures inside the canvas container apply `touch-action: none` and suppress OS swipe-back navigation (`useSwipeBack`).
   2. *Tap-to-Connect Pairing*: Connecting nodes uses a two-tap state machine (Tap Node A to highlight as source $\rightarrow$ Tap Node B to form a connecting red string) rather than micro cable dragging.
@@ -127,7 +127,7 @@ export interface CaseKnowledgeGraph {
 - 3.5. Duplicate edges between the same two nodes are prevented.
 
 #### 4. Strict Zero-Spoiler Alias Resolution & Cluster Merging
-- 4.1. When an Alias node (e.g., `"Anh Tuấn Thợ Điện"`) is placed on the canvas, it renders as a mystery contact card with masked avatar (`IoGlassesOutline`) and zero references to the true suspect (`suspect_huong`).
+- 4.1. When an Alias node (e.g., `"Anh Tuấn Thợ Điện"`) is placed on the canvas, it renders as a mystery contact card with masked avatar (`IoGlassesOutline`) and zero references to the true suspect (`suspect_01`).
 - 4.2. When the player links an Alias node to a Bridge Identifier node (e.g., phone number `0988886677`), and links that Bridge node to a verified recipient order or account name (`"Nguyễn Thị Thu Hương"`), the game engine validates the multi-hop connection against `CaseKnowledgeGraph`.
 - 4.3. Upon validating the complete identity chain, the connected nodes trigger a celebratory merge animation and snap into an unmasked Suspect Cluster card (`NGUYỄN THỊ THU HƯƠNG - Marketing Technosoft`).
 - 4.4. Incorrect or decoy connections remain visible on the board as player notes but do not trigger identity resolution or smoke-gun confirmation.

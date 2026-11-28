@@ -24,8 +24,8 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     suspectToTag: 'Anh Tuấn Thợ Điện',
     source: {
       caseId: 'case_01',
-      recordId: 'thread_tuan_dien_m4',
-      conversationId: 'thread_tuan_dien',
+      recordId: 'thread_004_m4',
+      conversationId: 'thread_004',
       title: 'Anh Tuấn Thợ Điện',
       snippet: 'Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!',
       eventDate: '15/10',
@@ -188,8 +188,8 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     // Tag first message
     const tag1 = tagSuspect(suspects, 'Anh Tuấn Thợ Điện', 'internet-messaging', 1000, {
       caseId: 'case_01',
-      recordId: 'thread_tuan_dien_m1',
-      conversationId: 'thread_tuan_dien',
+      recordId: 'thread_004_m1',
+      conversationId: 'thread_004',
       title: 'Anh Tuấn Thợ Điện',
       snippet: 'Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!',
       eventDate: '15/10',
@@ -202,8 +202,8 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     // Tag second message in the same conversation
     const tag2 = tagSuspect(tag1.suspects, 'Anh Tuấn Thợ Điện', 'internet-messaging', 2000, {
       caseId: 'case_01',
-      recordId: 'thread_tuan_dien_m2',
-      conversationId: 'thread_tuan_dien',
+      recordId: 'thread_004_m2',
+      conversationId: 'thread_004',
       title: 'Anh Tuấn Thợ Điện',
       snippet: 'Xong việc nhớ gọi lại cho em số này...',
       eventDate: '15/10',
@@ -227,18 +227,18 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
   it('Group-chat messages pinned by message id fold into one thread card with their sender kept', () => {
     const pin = (id: string, snippet: string, sender: string, t: number, prev: TaggedSuspect[]) =>
       tagSuspect(prev, 'Technosoft - Toàn công ty', 'internet-messaging', t, {
-        caseId: 'case_01', recordId: id, conversationId: 'thread_company', kind: 'message',
+        caseId: 'case_01', recordId: id, conversationId: 'thread_012', kind: 'message',
         title: 'Technosoft - Toàn công ty', snippet, sender,
       });
-    const first = pin('msg_company_pin', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 1, []);
-    const second = pin('msg_company_khoa_post', 'Team MKT nhờ cả nhà share...', 'Khoa BE', 2, first.suspects);
+    const first = pin('msg_012_0001', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 1, []);
+    const second = pin('msg_012_0004', 'Team MKT nhờ cả nhà share...', 'Khoa BE', 2, first.suspects);
     expect(second.suspects).toHaveLength(1);
-    expect(second.suspects[0].conversationId).toBe('thread_company');
+    expect(second.suspects[0].conversationId).toBe('thread_012');
     expect(second.suspects[0].messages?.map(m => [m.recordId, m.sender])).toEqual([
-      ['msg_company_pin', 'HR'], ['msg_company_khoa_post', 'Khoa BE'],
+      ['msg_012_0001', 'HR'], ['msg_012_0004', 'Khoa BE'],
     ]);
     // Re-pinning the same message adds nothing.
-    expect(pin('msg_company_pin', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 3, second.suspects).added).toBe(false);
+    expect(pin('msg_012_0001', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 3, second.suspects).added).toBe(false);
   });
 
   it('Khoa BE gets an ordinary landscape photo like other contacts, never the real person\'s portrait', () => {
@@ -263,7 +263,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     let sessionState: ActiveSessionState | null = null;
     let progressState: PlayerProgress = {
       schemaVersion: 1,
-      unlockedHusbandId: 'husband_hoang',
+      unlockedHusbandId: 'husband_01',
       unlockedLevel: 1,
       bestStarRatings: {},
       earnedWifeTitles: [],
@@ -280,13 +280,13 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
 
     const mockCase: CaseConfig = {
       caseId: 'case_01',
-      husbandId: 'husband_hoang',
+      husbandId: 'husband_01',
       husbandName: 'Thịnh',
       levelNumber: 1,
       allowedStrikes: 5,
       groundTruth: {
         verdict: 'cheating',
-        culpritSuspectId: 'suspect_huong',
+        culpritSuspectId: 'suspect_01',
         narrativeRoast: 'Roast',
       },
       suspectPool: [],

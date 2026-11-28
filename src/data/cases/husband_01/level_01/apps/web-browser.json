@@ -1,7 +1,7 @@
 {
   "history": [
     {
-      "id": "history_7",
+      "id": "hist_001",
       "title": "Cách bảo quản bưởi",
       "time": "15/10/2026 17:10",
       "url": "noidung.local/bai/7",
@@ -9,7 +9,7 @@
       "timestamp": "15/10/2026 17:10"
     },
     {
-      "id": "history_6",
+      "id": "hist_002",
       "title": "CSS grid căn cột",
       "time": "15/10/2026 10:00",
       "url": "noidung.local/bai/6",
@@ -17,7 +17,7 @@
       "timestamp": "15/10/2026 10:00"
     },
     {
-      "id": "history_5",
+      "id": "hist_003",
       "title": "Bảo dưỡng xe máy định kỳ",
       "time": "14/10/2026 07:30",
       "url": "noidung.local/bai/5",
@@ -25,7 +25,7 @@
       "timestamp": "14/10/2026 07:30"
     },
     {
-      "id": "history_4",
+      "id": "hist_004",
       "title": "Cách vệ sinh bàn phím cơ",
       "time": "13/10/2026 15:10",
       "url": "noidung.local/bai/4",
@@ -33,7 +33,7 @@
       "timestamp": "13/10/2026 15:10"
     },
     {
-      "id": "history_3",
+      "id": "hist_005",
       "title": "Bình nóng lạnh 20 lít loại nào tốt",
       "time": "13/10/2026 09:10",
       "url": "noidung.local/bai/3",
@@ -41,7 +41,7 @@
       "timestamp": "13/10/2026 09:10"
     },
     {
-      "id": "history_2",
+      "id": "hist_006",
       "title": "Dự báo mưa cuối tuần",
       "time": "12/10/2026 08:20",
       "url": "noidung.local/bai/2",
@@ -49,7 +49,7 @@
       "timestamp": "12/10/2026 08:20"
     },
     {
-      "id": "history_1",
+      "id": "hist_007",
       "title": "TypeScript kiểu dữ liệu tổng hợp",
       "time": "11/10/2026 09:25",
       "url": "noidung.local/bai/1",
@@ -57,7 +57,7 @@
       "timestamp": "11/10/2026 09:25"
     },
     {
-      "id": "history_0",
+      "id": "hist_008",
       "title": "React cập nhật trạng thái",
       "time": "11/10/2026 09:10",
       "url": "noidung.local/bai/0",
@@ -65,7 +65,7 @@
       "timestamp": "11/10/2026 09:10"
     },
     {
-      "id": "browser_history_16",
+      "id": "hist_009",
       "title": "Món canh rau",
       "time": "07/10/2026 10:20",
       "url": "https://example.invalid/reading/16",
@@ -73,7 +73,7 @@
       "timestamp": "07/10/2026 10:20"
     },
     {
-      "id": "browser_history_15",
+      "id": "hist_010",
       "title": "Gấp áo khoác",
       "time": "06/10/2026 10:20",
       "url": "https://example.invalid/reading/15",
@@ -81,7 +81,7 @@
       "timestamp": "06/10/2026 10:20"
     },
     {
-      "id": "browser_history_14",
+      "id": "hist_011",
       "title": "Tra cứu thời tiết",
       "time": "05/10/2026 10:20",
       "url": "https://example.invalid/reading/14",
@@ -89,7 +89,7 @@
       "timestamp": "05/10/2026 10:20"
     },
     {
-      "id": "browser_history_13",
+      "id": "hist_012",
       "title": "Chọn đèn học",
       "time": "04/10/2026 10:20",
       "url": "https://example.invalid/reading/13",
@@ -97,7 +97,7 @@
       "timestamp": "04/10/2026 10:20"
     },
     {
-      "id": "browser_history_12",
+      "id": "hist_013",
       "title": "Tập giãn cơ",
       "time": "03/10/2026 10:20",
       "url": "https://example.invalid/reading/12",
@@ -105,7 +105,7 @@
       "timestamp": "03/10/2026 10:20"
     },
     {
-      "id": "browser_history_11",
+      "id": "hist_014",
       "title": "Đọc sách kỹ thuật",
       "time": "02/10/2026 10:20",
       "url": "https://example.invalid/reading/11",
@@ -113,7 +113,7 @@
       "timestamp": "02/10/2026 10:20"
     },
     {
-      "id": "browser_history_10",
+      "id": "hist_015",
       "title": "Bảo quản cà phê",
       "time": "01/10/2026 10:20",
       "url": "https://example.invalid/reading/10",
@@ -121,7 +121,7 @@
       "timestamp": "01/10/2026 10:20"
     },
     {
-      "id": "browser_history_9",
+      "id": "hist_016",
       "title": "Trồng rau trong chậu",
       "time": "29/09/2026 10:20",
       "url": "https://example.invalid/reading/9",
@@ -129,7 +129,7 @@
       "timestamp": "29/09/2026 10:20"
     },
     {
-      "id": "browser_history_8",
+      "id": "hist_017",
       "title": "Túi rác phân loại",
       "time": "28/09/2026 10:20",
       "url": "https://example.invalid/reading/8",
@@ -137,7 +137,7 @@
       "timestamp": "28/09/2026 10:20"
     },
     {
-      "id": "browser_history_7",
+      "id": "hist_018",
       "title": "CSS grid",
       "time": "27/09/2026 10:20",
       "url": "https://example.invalid/reading/7",
@@ -145,7 +145,7 @@
       "timestamp": "27/09/2026 10:20"
     },
     {
-      "id": "browser_history_6",
+      "id": "hist_019",
       "title": "TypeScript narrowing",
       "time": "26/09/2026 10:20",
       "url": "https://example.invalid/reading/6",
@@ -153,7 +153,7 @@
       "timestamp": "26/09/2026 10:20"
     },
     {
-      "id": "browser_history_5",
+      "id": "hist_020",
       "title": "Cách giặt giày thể thao",
       "time": "25/09/2026 10:20",
       "url": "https://example.invalid/reading/5",
@@ -161,7 +161,7 @@
       "timestamp": "25/09/2026 10:20"
     },
     {
-      "id": "browser_history_4",
+      "id": "hist_021",
       "title": "Lịch bóng đá",
       "time": "24/09/2026 10:20",
       "url": "https://example.invalid/reading/4",
@@ -169,7 +169,7 @@
       "timestamp": "24/09/2026 10:20"
     },
     {
-      "id": "browser_history_3",
+      "id": "hist_022",
       "title": "Vệ sinh bàn phím",
       "time": "23/09/2026 10:20",
       "url": "https://example.invalid/reading/3",
@@ -177,7 +177,7 @@
       "timestamp": "23/09/2026 10:20"
     },
     {
-      "id": "browser_history_2",
+      "id": "hist_023",
       "title": "Mẹo pha cà phê phin",
       "time": "22/09/2026 10:20",
       "url": "https://example.invalid/reading/2",
@@ -185,7 +185,7 @@
       "timestamp": "22/09/2026 10:20"
     },
     {
-      "id": "browser_history_1",
+      "id": "hist_024",
       "title": "Bảo dưỡng xe máy",
       "time": "21/09/2026 10:20",
       "url": "https://example.invalid/reading/1",
@@ -193,7 +193,7 @@
       "timestamp": "21/09/2026 10:20"
     },
     {
-      "id": "browser_history_0",
+      "id": "hist_025",
       "title": "Chăm sóc húng quế ban công",
       "time": "20/09/2026 10:20",
       "url": "https://example.invalid/reading/0",
@@ -203,13 +203,13 @@
   ],
   "tabs": [
     {
-      "id": "tab_6",
+      "id": "tab_001",
       "title": "CSS grid căn cột",
       "content": "Khai báo grid-template-columns để chia cột; dùng gap đặt khoảng cách.",
       "url": "noidung.local/bai/6"
     },
     {
-      "id": "tab_3",
+      "id": "tab_002",
       "title": "So sánh bình nóng lạnh",
       "content": "So sánh dung tích 20 lít, công suất và chống giật khi chọn bình nóng lạnh.",
       "url": "noidung.local/bai/3"

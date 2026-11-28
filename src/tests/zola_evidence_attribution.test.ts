@@ -9,7 +9,7 @@ vi.mock('../hooks/useSwipeBack', () => ({ useSwipeBack: () => ({}) }));
 
 describe('Messaging evidence attribution and source preservation', () => {
   const dummyThread: MessagingThread = {
-    threadId: 'thread_tuan',
+    threadId: 'thread_903',
     contactName: 'Anh Tuấn Thợ Điện',
     avatarGradient: 'from-blue-400 to-blue-600',
     lastMessage: 'Đồ anh để quên em cất rồi',
@@ -79,7 +79,7 @@ describe('Messaging evidence attribution and source preservation', () => {
 
   it('attributes husband alibi messages to Chồng (Nguyễn Huy Thịnh) in thread with Vợ', () => {
     const wifeThread: MessagingThread = {
-      threadId: 'thread_wife',
+      threadId: 'thread_005',
       contactName: 'Vợ',
       avatarGradient: 'from-pink-400 to-rose-600',
       lastMessage: 'Anh đang họp',

@@ -22,12 +22,12 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
   it('does not verify dinner messages against the office-dress order, including saved links', () => {
     const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [
       { suspectId: 'chat', displayName: 'Khoa BE', sourceApp: 'internet-messaging', timestamp: 1,
-        conversationId: 'thread_khoa', messages: [
+        conversationId: 'thread_003', messages: [
           { recordId: 'm1', text: 'Tối nay anh, em đặt bàn bên Phố Cổ rồi nhé, 19h30. Chỗ trên tầng 2 cho yên tĩnh.' },
           { recordId: 'm2', text: 'Thì điện có tắt thế nào hôm nào anh cũng hỏi bữa cơm niêu ấm cúng đấy nhé.' },
         ] },
       { suspectId: 'order', displayName: 'Nguyễn Thị Thu Hương', sourceApp: 'ecommerce', timestamp: 2,
-        evidence: { caseId: 'case', recordId: 'order_01', title: 'Nguyễn Thị Thu Hương',
+        evidence: { caseId: 'case', recordId: 'order_005', title: 'Nguyễn Thị Thu Hương',
           snippet: 'Set váy lụa công sở\nSảnh Technosoft\n0988886677\n489.000đ' } },
     ]);
     for (const [source, target] of [[nodes[0], nodes[1]], [nodes[1], nodes[0]]]) {
@@ -41,25 +41,25 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
   it('verifies phone/order strings from matching pinned phone numbers, including other call records', () => {
     const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [
       { suspectId: 'call', displayName: 'Anh Tuấn Thợ Điện', sourceApp: 'phone', timestamp: 1,
-        evidence: { caseId: 'case', recordId: 'call_khoa_early', title: 'Anh Tuấn Thợ Điện', snippet: '0988886677\nCuộc gọi đi' } },
+        evidence: { caseId: 'case', recordId: 'call_003', title: 'Anh Tuấn Thợ Điện', snippet: '0988886677\nCuộc gọi đi' } },
       { suspectId: 'order', displayName: 'Nguyễn Thị Thu Hương', sourceApp: 'ecommerce', timestamp: 2,
-        evidence: { caseId: 'case', recordId: 'order_01', title: 'Nguyễn Thị Thu Hương', snippet: 'Số điện thoại: 0988 886 677' } },
+        evidence: { caseId: 'case', recordId: 'order_005', title: 'Nguyễn Thị Thu Hương', snippet: 'Số điện thoại: 0988 886 677' } },
     ]);
     const connect = () => createEdgeBetweenNodes(LEVEL_01_KNOWLEDGE_GRAPH, [], nodes[0].nodeId, nodes[1].nodeId, nodes).newEdge;
     expect(connect()).toMatchObject({ isCanonical: true, isSmokingGun: true, edgeId: 'edge_order_phone' });
-    nodes[1].messages = [{ recordId: 'order_01', text: 'Số điện thoại: 0988990011' }];
+    nodes[1].messages = [{ recordId: 'order_005', text: 'Số điện thoại: 0988990011' }];
     expect(connect()?.isCanonical).toBe(false);
   });
 
   it('rechecks the alibi string using only pinned wife messages when messages are added or removed', () => {
     const wife = [
-      { recordId: 'msg_wife_1855', text: 'Tối nay anh họp sprint với cả team, về muộn nhé.' },
+      { recordId: 'msg_005_0079', text: 'Tối nay anh họp sprint với cả team, về muộn nhé.' },
     ];
     const tags = () => [
       { suspectId: 'chat', displayName: 'Vợ', sourceApp: 'internet-messaging' as const, timestamp: 1,
-        conversationId: 'thread_wife', messages: [...wife] },
+        conversationId: 'thread_005', messages: [...wife] },
       { suspectId: 'tx', displayName: 'COM NIEU PHO CO', sourceApp: 'banking' as const, timestamp: 2,
-        evidence: { caseId: 'case', recordId: 'tx_01', title: 'COM NIEU PHO CO', snippet: '-640.000đ' } },
+        evidence: { caseId: 'case', recordId: 'tx_003', title: 'COM NIEU PHO CO', snippet: '-640.000đ' } },
     ];
     const connect = () => {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tags());
@@ -67,7 +67,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     };
     // 18:55 alone does not contradict the 20:48 card swipe.
     expect(connect()?.isCanonical).toBe(false);
-    wife.push({ recordId: 'msg_wife_2046', text: 'Sếp Hùng đang chốt nốt, anh chưa về được.' });
+    wife.push({ recordId: 'msg_005_0082', text: 'Sếp Hùng đang chốt nốt, anh chưa về được.' });
     expect(connect()).toMatchObject({ isCanonical: true, isSmokingGun: true, edgeId: 'edge_alibi_contradiction' });
     wife.pop();
     expect(connect()?.isCanonical).toBe(false);
@@ -75,8 +75,8 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
 
   it('rejects alibi pairings that do not prove location (online transfers, wrong message)', () => {
     const wife = { suspectId: 'chat', displayName: 'Vợ', sourceApp: 'internet-messaging' as const, timestamp: 1,
-      conversationId: 'thread_wife', messages: [{ recordId: 'msg_wife_2046', text: 'Sếp Hùng đang chốt nốt.' }] };
-    for (const recordId of ['tx_ngoc', 'tx_lan_anh']) {
+      conversationId: 'thread_005', messages: [{ recordId: 'msg_005_0082', text: 'Sếp Hùng đang chốt nốt.' }] };
+    for (const recordId of ['tx_005', 'tx_004']) {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [wife,
         { suspectId: recordId, displayName: recordId, sourceApp: 'banking', timestamp: 2,
           evidence: { caseId: 'case', recordId, title: recordId, snippet: 'Chuyển khoản' } }]);
@@ -84,41 +84,41 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     }
   });
 
-  it('connects order_01 to the HR-pinned legal name but not to other recipients', () => {
+  it('connects order_005 to the HR-pinned legal name but not to other recipients', () => {
     const order = (recordId: string, name: string) => ({ suspectId: recordId, displayName: name, sourceApp: 'ecommerce' as const,
       timestamp: 1, evidence: { caseId: 'case', recordId, title: name, snippet: `Người nhận: ${name}` } });
     const group = (messageId: string) => ({ suspectId: 'grp', displayName: 'Technosoft - Toàn công ty',
-      sourceApp: 'internet-messaging' as const, timestamp: 2, conversationId: 'thread_company',
+      sourceApp: 'internet-messaging' as const, timestamp: 2, conversationId: 'thread_012',
       messages: [{ recordId: messageId, text: 'Nguyễn Thị Thu Hương - Marketing Executive' }] });
     const connect = (recordId: string, messageId: string) => {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [order(recordId, 'Nguyễn Thị Thu Hương'), group(messageId)]);
       return createEdgeBetweenNodes(LEVEL_01_KNOWLEDGE_GRAPH, [], nodes[0].nodeId, nodes[1].nodeId, nodes).newEdge;
     };
-    expect(connect('order_01', 'msg_company_pin')).toMatchObject({ isCanonical: true, isSmokingGun: true, edgeId: 'edge_order_name' });
-    expect(connect('order_03', 'msg_company_pin')?.isCanonical).toBe(false);
-    expect(connect('order_02', 'msg_company_pin')?.isCanonical).toBe(false);
-    expect(connect('order_01', 'msg_company_hr_thanks')?.isCanonical).toBe(false);
+    expect(connect('order_005', 'msg_012_0001')).toMatchObject({ isCanonical: true, isSmokingGun: true, edgeId: 'edge_order_name' });
+    expect(connect('order_003', 'msg_012_0001')?.isCanonical).toBe(false);
+    expect(connect('order_006', 'msg_012_0001')?.isCanonical).toBe(false);
+    expect(connect('order_005', 'msg_012_0005')?.isCanonical).toBe(false);
   });
 
   it('keeps one canonical node per thread card: Khoa BE thread resolves to the alias even for a booking message', () => {
     const [node] = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [
       { suspectId: 'chat', displayName: 'Khoa BE', sourceApp: 'internet-messaging', timestamp: 1,
-        conversationId: 'thread_khoa', messages: [{ recordId: 'msg_khoa_booking', text: 'Book bàn 7h30 tầng 2' }] },
+        conversationId: 'thread_003', messages: [{ recordId: 'msg_003_0014', text: 'Book bàn 7h30 tầng 2' }] },
     ]);
-    expect(node).toMatchObject({ nodeId: 'node_alias_khoa', type: 'alias', label: 'Khoa BE' });
+    expect(node).toMatchObject({ nodeId: 'node_alias_01', type: 'alias', label: 'Khoa BE' });
   });
 
   it('pairs the booking message with the card-swipe receipt only on the same night', () => {
     const khoa = { suspectId: 'chat', displayName: 'Khoa BE', sourceApp: 'internet-messaging' as const, timestamp: 1,
-      conversationId: 'thread_khoa', messages: [{ recordId: 'msg_khoa_booking', text: 'Book bàn 7h30' }] };
+      conversationId: 'thread_003', messages: [{ recordId: 'msg_003_0014', text: 'Book bàn 7h30' }] };
     const connect = (recordId: string) => {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [khoa,
         { suspectId: recordId, displayName: recordId, sourceApp: 'banking', timestamp: 2,
           evidence: { caseId: 'case', recordId, title: recordId, snippet: 'Thanh toán' } }]);
       return createEdgeBetweenNodes(LEVEL_01_KNOWLEDGE_GRAPH, [], nodes[0].nodeId, nodes[1].nodeId, nodes).newEdge;
     };
-    expect(connect('tx_01')).toMatchObject({ edgeId: 'edge_booking_receipt', isCanonical: true, isSmokingGun: false });
-    expect(connect('tx_lunch')?.isCanonical).toBe(false);
+    expect(connect('tx_003')).toMatchObject({ edgeId: 'edge_booking_receipt', isCanonical: true, isSmokingGun: false });
+    expect(connect('tx_013')?.isCanonical).toBe(false);
   });
 
   it('includes ordinary pinned conversation and call aliases in the suspect picker', () => {
@@ -128,15 +128,15 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         evidence: { caseId: 'case', kind: 'message', recordId: 'notice', conversationId: 'floor8',
           title: 'Cư dân tầng 8', snippet: 'Hành lang đã thay bóng đèn.' } },
       { suspectId: 'call', displayName: 'Anh Tuấn Thợ Điện', sourceApp: 'phone', timestamp: 2,
-        evidence: { caseId: 'case', recordId: 'call_khoa_early', title: 'Anh Tuấn Thợ Điện', snippet: '0988886677' } },
+        evidence: { caseId: 'case', recordId: 'call_003', title: 'Anh Tuấn Thợ Điện', snippet: '0988886677' } },
     ]);
     const suspects = getSuspectsOnBoard({ placedNodes: nodes.map(node => ({ ...node, x: 0, y: 0 })) });
     expect(suspects.map(suspect => suspect.displayName)).toEqual(['Cư dân tầng 8', 'Anh Tuấn Thợ Điện']);
   });
 
   it.each([
-    ['node_record_khoa_booking', 'node_record_bank_receipt'],
-    ['node_record_bank_receipt', 'node_record_khoa_booking'],
+    ['node_record_booking', 'node_record_bank_receipt'],
+    ['node_record_bank_receipt', 'node_record_booking'],
   ])('verifies the booking and payment connection: %s to %s', (source, target) => {
     const { newEdge } = createEdgeBetweenNodes(LEVEL_01_KNOWLEDGE_GRAPH, [], source, target);
     expect(newEdge).toMatchObject({
@@ -152,15 +152,15 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     const graph = { ...LEVEL_01_KNOWLEDGE_GRAPH, nodes: [
       { nodeId: 'person', type: 'suspect' as const, label: 'Nguyễn Thị Thu Hương', isInitialDisguise: false },
       { nodeId: 'order', type: 'record_clue' as const, label: 'Đơn mua', sourceAppId: 'ecommerce' as const,
-        recordRefId: 'order_01', clueRefId: 'CLUE-POSH-05', isInitialDisguise: false },
+        recordRefId: 'order_005', clueRefId: 'CLUE-POSH-05', isInitialDisguise: false },
     ] };
     const tag = { suspectId: 'tag_1', displayName: 'Nguyễn Thị Thu Hương', sourceApp: 'ecommerce' as const,
-      timestamp: 1, evidence: { caseId: 'case_01', recordId: 'order_01', clueRefId: 'CLUE-POSH-05',
-        title: 'Đơn mua order_01', snippet: 'Nội dung' } };
+      timestamp: 1, evidence: { caseId: 'case_01', recordId: 'order_005', clueRefId: 'CLUE-POSH-05',
+        title: 'Đơn mua order_005', snippet: 'Nội dung' } };
     expect(deriveNodesFromTaggedEvidence(graph, [tag]).map(node => node.nodeId)).toEqual(['order']);
     expect(deriveNodesFromTaggedEvidence(graph, [{ ...tag, evidence: { ...tag.evidence,
-      recordId: 'order_polo', clueRefId: undefined, title: 'Đơn mua order_polo' } }])[0]).toMatchObject({
-      type: 'record_clue', label: 'Đơn mua order_polo', recordRefId: 'order_polo',
+      recordId: 'order_002', clueRefId: undefined, title: 'Đơn mua order_002' } }])[0]).toMatchObject({
+      type: 'record_clue', label: 'Đơn mua order_002', recordRefId: 'order_002',
     });
   });
 
@@ -180,8 +180,8 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     const selfRes = createEdgeBetweenNodes(
       LEVEL_01_KNOWLEDGE_GRAPH,
       existingEdges,
-      'node_alias_khoa',
-      'node_alias_khoa',
+      'node_alias_01',
+      'node_alias_01',
     );
     expect(selfRes.newEdge).toBeNull();
     expect(selfRes.isDuplicate).toBe(false);
@@ -190,7 +190,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     const firstRes = createEdgeBetweenNodes(
       LEVEL_01_KNOWLEDGE_GRAPH,
       existingEdges,
-      'node_alias_khoa',
+      'node_alias_01',
       'node_bridge_phone',
     );
     expect(firstRes.newEdge).not.toBeNull();
@@ -202,7 +202,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     const dupRes1 = createEdgeBetweenNodes(
       LEVEL_01_KNOWLEDGE_GRAPH,
       updatedEdges,
-      'node_alias_khoa',
+      'node_alias_01',
       'node_bridge_phone',
     );
     expect(dupRes1.newEdge).toBeNull();
@@ -213,7 +213,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       LEVEL_01_KNOWLEDGE_GRAPH,
       updatedEdges,
       'node_bridge_phone',
-      'node_alias_khoa',
+      'node_alias_01',
     );
     expect(dupRes2.newEdge).toBeNull();
     expect(dupRes2.isDuplicate).toBe(true);
@@ -241,7 +241,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     const partialEdges: CaseGraphEdge[] = [
       {
         edgeId: 'edge_alias_phone',
-        sourceNodeId: 'node_alias_khoa',
+        sourceNodeId: 'node_alias_01',
         targetNodeId: 'node_bridge_phone',
         relationship: 'bridges_identity',
         isSmokingGun: false,
@@ -249,7 +249,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     ];
     expect(evaluateUnmaskedSuspects(LEVEL_01_KNOWLEDGE_GRAPH, partialEdges)).toEqual([]);
 
-    // Stage 3: Adding bridge to legal name -> still no direct link to suspect_huong
+    // Stage 3: Adding bridge to legal name -> still no direct link to suspect_01
     const multiHopEdges: CaseGraphEdge[] = [
       ...partialEdges,
       {
@@ -269,29 +269,29 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     ];
     expect(evaluateUnmaskedSuspects(LEVEL_01_KNOWLEDGE_GRAPH, multiHopEdges)).toEqual([]);
 
-    // Stage 4: Connecting legal name to suspect_huong -> PATH IS COMPLETE! Suspect is unmasked!
+    // Stage 4: Connecting legal name to suspect_01 -> PATH IS COMPLETE! Suspect is unmasked!
     const completeChainEdges: CaseGraphEdge[] = [
       ...multiHopEdges,
       {
         edgeId: 'edge_name_suspect',
         sourceNodeId: 'node_bridge_name',
-        targetNodeId: 'node_suspect_huong',
+        targetNodeId: 'node_suspect_01',
         relationship: 'bridges_identity',
         isSmokingGun: false,
       },
     ];
     const unmasked = evaluateUnmaskedSuspects(LEVEL_01_KNOWLEDGE_GRAPH, completeChainEdges);
-    expect(unmasked).toContain('node_suspect_huong');
-    expect(unmasked).toContain('node_alias_khoa');
+    expect(unmasked).toContain('node_suspect_01');
+    expect(unmasked).toContain('node_alias_01');
   });
 
   it('does NOT unmask an alias when connected to an innocent suspect (Red Herring)', () => {
-    // Attempt connecting node_alias_khoa directly to an innocent suspect node (speculative non-canonical edge)
+    // Attempt connecting node_alias_01 directly to an innocent suspect node (speculative non-canonical edge)
     const invalidEdges: CaseGraphEdge[] = [
       {
-        edgeId: 'custom_edge_khoa_lan_anh',
-        sourceNodeId: 'node_alias_khoa',
-        targetNodeId: 'node_suspect_lan_anh',
+        edgeId: 'custom_edge_901',
+        sourceNodeId: 'node_alias_01',
+        targetNodeId: 'node_suspect_04',
         relationship: 'bridges_identity',
         isSmokingGun: false,
       },
@@ -311,7 +311,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       },
       {
         edgeId: 'edge_alias_phone',
-        sourceNodeId: 'node_alias_khoa',
+        sourceNodeId: 'node_alias_01',
         targetNodeId: 'node_bridge_phone',
         relationship: 'bridges_identity',
         isSmokingGun: false,
@@ -358,16 +358,16 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     };
     vi.stubGlobal('localStorage', mockStorage);
 
-    const storageKey = 'detective:v1:case_hoang_01:corkboard_state';
+    const storageKey = 'detective:v2:case_01:corkboard_state';
     const mockState = {
       placedNodes: [
-        { nodeId: 'node_alias_khoa', type: 'alias', label: 'Anh Tuấn', x: 250, y: 180 },
+        { nodeId: 'node_alias_01', type: 'alias', label: 'Anh Tuấn', x: 250, y: 180 },
         { nodeId: 'node_bridge_phone', type: 'bridge_id', label: 'SĐT', x: 550, y: 180 },
       ],
       edges: [
         {
           edgeId: 'edge_alias_phone',
-          sourceNodeId: 'node_alias_khoa',
+          sourceNodeId: 'node_alias_01',
           targetNodeId: 'node_bridge_phone',
           relationship: 'bridges_identity' as const,
           isSmokingGun: false,
@@ -467,14 +467,14 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         type: 'record_clue' as const,
         label: 'Anh Tuấn Thợ Điện',
         sourceAppId: 'internet-messaging',
-        recordRefId: 'thread_tuan_dien',
+        recordRefId: 'thread_004',
       },
       {
         nodeId: 'node_msg_2',
         type: 'record_clue' as const,
         label: 'Hương Em',
         sourceAppId: 'internet-messaging',
-        recordRefId: 'thread_huong',
+        recordRefId: 'thread_902',
       },
     ];
 
@@ -545,7 +545,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       const nonKeyEdges: CaseGraphEdge[] = [
         {
           edgeId: 'edge_booking_receipt',
-          sourceNodeId: 'node_record_khoa_booking',
+          sourceNodeId: 'node_record_booking',
           targetNodeId: 'node_record_bank_receipt',
           relationship: 'occurred_at',
           isSmokingGun: false,
@@ -562,7 +562,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         {
           edgeId: 'edge_name_suspect',
           sourceNodeId: 'node_bridge_name',
-          targetNodeId: 'node_suspect_huong',
+          targetNodeId: 'node_suspect_01',
           relationship: 'bridges_identity',
           isSmokingGun: false,
           isCanonical: true,

@@ -30,7 +30,7 @@ export async function clearStorageOnFirstLoad(page: Page): Promise<void> {
  * From the case file browser: open the active husband folder, flip to the level file and start it.
  */
 export async function startCaseFromSelector(page: Page, caseId = 'case_01'): Promise<void> {
-  await page.locator('[data-husband-id="husband_hoang"]').click();
+  await page.locator('[data-husband-id="husband_01"]').click();
   await page.locator(`[data-level-tab="${caseId}"]`).click();
   await page.locator(`[data-case-id="${caseId}"]`).click();
 }

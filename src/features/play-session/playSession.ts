@@ -56,7 +56,7 @@ export class PlaySession {
       strikes: caseConfig.allowedStrikes, taggedSuspects: [], pendingChallenge: null,
       resumableSession: null, ongoingSession: null, systemAlertToast: null,
       playerProgress: {
-        schemaVersion: 1, unlockedHusbandId: 'husband_hoang', unlockedLevel: 1,
+        schemaVersion: 2, unlockedHusbandId: 'husband_01', unlockedLevel: 1,
         bestStarRatings: { case_01: 3, case_02: 2 }, earnedWifeTitles: [], audioMutePreference: false,
       },
     };
@@ -340,7 +340,7 @@ export class PlaySession {
   private buildSessionSnapshot(): ActiveSessionState {
     const state = this.state;
     return {
-      schemaVersion: 1, gameId: 'jealous_wife', caseId: state.caseConfig.caseId,
+      schemaVersion: 2, gameId: 'jealous_wife', caseId: state.caseConfig.caseId,
       levelNumber: state.caseConfig.levelNumber, activeApp: state.activeAppId,
       suspicionStrikes: state.strikes, taggedSuspects: state.taggedSuspects,
       unlockedChallenges: [...state.unlockedChallenges], elapsedSeconds: 0,

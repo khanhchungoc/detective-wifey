@@ -8,7 +8,7 @@ import { DEFAULT_APPS_DATA } from '../../data/defaults';
 export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_01',
-    husbandId: 'husband_hoang',
+    husbandId: 'husband_01',
     husbandName: 'Thịnh',
     levelNumber: 1,
     levelTitle: 'MÀN 1: Điện thoại ngoài phòng tắm',
@@ -18,7 +18,7 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   },
   {
     caseId: 'case_02',
-    husbandId: 'husband_hoang',
+    husbandId: 'husband_01',
     husbandName: 'Thịnh',
     levelNumber: 2,
     levelTitle: 'MÀN 2: Hồ sơ đang thu thập',
@@ -29,7 +29,7 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   },
   {
     caseId: 'case_03',
-    husbandId: 'husband_hoang',
+    husbandId: 'husband_01',
     husbandName: 'Thịnh',
     levelNumber: 3,
     levelTitle: 'MÀN 3: Hồ sơ đang thu thập',
@@ -112,7 +112,7 @@ export function validateCaseConfig(config: CaseConfig): { isValid: boolean; erro
 /**
  * Returns available levels for active husband (AC 5).
  */
-export function getAvailableLevels(husbandId: string = 'husband_hoang'): LevelMetadata[] {
+export function getAvailableLevels(husbandId: string = 'husband_01'): LevelMetadata[] {
   return LEVEL_CATALOG.filter((lvl) => lvl.husbandId === husbandId).sort(
     (a, b) => a.levelNumber - b.levelNumber
   );
@@ -174,7 +174,7 @@ export function loadCase(caseId: string): CaseConfig {
 /**
  * Loads a case configuration by level number (1..3).
  */
-export function loadCaseByLevel(levelNumber: number, husbandId: string = 'husband_hoang'): CaseConfig {
+export function loadCaseByLevel(levelNumber: number, husbandId: string = 'husband_01'): CaseConfig {
   if (levelNumber < 1 || levelNumber > 3) {
     throw new Error('Không tìm thấy màn chơi yêu cầu.');
   }

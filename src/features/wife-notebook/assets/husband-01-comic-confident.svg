@@ -22,7 +22,7 @@
     </linearGradient>
   </defs>
 
-  <!-- Shoulders & Sky-Blue Linen Shirt (matching Hoang wallpaper v3) -->
+  <!-- Shoulders & Sky-Blue Linen Shirt (matching husband wallpaper v3) -->
   <path d="M36 226 C40 176 66 154 95 148 L120 156 L145 148 C174 154 200 176 204 226 Z" fill="url(#shirt-lit)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
   <!-- Deep Comic Noir Shadow Folds on Shirt -->
   <path d="M38 224 C45 188 64 168 84 160 L74 224 Z" fill="#0b1f33" opacity="0.72"/>
@@ -53,7 +53,7 @@
   <path d="M77 95 C71 95 69 108 74 115 C76 118 80 118 81 115" fill="#b57149" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
   <path d="M163 95 C169 95 171 108 166 115 C164 118 160 118 159 115" fill="#9c5c38" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
 
-  <!-- Square-Jawed Head (Hoang Likeness) -->
+  <!-- Square-Jawed Head (Husband Likeness) -->
   <path d="M80 76 C80 54 98 46 120 46 C142 46 160 54 160 76 L158 112 C157 126 146 136 132 141 C124 144 116 144 108 141 C94 136 83 126 82 112 Z" fill="url(#skin-noir)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
 
   <!-- Top-Down Spotlight Forehead Highlight & Jawline Comic Shading -->

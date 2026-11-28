@@ -19,7 +19,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 
 - [Thiết kế Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md): Mục 3.3 phòng thẩm vấn 3 tầng, đèn spotlight, Comic Thịnh và bộ chọn COD Cold War.
 - [Tính năng Sổ Tay Bắt Ghen](../../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md): Mục 2.4 state machine đối chất theo nhịp và fallback bậc thang.
-- [Màn chơi Chồng Thịnh Màn 1](../../epic-04-detective-case-stories-level-content/us-027-husband-hoang-level-1-case-implementation.md): Mục 5 kịch bản đối chất 4 nhịp và lời thoại thú tội.
+- [Màn chơi Chồng Thịnh Màn 1](../../epic-04-detective-case-stories-level-content/us-027-husband-01-level-1-case-implementation.md): Mục 5 kịch bản đối chất 4 nhịp và lời thoại thú tội.
 - [Biên bản khám phá](../../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md): Tự động đánh giá đồ thị, không gắp thẻ thủ công, phạt 1 vạch nghi ngờ khi đối chất thất bại.
 - Thành phần mã nguồn thực tế: `WifeNotebookModal.tsx`, `confrontationEngine.ts`, `ConfrontationModal.tsx`, `HusbandCharacterImage.tsx`, `confrontationMotion.ts`, `graphEngine.ts`, `level01Fixture.ts`.
 
@@ -234,7 +234,7 @@ tags: [requirement, wireframe, confrontation, excuse-engine, verdict, epic-03]
 +------------------------------------------------+
 ```
 
-- Khi vượt qua nhịp chứng cứ then chốt cuối cùng, Thịnh sụp đổ (`broken`), mở khóa bước `ending` (`canAccuse = true`) trên D-Pad (ví dụ: `end_divorce` bên trái, `end_forgive` bên phải).
+- Khi vượt qua nhịp chứng cứ then chốt cuối cùng, Thịnh sụp đổ (`broken`), mở khóa bước `ending` (`canAccuse = true`) trên D-Pad (ví dụ: `choice_011` bên trái, `choice_012` bên phải).
 - Sau khi chọn phán quyết, hệ thống đóng dấu kết quả bằng spring `POP` phù hợp `groundTruth.verdict` (`BẮT QUẢ TANG NGOẠI TÌNH` / `VẠCH TRẦN SUGAR DADDY` / `MINH OAN CHỒNG VÔ TỘI`), trao 3 sao (`★★★`), danh hiệu Vợ, lời Roast tổng kết, nút `[ TẠO THẺ ROAST KHOE MXH ]` (US-017) và nút qua màn (US-018).
 - *(Lưu ý tương thích ngược: Các màn chưa khai báo `confrontationScript` như Màn 2 và Màn 3 tự động hiển thị giao diện đánh giá bậc thang dự phòng 0 / 1-2 / 3 sao).*
 

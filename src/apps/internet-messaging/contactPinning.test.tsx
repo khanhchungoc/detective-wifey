@@ -24,7 +24,7 @@ vi.mock('./components/MessagingEvidenceSheet', () => ({
 }));
 
 it.each(['0988886677', undefined])('pins contact details with supplied phone %s into the clue card', phone => {
-  state.contact = { id: 'contact_tuan', name: 'Anh Tuấn Thợ Điện', section: 'A', department: 'Bảo trì', phone };
+  state.contact = { id: 'contact_901', name: 'Anh Tuấn Thợ Điện', section: 'A', department: 'Bảo trì', phone };
   state.thread = null;
   state.sheet = null;
   const onTagSuspect = vi.fn();
@@ -34,12 +34,12 @@ it.each(['0988886677', undefined])('pins contact details with supplied phone %s 
   const sheet = state.sheet!;
   sheet.onPinEvidence(state.contact.name);
   expect(onTagSuspect).toHaveBeenCalledWith(state.contact.name, expect.objectContaining({
-    caseId: 'case_01', recordId: 'contact_tuan', kind: 'person',
+    caseId: 'case_01', recordId: 'contact_901', kind: 'person',
     snippet: phone ? `SĐT: ${phone} • Bảo trì` : 'Bảo trì',
   }));
   const pinned = tagSuspect([], state.contact.name, 'internet-messaging', 1, onTagSuspect.mock.calls[0][1]);
   state.thread = {
-    threadId: 'thread_tuan', contactName: state.contact.name, lastMessage: 'Unpinned preview', timestamp: '19:30', messages: [],
+    threadId: 'thread_903', contactName: state.contact.name, lastMessage: 'Unpinned preview', timestamp: '19:30', messages: [],
   };
   renderToStaticMarkup(<MessagingInboxView caseId="case_01" contacts={[state.contact]} threads={[state.thread]}
     onSelectThread={vi.fn()} onTagSuspect={onTagSuspect} onReturnHome={vi.fn()} />);
@@ -56,14 +56,14 @@ it.each(['0988886677', undefined])('pins contact details with supplied phone %s 
     .filter(Boolean).join('\n')).toBe(sheet.source!.snippet);
 
   const message: EvidenceSource = {
-    caseId: 'case_01', recordId: 'thread_tuan_m1', conversationId: 'thread_tuan',
+    caseId: 'case_01', recordId: 'thread_903_m1', conversationId: 'thread_903',
     kind: 'message', title: state.contact.name, visibleAlias: state.contact.name,
     snippet: 'Anh tới rồi.', eventTime: '19:30',
   };
   const withMessage = tagSuspect(pinned.suspects, state.contact.name, 'internet-messaging', 2, message);
   const reloaded = normalizeTaggedSuspects(JSON.parse(JSON.stringify(withMessage.suspects)));
   const withSecondMessage = tagSuspect(reloaded, state.contact.name, 'internet-messaging', 3, {
-    ...message, recordId: 'thread_tuan_m2', snippet: 'Em xuống nhé.',
+    ...message, recordId: 'thread_903_m2', snippet: 'Em xuống nhé.',
   });
   const mergedNodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, withSecondMessage.suspects);
   expect(mergedNodes).toHaveLength(1);
@@ -88,11 +88,11 @@ it('keeps unmatched conversations free of invented phone numbers and unpinned me
 it.each([false, true])('merges saved conversation and contact pins in either order (contact first: %s)', contactFirst => {
   const name = 'Hương Em';
   const contact: EvidenceSource = {
-    caseId: 'case_01', recordId: 'contact_huong', kind: 'person', title: name,
+    caseId: 'case_01', recordId: 'contact_902', kind: 'person', title: name,
     visibleAlias: name, snippet: 'SĐT: 0988886677',
   };
   const conversation: EvidenceSource = {
-    caseId: 'case_01', recordId: 'thread_huong', conversationId: 'thread_huong',
+    caseId: 'case_01', recordId: 'thread_902', conversationId: 'thread_902',
     kind: 'conversation', title: name, visibleAlias: name, snippet: '', isExplicitConversationPin: true,
   };
   const sources = contactFirst ? [contact, conversation] : [conversation, contact];
@@ -104,7 +104,7 @@ it.each([false, true])('merges saved conversation and contact pins in either ord
   expect(deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, reloaded)).toHaveLength(1);
   const withMessage = tagSuspect(reloaded, name, 'internet-messaging', 3, {
     ...conversation, kind: 'message', isExplicitConversationPin: false,
-    recordId: 'thread_huong_m1', snippet: 'Em xuống nhé.',
+    recordId: 'thread_902_m1', snippet: 'Em xuống nhé.',
   });
   const repinned = tagSuspect(withMessage.suspects, name, 'internet-messaging', 4, contact);
   expect(repinned.added).toBe(false);

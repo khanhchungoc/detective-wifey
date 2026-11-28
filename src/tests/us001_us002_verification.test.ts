@@ -27,7 +27,7 @@ describe('US-001 & US-002 acceptance suite', () => {
 console.log('[US-001 - AC 1] Level 1 Case Schema Ingestion and Initialization');
 const c1 = loadCase('case_01');
 assert.equal(c1.caseId, 'case_01');
-assert.equal(c1.husbandId, 'husband_hoang');
+assert.equal(c1.husbandId, 'husband_01');
 assert.equal(c1.levelNumber, 1);
 assert.equal(c1.allowedStrikes, 5, 'Level 1 must allow exactly 5 strikes');
 assert.ok(c1.suspectPool.length >= 1, 'Must have at least 1 initial suspect');
@@ -84,7 +84,7 @@ assert.throws(
 console.log('  -> PASS: Missing or corrupt case triggers expected fallback errors.\n');
 
 console.log('[US-001 - AC 5] Level Catalog Manifest Exposure for Level Selector');
-const levels = getAvailableLevels('husband_hoang');
+const levels = getAvailableLevels('husband_01');
 assert.equal(levels.length, 3, 'Catalog must return 3 levels');
 assert.equal(levels[0].levelNumber, 1);
 assert.equal(levels[0].allowedStrikes, 5);
@@ -143,7 +143,7 @@ globalThis.localStorage = {
 
 const store = new LocalStorageAdapter();
 await store.saveActiveSession({
-  schemaVersion: 1,
+  schemaVersion: 2,
   gameId: 'jealous_wife',
   caseId: 'case_01',
   levelNumber: 1,

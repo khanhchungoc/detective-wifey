@@ -1,10 +1,10 @@
 # Danh sách Bí danh Bạn bè (Friend Aliases Pool)
 
-> **Phạm vi**: Kho tên thật của bạn bè tác giả, dùng làm nhân vật phụ rải rác trong các màn chơi của người chồng **Thịnh Doom - Nguyễn Huy Thịnh** (`husband_hoang`, sinh 1995, Tech Lead tại Technosoft, nhà ở chung cư An Bình, 18 ngõ 68 Trung Kính). Dàn nhân vật cố định xuyên màn vẫn do [hồ sơ người chồng](husband-hoang/husband-profile.md) làm SSOT; file này chỉ là kho tên chờ dùng.
+> **Phạm vi**: Kho tên thật của bạn bè tác giả, dùng làm nhân vật phụ rải rác trong các màn chơi của người chồng **Thịnh Doom - Nguyễn Huy Thịnh** (`husband_01`, sinh 1995, Tech Lead tại Technosoft, nhà ở chung cư An Bình, 18 ngõ 68 Trung Kính). Dàn nhân vật cố định xuyên màn vẫn do [hồ sơ người chồng](husband-01/husband-profile.md) làm SSOT; file này chỉ là kho tên chờ dùng.
 >
 > **Mốc tuổi**: Tính theo năm cốt truyện 2026 (Thịnh 31 tuổi).
 >
-> **Mã nội bộ**: `husband_hoang`, thư mục `husband-hoang/` và `src/data/cases/hoang/` giữ nguyên tên cũ để không vỡ dữ liệu lưu game. Chỉ tên hiển thị đổi thành Thịnh.
+> **Mã nội bộ**: `husband_01`, thư mục `husband-01/` và `src/data/cases/husband_01/` là mã chung, không chứa tên nhân vật. Chỉ tên hiển thị là Thịnh.
 
 ---
 
@@ -70,5 +70,5 @@ Thành viên: **A9 (Chính), Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấ
 - **Tuấn**: "Tuấn Đụt" đã đổi thành "Tuấn Chó" trong dữ liệu Màn 1 và hồ sơ. Vẫn còn "Anh Tuấn Thợ Điện" và "Sếp Tuấn Anh": luôn hiện đủ tên lưu danh bạ. Chat cũ của Tuấn Chó vẫn nói chuyện đá bóng (ảnh đại diện là ảnh đội bóng); muốn khớp sở thích cầu lông thì sửa ở lần chỉnh Màn 1 sau.
 - **Nam**: Đã có "Nam Dev" (đồng nghiệp Technosoft, `char_boss`). "Namzua" làm ở công ty khác; luôn hiện tên "Namzua". Sếp thật của Thịnh là "Sếp Tuấn Anh".
 - **Minh**: Hai bạn tên Minh. Luôn dùng "Minh Worm" và "Minh Bằng Cổ", không dùng "Minh" trơn.
-- **Bách**: Màn 1 đã có "Bách Dev" (`contact_13`, nhóm "Team Dev Technosoft"). Trần Bách trùng tên và nghề nên dùng luôn cho liên hệ này, không tạo Bách thứ hai. Chat cũ không mâu thuẫn; có thể thêm chi tiết rau nhà trồng hoặc người yêu mới ở màn sau.
+- **Bách**: Màn 1 đã có "Bách Dev" (`contact_014`, nhóm "Team Dev Technosoft"). Trần Bách trùng tên và nghề nên dùng luôn cho liên hệ này, không tạo Bách thứ hai. Chat cũ không mâu thuẫn; có thể thêm chi tiết rau nhà trồng hoặc người yêu mới ở màn sau.
 - **Kế toán**: Đã có "Lan Anh Kế Toán" ở Technosoft. Linh Yoyo làm kế toán ở nơi khác; lưu "Linh Yoyo", không gắn chữ "Kế Toán".

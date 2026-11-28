@@ -1,73 +1,73 @@
 {
   "posts": [
     {
-      "id": "post_4",
+      "id": "post_001",
       "author": "Bách Dev",
       "time": "14/10",
       "content": "Cập nhật dự án nội bộ. Thịnh bình luận: Cảm ơn cả nhóm."
     },
     {
-      "id": "post_3",
+      "id": "post_002",
       "author": "Technosoft",
       "time": "13/10",
       "content": "Buổi chia sẻ kỹ thuật tuần sau: khả năng tiếp cận trong giao diện."
     },
     {
-      "id": "post_2",
+      "id": "post_003",
       "author": "Nam Dev",
       "time": "12/10",
       "content": "Đã hoàn thành khóa TypeScript. Thịnh bình luận: Chúc mừng ông."
     },
     {
-      "id": "post_1",
+      "id": "post_004",
       "author": "Nhân sự Technosoft",
       "time": "11/10",
       "content": "Tuyển lập trình viên frontend làm việc tại văn phòng. Nộp hồ sơ qua nhân sự."
     },
     {
-      "id": "post_0",
+      "id": "post_005",
       "author": "Đồng nghiệp",
       "time": "10/10",
       "content": "Tách giao diện khỏi dữ liệu để dễ kiểm thử. Thịnh đã lưu bài viết."
     },
     {
-      "id": "network_history_0",
+      "id": "post_006",
       "author": "Nam Dev",
       "time": "22/09",
       "content": "Chia sẻ cách viết kiểm thử giao diện dễ bảo trì."
     },
     {
-      "id": "network_history_1",
+      "id": "post_007",
       "author": "Technosoft",
       "time": "23/09",
       "content": "Nhóm kỹ thuật mở buổi trao đổi về khả năng tiếp cận."
     },
     {
-      "id": "network_history_2",
+      "id": "post_008",
       "author": "Bách Dev",
       "time": "24/09",
       "content": "Vừa hoàn thành khóa học quản lý trạng thái."
     },
     {
-      "id": "network_history_3",
+      "id": "post_009",
       "author": "Nam Dev",
       "time": "25/09",
       "content": "Ghi chú sau một buổi đọc mã cùng đồng nghiệp."
     },
     {
-      "id": "network_history_4",
+      "id": "post_010",
       "author": "Technosoft",
       "time": "26/09",
       "content": "Tài liệu hướng dẫn kiểm tra lỗi được cập nhật."
     },
     {
-      "id": "network_history_5",
+      "id": "post_011",
       "author": "Bách Dev",
       "time": "27/09",
       "content": "Cảm ơn mọi người đã góp ý cho bản trình bày."
     },
     {
-      "id": "network_history_6",
+      "id": "post_012",
       "author": "Nam Dev",
       "time": "28/09",
       "content": "Nhóm đang tuyển thêm đồng nghiệp frontend."

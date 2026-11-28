@@ -16,7 +16,7 @@ const EXPECTED_APP_IDS = [
   'professional-network',
 ] as const;
 
-describe('Hoang level_01 modular CaseConfig assembly', () => {
+describe('husband_01 level_01 modular CaseConfig assembly', () => {
   it('assembles core case metadata, groundTruth, suspectPool, and confrontationScript', () => {
     expect(level01.caseId).toBe('case_01');
     expect(level01.groundTruth).toBeDefined();

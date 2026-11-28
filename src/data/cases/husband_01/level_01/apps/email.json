@@ -1,7 +1,7 @@
 {
   "emails": [
     {
-      "id": "email_7",
+      "id": "email_001",
       "subject": "Lịch bảo trì thang máy",
       "sender": "Ban Quản Lý",
       "time": "15/10/2026 08:00",
@@ -9,7 +9,7 @@
       "timestamp": "15/10/2026 08:00"
     },
     {
-      "id": "email_6",
+      "id": "email_002",
       "subject": "Hoàn tiền đơn áo polo",
       "sender": "Mua sắm",
       "time": "14/10/2026 19:11",
@@ -17,7 +17,7 @@
       "timestamp": "14/10/2026 19:11"
     },
     {
-      "id": "email_5",
+      "id": "email_003",
       "subject": "Xác nhận gói PT tháng 10",
       "sender": "California Fitness",
       "time": "13/10/2026 17:46",
@@ -25,7 +25,7 @@
       "timestamp": "13/10/2026 17:46"
     },
     {
-      "id": "email_4",
+      "id": "email_004",
       "subject": "Xác nhận đơn bình nóng lạnh 20L",
       "sender": "Mua sắm",
       "time": "13/10/2026 09:31",
@@ -33,7 +33,7 @@
       "timestamp": "13/10/2026 09:31"
     },
     {
-      "id": "email_3",
+      "id": "email_005",
       "subject": "Ưu đãi cuối tuần",
       "sender": "Mua sắm",
       "time": "12/10/2026 10:00",
@@ -41,7 +41,7 @@
       "timestamp": "12/10/2026 10:00"
     },
     {
-      "id": "email_2",
+      "id": "email_006",
       "subject": "Bản tin công nghệ",
       "sender": "Bản tin công nghệ",
       "time": "11/10/2026 07:00",
@@ -49,7 +49,7 @@
       "timestamp": "11/10/2026 07:00"
     },
     {
-      "id": "email_1",
+      "id": "email_007",
       "subject": "Xác nhận thanh toán internet",
       "sender": "Chăm sóc internet",
       "time": "10/10/2026 09:11",
@@ -57,7 +57,7 @@
       "timestamp": "10/10/2026 09:11"
     },
     {
-      "id": "email_0",
+      "id": "email_008",
       "subject": "Phiếu lương tháng 10",
       "sender": "Nhân sự Technosoft",
       "time": "10/10/2026 08:00",
@@ -65,7 +65,7 @@
       "timestamp": "10/10/2026 08:00"
     },
     {
-      "id": "email_history_16",
+      "id": "email_009",
       "subject": "Ưu đãi vận chuyển",
       "sender": "Ban Quản Lý",
       "time": "07/10/2026 09:00",
@@ -73,7 +73,7 @@
       "timestamp": "07/10/2026 09:00"
     },
     {
-      "id": "email_history_15",
+      "id": "email_010",
       "subject": "Lịch tập trong tuần",
       "sender": "Thông Tin Tài Khoản",
       "time": "06/10/2026 09:00",
@@ -81,7 +81,7 @@
       "timestamp": "06/10/2026 09:00"
     },
     {
-      "id": "email_history_14",
+      "id": "email_011",
       "subject": "Xác nhận thanh toán dịch vụ",
       "sender": "Dịch Vụ Khách Hàng",
       "time": "05/10/2026 09:00",
@@ -89,7 +89,7 @@
       "timestamp": "05/10/2026 09:00"
     },
     {
-      "id": "email_history_13",
+      "id": "email_012",
       "subject": "Nhắc bảo dưỡng thiết bị",
       "sender": "Nhóm Kỹ Thuật",
       "time": "04/10/2026 09:00",
@@ -97,7 +97,7 @@
       "timestamp": "04/10/2026 09:00"
     },
     {
-      "id": "email_history_12",
+      "id": "email_013",
       "subject": "Thông tin hội thảo nội bộ",
       "sender": "Ban Quản Lý",
       "time": "03/10/2026 09:00",
@@ -105,7 +105,7 @@
       "timestamp": "03/10/2026 09:00"
     },
     {
-      "id": "email_history_11",
+      "id": "email_014",
       "subject": "Khảo sát chất lượng dịch vụ",
       "sender": "Thông Tin Tài Khoản",
       "time": "02/10/2026 09:00",
@@ -113,7 +113,7 @@
       "timestamp": "02/10/2026 09:00"
     },
     {
-      "id": "email_history_10",
+      "id": "email_015",
       "subject": "Bản tin bảo mật",
       "sender": "Dịch Vụ Khách Hàng",
       "time": "01/10/2026 09:00",
@@ -121,7 +121,7 @@
       "timestamp": "01/10/2026 09:00"
     },
     {
-      "id": "email_history_9",
+      "id": "email_016",
       "subject": "Thông báo thư viện",
       "sender": "Nhóm Kỹ Thuật",
       "time": "29/09/2026 09:00",
@@ -129,7 +129,7 @@
       "timestamp": "29/09/2026 09:00"
     },
     {
-      "id": "email_history_8",
+      "id": "email_017",
       "subject": "Lịch vệ sinh khu làm việc",
       "sender": "Ban Quản Lý",
       "time": "28/09/2026 09:00",
@@ -137,7 +137,7 @@
       "timestamp": "28/09/2026 09:00"
     },
     {
-      "id": "email_history_7",
+      "id": "email_018",
       "subject": "Bản tin công nghệ tuần",
       "sender": "Thông Tin Tài Khoản",
       "time": "27/09/2026 09:00",
@@ -145,7 +145,7 @@
       "timestamp": "27/09/2026 09:00"
     },
     {
-      "id": "email_history_6",
+      "id": "email_019",
       "subject": "Đơn hàng đã giao",
       "sender": "Dịch Vụ Khách Hàng",
       "time": "26/09/2026 09:00",
@@ -153,7 +153,7 @@
       "timestamp": "26/09/2026 09:00"
     },
     {
-      "id": "email_history_5",
+      "id": "email_020",
       "subject": "Nhắc cập nhật hồ sơ nhân sự",
       "sender": "Nhóm Kỹ Thuật",
       "time": "25/09/2026 09:00",
@@ -161,7 +161,7 @@
       "timestamp": "25/09/2026 09:00"
     },
     {
-      "id": "email_history_4",
+      "id": "email_021",
       "subject": "Thông tin gói dữ liệu",
       "sender": "Ban Quản Lý",
       "time": "24/09/2026 09:00",
@@ -169,7 +169,7 @@
       "timestamp": "24/09/2026 09:00"
     },
     {
-      "id": "email_history_3",
+      "id": "email_022",
       "subject": "Hóa đơn mua sách",
       "sender": "Thông Tin Tài Khoản",
       "time": "23/09/2026 09:00",
@@ -177,7 +177,7 @@
       "timestamp": "23/09/2026 09:00"
     },
     {
-      "id": "email_history_2",
+      "id": "email_023",
       "subject": "Biên nhận thay dầu máy",
       "sender": "Dịch Vụ Khách Hàng",
       "time": "22/09/2026 09:00",
@@ -185,7 +185,7 @@
       "timestamp": "22/09/2026 09:00"
     },
     {
-      "id": "email_history_1",
+      "id": "email_024",
       "subject": "Tài liệu buổi chia sẻ kỹ thuật",
       "sender": "Nhóm Kỹ Thuật",
       "time": "21/09/2026 09:00",
@@ -193,7 +193,7 @@
       "timestamp": "21/09/2026 09:00"
     },
     {
-      "id": "email_history_0",
+      "id": "email_025",
       "subject": "Thông báo đăng ký thẻ xe",
       "sender": "Ban Quản Lý",
       "time": "20/09/2026 09:00",

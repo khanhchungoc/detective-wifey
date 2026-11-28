@@ -46,19 +46,19 @@ describe('US-004 banking inspection', () => {
     expect(data.actualBalance).toBe('18.500.000 đ');
     expect(data.transactions.length).toBeGreaterThanOrEqual(60);
     expect(data.transactions.slice(0, 20).map(row => row.id)).toEqual([
-      'tx_snack', 'tx_phone', 'tx_01', 'tx_lan_anh', 'tx_ngoc', 'tx_tuan_coc', 'tx_nam',
-      'tx_breakfast', 'tx_refund', 'tx_water', 'tx_parking', 'tx_gym', 'tx_lunch',
-      'tx_market', 'tx_ngoc_room', 'tx_fuel', 'tx_power', 'tx_net', 'tx_home', 'tx_salary',
+      'tx_001', 'tx_002', 'tx_003', 'tx_004', 'tx_005', 'tx_006', 'tx_007',
+      'tx_008', 'tx_009', 'tx_010', 'tx_011', 'tx_012', 'tx_013',
+      'tx_014', 'tx_015', 'tx_016', 'tx_017', 'tx_018', 'tx_019', 'tx_020',
     ]);
     expect(data.transactions.some(row => row.id === 'tx_02' || /huong/i.test(row.counterpartyName ?? ''))).toBe(false);
-    expect(data.transactions.find(row => row.id === 'tx_01')).toMatchObject({
+    expect(data.transactions.find(row => row.id === 'tx_003')).toMatchObject({
       direction: 'outflow', counterpartyName: 'COM NIEU PHO CO', memo: 'Thanh toan the', clueRefId: 'CLUE-BANK-07',
     });
     // Only the card payment is a clue; online transfers keep generic memos that the chats explain.
-    expect(data.transactions.filter(row => row.clueRefId).map(row => row.id)).toEqual(['tx_01']);
-    expect(data.transactions.find(row => row.id === 'tx_ngoc')).toMatchObject({ counterpartyName: 'NGUYEN BAO NGOC', memo: 'CK' });
-    expect(data.transactions.find(row => row.id === 'tx_lan_anh')).toMatchObject({ counterpartyName: 'NGUYEN LAN ANH', memo: 'CK' });
-    expect(data.transactions.find(row => row.id === 'tx_tuan_coc')).toMatchObject({ counterpartyName: 'TRAN VAN TUAN', memo: 'Coc' });
+    expect(data.transactions.filter(row => row.clueRefId).map(row => row.id)).toEqual(['tx_003']);
+    expect(data.transactions.find(row => row.id === 'tx_005')).toMatchObject({ counterpartyName: 'NGUYEN BAO NGOC', memo: 'CK' });
+    expect(data.transactions.find(row => row.id === 'tx_004')).toMatchObject({ counterpartyName: 'NGUYEN LAN ANH', memo: 'CK' });
+    expect(data.transactions.find(row => row.id === 'tx_006')).toMatchObject({ counterpartyName: 'TRAN VAN TUAN', memo: 'Coc' });
     expect(data.transactions[0].direction).toBe('outflow');
     expect(data.transactions[0].reference).toBeUndefined();
     expect(data.transactions[0].counterpartyBank).toBeUndefined();

@@ -92,15 +92,15 @@ export interface ConfrontationEvaluationResult {
  * Standard red-herring over-jealous roast dialogues for Level 1 suspects.
  */
 const RED_HERRING_ROASTS_L1: Record<string, string> = {
-  suspect_tuan_dien:
+  suspect_02:
     'Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?',
-  suspect_lan_anh:
+  suspect_04:
     'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
-  suspect_thao:
+  suspect_05:
     'Người ta đợi anh tập trị liệu cột sống rồi còn trừ buổi của anh. Em bắt được lưng đau, chưa bắt được người tình.',
-  suspect_ngoc:
+  suspect_03:
     'Em gái anh trượt môn Vĩ mô nhờ anh giấu mẹ. Em định bắt ghen hay đi méc mẹ?',
-  suspect_mai:
+  suspect_06:
     'Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.',
 };
 

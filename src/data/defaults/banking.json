@@ -4,7 +4,7 @@
   "unreadBadge": 0,
   "transactions": [
     {
-      "id": "df_tx_01",
+      "id": "tx_061",
       "time": "19:00",
       "date": "Hôm qua",
       "amount": "-650.000 đ",
@@ -13,7 +13,7 @@
       "category": "Hóa đơn & Tiện ích"
     },
     {
-      "id": "df_tx_02",
+      "id": "tx_062",
       "time": "12:15",
       "date": "Hôm qua",
       "amount": "-45.000 đ",
@@ -22,7 +22,7 @@
       "category": "Ăn uống hàng ngày"
     },
     {
-      "id": "df_tx_03",
+      "id": "tx_063",
       "time": "09:30",
       "date": "2 ngày trước",
       "amount": "-100.000 đ",

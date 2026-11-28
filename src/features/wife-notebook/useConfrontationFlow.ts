@@ -21,13 +21,13 @@ function resolveFallbackCaseConfig(
 ): CaseConfig {
   return caseConfig ?? {
     caseId: caseId || 'case_01',
-    husbandId: 'husband_hoang',
+    husbandId: 'husband_01',
     husbandName: 'Thịnh',
     levelNumber: 1,
     allowedStrikes: maxStrikes || 5,
     groundTruth: {
       verdict: 'cheating',
-      culpritSuspectId: 'suspect_huong',
+      culpritSuspectId: 'suspect_01',
       narrativeRoast:
         'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
       overJealousRoast:

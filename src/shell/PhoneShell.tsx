@@ -19,7 +19,7 @@ import { useNavigationGuard } from './useNavigationGuard';
 import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
-import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.webp';
+import defaultWallpaper from './assets/husband-01-technosoft-selfie-wallpaper-v3.webp';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
 export interface PhoneShellProps {
