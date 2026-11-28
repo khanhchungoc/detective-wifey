@@ -91,3 +91,29 @@ export function evaluateLevelCardClick(
   }
   return { action: 'select', feedback: null };
 }
+
+/** Gap between consecutive sheets turning for one tab tap (seconds). */
+export const SHEET_FLIP_STAGGER_S = 0.07;
+
+export interface SheetFlip {
+  sheet: number;
+  /** Target state: true = turned over (out of the way), false = back on the stack. */
+  flipped: boolean;
+  /** Turn order, 0 first; multiply by the stagger for the start delay. */
+  order: number;
+}
+
+/**
+ * Binder model: sheets before the current one are flipped over. Moving forward from `from` to `to`
+ * flips sheets from..to-1 in ascending order; moving back flips sheets to..from-1 back in reverse
+ * (nearest the current sheet first).
+ */
+export function planSheetFlips(from: number, to: number): SheetFlip[] {
+  const plan: SheetFlip[] = [];
+  if (to > from) {
+    for (let sheet = from; sheet < to; sheet += 1) plan.push({ sheet, flipped: true, order: sheet - from });
+  } else if (to < from) {
+    for (let sheet = from - 1; sheet >= to; sheet -= 1) plan.push({ sheet, flipped: false, order: from - 1 - sheet });
+  }
+  return plan;
+}

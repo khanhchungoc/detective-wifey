@@ -30,23 +30,23 @@ export async function clearStorageOnFirstLoad(page: Page): Promise<void> {
  * From the case file browser: open the active husband folder, flip to the level file and start it.
  */
 export async function startCaseFromSelector(page: Page, caseId = 'case_01'): Promise<void> {
-  await page.getByRole('button', { name: 'Mở hồ sơ' }).click();
+  await page.locator('[data-husband-id="husband_hoang"]').click();
   await page.locator(`[data-level-tab="${caseId}"]`).click();
   await page.locator(`[data-case-id="${caseId}"]`).click();
 }
 
 /**
  * Walks the real start flow up to the phone lock screen:
- * "Bắt đầu" -> open husband folder -> level file -> skip intro -> briefing "Mở điện thoại".
+ * "Bắt đầu" -> open husband folder -> level file -> skip intro -> briefing "Bắt đầu điều tra".
  */
 export async function openLevelToLockscreen(page: Page, caseId = 'case_01'): Promise<Locator> {
   await page.goto('/');
   await page.getByRole('button', { name: 'Bắt đầu' }).click();
   await startCaseFromSelector(page, caseId);
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
-  const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
+  const openPhone = page.getByRole('button', { name: /Bắt đầu điều tra/ });
   // The intro may be skipped on replays, and a "Bỏ qua" tap right after it mounts can be ignored,
-  // so retry until the briefing's "Mở điện thoại" button shows.
+  // so retry until the briefing's "Bắt đầu điều tra" button shows.
   await expect(async () => {
     if (await skip.isVisible()) await skip.click();
     await expect(openPhone).toBeVisible({ timeout: 1000 });

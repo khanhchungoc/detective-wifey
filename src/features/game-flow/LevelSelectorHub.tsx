@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import { IoVolumeHighOutline, IoVolumeMuteOutline } from 'react-icons/io5';
 import type { HusbandProfile, LevelCardItem } from '../../shared/contracts/game-flow';
+import { InkFilterDefs } from './case-files/FolderParts';
 import { HusbandStage } from './case-files/HusbandStage';
 import { LevelStage } from './case-files/LevelStage';
 import { clampPageIndex, resolveInitialHusbandIndex } from './case-files/pagerLogic';
@@ -61,16 +62,13 @@ export const LevelSelectorHub: React.FC<LevelSelectorHubProps> = ({
   }, [activeHusband]);
   const closeFolder = useCallback(() => setStage('husbands'), []);
 
-  const fade = reduced
-    ? { duration: 0.12 }
-    : { duration: 0.12, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
-
   return (
     <div
       className="flex h-[100dvh] w-full flex-col overflow-hidden bg-game-canvas font-sans text-game-text"
       data-screen="level-selector-hub"
       data-selector-stage={stage}
     >
+      <InkFilterDefs />
       <header className="w-full shrink-0 border-b border-white/10 bg-game-backdrop">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-3 md:px-8">
           <h1 className="text-ios-headline font-semibold leading-tight text-game-text">Hồ sơ vụ án</h1>
@@ -94,43 +92,30 @@ export const LevelSelectorHub: React.FC<LevelSelectorHubProps> = ({
       </header>
 
       <div className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col">
-        <AnimatePresence mode="wait" initial={false}>
-          {stage === 'husbands' || !activeHusband ? (
-            <motion.div
-              key="husbands"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={fade}
-              className="flex min-h-0 flex-1 flex-col"
-            >
-              <HusbandStage
-                husbands={husbands}
-                activeIndex={safeIndex}
-                reduced={reduced}
-                onIndexChange={setHusbandIndex}
-                onOpen={openFolder}
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="levels"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={fade}
-              className="flex min-h-0 flex-1 flex-col"
-            >
-              <LevelStage
-                husband={activeHusband}
-                levels={husbandLevels}
-                reduced={reduced}
-                onBack={closeFolder}
-                onSelectLevel={onSelectLevel}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/*
+          Plain swap, no AnimatePresence: a fade-out then fade-in between stages exposed the dark
+          canvas for ~240ms (the black screen). The opaque paper cover inside LevelStage opens the
+          folder in place instead, so there is never an empty frame.
+        */}
+        {stage === 'husbands' || !activeHusband ? (
+          <HusbandStage
+            key="husbands"
+            husbands={husbands}
+            activeIndex={safeIndex}
+            reduced={reduced}
+            onIndexChange={setHusbandIndex}
+            onOpen={openFolder}
+          />
+        ) : (
+          <LevelStage
+            key="levels"
+            husband={activeHusband}
+            levels={husbandLevels}
+            reduced={reduced}
+            onBack={closeFolder}
+            onSelectLevel={onSelectLevel}
+          />
+        )}
       </div>
     </div>
   );

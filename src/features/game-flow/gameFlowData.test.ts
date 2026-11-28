@@ -36,7 +36,7 @@ describe('buildLevelCards', () => {
 
 describe('buildCaseBriefing', () => {
   it('reads persona and wife profile from the husband profile SSOT', () => {
-    const [hoang] = buildHusbandProfiles('portrait.jpg');
+    const [hoang] = buildHusbandProfiles();
     const briefing = buildCaseBriefing(loadCase('case_01'), 'Điện thoại ngoài phòng tắm', hoang);
     expect(briefing.personaTraits).toBe(hoang.personaTraits);
     expect(briefing.wifeProfile).toBe(hoang.wifeProfile);

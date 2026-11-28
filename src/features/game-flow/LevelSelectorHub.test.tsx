@@ -15,6 +15,7 @@ import {
   resolvePagerTarget,
 } from './LevelSelectorHub';
 import { LevelStage } from './case-files/LevelStage';
+import { planSheetFlips } from './case-files/pagerLogic';
 
 const RAW_EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
 const EM_DASH_REGEX = /[—–]/;
@@ -112,13 +113,15 @@ const renderLevelStage = (initialIndex?: number) =>
   );
 
 describe('LevelSelectorHub husband stage', () => {
-  it('opens on the husband stage with the case file header and one primary CTA', () => {
+  it('opens on the husband stage with the case file header and a tappable folder', () => {
     const html = renderHub();
     expect(html).toContain('data-selector-stage="husbands"');
     expect(html).toContain('Hồ sơ vụ án');
     expect(html).not.toContain('Chọn màn');
     expect(html).toContain('aria-label="Tắt âm thanh"');
-    expect(html).toContain('>Mở hồ sơ<');
+    expect(html).not.toContain('>Mở hồ sơ<');
+    expect(html).toContain('aria-label="Mở hồ sơ Nguyễn Huy Hoàng"');
+    expect(html).toMatch(/role="button"[^>]*tabindex="0"|tabindex="0"[^>]*role="button"/);
     expect(html).not.toContain('>Đổi hồ sơ<');
     expect(html).toContain('data-husband-id="hoang"');
     expect(html).not.toContain('data-husband-id="tuan"');
@@ -158,11 +161,13 @@ describe('LevelSelectorHub husband stage', () => {
     expect(html).toContain('Thông tin đang bị che');
     expect(html).not.toContain('Kiến trúc sư trưởng');
     expect(html).not.toContain('Công trình ở xa');
-    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Mở hồ sơ<\/button>/);
+    expect(html).toContain('aria-disabled="true"');
+    expect(html).toContain('aria-label="Mở hồ sơ Trần Quốc Tuấn"');
+    expect(html).not.toMatch(/data-husband-id="tuan"[^>]*tabindex="0"/);
   });
 
-  it('enables the open button for a released husband', () => {
-    expect(renderHub()).not.toMatch(/<button[^>]*disabled=""[^>]*>Mở hồ sơ<\/button>/);
+  it('keeps a released husband folder openable (no aria-disabled)', () => {
+    expect(renderHub()).not.toContain('aria-disabled');
   });
 });
 
@@ -210,6 +215,34 @@ describe('LevelStage (folder opened)', () => {
     expect(html).not.toMatch(RAW_EMOJI_REGEX);
     expect(html).not.toMatch(ARBITRARY_TEXT_PX_REGEX);
     expect(html).not.toContain('font-mono');
+  });
+});
+
+describe('binder sheet flips', () => {
+  it('tapping a later tab flips every sheet before it, nearest the current sheet first', () => {
+    expect(planSheetFlips(1, 3)).toEqual([
+      { sheet: 1, flipped: true, order: 0 },
+      { sheet: 2, flipped: true, order: 1 },
+    ]);
+  });
+
+  it('tapping an earlier tab flips the sheets back in reverse order', () => {
+    expect(planSheetFlips(3, 0)).toEqual([
+      { sheet: 2, flipped: false, order: 0 },
+      { sheet: 1, flipped: false, order: 1 },
+      { sheet: 0, flipped: false, order: 2 },
+    ]);
+  });
+
+  it('plans nothing when the target is the current sheet', () => {
+    expect(planSheetFlips(2, 2)).toEqual([]);
+  });
+
+  it('puts each tab on its own sheet, staggered, with the first sheet flipped on first open', () => {
+    const html = renderLevelStage();
+    expect(html.match(/role="tab"/g)).toHaveLength(LEVELS.length);
+    expect(html.match(/data-level-tab="/g)).toHaveLength(LEVELS.length);
+    expect(html).toContain('aria-selected="true"');
   });
 });
 

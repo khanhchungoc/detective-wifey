@@ -27,6 +27,11 @@ export default {
           paper: '#F5F1E8',
           'paper-border': '#C9BFAE',
           'paper-slip': '#EAEFF4',
+          // Aged case-folder papers (pre-level selector).
+          manila: '#EAD8AC',
+          kraft: '#D4BB86',
+          'manila-edge': '#9C7A3C',
+          'label-strip': '#F7F1DF',
           polaroid: '#EEF2F6',
           'film-frame': '#FBFAF7',
           sticky: '#F6E271',
@@ -75,6 +80,10 @@ export default {
           'sans-serif',
         ],
         handwriting: ['"Shantell Sans"', 'cursive', 'sans-serif'],
+        // Printed case-file labels (pre-level dossier only). Slab serif with full Vietnamese coverage.
+        dossier: ['Bitter', 'Georgia', 'serif'],
+        // Typewritten text on paper case files only (pre-level screens). Full Vietnamese coverage.
+        typewriter: ['"IBM Plex Mono"', 'Courier New', 'serif'],
       },
     },
   },
