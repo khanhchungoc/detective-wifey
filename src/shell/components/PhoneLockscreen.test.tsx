@@ -79,7 +79,7 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(html).toContain('Thông báo biến động số dư');
     expect(html).toContain('bg-slate-950/55');
     expect(html).toContain('data-lockscreen-notif-peek="true"');
-    expect(html).toContain('data-lockscreen-flashlight="true"');
+    expect(html).toContain('data-lockscreen-back="true"');
     expect(html).toContain('data-lockscreen-camera="true"');
     expect(html).not.toContain('data-lockscreen-home-bar');
     expect(html).toContain('touch-action:none');
