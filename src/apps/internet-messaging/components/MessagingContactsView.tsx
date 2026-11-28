@@ -75,9 +75,6 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
                 Lời mời kết bạn
               </span>
             </div>
-            <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-rose-500 text-white text-ios-caption-2 font-bold flex items-center justify-center">
-              1
-            </span>
           </div>
 
           <div className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-all cursor-pointer min-h-[44px]">

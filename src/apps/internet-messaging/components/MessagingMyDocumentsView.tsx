@@ -200,7 +200,6 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
           }`}
         >
           <span>Ảnh</span>
-          <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
         </button>
 
         <button

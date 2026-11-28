@@ -16,7 +16,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-blue-700 to-indigo-800',
   themeColor: '#0A66C2',
   bottomBarColor: '#F3F2F0',
-  notificationBadgeCount: 1,
   isLocked: false,
   component: LazyProfessionalNetworkApp,
 };

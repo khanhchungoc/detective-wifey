@@ -222,7 +222,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-orange-500 to-amber-600',
   themeColor: '#EE4D2D',
   bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: EcommerceApp,
 };

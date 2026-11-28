@@ -27,6 +27,7 @@ import type { AppDefinition, AppId } from '../shared/contracts/app-contracts';
 import type { GameFlowStage, LevelCardItem } from '../shared/contracts/game-flow';
 import { appTransition, transition } from '../shared/motion/transition';
 import { AnchoredOverlay } from '../shared/ui/AnchoredOverlay';
+import { getAppBadgeCount } from '../shared/data/appBadge';
 import { RetainedAppView } from './RetainedAppView';
 
 export function GameRoot({ repository, initialCaseConfig, initialStage = 'startup' }: {
@@ -59,6 +60,8 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
   const activeApp = activeAppId !== 'home' ? getAppDefinition(activeAppId) ?? null : null;
   const contexts = useMemo(() => Object.fromEntries(Object.values(APP_REGISTRY)
     .map(app => [app.appId, createAppContext(caseConfig, app.appId)])), [caseConfig]);
+  const appBadgeCounts = useMemo(() => Object.fromEntries(ALL_LAUNCHER_APP_IDS
+    .map(id => [id, getAppBadgeCount(id, caseConfig.appsData)])), [caseConfig.appsData]);
   // Level-scoped app enablement: up to 12 apps displayed on SpringBoard, with out-of-scope apps disabled.
   const enabledAppIds = useMemo(() => new Set(
     (caseConfig.activeAppIds || [])
@@ -229,6 +232,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               activeAppId={activeAppId} activeAppDefinition={activeApp}
               activeUpperApps={upper} activeDockApps={dock}
               grayedOutAppIds={disabledAppIds}
+              appBadgeCounts={appBadgeCounts}
               systemAlertToast={state.systemAlertToast}
               onLaunchApp={launch} onReturnHome={returnHome}
               onGoToStartScreen={() => {

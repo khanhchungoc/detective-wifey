@@ -29,6 +29,8 @@ export interface PhoneShellProps {
   activeUpperApps: AppDefinition[];
   activeDockApps: AppDefinition[];
   grayedOutAppIds?: string[];
+  /** Home badge per app id, derived from level data by the host. */
+  appBadgeCounts?: Record<string, number>;
   systemAlertToast: string | null;
   incomingNotification?: NotificationToast | null;
   children: ReactNode;
@@ -59,7 +61,7 @@ export interface PhoneShellProps {
 /** Phone presentation and transient OS state. Gameplay is supplied by the host. */
 export const PhoneShell: React.FC<PhoneShellProps> = ({
   deviceMetadata, activeAppId, activeAppDefinition, activeUpperApps, activeDockApps,
-  grayedOutAppIds,
+  grayedOutAppIds, appBadgeCounts,
   systemAlertToast, incomingNotification, children, overlays, renderLevelSelector,
   onLaunchApp: handleLaunchApp, onReturnHome, onGoToStartScreen, onRestartLevel,
   onOpenNotebook, onCloseNotebook, notebookOpen = false, notebookEvidenceCount = 0, notebookCaseNumber = 1, onNotify,
@@ -347,6 +349,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                     >
                       <AppIconSquircle
                         app={app}
+                        overrideBadgeCount={appBadgeCounts?.[app.appId]}
                         isGrayedOut={isGrayedOut}
                         isOpen={activeAppId === app.appId}
                         onClick={() => {
@@ -386,6 +389,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                       <AppIconSquircle
                         key={app.appId}
                         app={app}
+                        overrideBadgeCount={appBadgeCounts?.[app.appId]}
                         hideLabel
                         isGrayedOut={isGrayedOut}
                         isOpen={activeAppId === app.appId}

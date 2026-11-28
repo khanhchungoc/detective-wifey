@@ -14,7 +14,7 @@ describe('US-003 Internet Messaging App Module Suite', () => {
     assert.ok(APP_REGISTRY['internet-messaging']);
     assert.equal(appDefinition.displayName, getAppDisplayName('internet-messaging'));
     assert.equal(appDefinition.themeColor, '#0088FF');
-    assert.equal(appDefinition.notificationBadgeCount, 4, 'Registry default remains independent of case thread unread counts');
+    assert.equal('notificationBadgeCount' in appDefinition, false, 'Badges derive from level data, never from the registry');
     assert.equal(appDefinition.isLocked, false);
     assert.ok(InternetMessagingApp);
   });

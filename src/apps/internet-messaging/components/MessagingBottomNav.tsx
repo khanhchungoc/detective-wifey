@@ -19,7 +19,7 @@ interface MessagingBottomNavProps {
 export const MessagingBottomNav: React.FC<MessagingBottomNavProps> = ({
   activeTab,
   onTabChange,
-  messageBadgeCount = 4,
+  messageBadgeCount = 0,
 }) => {
   return (
     <nav data-zola-bottom-nav className="app-bottom-nav bg-white border-t border-[#E5E7EB] flex items-center justify-around px-1 z-10 select-none">

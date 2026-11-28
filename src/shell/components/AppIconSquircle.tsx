@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, type CSSProperties } from 'react';
 import { AppDefinition } from '../../shared/contracts/app-contracts';
 
 interface AppIconSquircleProps {
-  app: Pick<AppDefinition, 'icon' | 'displayName' | 'iconAsset' | 'themeGradient' | 'notificationBadgeCount'> & Partial<Pick<AppDefinition, 'appId'>>;
+  app: Pick<AppDefinition, 'icon' | 'displayName' | 'iconAsset' | 'themeGradient'> & Partial<Pick<AppDefinition, 'appId'>>;
   onClick: () => void;
   overrideBadgeCount?: number;
   hideLabel?: boolean;
@@ -24,8 +24,7 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
   const touchActivatedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const IconComponent = app.icon;
-  const badgeCount =
-    overrideBadgeCount !== undefined ? overrideBadgeCount : app.notificationBadgeCount || 0;
+  const badgeCount = overrideBadgeCount ?? 0;
 
   useEffect(() => {
     return () => {

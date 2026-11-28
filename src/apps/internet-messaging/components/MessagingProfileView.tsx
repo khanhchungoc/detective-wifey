@@ -92,9 +92,6 @@ export const MessagingProfileView: React.FC<MessagingProfileViewProps> = ({
           aria-label="Cài đặt tài khoản"
         >
           <IoSettingsOutline className="w-6 h-6" />
-          <span className="absolute top-1.5 right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#FF3B30] text-white text-ios-caption-2 font-bold flex items-center justify-center">
-            !
-          </span>
         </button>
       </header>
 

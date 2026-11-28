@@ -14,7 +14,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-red-500 to-rose-600',
   themeColor: '#EA4335',
   bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 4,
   isLocked: false,
   component: LazyEmailApp,
 };

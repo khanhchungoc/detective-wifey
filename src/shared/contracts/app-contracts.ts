@@ -59,7 +59,6 @@ export interface AppDefinition {
   themeColor: string;
   /** Surface adjoining the shell home gesture area (independent of the header). */
   bottomBarColor?: string;
-  notificationBadgeCount?: number;
   isLocked: boolean;
   lockChallengeId?: string;
   component: React.ComponentType<VirtualAppProps>;
