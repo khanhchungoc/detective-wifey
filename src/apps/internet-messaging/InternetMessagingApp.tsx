@@ -206,21 +206,29 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
     cancelActiveAnims();
     detailEl.style.pointerEvents = 'none';
 
+    // Clear any inline swipe displacement on the inner detail surface so outer + inner transforms never double-stack for a frame.
+    const innerSurface = detailEl.firstElementChild;
+    if (innerSurface instanceof HTMLElement) {
+      innerSurface.style.transform = '';
+    }
+
     const duration = displacementPx > 0 ? Math.max(150, Math.round(280 * (1 - progress))) : 280;
     const fromTransform = displacementPx > 0 ? `translate3d(${displacementPx}px, 0, 0)` : 'translate3d(0, 0, 0)';
+    // Lock final off-screen transform inline so cancelling animations on unmount can never flash back to 0px.
+    detailEl.style.transform = 'translate3d(100%, 0, 0)';
     const detailAnim = detailEl.animate(
       [{ transform: fromTransform }, { transform: 'translate3d(100%, 0, 0)' }],
-      { duration, easing: DETAIL_EASE, fill: 'forwards' }
+      { duration, easing: DETAIL_EASE }
     );
     const anims: Animation[] = [detailAnim];
 
     if (scrimEl && typeof scrimEl.animate === 'function') {
       const fromOpacity = Math.max(0, 1 - progress);
+      scrimEl.style.opacity = '0';
       anims.push(
         scrimEl.animate([{ opacity: fromOpacity }, { opacity: 0 }], {
           duration,
           easing: DETAIL_EASE,
-          fill: 'forwards',
         })
       );
     }
@@ -243,9 +251,9 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
     >
       {/* Viewport Content */}
       <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
-        {/* Base Layer: Screens with Bottom Tab Bar (kept mounted behind detail screens) */}
+        {/* Base Layer: Screens with Bottom Tab Bar (z-10 stacking context stays strictly behind z-20 detail views) */}
         <div
-          className="absolute inset-0 flex flex-col min-h-0 overflow-hidden"
+          className="absolute inset-0 z-10 flex flex-col min-h-0 overflow-hidden"
           inert={isDetailActive}
           aria-hidden={isDetailActive}
         >

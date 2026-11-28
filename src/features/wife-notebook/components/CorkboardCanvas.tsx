@@ -371,7 +371,7 @@ const CorkboardContents = memo(function CorkboardContents({
               }}
               className={`corkboard-node-card absolute cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 node.imageSrc
-                  ? 'rounded-[2px] border bg-[#d2cdc2] p-2 pt-3 pb-2.5'
+                  ? 'rounded-[2px] border bg-[#f0ebe1] p-2 pt-3 pb-2.5'
                   : 'corkboard-paper-card rounded-[3px] border p-2.5 pt-[16px]'
               } ${
                 isDraggingThis

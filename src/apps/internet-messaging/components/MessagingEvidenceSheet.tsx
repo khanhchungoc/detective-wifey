@@ -38,6 +38,7 @@ export const MessagingEvidenceSheet: React.FC<MessagingEvidenceSheetProps> = ({
               subtitle,
               snippet: evidenceSnippet ?? '',
               suspectToTag,
+              imageSrc: source?.imageSrc,
               source,
             }
           : null
