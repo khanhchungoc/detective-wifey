@@ -376,7 +376,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
       };
       const now = Date.now();
       const prevTap = lastTap.current;
-      if (prevTap && now - prevTap.time < 350 && Math.hypot(e.clientX - prevTap.x, e.clientY - prevTap.y) <= 44 && !lockedRef.current) {
+      if (prevTap && now - prevTap.time < 400 && Math.hypot(e.clientX - prevTap.x, e.clientY - prevTap.y) <= 64 && !lockedRef.current) {
         lastTap.current = null;
         if (onDoubleTapBackground) {
           onDoubleTapBackground(point);
@@ -487,11 +487,11 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
     const cap = captureTapStart.current;
     if (cap && cap.pointerId === e.pointerId) {
       captureTapStart.current = null;
-      // When zoomed in all the way, cards cover almost the entire viewport; allow double-tapping a card to zoom back out.
-      if (!multiTouch.current && !lockedRef.current && cap.onCard && !cap.moved && viewportRef.current.zoom > 1.15) {
+      // Allow double-tapping a card in focus view (or zoomed in) to zoom all the way back out cleanly.
+      if (!multiTouch.current && !lockedRef.current && cap.onCard && !cap.moved && (Boolean(onDoubleTapBackground) || viewportRef.current.zoom > 1.15)) {
         const now = Date.now();
         const prevTap = lastTap.current;
-        if (prevTap && now - prevTap.time < 350 && Math.hypot(e.clientX - prevTap.x, e.clientY - prevTap.y) <= 44) {
+        if (prevTap && now - prevTap.time < 400 && Math.hypot(e.clientX - prevTap.x, e.clientY - prevTap.y) <= 64) {
           const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
           const cam = viewportRef.current;
           const point = {
@@ -499,6 +499,7 @@ export function useCorkboardGestures(options?: UseCorkboardGesturesOptions) {
             y: cam.y + (e.clientY - rect.top - rect.height / 2) / cam.zoom,
           };
           lastTap.current = null;
+          e.stopPropagation();
           onTapBackground?.(point);
           if (onDoubleTapBackground) {
             onDoubleTapBackground(point);

@@ -46,9 +46,14 @@ html[data-motion='close']::view-transition-group(*) { animation-duration: var(--
   will-change: transform, opacity;
   transform: translateZ(0);
 }
-html:is([data-motion='open'], [data-motion='close'])::view-transition-old(root),
-html:is([data-motion='open'], [data-motion='close'])::view-transition-new(root) {
-  animation: none;
+::view-transition-old(root) { animation: none; opacity: 1; }
+::view-transition-new(root) { animation: none; }
+html:is([data-motion='sheet-in'], [data-motion='sheet-out'])::view-transition-group(*) {
+  animation-duration: .22s;
+  animation-timing-function: var(--ease-ios-default);
+}
+html:is([data-motion='sheet-in'], [data-motion='sheet-out'])::view-transition-new(root) {
+  animation: ios-app-fade-in .22s var(--ease-ios-default) both;
 }
 ::view-transition-group(phone-app-grid),
 ::view-transition-group(phone-dock-apps) { z-index: 5; }
@@ -93,8 +98,9 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
   animation-timing-function: var(--ease-ios-default);
 }
 ::view-transition-old(phone-content), ::view-transition-new(phone-content) {
-  animation-duration: .35s;
+  animation-duration: .32s;
   animation-timing-function: var(--ease-ios-default);
+  animation-fill-mode: both;
 }
 @keyframes ios-push { from { transform: translateX(100%); } }
 @keyframes ios-under { to { transform: translateX(-25%); opacity: .6; } }
@@ -167,8 +173,9 @@ html[data-motion='pop'] [data-detail-layer] { view-transition-name: phone-detail
 html:is([data-motion='push'], [data-motion='pop']) [data-zola-bottom-nav] { view-transition-name: zola-bottom-nav; }
 ::view-transition-group(zola-bottom-nav) { z-index: 30; }
 ::view-transition-old(phone-detail), ::view-transition-new(phone-detail) {
-  animation-duration: .35s;
+  animation-duration: .32s;
   animation-timing-function: var(--ease-ios-default);
+  animation-fill-mode: both;
 }
 html[data-motion='push']::view-transition-new(phone-detail) { animation-name: ios-push; }
 html[data-motion='pop']::view-transition-old(phone-detail) { animation-name: ios-pop; }
@@ -232,7 +239,7 @@ html[data-swipe-motion][data-motion='close']::view-transition-new(phone-app-icon
 ::view-transition-new(notification-banner) { animation: none; }
 ::view-transition-new(phone-sheet):only-child { animation: ios-sheet-in .32s var(--ease-ios-spring) both; }
 ::view-transition-old(phone-sheet):only-child { opacity: 1; animation: ios-sheet-out .25s var(--ease-ios-default) both; }
-::view-transition-new(evidence-modal):only-child { animation: ios-dialog-in .28s var(--ease-ios-spring) both; }
+::view-transition-new(evidence-modal):only-child { animation: ios-dialog-in .22s var(--ease-ios-spring) both; }
 ::view-transition-old(evidence-modal):only-child { opacity: 1; animation: ios-dialog-out .22s var(--ease-ios-default) both; }
 ::view-transition-new(lock-screen):only-child { animation: ios-sheet-in .32s var(--ease-ios-spring) both; }
 ::view-transition-old(lock-screen):only-child { opacity: 1; animation: ios-sheet-out .25s var(--ease-ios-default) both; }
