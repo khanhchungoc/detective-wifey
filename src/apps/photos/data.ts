@@ -3,6 +3,7 @@ import type { UniversalEvidenceItem } from '../../shared/contracts/evidence';
 import type { NormalizedPhotosState, PhotoAlbum, PhotoExif, PhotoItem } from './types';
 import photosAnniversary from './assets/photos-anniversary.webp';
 import photosDinnerClaypot from './assets/photos-dinner-claypot.webp';
+import photosLevel0Cafe from './assets/photos-level0-cafe.webp';
 import photosEveryday01 from './assets/photos-everyday-01.webp';
 import photosEveryday02 from './assets/photos-everyday-02.webp';
 import photosEveryday03 from './assets/photos-everyday-03.webp';
@@ -53,6 +54,11 @@ const photoArtworkById: Readonly<Record<string, PhotoArtwork>> = {
   photo_013: everyday03.bottomLeft,
   photo_012: everyday04.topRight,
   photo_011: everyday04.bottomLeft,
+  photo_l0_002: everyday04.bottomLeft,
+  photo_l0_003: everyday01.bottomLeft,
+  photo_l0_004: everyday04.topLeft,
+  photo_l0_005: everyday02.topRight,
+  photo_l0_006: everyday01.bottomRight,
   p1: anniversary.topLeft,
   p2: anniversary.topRight,
   photo_017: everyday01.topLeft,
@@ -72,6 +78,7 @@ const photoArtworkByClue: Readonly<Record<string, PhotoArtwork>> = {
 
 const standalonePhotoUrlById: Readonly<Record<string, string>> = {
   photo_dinner_claypot: photosDinnerClaypot,
+  photo_l0_001: photosLevel0Cafe,
 };
 
 const standalonePhotoUrlByClue: Readonly<Record<string, string>> = {
@@ -79,9 +86,9 @@ const standalonePhotoUrlByClue: Readonly<Record<string, string>> = {
 };
 
 function getStandalonePhotoUrl(photo: Record<string, unknown>): string | undefined {
-  return standalonePhotoUrlByClue[text(photo.clueRefId)]
-    || standalonePhotoUrlById[text(photo.id)]
-    || standalonePhotoUrlById[text(photo.photoId)];
+  return standalonePhotoUrlById[text(photo.id)]
+    || standalonePhotoUrlById[text(photo.photoId)]
+    || standalonePhotoUrlByClue[text(photo.clueRefId)];
 }
 
 function getPhotoArtwork(photo: Record<string, unknown>): PhotoArtwork | undefined {

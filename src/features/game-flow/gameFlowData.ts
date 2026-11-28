@@ -72,24 +72,27 @@ export function buildLevelCards(
   unlockedMaxLevel: number,
   starRatings: Record<string, number>,
 ): LevelCardItem[] {
-  // Màn 0 is the in-phone guide. Its content is built later, so the file is visible but not playable.
-  const guideCard: LevelCardItem = {
-    caseId: 'case_00_guide',
+  const hasLevelZero = availableLevels.some((lvl) => lvl.levelNumber === 0);
+
+  const fallbackGuideCard: LevelCardItem = {
+    caseId: 'case_00',
     husbandId: 'husband_01',
     levelNumber: 0,
-    levelTitle: 'Hướng dẫn điều tra',
+    levelTitle: 'Bữa cà phê tăng ca',
     summary: GUIDE_CARD_TEASER,
-    activeAppCount: 0,
-    allowedStrikes: 0,
+    activeAppCount: 3,
+    allowedStrikes: 5,
     isGuide: true,
-    comingSoon: true,
+    comingSoon: false,
     unlocked: true,
+    bestStars: starRatings.case_00 ?? 0,
   };
 
-  const normalCards: LevelCardItem[] = availableLevels.map((lvl) => {
-    const unlocked = lvl.levelNumber <= Math.max(1, unlockedMaxLevel);
-    const activeAppCount = lvl.levelNumber === 1 ? 4 : lvl.levelNumber === 2 ? 6 : 8;
-    const cleanTitle = lvl.levelTitle.replace(/^MÀN\s+\d+:\s*/i, '').trim();
+  const cards: LevelCardItem[] = availableLevels.map((lvl) => {
+    const isGuide = lvl.levelNumber === 0;
+    const unlocked = isGuide || lvl.levelNumber <= Math.max(1, unlockedMaxLevel);
+    const activeAppCount = isGuide ? 3 : lvl.levelNumber === 1 ? 4 : lvl.levelNumber === 2 ? 6 : 8;
+    const cleanTitle = lvl.levelTitle.replace(/^MÀN\s+\d+(?:\s*\([^)]*\))?:\s*/i, '').trim();
     return {
       caseId: lvl.caseId,
       husbandId: lvl.husbandId,
@@ -99,6 +102,7 @@ export function buildLevelCards(
       summary: lvl.storySnippet.replace(/^Độ khó:[^)]*\)\.\s*/, ''),
       activeAppCount,
       allowedStrikes: lvl.allowedStrikes,
+      isGuide,
       unlocked,
       bestStars: starRatings[lvl.caseId] ?? 0,
       comingSoon: lvl.comingSoon,
@@ -106,7 +110,7 @@ export function buildLevelCards(
     };
   });
 
-  return [guideCard, ...normalCards];
+  return hasLevelZero ? cards : [fallbackGuideCard, ...cards];
 }
 
 export const BRIEFING_HOOK_QUESTION = 'Bạn có đủ tỉnh táo để tìm ra bằng chứng?';

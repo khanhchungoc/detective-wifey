@@ -53,6 +53,7 @@ export interface WifeNotebookModalProps {
   onUpdateTaggedSuspects?: (suspects: TaggedEvidenceItem[]) => void;
   onApplyConfrontationStrike?: () => void;
   onConfrontationVictory?: (stars: 1 | 2 | 3, wifeTitle?: string) => void;
+  onVerifiedEdgesChange?: (verifiedEdgeIds: string[]) => void;
   onNextLevel?: () => void;
   onCaught?: () => void;
 }
@@ -74,6 +75,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   onUpdateTaggedSuspects,
   onApplyConfrontationStrike,
   onConfrontationVictory,
+  onVerifiedEdgesChange,
   onNextLevel,
   onCaught,
 }) => {
@@ -418,6 +420,10 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     () => getVerifiedKeyEdgeIds(edges, knowledgeGraph),
     [edges, knowledgeGraph],
   );
+
+  useEffect(() => {
+    onVerifiedEdgesChange?.(verifiedKeyEdgeIds);
+  }, [verifiedKeyEdgeIds, onVerifiedEdgesChange]);
 
   const keyConnectionProgress = useMemo(
     () => getKeyConnectionProgress(edges, knowledgeGraph),

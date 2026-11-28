@@ -70,7 +70,7 @@ export function resolveDefaultLevelIndex(levels: LevelCardItem[]): number {
 }
 
 export function canStartLevel(level: LevelCardItem): boolean {
-  return level.unlocked && !level.isGuide && !level.comingSoon;
+  return level.unlocked && !level.comingSoon;
 }
 
 export function evaluateLevelCardClick(
@@ -80,7 +80,7 @@ export function evaluateLevelCardClick(
   now: number,
   debounceMs: number = SELECT_DEBOUNCE_MS,
 ): { action: 'select' | 'locked' | 'ignore'; feedback: string | null } {
-  if (husbandComingSoon || level.isGuide || level.comingSoon) {
+  if (husbandComingSoon || level.comingSoon) {
     return { action: 'ignore', feedback: null };
   }
   if (!level.unlocked) {

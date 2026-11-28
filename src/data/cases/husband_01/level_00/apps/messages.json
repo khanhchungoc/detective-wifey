@@ -1,0 +1,203 @@
+{
+  "unreadBadge": 1,
+  "threads": [
+    {
+      "threadId": "thread_l0_001",
+      "lastMessageTimestamp": "12/09 22:10",
+      "contactId": "contact_l0_001",
+      "isPinned": false,
+      "unreadCount": 1,
+      "messages": [
+        {
+          "messageId": "msg_l0_001_01",
+          "timestamp": "12/09/2026 19:50",
+          "sender": "outgoing",
+          "bodyText": "Tối nay xong sớm ko? Qua chỗ cũ lấy đồ nha."
+        },
+        {
+          "messageId": "msg_l0_001_02",
+          "timestamp": "12/09/2026 19:52",
+          "sender": "incoming",
+          "bodyText": "8h em xong ca rồi anh. Mưa nhẹ nên cũng vắng."
+        },
+        {
+          "messageId": "msg_l0_001_03",
+          "timestamp": "12/09/2026 20:15",
+          "sender": "incoming",
+          "bodyText": "Em tới rồi nhé, ngồi trên tầng 2 cho thoáng.",
+          "clueRefId": "CLUE-ZOLA-01"
+        },
+        {
+          "messageId": "msg_l0_001_04",
+          "timestamp": "12/09/2026 22:10",
+          "sender": "incoming",
+          "bodyText": "Áo khoác anh để quên em cất rồi, mai rảnh em gửi lại nhé.",
+          "clueRefId": "CLUE-ZOLA-01"
+        }
+      ]
+    },
+    {
+      "threadId": "thread_l0_002",
+      "lastMessageTimestamp": "12/09 20:12",
+      "contactId": "contact_010",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_l0_002_01",
+          "timestamp": "12/09/2026 10:20",
+          "sender": "incoming",
+          "bodyText": "Trưa nay em nấu canh bí đỏ với thịt rang cháy cạnh, anh về ăn sớm nhé."
+        },
+        {
+          "messageId": "msg_l0_002_02",
+          "timestamp": "12/09/2026 10:22",
+          "sender": "outgoing",
+          "bodyText": "Nhất vợ luôn, 12h anh có mặt ở nhà ❤️"
+        },
+        {
+          "messageId": "msg_l0_002_03",
+          "timestamp": "12/09/2026 18:10",
+          "sender": "incoming",
+          "bodyText": "Tối nay mấy giờ anh xong việc? Em phần cơm nhé."
+        },
+        {
+          "messageId": "msg_l0_002_04",
+          "timestamp": "12/09/2026 18:15",
+          "sender": "outgoing",
+          "bodyText": "Chắc hơi muộn tí vợ ơi, nay có vài việc phát sinh."
+        },
+        {
+          "messageId": "msg_l0_002_05",
+          "timestamp": "12/09/2026 20:10",
+          "sender": "outgoing",
+          "bodyText": "Anh đang ngồi công ty fix lỗi gấp, chắc 9 rưỡi mới về. Vợ ăn trước nhé ❤️",
+          "clueRefId": "CLUE-ZOLA-07"
+        },
+        {
+          "messageId": "msg_l0_002_06",
+          "timestamp": "12/09/2026 20:12",
+          "sender": "incoming",
+          "bodyText": "Vâng, anh nhớ ăn tạm gì cho đỡ đói nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_l0_003",
+      "lastMessageTimestamp": "12/09 17:50",
+      "contactId": "contact_l0_002",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_l0_003_01",
+          "timestamp": "12/09/2026 17:45",
+          "sender": "incoming",
+          "bodyText": "Em ơi file in thẻ nhân viên đợt mới gửi lại chị bản PDF nhé, bản cũ bị lệch lề."
+        },
+        {
+          "messageId": "msg_l0_003_02",
+          "timestamp": "12/09/2026 17:48",
+          "sender": "outgoing",
+          "bodyText": "Dạ em vừa xuất lại file PDF gửi mail chị rồi ạ. Thứ Hai chị giao giúp em ở sảnh Technosoft nhé chị."
+        },
+        {
+          "messageId": "msg_l0_003_03",
+          "timestamp": "12/09/2026 17:50",
+          "sender": "incoming",
+          "bodyText": "Ok em, chị nhận được rồi. Cảm ơn em nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_l0_006",
+      "lastMessageTimestamp": "12/09 16:43",
+      "contactId": "contact_005",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_l0_006_01",
+          "timestamp": "12/09/2026 16:40",
+          "sender": "incoming",
+          "bodyText": "Bản vá giỏ hàng chạy ổn rồi ông ơi. Cuối tuần cứ nghỉ ngơi đi, thứ Hai review tiếp."
+        },
+        {
+          "messageId": "msg_l0_006_02",
+          "timestamp": "12/09/2026 16:43",
+          "sender": "outgoing",
+          "bodyText": "Ok ông, cảm ơn ông nhé 👍"
+        }
+      ]
+    },
+    {
+      "threadId": "thread_l0_007",
+      "lastMessageTimestamp": "11/09 20:00",
+      "contactId": "contact_006",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_l0_007_01",
+          "timestamp": "11/09/2026 20:00",
+          "sender": "incoming",
+          "bodyText": "Thông báo: Tòa CT2 tạm ngừng cấp nước từ 08:00 đến 10:00 sáng Chủ Nhật 13/09 để bảo trì đường ống. Kính mong quý cư dân thông cảm."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_l0_005",
+      "lastMessageTimestamp": "11/09 18:37",
+      "contactId": "contact_004",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_l0_005_01",
+          "timestamp": "11/09/2026 18:30",
+          "sender": "incoming",
+          "bodyText": "Chủ Nhật 5h chiều sân Trung Kính vẫn đá đều chứ ông?"
+        },
+        {
+          "messageId": "msg_l0_005_02",
+          "timestamp": "11/09/2026 18:35",
+          "sender": "outgoing",
+          "bodyText": "Đá chứ, tôi mới mua đôi giày mới chưa kịp thử đây."
+        },
+        {
+          "messageId": "msg_l0_005_03",
+          "timestamp": "11/09/2026 18:37",
+          "sender": "incoming",
+          "bodyText": "Ngon luôn, nhớ mang nước nhé ông."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_l0_004",
+      "lastMessageTimestamp": "10/09 19:24",
+      "contactId": "contact_003",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_l0_004_01",
+          "timestamp": "10/09/2026 19:15",
+          "sender": "incoming",
+          "bodyText": "Cuối tuần hai đứa có về quê không con? Mẹ vừa thu hoạch ít rau sạch trong vườn."
+        },
+        {
+          "messageId": "msg_l0_004_02",
+          "timestamp": "10/09/2026 19:20",
+          "sender": "outgoing",
+          "bodyText": "Tuần này con bận chút việc công ty mẹ ạ, để cuối tuần sau con đưa Thư về ăn cơm với mẹ nhé."
+        },
+        {
+          "messageId": "msg_l0_004_03",
+          "timestamp": "10/09/2026 19:24",
+          "sender": "incoming",
+          "bodyText": "Ừ, hai vợ chồng giữ gìn sức khỏe, đừng thức khuya quá nhé."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "opening": [
+    {
+      "choiceId": "choice_l0_01",
+      "slot": "left",
+      "wifeLine": "{{husband.shortName}}, tối nay anh thật sự đi đâu?",
+      "husbandLine": "Tùng Gara là cậu thợ sửa xe chứ ai? Tối nay anh ngồi công ty fix lỗi gấp mà!",
+      "husbandMood": "confident"
+    },
+    {
+      "choiceId": "choice_l0_02",
+      "slot": "right",
+      "wifeLine": "Anh giải thích chuyện 'Tùng Gara' đi.",
+      "husbandLine": "Tùng Gara là cậu thợ sửa xe chứ ai? Tối nay anh ngồi công ty fix lỗi gấp mà!",
+      "husbandMood": "confident"
+    }
+  ],
+  "beats": [
+    {
+      "beatId": "beat_l0_01",
+      "topic": "Tùng Gara là ai?",
+      "choices": [
+        {
+          "choiceId": "choice_l0_03",
+          "slot": "up",
+          "wifeLine": "Thợ sửa xe nào dùng số 0933112244 mà ghi chú danh bạ lại là 'Lê Ngọc Vy - 45 Nguyễn Khang'?",
+          "requiredEdgeIds": [
+            "edge_l0_alias_identity"
+          ],
+          "onTrue": {
+            "husbandLine": "À... Vy là người quen gần công ty. Anh lưu nhầm tên thôi chứ tối nay anh vẫn ở văn phòng!",
+            "husbandMood": "nervous"
+          },
+          "onFalse": {
+            "husbandLine": "Em đọc kỹ lại đi, có bằng chứng gì chứng minh Tùng Gara là ai đâu?",
+            "husbandMood": "smug"
+          }
+        },
+        {
+          "choiceId": "choice_l0_04",
+          "slot": "left",
+          "wifeLine": "Chị Hằng In Ấn gọi anh chiều nay là sao?",
+          "onFalse": {
+            "husbandLine": "Chị Hằng lớn hơn anh một tuổi, làm in thẻ nhân viên cho công ty. Em đọc lại tin nhắn xin file PDF đi, oan cho người ta quá!",
+            "husbandMood": "smug"
+          }
+        }
+      ]
+    },
+    {
+      "beatId": "beat_l0_02",
+      "topic": "Anh có thật sự ở công ty lúc 20:10?",
+      "choices": [
+        {
+          "choiceId": "choice_l0_05",
+          "slot": "up",
+          "wifeLine": "20:10 anh nhắn tôi đang ngồi công ty fix lỗi. Vậy bức ảnh bàn 2 ly nước lúc 20:25 ở 45 Nguyễn Khang là ai chụp?",
+          "requiredEdgeIds": [
+            "edge_l0_alibi_photo"
+          ],
+          "onTrue": {
+            "husbandLine": "Anh xin lỗi vợ... anh không ngồi công ty mà ra Góc Phố gặp Vy. Anh sai rồi!",
+            "husbandMood": "broken"
+          },
+          "onFalse": {
+            "husbandLine": "Anh ngồi công ty thật mà, em có bằng chứng nào bảo anh đi chỗ khác đâu?",
+            "husbandMood": "smug"
+          }
+        }
+      ]
+    }
+  ],
+  "ending": [
+    {
+      "choiceId": "choice_l0_06",
+      "outcome": "forgive",
+      "slot": "left",
+      "wifeLine": "Lần đầu cảnh cáo. Chặn số ngay!",
+      "husbandLine": "Anh xóa ngay đây vợ ơi...",
+      "husbandMood": "broken"
+    },
+    {
+      "choiceId": "choice_l0_07",
+      "outcome": "forgive",
+      "slot": "right",
+      "wifeLine": "Đừng để tôi bắt được lần nữa.",
+      "husbandLine": "Anh xóa ngay đây vợ ơi...",
+      "husbandMood": "broken"
+    }
+  ]
+}

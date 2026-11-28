@@ -28,6 +28,16 @@ import type { GameFlowStage, LevelCardItem } from '../shared/contracts/game-flow
 import { appTransition, transition } from '../shared/motion/transition';
 import { AnchoredOverlay } from '../shared/ui/AnchoredOverlay';
 import { getAppBadgeCount } from '../shared/data/appBadge';
+import {
+  TutorialPopupGuide,
+  createInitialTutorialState,
+  dismissCurrentPopup,
+  readLevel0Status,
+  skipTutorialGuide,
+  triggerTutorialStep,
+  writeLevel0Status,
+  type TutorialProgressState,
+} from '../features/tutorial';
 import { RetainedAppView } from './RetainedAppView';
 
 export function GameRoot({ repository, initialCaseConfig, initialStage = 'startup' }: {
@@ -119,10 +129,68 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
   };
 
   const [lockscreenReturnStage, setLockscreenReturnStage] = useState<'level-selector' | 'level-context'>('level-context');
+  const isLevel0 = caseConfig.levelNumber === 0;
+  const [tutorialState, setTutorialState] = useState<TutorialProgressState>(() => createInitialTutorialState());
+
+  useEffect(() => {
+    if (isLevel0) {
+      setTutorialState(createInitialTutorialState());
+    }
+  }, [isLevel0, state.appSessionId]);
+
+  const hasMessagesPin = useMemo(
+    () => state.taggedSuspects.some(item => item.sourceApp === 'messages'),
+    [state.taggedSuspects],
+  );
+  const hasPhonePin = useMemo(
+    () => state.taggedSuspects.some(item => item.sourceApp === 'phone'),
+    [state.taggedSuspects],
+  );
+
+  useEffect(() => {
+    if (!isLevel0 || flowStage !== 'phone-home' || activeAppId !== 'home') return;
+    if (tutorialState.activeStep === 'goal' && tutorialState.dismissedCurrentPopup && !tutorialState.guideSkipped) {
+      const timer = window.setTimeout(() => {
+        setTutorialState(prev => triggerTutorialStep(prev, 'open_messages'));
+      }, 2000);
+      return () => window.clearTimeout(timer);
+    }
+    return undefined;
+  }, [isLevel0, flowStage, activeAppId, tutorialState.activeStep, tutorialState.dismissedCurrentPopup, tutorialState.guideSkipped]);
+
+  useEffect(() => {
+    if (!isLevel0 || flowStage !== 'phone-home') return;
+    if (activeAppId === 'messages') {
+      setTutorialState(prev => triggerTutorialStep(prev, 'pin_message'));
+    }
+  }, [isLevel0, flowStage, activeAppId]);
+
+  useEffect(() => {
+    if (!isLevel0 || flowStage !== 'phone-home') return;
+    if (hasMessagesPin && !hasPhonePin) {
+      setTutorialState(prev => triggerTutorialStep(prev, 'open_phone'));
+    }
+  }, [isLevel0, flowStage, hasMessagesPin, hasPhonePin]);
+
+  useEffect(() => {
+    if (!isLevel0 || flowStage !== 'phone-home') return;
+    if (hasMessagesPin && hasPhonePin && !notebookOpen) {
+      setTutorialState(prev => triggerTutorialStep(prev, 'open_notebook'));
+    }
+  }, [isLevel0, flowStage, hasMessagesPin, hasPhonePin, notebookOpen]);
+
+  useEffect(() => {
+    if (!isLevel0 || flowStage !== 'phone-home') return;
+    if (notebookOpen && hasMessagesPin && hasPhonePin) {
+      setTutorialState(prev => triggerTutorialStep(prev, 'connect_alias'));
+    }
+  }, [isLevel0, flowStage, notebookOpen, hasMessagesPin, hasPhonePin]);
 
   const handleSelectLevelCard = (card: LevelCardItem) => {
-    // The Màn 0 guide is not playable yet; the selector never emits it, this guards the contract.
-    if (card.isGuide || card.comingSoon) return;
+    if (card.comingSoon) return;
+    if (!card.isGuide && readLevel0Status() === 'not_started') {
+      writeLevel0Status('skipped');
+    }
     if (state.ongoingSession?.caseId === card.caseId) {
       if (game.resumeOngoing()) {
         setLockscreenReturnStage('level-selector');
@@ -290,12 +358,51 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                     launch(appId);
                   }}
                   onUpdateTaggedSuspects={game.updateTaggedSuspects}
-                  onApplyConfrontationStrike={game.applyConfrontationPenalty}
-                  onConfrontationVictory={game.recordConfrontationVerdict}
-                  onNextLevel={game.forgiveAndAdvanceLevel}
+                  onConfront={isLevel0 ? () => setTutorialState(prev => triggerTutorialStep(prev, 'confrontation_rules')) : undefined}
+                  onVerifiedEdgesChange={isLevel0 ? (edgeIds) => {
+                    if (edgeIds.includes('edge_l0_alias_identity') && !edgeIds.includes('edge_l0_alibi_photo')) {
+                      setTutorialState(prev => triggerTutorialStep(prev, 'independent_alibi'));
+                    }
+                  } : undefined}
+                  onApplyConfrontationStrike={isLevel0 ? () => {} : game.applyConfrontationPenalty}
+                  onConfrontationVictory={(stars, wifeTitle) => {
+                    game.recordConfrontationVerdict(stars, wifeTitle);
+                    if (isLevel0) {
+                      writeLevel0Status('completed');
+                    }
+                  }}
+                  onNextLevel={() => {
+                    if (isLevel0) {
+                      setOpenNotebookCase(null);
+                      setTutorialState(prev => triggerTutorialStep(prev, 'complete'));
+                      return;
+                    }
+                    game.forgiveAndAdvanceLevel();
+                  }}
                 />
                 </Suspense>
                 </AnchoredOverlay>
+                {isLevel0 && flowStage === 'phone-home' && (
+                  <TutorialPopupGuide
+                    step={tutorialState.activeStep}
+                    visible={!tutorialState.dismissedCurrentPopup}
+                    onDismiss={() => setTutorialState(prev => dismissCurrentPopup(prev))}
+                    onSkipGuide={() => setTutorialState(prev => skipTutorialGuide(prev))}
+                    onEnterLevel1={() => {
+                      setOpenNotebookCase(null);
+                      setTutorialState(prev => dismissCurrentPopup(prev));
+                      if (game.selectLevel(1)) {
+                        setLockscreenReturnStage('level-context');
+                        setFlowStage('level-context');
+                      }
+                    }}
+                    onReplayLevel0={() => {
+                      setOpenNotebookCase(null);
+                      void game.restart();
+                      setTutorialState(createInitialTutorialState());
+                    }}
+                  />
+                )}
                 {briefingRecallOpen && (
                   <LevelContextBriefing
                     briefing={activeBriefing}

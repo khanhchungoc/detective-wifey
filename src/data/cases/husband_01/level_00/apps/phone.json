@@ -1,0 +1,72 @@
+{
+  "unreadBadge": 0,
+  "calls": [
+    {
+      "callId": "call_l0_001",
+      "contactId": "contact_l0_001",
+      "timestamp": "12/09/2026 20:12",
+      "direction": "outgoing",
+      "durationSeconds": 42,
+      "clueRefId": "CLUE-PHONE-01"
+    },
+    {
+      "callId": "call_l0_002",
+      "contactId": "contact_l0_002",
+      "timestamp": "12/09/2026 17:40",
+      "direction": "incoming",
+      "durationSeconds": 20
+    },
+    {
+      "callId": "call_l0_003",
+      "contactId": "contact_010",
+      "timestamp": "12/09/2026 11:55",
+      "direction": "incoming",
+      "durationSeconds": 35
+    },
+    {
+      "callId": "call_l0_004",
+      "contactId": "contact_004",
+      "timestamp": "11/09/2026 18:25",
+      "direction": "incoming",
+      "durationSeconds": 64
+    },
+    {
+      "callId": "call_l0_005",
+      "contactId": "contact_003",
+      "timestamp": "10/09/2026 19:30",
+      "direction": "outgoing",
+      "durationSeconds": 185
+    }
+  ],
+  "contacts": [
+    {
+      "contactId": "contact_l0_001",
+      "notesField": "Lê Ngọc Vy - 45 Nguyễn Khang",
+      "clueRefId": "CLUE-PHONE-02"
+    },
+    {
+      "contactId": "contact_l0_002",
+      "notesField": "In thẻ nhân viên Technosoft"
+    },
+    {
+      "contactId": "contact_010",
+      "notesField": "Nóc nhà"
+    },
+    {
+      "contactId": "contact_003",
+      "notesField": ""
+    },
+    {
+      "contactId": "contact_004",
+      "notesField": "Đá bóng sân Trung Kính"
+    },
+    {
+      "contactId": "contact_005",
+      "notesField": "Team Dev Technosoft"
+    },
+    {
+      "contactId": "contact_006",
+      "notesField": "Hotline kỹ thuật tòa nhà"
+    }
+  ]
+}

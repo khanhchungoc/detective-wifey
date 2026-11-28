@@ -1,0 +1,50 @@
+[
+  {
+    "contactId": "contact_l0_001",
+    "personId": "person_027",
+    "savedName": "Tùng Gara",
+    "phone": "0933112244",
+    "notesField": "Lê Ngọc Vy - 45 Nguyễn Khang"
+  },
+  {
+    "contactId": "contact_l0_002",
+    "personId": "person_028",
+    "savedName": "Chị Hằng In Ấn",
+    "phone": "0944556611",
+    "notesField": "In thẻ nhân viên Technosoft"
+  },
+  {
+    "contactId": "contact_010",
+    "personId": "person_001",
+    "savedName": "Vợ",
+    "phone": "0900112233",
+    "notesField": "Nóc nhà"
+  },
+  {
+    "contactId": "contact_003",
+    "personId": "person_002",
+    "savedName": "Mẹ Ở Quê",
+    "phone": "0915220011"
+  },
+  {
+    "contactId": "contact_004",
+    "personId": "person_009",
+    "savedName": "Tuấn Chó",
+    "phone": "0977112233",
+    "notesField": "Đá bóng sân Trung Kính"
+  },
+  {
+    "contactId": "contact_005",
+    "personId": "person_010",
+    "savedName": "Nam Dev",
+    "phone": "0933445566",
+    "notesField": "Team Dev Technosoft"
+  },
+  {
+    "contactId": "contact_006",
+    "personId": "person_029",
+    "savedName": "BQL CT2 An Bình",
+    "phone": "0243999888",
+    "notesField": "Hotline kỹ thuật tòa nhà"
+  }
+]

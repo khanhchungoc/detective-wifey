@@ -14,7 +14,7 @@ import type { CaseConfig } from '../../shared/contracts/case-schema';
 describe('caseRuntime', () => {
   it('returns ordered levels for a husband and empty list for unknown husband', () => {
     const levels = getAvailableLevels('husband_01');
-    expect(levels.map((l) => l.levelNumber)).toEqual([1, 2, 3]);
+    expect(levels.map((l) => l.levelNumber)).toEqual([0, 1, 2, 3]);
     expect(getAvailableLevels('unknown_husband')).toEqual([]);
   });
 
@@ -42,7 +42,7 @@ describe('caseRuntime', () => {
 
   it('throws localized Vietnamese errors for missing caseId or out-of-range levelNumber', () => {
     expect(() => loadCase('nonexistent_case')).toThrow('Không thể tải dữ liệu vụ án');
-    expect(() => loadCaseByLevel(0)).toThrow('Không tìm thấy màn chơi yêu cầu.');
+    expect(() => loadCaseByLevel(-1)).toThrow('Không tìm thấy màn chơi yêu cầu.');
     expect(() => loadCaseByLevel(4)).toThrow('Không tìm thấy màn chơi yêu cầu.');
     expect(() => loadCaseByLevel(1, 'unknown_husband')).toThrow('Không tìm thấy màn chơi yêu cầu.');
   });
