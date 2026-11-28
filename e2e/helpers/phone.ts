@@ -121,6 +121,7 @@ export async function launchApp(page: Page, appId: string): Promise<void> {
   await expect(launcher).toBeVisible();
   await launcher.click();
   await expect(page.locator('[data-app-viewport]')).toBeVisible();
+  await expect(page.locator('[data-app-instance]:not([hidden]) [aria-busy="true"]')).toHaveCount(0);
 }
 
 /**
