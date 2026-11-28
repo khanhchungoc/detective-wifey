@@ -44,3 +44,11 @@ describe('buildCaseBriefing', () => {
     expect(briefing.introBeats.map((b) => b.speakerRole)).toEqual(['husband', 'wife']);
   });
 });
+
+describe('buildLevelCards summaries', () => {
+  it('drops the difficulty prefix from case file summaries', () => {
+    const cards = buildLevelCards(getAvailableLevels('husband_hoang'), 1, {});
+    expect(cards.slice(1).every((c) => !c.summary.startsWith('Độ khó'))).toBe(true);
+    expect(cards[1].summary.startsWith('23:45')).toBe(true);
+  });
+});

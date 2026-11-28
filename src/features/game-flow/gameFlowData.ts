@@ -92,7 +92,8 @@ export function buildLevelCards(
       husbandId: lvl.husbandId,
       levelNumber: lvl.levelNumber,
       levelTitle: cleanTitle || lvl.levelTitle,
-      summary: lvl.storySnippet,
+      // The selector file shows story only; difficulty and rule text stay out of it.
+      summary: lvl.storySnippet.replace(/^Độ khó:[^)]*\)\.\s*/, ''),
       activeAppCount,
       allowedStrikes: lvl.allowedStrikes,
       unlocked,
