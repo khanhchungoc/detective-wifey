@@ -378,7 +378,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-blue-500 to-sky-600',
   themeColor: '#0088FF',
   bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 4,
   isLocked: false,
   component: InternetMessagingApp,
 };

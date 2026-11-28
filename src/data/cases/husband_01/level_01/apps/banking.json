@@ -230,10 +230,10 @@
       "date": "08/10/2026",
       "time": "18:25",
       "amount": "+50.000 đ",
-      "beneficiary": "Bach Dev",
       "memo": "Chia tien mua giay in",
       "status": "Thành công",
-      "timestamp": "08/10/2026 18:25"
+      "timestamp": "08/10/2026 18:25",
+      "counterpartyPersonId": "person_011"
     },
     {
       "id": "tx_024",

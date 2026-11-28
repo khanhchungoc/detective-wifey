@@ -34,7 +34,7 @@
 | `friend_minh_bc` | Minh Bằng Cổ | Vũ Văn Minh | 1994 (32) | Thịnh `em`, gọi `anh` | IT | Chưa có người yêu; nhà Trung Kính (cùng khu với Thịnh) | Mê chơi game Nintendo Switch |
 | `friend_namzua` | Namzua | Nguyễn Ức Nam | 1995 (31) | Cùng tuổi: `ông - tôi` | Dev Frontend, công ty outsource lớn nhất Việt Nam | 1 vợ, 1 con, ở chung cư | Đẹp trai, tập gym, chơi cầu lông; chơi poker |
 | `friend_linh` | Linh Yoyo | Linh (chưa rõ họ) | 1995 (31) | Cùng tuổi: `bà - tôi` hoặc gọi tên | Kế toán | (chưa rõ) | Hào phóng, hay bao cả nhóm |
-| `friend_bach` (`person_011`) | Bách Dev | Trần Bách | 1995 (31) | Cùng tuổi: `ông - tôi` | Dev | Mới có người yêu; nhà Tây Tựu | Trồng rau ở nhà; gợi ý gán vào liên hệ "Bách Dev" đã có trong Màn 1 (xem mục 5) |
+| `friend_bach` (`person_011`) | Bách Chut | Trần Bách | 1995 (31) | Cùng tuổi: `ông - tôi` | Dev | Mới có người yêu; nhà Tây Tựu | Trồng rau ở nhà; gợi ý gán vào liên hệ "Bách Chut" đã có trong Màn 1 (xem mục 5) |
 | `friend_phuong` | Phương Bé | Trần Thị Phương | 1996 (30) | Thịnh `anh`, gọi `em` | Dev Backend | Mới có người yêu kém tuổi | Hay "phát cơm chó"; thần tượng anh Bình và anh Chính; cực kỳ đảm đang |
 | `char_best_friend` (`person_009`) | Tuấn Chó | Nguyễn Tuấn | 1997 (29) | Bạn thân: `ông - tôi` | Dev Frontend | Độc thân, chưa người yêu | **Đã thay "Tuấn Đụt" làm bạn thân cố định** (xem hồ sơ người chồng). Vui tính, trẻ con; thích cầu lông; thích thịt chó; chơi poker |
 | `friend_trung` | Trung Khỉm | Nguyễn Trung | 1997 (29) | Thịnh `anh`, gọi `em` (hoặc `ông - tôi` khi đùa) | Dev Backend, công ty IT khác công ty của Namzua | 1 vợ, 1 con mèo | Đầu óc "bậy bạ", thích gái xinh ("sếch giốc"); chơi poker |
@@ -60,7 +60,7 @@ Thành viên: **A9 (Chính), Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấ
 | Màn | Bạn bè gợi ý | Ứng dụng & Vai trò |
 |---|---|---|
 | **Màn 1** (Cuộc gọi từ phòng tắm) | Tuấn Chó (đã có), Namzua, Trung Khỉm, Minh Bằng Cổ, Sếp Tuấn Anh | `internet-messaging`: nhóm "Hội Cầu Lông Thứ 3-5" (Namzua, Tuấn Chó, Trung Khỉm) rủ đánh cầu, gửi meme; sinh hoạt thuần. `phone`/`messages`: Minh Bằng Cổ rủ sang nhà chơi Switch cuối tuần (cùng khu Trung Kính). `email`/`team-collaboration`: Sếp Tuấn Anh giao việc sprint. Chỉ thêm nếu không phá tỷ lệ 75% sinh hoạt và số bản ghi đã chốt của Màn 1. |
-| **Màn 2** (Quỹ đen & Tráo danh bạ) | Hội Poker, Phòng Chứng Khoán, Vượng Coin, Hồng Emerald, Linh Yoyo, Trang Bịp | `internet-messaging`/`banking`: Hội Poker và chuyển khoản nhỏ trả nợ phỉnh (gây nhiễu). Phòng gửi "mã ngon" cổ phiếu, Vượng rủ "all in coin"; Thịnh chuyển tiền đầu tư từ quỹ đen (gây nhiễu, không phải tiền cho bồ). `banking`/`ecommerce`: hóa đơn cafe/spa của Hồng Emerald, hóa ra là voucher spa tặng vợ (giải oan). Linh Yoyo chuyển trả tiền bữa liên hoan (giải oan). Bách Dev mang rau nhà trồng ở Tây Tựu cho Thịnh hoặc khoe người yêu mới (sinh hoạt). Trang Bịp đùa "cần ny 500 tỷ" (gây nhiễu nữ). |
+| **Màn 2** (Quỹ đen & Tráo danh bạ) | Hội Poker, Phòng Chứng Khoán, Vượng Coin, Hồng Emerald, Linh Yoyo, Trang Bịp | `internet-messaging`/`banking`: Hội Poker và chuyển khoản nhỏ trả nợ phỉnh (gây nhiễu). Phòng gửi "mã ngon" cổ phiếu, Vượng rủ "all in coin"; Thịnh chuyển tiền đầu tư từ quỹ đen (gây nhiễu, không phải tiền cho bồ). `banking`/`ecommerce`: hóa đơn cafe/spa của Hồng Emerald, hóa ra là voucher spa tặng vợ (giải oan). Linh Yoyo chuyển trả tiền bữa liên hoan (giải oan). Bách Chut mang rau nhà trồng ở Tây Tựu cho Thịnh hoặc khoe người yêu mới (sinh hoạt). Trang Bịp đùa "cần ny 500 tỷ" (gây nhiễu nữ). |
 | **Màn 3** (Ngoại tình công sở đa tầng) | Sếp Tuấn Anh, Thành Hanen, Minh Worm, Bình Đại Bàng, A9, Dương Ocean, Phương Bé | `email`/`professional-network`: Sếp Tuấn Anh đăng bài diễn giả, Thành (Marketing Hanen) và Minh Worm (startup) mời hợp tác hoặc mời về làm, tạo lớp nhiễu công việc. `internet-messaging`: Bình rủ nhậu Long Biên (bằng chứng ngoại phạm thật có thể đối chiếu). A9 khoe "đi sửa điện cho em gái" làm người chơi nghi nhầm. Dương Ocean đùa "nhất buổi trưa, nhì trời mưa" (gây nhiễu). Phương Bé đăng ảnh "cơm chó", khen anh Bình anh Chính. |
 
 ---
@@ -70,5 +70,20 @@ Thành viên: **A9 (Chính), Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấ
 - **Tuấn**: "Tuấn Đụt" đã đổi thành "Tuấn Chó" trong dữ liệu Màn 1 và hồ sơ. Vẫn còn "Anh Tuấn Thợ Điện" và "Sếp Tuấn Anh": luôn hiện đủ tên lưu danh bạ. Chat cũ của Tuấn Chó vẫn nói chuyện đá bóng (ảnh đại diện là ảnh đội bóng); muốn khớp sở thích cầu lông thì sửa ở lần chỉnh Màn 1 sau.
 - **Nam**: Đã có "Nam Dev" (đồng nghiệp Technosoft, `char_boss`, `person_010`). "Namzua" làm ở công ty khác; luôn hiện tên "Namzua". Sếp thật của Thịnh là "Sếp Tuấn Anh".
 - **Minh**: Hai bạn tên Minh. Luôn dùng "Minh Worm" và "Minh Bằng Cổ", không dùng "Minh" trơn.
-- **Bách**: Màn 1 đã có "Bách Dev" (`contact_014`, nhóm "Team Dev Technosoft"). Trần Bách trùng tên và nghề nên dùng luôn cho liên hệ này, không tạo Bách thứ hai. Chat cũ không mâu thuẫn; có thể thêm chi tiết rau nhà trồng hoặc người yêu mới ở màn sau.
+- **Bách**: Màn 1 đã có "Bách Chut" (`contact_014`, nhóm "Team Dev Technosoft"). Trần Bách trùng tên và nghề nên dùng luôn cho liên hệ này, không tạo Bách thứ hai. Chat cũ không mâu thuẫn; có thể thêm chi tiết rau nhà trồng hoặc người yêu mới ở màn sau.
 - **Kế toán**: Đã có "Lan Anh Kế Toán" ở Technosoft. Linh Yoyo làm kế toán ở nơi khác; lưu "Linh Yoyo", không gắn chữ "Kế Toán".
+
+---
+
+## 6. Đã dùng trong Màn 1
+
+Cả 15 bạn chưa có trong game nay là liên hệ danh bạ (Phone + Zola), mỗi người 1 luồng SMS lịch sử 6 tin, chỉ sinh hoạt. Mã: `person_012` - `person_026`, `contact_019` - `contact_033`, luồng SMS `thread_031` - `thread_045` (xem [`master/people.json`](../../../src/data/cases/husband_01/master/people.json) và [`level_01/contacts.json`](../../../src/data/cases/husband_01/level_01/contacts.json)).
+
+| Bạn | Vai trong Màn 1 |
+|---|---|
+| A9, Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấn Chó, Trung Khỉm | Nhóm Zola "Hội Poker Tối Thứ 6" (`thread_046`) chat khuya, tạo thông báo khóa màn hình thứ hai (`toast_002`). Sếp Tuấn Anh báo "đang ở Đà Nẵng", xác nhận gián tiếp họp bị hủy. |
+| Namzua, Tuấn Chó, Trung Khỉm | Nhóm "Cầu lông T3-T5" (`thread_047`). |
+| Minh Bằng Cổ | Luồng 1-1 (`thread_048`) rủ sang nhà chơi game cuối tuần. |
+| Sếp Tuấn Anh | Thay "sếp Hùng" cũ: sếp đi Đà Nẵng làm họp sprint bị dời; sinh nhật sếp là lý do đặt hoa (bẫy Mai Lễ Tân). |
+| Thành, Minh Worm, Phương, Trang, Dương, Phòng, Hồng, Vượng, Linh | Chỉ có trong danh bạ + SMS lịch sử; sẵn sàng cho Màn 2 - 3. |
+

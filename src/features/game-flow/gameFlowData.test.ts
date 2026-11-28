@@ -9,7 +9,7 @@ describe('buildLockscreenConfig for Level 1', () => {
     expect(config.narrativeTime).toBe('23:45');
     expect(config.notifications.map((n) => [n.appId, n.timeLabel])).toEqual([
       ['internet-messaging', '22:58'],
-      ['internet-messaging', '23:41'],
+      ['internet-messaging', '23:42'],
     ]);
     // Masked bodies never reveal sender names or text.
     expect(config.notifications.every((n) => n.maskedBody === 'Bạn có 1 tin nhắn mới')).toBe(true);

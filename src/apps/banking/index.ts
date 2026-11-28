@@ -16,7 +16,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-[#ED1C24] to-[#B71C1C]',
   themeColor: '#ED1C24',
   bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 1,
   isLocked: false,
   component: LazyBankingApp,
 };

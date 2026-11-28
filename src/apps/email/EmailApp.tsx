@@ -160,7 +160,6 @@ export const appDefinition: AppDefinition = {
   icon: IoMail,
   themeGradient: 'from-red-500 to-rose-600',
   themeColor: '#EA4335', bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 4,
   isLocked: false,
   component: EmailApp,
 };

@@ -14,14 +14,14 @@ describe('US-003 Internet Messaging App Module Suite', () => {
     assert.ok(APP_REGISTRY['internet-messaging']);
     assert.equal(appDefinition.displayName, getAppDisplayName('internet-messaging'));
     assert.equal(appDefinition.themeColor, '#0088FF');
-    assert.equal(appDefinition.notificationBadgeCount, 4, 'Registry default remains independent of case thread unread counts');
+    assert.equal('notificationBadgeCount' in appDefinition, false, 'Badges derive from level data, never from the registry');
     assert.equal(appDefinition.isLocked, false);
     assert.ok(InternetMessagingApp);
   });
 
   it('keeps the alias ordinary while the dinner clue spans the alias thread and the wife alibi', () => {
     const data = readMessagingData(loadCase('case_01').appsData['internet-messaging']);
-    assert.equal(data.threads!.length, 12);
+    assert.equal(data.threads!.length, 15);
     assert.equal(data.otherThreads!.some(thread => thread.threadId === 'thread_903'), false, 'Old alias thread is gone');
     const thread = data.threads!.find(thread => thread.contactName === 'Khoa BE');
     assert.ok(thread);
@@ -32,12 +32,12 @@ describe('US-003 Internet Messaging App Module Suite', () => {
     assert.equal(thread.suspectId, '', 'No author metadata leaks the real identity');
     assert.equal(thread.unreadCount, 0, 'Unread counts never steer the player');
     assert.equal(thread.systemBanner, '', 'No disappearing-message shortcut');
-    assert.equal(thread.messages.length, 18, 'Work chatter keeps the alias thread ordinary');
-    assert.equal(thread.lastMessage, 'A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.');
+    assert.equal(thread.messages.length, 16, 'Work chatter keeps the alias thread ordinary');
+    assert.equal(thread.lastMessage, 'Vâng ạ, e gửi file từ sáng.');
     const reservation = thread.messages.find(message => message.id === 'msg_003_0014');
     assert.ok(reservation);
     assert.ok((reservation.timestamp || reservation.time).includes('15/10') && (reservation.timestamp || reservation.time).includes('17:40'));
-    assert.equal(reservation.text, 'Ok a, e book bàn 7h30 chỗ hôm trước nhé.');
+    assert.equal(reservation.text, 'Ok a, e đặt chỗ hôm trước lúc 7h30 nha.');
     assert.equal(reservation.clueRefId, 'CLUE-ZOLA-01');
     const wife = data.threads!.find(thread => thread.threadId === 'thread_005');
     assert.ok(wife);
@@ -58,7 +58,7 @@ describe('US-003 Internet Messaging App Module Suite', () => {
   it('uses a complete shared phone number for cross-app identity without directory spoilers', () => {
     const case1 = loadCase('case_01');
     const data = readMessagingData(case1.appsData['internet-messaging']);
-    assert.equal(data.contacts!.length, 14);
+    assert.equal(data.contacts!.length, 29);
     const alias = data.contacts!.find(contact => contact.name === 'Khoa BE');
     assert.ok(alias);
     assert.equal(alias.id, 'contact_011');

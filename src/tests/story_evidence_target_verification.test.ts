@@ -25,8 +25,8 @@ describe('Story JSON Data Ingestion & Evidence Long-Press Target Suite', () => {
     assert.equal(booking.clueRefId, 'CLUE-ZOLA-01');
     assert.ok(!booking.text.toLowerCase().includes('váy'), 'Chat never names the dress');
     assert.ok(khoa.messages.every((m) => !m.locationData), 'No location shortcut survives');
-    assert.equal(khoa.messages[khoa.messages.length - 1].text, 'A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.');
-    assert.equal(khoa.messages[khoa.messages.length - 1].clueRefId, '', 'Trigger notification is context, not a separate clue');
+    assert.equal(khoa.messages[khoa.messages.length - 1].text, 'Vâng ạ, e gửi file từ sáng.', 'The alias thread ends on ordinary work chatter');
+    assert.ok(khoa.messages.every((m) => !/quán|áo khoác|Vừa lắm/.test(m.text)), 'No post-dinner confession survives');
 
     // The real electrician is an innocent decoy whose notification is explained by other chats.
     const tuan = threads.find((t) => t.threadId === 'thread_004');
@@ -49,7 +49,7 @@ describe('Story JSON Data Ingestion & Evidence Long-Press Target Suite', () => {
     const early = wife.messages.find((m) => m.id === 'msg_005_0079')!;
     const late = wife.messages.find((m) => m.id === 'msg_005_0082')!;
     assert.ok(at(early).includes('18:55') && early.text.includes('họp sprint với cả team'));
-    assert.ok(at(late).includes('20:46') && late.text.includes('sếp Hùng đang chốt nốt'));
+    assert.ok(at(late).includes('20:46') && late.text.includes('sếp Tuấn Anh đang chốt nốt'));
     assert.equal(early.clueRefId, 'CLUE-ZOLA-09');
     assert.equal(late.clueRefId, 'CLUE-ZOLA-09');
 

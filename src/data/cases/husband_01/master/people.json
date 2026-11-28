@@ -150,5 +150,156 @@
       "0933778899"
     ],
     "avatarIndex": 9
+  },
+  {
+    "personId": "person_012",
+    "legalName": "Nguyễn Cú Thành",
+    "gender": "male",
+    "birthYear": 1992,
+    "role": "friend",
+    "phones": [
+      "0912668120"
+    ]
+  },
+  {
+    "personId": "person_013",
+    "legalName": "Nguyễn Ức Nam",
+    "gender": "male",
+    "birthYear": 1995,
+    "role": "friend",
+    "phones": [
+      "0936215477"
+    ]
+  },
+  {
+    "personId": "person_014",
+    "legalName": "Lê Văn Minh",
+    "gender": "male",
+    "birthYear": 1992,
+    "role": "friend",
+    "phones": [
+      "0904381926"
+    ]
+  },
+  {
+    "personId": "person_015",
+    "legalName": "Nguyễn Trung",
+    "gender": "male",
+    "birthYear": 1997,
+    "role": "friend",
+    "phones": [
+      "0368552190"
+    ]
+  },
+  {
+    "personId": "person_016",
+    "legalName": "Bình",
+    "gender": "male",
+    "birthYear": 1991,
+    "role": "friend",
+    "phones": [
+      "0983117045"
+    ]
+  },
+  {
+    "personId": "person_017",
+    "legalName": "Trần A Chính",
+    "gender": "male",
+    "birthYear": 1989,
+    "role": "friend",
+    "phones": [
+      "0913999009"
+    ]
+  },
+  {
+    "personId": "person_018",
+    "legalName": "Trần Thị Phương",
+    "gender": "female",
+    "birthYear": 1996,
+    "role": "friend",
+    "phones": [
+      "0389420616"
+    ]
+  },
+  {
+    "personId": "person_019",
+    "legalName": "Hồng Trang",
+    "gender": "female",
+    "birthYear": 1999,
+    "role": "friend",
+    "phones": [
+      "0866500500"
+    ]
+  },
+  {
+    "personId": "person_020",
+    "legalName": "Dương Trần",
+    "gender": "male",
+    "birthYear": 1998,
+    "role": "friend",
+    "phones": [
+      "0857334812"
+    ]
+  },
+  {
+    "personId": "person_021",
+    "legalName": "Vũ Văn Minh",
+    "gender": "male",
+    "birthYear": 1994,
+    "role": "friend",
+    "phones": [
+      "0975246318"
+    ]
+  },
+  {
+    "personId": "person_022",
+    "legalName": "Nguyễn Biên Phòng",
+    "gender": "male",
+    "birthYear": 1991,
+    "role": "friend",
+    "phones": [
+      "0942731560"
+    ]
+  },
+  {
+    "personId": "person_023",
+    "legalName": "Ngọc Bích Hồng",
+    "gender": "female",
+    "birthYear": 1992,
+    "role": "friend",
+    "phones": [
+      "0918886668"
+    ]
+  },
+  {
+    "personId": "person_024",
+    "legalName": "Lương Ngọc Vượng",
+    "gender": "male",
+    "birthYear": 1992,
+    "role": "friend",
+    "phones": [
+      "0965120892"
+    ]
+  },
+  {
+    "personId": "person_025",
+    "legalName": "Vũ Nguyễn Tuấn Anh",
+    "gender": "male",
+    "birthYear": 1989,
+    "role": "colleague",
+    "phones": [
+      "0903456189"
+    ],
+    "orgId": "org_001"
+  },
+  {
+    "personId": "person_026",
+    "legalName": "Linh",
+    "gender": "female",
+    "birthYear": 1995,
+    "role": "friend",
+    "phones": [
+      "0397158295"
+    ]
   }
 ]

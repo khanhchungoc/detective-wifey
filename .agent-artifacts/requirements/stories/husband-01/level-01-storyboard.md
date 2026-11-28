@@ -32,7 +32,7 @@ level: 1
 | `suspect_06` | Đỗ Thị Mai | 24 tuổi, Nữ | Lễ tân sảnh tòa nhà Minh An | Nhỏ hơn 5 tuổi; `a` - `e` | "Mai Lễ Tân" (`contact_009`, SĐT `0988990011`) | Lịch sự dịch vụ, `ạ` cuối câu, 🙏 | Bẫy nghi ngờ (Vô tội) |
 | `contact_wife` | Trần Minh Thư | 28 tuổi, Nữ | Vợ hợp pháp, kế toán | Nhỏ hơn 1 tuổi; `anh` - `em` | "Vợ" (`contact_010`, SĐT `0900112233`) | Quan tâm, nhẹ nhàng; ngày D có chuyện vui muốn nói | Nhân vật mỏ neo (người chơi) |
 | `contact_mom` | Nguyễn Thị Hòa | 56 tuổi, Nữ | Mẹ ruột Thịnh ở quê, sinh nhật 18/10 | Bề trên; Thịnh xưng `con` gọi `mẹ` | "Mẹ Ở Quê" (`contact_001`, SĐT `0915220011`) | Chính tả chuẩn, không viết tắt, hay dặn "đừng mua gì tốn kém" | Sinh hoạt / Giải oan thợ điện |
-| `contact_dev` | Nam Dev và Bách Dev | 30 và 27 tuổi, Nam | Đồng nghiệp Team Dev Technosoft | Nam ngang hàng (`ông - tôi`); Bách nhỏ hơn (`a - e`) | "Team Dev Technosoft" (nhóm), "Nam Dev" (`contact_004`) | Tiếng lóng dev, viết tắt, `ae` | Sinh hoạt công việc / Phá ngoại phạm |
+| `contact_dev` | Nam Dev và Bách Chut | 30 và 27 tuổi, Nam | Đồng nghiệp Team Dev Technosoft | Nam ngang hàng (`ông - tôi`); Bách nhỏ hơn (`a - e`) | "Team Dev Technosoft" (nhóm), "Nam Dev" (`contact_004`) | Tiếng lóng dev, viết tắt, `ae` | Sinh hoạt công việc / Phá ngoại phạm |
 | `contact_hr` | Phòng Nhân sự Technosoft | - | Tài khoản HR trong nhóm toàn công ty | Lịch sự hành chính | "HR Technosoft" trong nhóm "Technosoft - Toàn công ty" | Văn phong thông báo | Nguồn tên pháp lý của Hương |
 | `contact_friend` | Tuấn Chó (Nguyễn Tuấn) | 29 tuổi (1997), Nam | Bạn thân | Kém Thịnh 2 tuổi nhưng thân, vẫn xưng `tôi - ông` | "Tuấn Chó" (`contact_006`) | Suồng sã, bóng đá | Sinh hoạt bạn bè |
 
@@ -57,29 +57,30 @@ level: 1
 | `ACT-04` | 13/10 09:30 | Shop điện máy | Đặt bình nóng lạnh 20L, người nhận `Nguyễn Thị Hòa`, SĐT `0915220011`, giao nhà mẹ | Shop -> nhà mẹ | `ecommerce` | `order_004` (`CLUE-POSH-06`) | Người nhận nữ lạ nhưng SĐT trùng danh bạ "Mẹ Ở Quê" |
 | `ACT-05` | 13/10 17:15 - 17:22 | Thảo PT | Chốt buổi đánh giá cột sống thứ Năm 18:00, trước giờ họp sprint 19:00 | Phòng gym tầng 5 Minh An | `internet-messaging` | `thread_009` (Giải oan Thảo) | Lịch tập trị liệu có trước cuộc hẹn |
 | `ACT-06` | 13/10 21:00 - 21:05 | Vợ | Vợ xin chồng về sớm đi khám thứ Năm; Thịnh: "Thứ 5 anh có họp sprint rồi vợ ơi" | - | `internet-messaging` | `thread_005` (Sinh hoạt / cài cảm xúc) | Lúc này họp sprint là thật |
-| `ACT-07` | 14/10 15:02 - 15:10 | Lan Anh | Lan Anh nhờ Thịnh đặt hoa sáp sinh nhật anh Hùng, để tên Mai lễ tân nhận cho kín vì anh Hùng hay xuống sảnh | - | `internet-messaging` | `thread_007` (Giải oan Mai) | Quà chung của Team Dev |
+| `ACT-07` | 14/10 15:02 - 15:10 | Lan Anh | Lan Anh nhờ Thịnh đặt hoa sáp sinh nhật anh Tuấn Anh, để tên Mai lễ tân nhận cho kín vì anh Tuấn Anh hay xuống sảnh | - | `internet-messaging` | `thread_007` (Giải oan Mai) | Quà chung của Team Dev |
 | `ACT-08` | 14/10 15:20 | Shop Hoa Sáp | Đặt lẵng hoa sáp, người nhận `Đỗ Thị Mai`, SĐT `0988990011`, thiệp "Chúc mừng sinh nhật! - Team Dev" | Shop -> sảnh Minh An | `ecommerce` | `order_003`, `shopchat_002` (`CLUE-POSH-06`) | Người nhận nữ là lễ tân nhận hộ |
 | `EVT-03` | 14/10 21:12 - 21:16 | Hương ("Khoa BE") | "Thứ 5 tròn 1 tháng rồi đó a. A nhớ vụ khao nhé"; Thịnh: "Tối đó a vướng họp sprint rồi e." | - | `internet-messaging` | `thread_003` | Kỷ niệm 1 tháng quen nhau (15/09), không phải 1 tháng vào công ty (08/09) |
 | `EVT-04` | D 11:35 - 11:42 | Mai Lễ Tân | Mai báo 2 kiện: 1 túi dài người nhận Mai (hoa), 1 hộp nhỏ người nhận khác nhưng shipper dặn đưa Thịnh. Thịnh: "Của a cả, chiều a xuống lấy" | Sảnh Minh An: hộp váy (shipper -> Mai -> Thịnh) | `internet-messaging` | `thread_011` (Giải oan Mai + gợi ý phụ) | Thịnh chặn gói quà mang tên người khác |
 | `ACT-09` | D 15:05 | Mai Lễ Tân | Thịnh lấy hộp nhỏ; túi hoa Mai cất kho tới thứ Hai như chị Lan Anh dặn | Sảnh | `internet-messaging` | `thread_011` (Giải oan Mai) | Hoa ở lại sảnh, váy đi theo Thịnh |
 | `ACT-10` | D 15:30 - 15:35 | Anh Tuấn Thợ Điện | Thịnh chuyển cọc 1.500.000đ; Tuấn: "Anh nhận cọc rồi nhé" | Ngân hàng | `banking` + `internet-messaging` | `tx_006`, `thread_004` (Giải oan thợ điện) | Nội dung chuyển khoản chỉ ghi "Coc" |
 | `ACT-11` | D 16:05 - 16:21 | Vợ | "Em khám xong rồi. Tối về em có chuyện muốn nói 🙂" | Bệnh viện | `internet-messaging` | `thread_005` (Cài cảm xúc) | Thư biết mình có thai 6 tuần |
-| `EVT-05` | D 17:30 - 17:33 | Team Dev | Nam: "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae"; Thịnh: "Ok ông 👍" | - | `internet-messaging` | `thread_002` / `msg_002_0012` (`CLUE-ZOLA-09`) | Thịnh biết không còn cuộc họp nào |
-| `EVT-06` | D 17:35 - 17:40 | Hương ("Khoa BE") | Thịnh: "Họp hủy rồi. Tối nay khao luôn nhé?"; Khoa: "Ok a, e book bàn 7h30 chỗ hôm trước nhé." | Quán Cơm Niêu Phố Cổ (không nêu tên trong chat) | `internet-messaging` | `thread_003` / `msg_003_0014` (`CLUE-ZOLA-01`) | Cuộc họp bị hủy biến thành buổi hẹn |
+| `EVT-05` | D 17:30 - 17:33 | Team Dev | Nam: "Sếp Tuấn Anh 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae"; Thịnh: "Ok ông 👍" | - | `internet-messaging` | `thread_002` / `msg_002_0012` (`CLUE-ZOLA-09`) | Thịnh biết không còn cuộc họp nào |
+| `EVT-06` | D 17:35 - 17:40 | Hương ("Khoa BE") | Thịnh: "Tối nay a xong sớm. Vụ khao làm luôn nhé?"; Khoa: "Ok a, e đặt chỗ hôm trước lúc 7h30 nha." | Quán Cơm Niêu Phố Cổ (không nêu tên trong chat) | `internet-messaging` | `thread_003` / `msg_003_0014` (`CLUE-ZOLA-01`) | Cuộc họp bị hủy biến thành buổi hẹn |
 | `ACT-12` | D 18:00 | Thịnh rời văn phòng | Lan Anh sau đó nhắn thấy Thịnh về từ 6h | Sảnh Minh An | - | (Không có bản ghi trực tiếp) | Không có app nào ghi vị trí 18:00 - 19:20 (khoảng trống có chủ đích) |
 | `ACT-13` | D 18:20 - 18:45 | Thảo PT | "A tới chưa? E đợi a nãy giờ 😤"; "A ko tới thì e trừ buổi nha a" | Gym tầng 5 | `internet-messaging` | `thread_009` (Bẫy nghi ngờ trong giờ tối) | Thịnh quên lịch tập |
 | `EVT-07` | D 18:52 - 18:56 | Vợ | Vợ: canh cua mồng tơi, mấy giờ về; Thịnh: "Tối nay họp sprint với cả team, chắc 9h. Vợ ăn trước nhé ❤️" | - | `internet-messaging` | `thread_005` / `msg_005_0079` (`CLUE-ZOLA-09`) | Lời khai giả lần 1 (sau khi họp đã hủy) |
 | `ACT-14` | D 19:05 | California Fitness | SMS báo vắng mặt buổi PT 18:00, buổi đã bị trừ | - | `messages` | `sms_gym_absent` (`CLUE-MSG-02`) | Giải oan Thảo; Thịnh không ở gym |
-| `EVT-08` | D 19:18 - 19:20 | Hương ("Khoa BE") | Thịnh gọi 26 giây; Khoa: "E tới rồi a." | Cơm Niêu Phố Cổ, tầng 2 | `phone` + `internet-messaging` | `call_003`, `thread_003` | Gặp nhau, trao hộp váy |
+| `EVT-07b` | D 18:58 | Hương ("Khoa BE") | Thịnh đặt xe hộ từ Technosoft tới Cơm Niêu Phố Cổ, SĐT người đi `0988886677` | Technosoft -> quán | `ride-hailing` | `trip_021` (`CLUE-GRAP-04`) | Thịnh đi xe máy, đặt Grab cho Hương; cầu nối SĐT thứ hai |
+| `EVT-08` | D 19:18 - 19:20 | Hương ("Khoa BE") | Thịnh gọi 26 giây | Cơm Niêu Phố Cổ, tầng 2 | `phone` | `call_003` | Gặp nhau, trao hộp váy |
 | `ACT-15` | D 19:50 - 20:13 | Bé Ngọc | Ngọc xin 1,2tr học lại môn Vĩ mô; Thịnh chuyển 20:10; tin cuối "Nhớ là a đừng kể gì nha 🙊" | Ngân hàng | `internet-messaging` + `banking` | `thread_008`, `tx_005` (`CLUE-ZOLA-10`) | Bản xem trước bị cắt trông như che giấu; đọc trọn luồng thấy "mẹ mà biết thì e toi" |
-| `ACT-16` | D 19:58 - 20:31 | Lan Anh | "6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Hùng 😤"; Thịnh chuyển 500k lúc 20:30: "A ứng luôn cho cả nhóm" | Ngân hàng | `internet-messaging` + `banking` | `thread_007`, `tx_004` (Giải oan Lan Anh + phá ngoại phạm phụ) | Chuyển tiền cho phụ nữ giữa buổi tối, nhưng là quỹ chung |
-| `EVT-09` | D 20:45 - 20:46 | Vợ | Vợ: "Họp xong chưa anh?"; Thịnh: "Chưa em, sếp Hùng đang chốt nốt." | - | `internet-messaging` | `thread_005` / `msg_005_0082` (`CLUE-ZOLA-09`) | Lời khai giả lần 2; sếp Hùng đã bay Đà Nẵng |
+| `ACT-16` | D 19:58 - 20:31 | Lan Anh | "6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Tuấn Anh 😤"; Thịnh chuyển 500k lúc 20:30: "A ứng luôn cho cả nhóm" | Ngân hàng | `internet-messaging` + `banking` | `thread_007`, `tx_004` (Giải oan Lan Anh + phá ngoại phạm phụ) | Chuyển tiền cho phụ nữ giữa buổi tối, nhưng là quỹ chung |
+| `EVT-09` | D 20:45 - 20:46 | Vợ | Vợ: "Họp xong chưa anh?"; Thịnh: "Chưa em, sếp Tuấn Anh đang chốt nốt." | - | `internet-messaging` | `thread_005` / `msg_005_0082` (`CLUE-ZOLA-09`) | Lời khai giả lần 2; sếp Tuấn Anh đã bay Đà Nẵng |
 | `EVT-10` | D 20:48 | Cơm Niêu Phố Cổ | Quẹt thẻ 640.000đ | Quán | `banking` | `tx_003` (`CLUE-BANK-07`) | Smoking Gun ngoại phạm: 2 phút sau lời khai họp |
-| `EVT-11` | D 21:30 - 21:32 | Hương ("Khoa BE") | Khoa: "Vừa lắm a, cảm ơn a nha."; Thịnh: "Ok e, mai gặp." | - | `internet-messaging` | `thread_003` | Hương mặc thử váy size S; câu không nêu tên món đồ |
-| `EVT-12` | D 22:10 | Vợ | Thịnh: "Anh về tới hầm rồi." | Hầm xe CT2 An Bình | `internet-messaging` | `thread_005` | Về nhà, quên áo khoác ở quán, Hương cầm về |
+| `EVT-11` | D 21:31 - 21:33 | Hương ("Khoa BE") | Thịnh: "Mai a xem lại banner cho e nhé."; Khoa: "Vâng ạ, e gửi file từ sáng." | - | `internet-messaging` | `thread_003` | Kết luồng bằng chuyện công việc, giữ vỏ bọc đồng nghiệp |
+| `EVT-12` | D 22:10 | Vợ | Thịnh: "Anh về tới hầm rồi." | Hầm xe CT2 An Bình | `internet-messaging` | `thread_005` | Về nhà bằng xe máy |
 | `ACT-17` | D 22:58 | Anh Tuấn Thợ Điện | "Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu." | - | `internet-messaging` | `thread_004`, `toast_001` (`CLUE-ZOLA-11`) | Mồi meme: "bà ấy" nghe như "bà xã", thực ra là mẹ Thịnh |
-| `EVT-13` | D 23:20 | Hương ("Khoa BE") | Thịnh gọi 96 giây từ ban công | - | `phone` | `call_001` (`CLUE-PHONE-01`) | Hỏi về chiếc áo khoác bỏ quên |
-| `EVT-14` | D 23:41 | Hương ("Khoa BE") | "A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha." | - | `internet-messaging` | `thread_003`, `toast_002` | Thông báo khởi phát thứ hai, không tự là bằng chứng |
+| `EVT-13` | D 23:20 | Hương ("Khoa BE") | Thịnh gọi 96 giây từ ban công | - | `phone` | `call_001` (`CLUE-PHONE-01`) | Hỏi Hương đã về tới nhà chưa |
+| `EVT-14` | D 22:31 - 23:42 | Hội Poker, Cầu lông, Minh Bằng Cổ | Bạn bè chat khuya; sếp Tuấn Anh báo "đang ở Đà Nẵng"; A9 đòi nợ phỉnh (`toast_002`) | - | `internet-messaging` | `thread_046`, `thread_047`, `thread_048` | Đẩy "Khoa BE" xuống giữa hộp thư; xác nhận gián tiếp họp bị hủy |
 | `ACT-18` | D 23:45 | Thư | Thịnh vào tắm, máy 8% pin cắm sạc ngoài phòng; Thư cầm máy | Phòng ngủ 1206 CT2 | - | `deviceMetadata` | Thời điểm kiểm tra máy |
 
 ---
@@ -101,20 +102,20 @@ flowchart TD
     T6["15:30 - ACT-10<br/>Cọc 1,5tr cho TRAN VAN TUAN<br/>📱 banking (tx_006)"]
     T7["16:05 - ACT-11<br/>Vợ: Tối về em có chuyện muốn nói<br/>📱 internet-messaging (thread_005)"]
     T8["17:30 - EVT-05<br/>Team Dev: họp sprint dời sang T2, Thịnh: Ok ông<br/>📱 internet-messaging (thread_002)"]
-    T9["17:35 - 17:40 - EVT-06<br/>Thịnh: Họp hủy rồi, khao luôn nhé? Khoa: book bàn 7h30 chỗ hôm trước<br/>📱 internet-messaging (thread_003)"]
+    T9["17:35 - 17:40 - EVT-06<br/>Thịnh: xong sớm, khao luôn nhé? Khoa: đặt chỗ hôm trước 7h30<br/>📱 internet-messaging (thread_003)"]
   end
 
   subgraph D_DAY_NIGHT ["3. Tối D-Day: ngoại phạm giả & các bẫy nghi ngờ"]
     T10["18:20 - 19:05 - ACT-13, ACT-14<br/>Thảo đợi ở gym; SMS báo vắng mặt<br/>📱 internet-messaging + messages"]
     T11["18:55 - EVT-07<br/>Báo vợ: họp sprint với cả team<br/>📱 internet-messaging (thread_005)"]
-    T12["19:18 - 19:20 - EVT-08<br/>Gọi Khoa BE 26s; Khoa: E tới rồi a<br/>📱 phone + internet-messaging"]
+    T12["19:18 - 19:20 - EVT-08<br/>Gọi Khoa BE 26s<br/>📱 phone"]
     T13["20:10 - 20:31 - ACT-15, ACT-16<br/>Chuyển Ngọc 1,2tr; chuyển Lan Anh 500k<br/>📱 banking + internet-messaging"]
-    T14["20:46 - EVT-09<br/>Báo vợ: sếp Hùng đang chốt nốt<br/>📱 internet-messaging (thread_005)"]
+    T14["20:46 - EVT-09<br/>Báo vợ: sếp Tuấn Anh đang chốt nốt<br/>📱 internet-messaging (thread_005)"]
     T15["20:48 - EVT-10<br/>Quẹt thẻ 640.000đ COM NIEU PHO CO<br/>📱 banking (tx_003)"]
-    T16["21:30 - EVT-11<br/>Khoa BE: Vừa lắm a<br/>📱 internet-messaging"]
+    T16["21:31 - EVT-11<br/>Khoa BE: chuyện banner công việc<br/>📱 internet-messaging"]
     T17["22:58 - ACT-17 (toast_001)<br/>Anh Tuấn Thợ Điện: không để bà ấy biết đâu<br/>📱 internet-messaging"]
     T18["23:20 - EVT-13<br/>Gọi Khoa BE 96s<br/>📱 phone (call_001)"]
-    T19["23:41 - EVT-14 (toast_002)<br/>Khoa BE: A để quên áo khoác ở quán<br/>📱 internet-messaging"]
+    T19["22:31 - 23:42 - EVT-14 (toast_002)<br/>Nhóm Poker, Cầu lông chat khuya<br/>📱 internet-messaging"]
   end
 
   T0 --> T1 --> T2 --> T3 --> T4 --> T5 --> T6 --> T7 --> T8 --> T9 --> T10 --> T11 --> T12 --> T13 --> T14 --> T15 --> T16 --> T17 --> T18 --> T19
@@ -159,16 +160,16 @@ flowchart LR
 
   subgraph CLUE_NODES ["4. 🔍 NÚT MANH MỐI & LIÊN KẾT (CLUE NODES & EDGES)"]
     Record_Order["node_record_ecommerce_order (CLUE-POSH-05)<br/>Váy lụa be size S, người nhận Hương 0988886677, thiệp 15/09 - 15/10"]
-    Record_Booking["node_record_booking (CLUE-ZOLA-01)<br/>Khoa BE: book bàn 7h30, chỗ hôm trước như lần trước"]
+    Record_Booking["node_record_booking (CLUE-ZOLA-01)<br/>Khoa BE: đặt chỗ hôm trước lúc 7h30"]
     Record_DevCancel["node_record_dev_cancel (CLUE-ZOLA-09)<br/>17:30 họp sprint dời sang T2, Thịnh: Ok ông"]
     Record_Wife1855["node_record_wife_1855 (CLUE-ZOLA-09)<br/>18:55: họp sprint với cả team"]
-    Record_Wife2046["node_record_wife_alibi (CLUE-ZOLA-09)<br/>20:46: sếp Hùng đang chốt nốt"]
+    Record_Wife2046["node_record_wife_alibi (CLUE-ZOLA-09)<br/>20:46: sếp Tuấn Anh đang chốt nốt"]
     Record_Receipt["node_record_bank_receipt (CLUE-BANK-07)<br/>20:48 COM NIEU PHO CO -640.000đ"]
     Record_Call["node_record_phone_call (CLUE-PHONE-01)<br/>23:20 gọi Khoa BE 96s"]
     Slot_Dinner["node_timeline_dinner<br/>Tối 15/10 (18:55 - 20:48)"]
     Proof_TuanDien["Mẹ: bình nóng lạnh hỏng + cọc 1,5tr TRAN VAN TUAN (CLUE-ZOLA-11)"]
     Proof_Ngoc["Ngọc trượt Vĩ mô, sợ mẹ biết + tx_005 (CLUE-ZOLA-10)"]
-    Proof_LanAnh["Quỹ sinh nhật anh Hùng + tx_004"]
+    Proof_LanAnh["Quỹ sinh nhật anh Tuấn Anh + tx_004"]
     Proof_Thao["SMS vắng mặt buổi PT 18:00 (CLUE-MSG-02)"]
     Proof_Mai["Hoa sáp Team Dev gửi tên Mai (CLUE-POSH-06)"]
     Proof_Heater["Bình nóng lạnh cho Nguyễn Thị Hòa = SĐT Mẹ (CLUE-POSH-06)"]

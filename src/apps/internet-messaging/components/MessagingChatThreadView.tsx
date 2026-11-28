@@ -119,7 +119,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
 
           <div className="flex items-center gap-2 min-w-0 flex-1 ml-1">
             {/* Contact Avatar */}
-            <ContactAvatar name={thread.contactName} avatarIndex={thread.avatarIndex} size={36} className="shadow-sm" />
+            <ContactAvatar name={thread.contactName} avatarIndex={thread.avatarIndex} isGroup={thread.isGroup} size={36} className="shadow-sm" />
 
             <div className="min-w-0 flex-1">
               <h2 className="text-ios-headline font-bold truncate text-white leading-tight">

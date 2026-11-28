@@ -15,7 +15,7 @@ import {
  * Win needs the three canonical strings (see level_01.json confrontationScript):
  *   edge_order_phone          Shopee order  <-> late call to "Khoa BE" (same number)
  *   edge_order_name           Shopee order  <-> HR pinned welcome for "Nguyễn Thị Thu Hương" (company group)
- *   edge_alibi_contradiction  Zola "Chưa em, sếp Hùng đang chốt nốt." (20:46) <-> card swipe 20:48
+ *   edge_alibi_contradiction  Zola "Chưa em, sếp Tuấn Anh đang chốt nốt." (20:46) <-> card swipe 20:48
  * and accusing the culprit, suspect_01 (alias "Khoa BE").
  */
 
@@ -155,7 +155,7 @@ test.describe('Level 1 main game loop', () => {
     await expect(tab).toHaveAttribute('aria-label', /1 manh mối/);
     await pinBankRows(page, ['COM NIEU PHO CO']);
     await pinKhoaCall(page);
-    await pinMessage(page, 'Anh về tới hầm rồi', 'sếp Hùng đang chốt nốt');
+    await pinMessage(page, 'Anh về tới hầm rồi', 'sếp Tuấn Anh đang chốt nốt');
     await pinMessage(page, 'Technosoft - Toàn công ty', 'Chào mừng bạn Nguyễn Thị Thu Hương');
     await expect(tab).toHaveAttribute('aria-label', new RegExp(`${WIN_CLUE_COUNT} manh mối`));
 

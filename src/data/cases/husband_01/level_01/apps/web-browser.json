@@ -199,6 +199,15 @@
       "url": "https://example.invalid/reading/0",
       "content": "Tưới vào sáng sớm, tránh để úng đất.",
       "timestamp": "20/09/2026 10:20"
+    },
+    {
+      "id": "hist_026",
+      "title": "Váy lụa dáng suông - bảng size",
+      "time": "12/10/2026 08:52",
+      "url": "shopoo.local/vay-lua-dang-suong/bang-size",
+      "content": "Size S: eo 64cm, hợp người 1m50-1m58, 43-48kg. Size M: eo 68cm, hợp người 1m55-1m63, 48-54kg.",
+      "timestamp": "12/10/2026 08:52",
+      "clueRefId": "CLUE-BROW-05"
     }
   ],
   "tabs": [

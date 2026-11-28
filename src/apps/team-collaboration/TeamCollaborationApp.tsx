@@ -85,7 +85,6 @@ export const appDefinition: AppDefinition = {
   icon: IoPeople,
   themeGradient: 'from-indigo-600 to-purple-700',
   themeColor: '#464EB8', bottomBarColor: '#F5F5F5',
-  notificationBadgeCount: 2,
   isLocked: false,
   component: TeamCollaborationApp,
 };

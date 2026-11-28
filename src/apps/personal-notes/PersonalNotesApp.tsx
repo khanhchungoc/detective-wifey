@@ -88,7 +88,6 @@ export const appDefinition: AppDefinition = {
   icon: IoDocumentText,
   themeGradient: 'from-amber-500 to-yellow-600',
   themeColor: '#1A73E8', bottomBarColor: '#FFF9E6',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: PersonalNotesApp,
 };

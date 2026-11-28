@@ -101,7 +101,7 @@ const RED_HERRING_ROASTS_L1: Record<string, string> = {
   suspect_03:
     'Em gái anh trượt môn Vĩ mô nhờ anh giấu mẹ. Em định bắt ghen hay đi méc mẹ?',
   suspect_06:
-    'Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.',
+    'Hoa sinh nhật sếp Tuấn Anh, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.',
 };
 
 const DEFAULT_REQUIRED_SMOKING_GUN_EDGE_IDS = [

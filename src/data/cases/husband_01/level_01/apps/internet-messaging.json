@@ -210,7 +210,7 @@
         {
           "id": "msg_002_0012",
           "sender": "them",
-          "text": "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae.",
+          "text": "Sếp Tuấn Anh 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae.",
           "time": "15/10/2026 17:30",
           "clueRefId": "CLUE-ZOLA-09",
           "timestamp": "15/10/2026 17:30",
@@ -251,139 +251,159 @@
       "isMuted": true
     },
     {
-      "threadId": "thread_003",
-      "contactId": "contact_011",
+      "threadId": "thread_046",
+      "contactName": "Hội Poker Tối Thứ 6",
       "avatarGradient": "from-slate-400 to-slate-600",
-      "timestamp": "15/10/2026 23:41",
-      "unreadCount": 0,
-      "historyPriority": "regular",
+      "unreadCount": 3,
+      "historyPriority": "medium",
+      "isGroup": true,
+      "memberCount": 7,
+      "timestamp": "15/10/2026 23:42",
       "messages": [
         {
-          "id": "msg_003_0001",
+          "id": "msg_046_0001",
           "sender": "them",
-          "text": "A ơi landing page bị lỗi form đăng ký, a xem giúp e với",
-          "time": "12/10/2026 09:40",
-          "timestamp": "12/10/2026 09:40"
+          "text": "Thứ 6 này chơi ở nhà anh nhé, chị đi vắng.",
+          "time": "13/10/2026 21:05",
+          "timestamp": "13/10/2026 21:05",
+          "senderContactId": "contact_024"
         },
         {
-          "id": "msg_003_0002",
+          "id": "msg_046_0002",
+          "sender": "them",
+          "text": "Ok a, e mang bánh.",
+          "time": "13/10/2026 21:07",
+          "timestamp": "13/10/2026 21:07",
+          "senderContactId": "contact_020"
+        },
+        {
+          "id": "msg_046_0003",
           "sender": "me",
-          "text": "Ok e, gửi a link với ảnh lỗi nhé.",
-          "time": "12/10/2026 09:52",
-          "timestamp": "12/10/2026 09:52"
+          "text": "Em đến muộn tí, 8h nhé.",
+          "time": "13/10/2026 21:10",
+          "timestamp": "13/10/2026 21:10"
         },
         {
-          "id": "msg_003_0003",
+          "id": "msg_046_0004",
           "sender": "them",
-          "text": "E gửi qua mail rồi a. Phần CTA trên banner a check giúp luôn nhé",
-          "time": "12/10/2026 09:55",
-          "timestamp": "12/10/2026 09:55"
+          "text": "Thứ 6 chốt mấy người?",
+          "time": "15/10/2026 22:31",
+          "timestamp": "15/10/2026 22:31",
+          "senderContactId": "contact_023"
         },
         {
-          "id": "msg_003_0004",
+          "id": "msg_046_0005",
+          "sender": "them",
+          "text": "E có. Tuấn Chó cũng có.",
+          "time": "15/10/2026 22:33",
+          "timestamp": "15/10/2026 22:33",
+          "senderContactId": "contact_022"
+        },
+        {
+          "id": "msg_046_0006",
+          "sender": "them",
+          "text": "Tôi có nhé, lần này phải gỡ.",
+          "time": "15/10/2026 22:34",
+          "timestamp": "15/10/2026 22:34",
+          "senderContactId": "contact_006"
+        },
+        {
+          "id": "msg_046_0007",
+          "sender": "them",
+          "text": "Anh đang ở Đà Nẵng, CN mới về. Tuần này anh nghỉ.",
+          "time": "15/10/2026 22:50",
+          "timestamp": "15/10/2026 22:50",
+          "senderContactId": "contact_032"
+        },
+        {
+          "id": "msg_046_0008",
+          "sender": "them",
+          "text": "Sếp đi công tác là bọn em vui rồi 😂",
+          "time": "15/10/2026 22:52",
+          "timestamp": "15/10/2026 22:52",
+          "senderContactId": "contact_024"
+        },
+        {
+          "id": "msg_046_0009",
+          "sender": "them",
+          "text": "Ông {{husband.shortName}} đâu, im thế?",
+          "time": "15/10/2026 23:38",
+          "timestamp": "15/10/2026 23:38",
+          "senderContactId": "contact_020"
+        },
+        {
+          "id": "msg_046_0010",
+          "sender": "them",
+          "text": "Chắc đang bận việc nhà 😏",
+          "time": "15/10/2026 23:40",
+          "timestamp": "15/10/2026 23:40",
+          "senderContactId": "contact_023"
+        },
+        {
+          "id": "msg_046_0011",
+          "sender": "them",
+          "text": "{{husband.shortName}} còn nợ anh 2 phỉnh tuần trước đấy nhé, đừng có lặn 😏",
+          "time": "15/10/2026 23:42",
+          "timestamp": "15/10/2026 23:42",
+          "senderContactId": "contact_024"
+        }
+      ]
+    },
+    {
+      "threadId": "thread_047",
+      "contactName": "Cầu lông T3-T5",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "unreadCount": 0,
+      "historyPriority": "medium",
+      "isGroup": true,
+      "memberCount": 4,
+      "timestamp": "15/10/2026 23:30",
+      "messages": [
+        {
+          "id": "msg_047_0001",
+          "sender": "them",
+          "text": "T3 vừa rồi ông {{husband.shortName}} đánh như mơ ngủ.",
+          "time": "13/10/2026 22:00",
+          "timestamp": "13/10/2026 22:00",
+          "senderContactId": "contact_020"
+        },
+        {
+          "id": "msg_047_0002",
           "sender": "me",
-          "text": "Fix xong form rồi, e test lại nhé.",
-          "time": "12/10/2026 14:20",
-          "timestamp": "12/10/2026 14:20"
+          "text": "Tại vợt ông cho mượn đứt dây.",
+          "time": "13/10/2026 22:02",
+          "timestamp": "13/10/2026 22:02"
         },
         {
-          "id": "msg_003_0005",
+          "id": "msg_047_0003",
           "sender": "them",
-          "text": "Chạy ok rồi a, cảm ơn a.",
-          "time": "12/10/2026 14:35",
-          "timestamp": "12/10/2026 14:35"
+          "text": "Tối nay sân đóng cửa bảo trì, nghỉ 1 buổi nhé ae.",
+          "time": "15/10/2026 21:58",
+          "timestamp": "15/10/2026 21:58",
+          "senderContactId": "contact_020"
         },
         {
-          "id": "msg_003_0006",
+          "id": "msg_047_0004",
           "sender": "them",
-          "text": "Trưa nay a ăn gì? E order cơm bên dưới luôn nha",
-          "time": "13/10/2026 12:10",
-          "timestamp": "13/10/2026 12:10"
+          "text": "Thế thứ 7 bù nhé.",
+          "time": "15/10/2026 22:05",
+          "timestamp": "15/10/2026 22:05",
+          "senderContactId": "contact_006"
         },
         {
-          "id": "msg_003_0007",
+          "id": "msg_047_0005",
+          "sender": "them",
+          "text": "Thứ 7 e book sân 3 lúc 7h rồi nhé.",
+          "time": "15/10/2026 23:28",
+          "timestamp": "15/10/2026 23:28",
+          "senderContactId": "contact_022"
+        },
+        {
+          "id": "msg_047_0006",
           "sender": "me",
-          "text": "Cho a 1 suất như hôm trc.",
-          "time": "13/10/2026 12:12",
-          "timestamp": "13/10/2026 12:12"
-        },
-        {
-          "id": "msg_003_0008",
-          "sender": "them",
-          "text": "Thứ 5 tròn 1 tháng rồi đó a. A nhớ vụ khao nhé",
-          "time": "14/10/2026 21:12",
-          "timestamp": "14/10/2026 21:12"
-        },
-        {
-          "id": "msg_003_0009",
-          "sender": "me",
-          "text": "Tối đó a vướng họp sprint rồi e.",
-          "time": "14/10/2026 21:15",
-          "timestamp": "14/10/2026 21:15"
-        },
-        {
-          "id": "msg_003_0010",
-          "sender": "them",
-          "text": "Vâng, để hôm khác ạ.",
-          "time": "14/10/2026 21:16",
-          "timestamp": "14/10/2026 21:16"
-        },
-        {
-          "id": "msg_003_0011",
-          "sender": "them",
-          "text": "Bản build sáng nay lên staging chưa a? Bên e cần chụp màn hình làm bài đăng",
-          "time": "15/10/2026 09:30",
-          "timestamp": "15/10/2026 09:30"
-        },
-        {
-          "id": "msg_003_0012",
-          "sender": "me",
-          "text": "Lên rồi e.",
-          "time": "15/10/2026 09:41",
-          "timestamp": "15/10/2026 09:41"
-        },
-        {
-          "id": "msg_003_0013",
-          "sender": "me",
-          "text": "Họp hủy rồi. Tối nay khao luôn nhé?",
-          "time": "15/10/2026 17:35",
-          "timestamp": "15/10/2026 17:35"
-        },
-        {
-          "id": "msg_003_0014",
-          "sender": "them",
-          "text": "Ok a, e book bàn 7h30 chỗ hôm trước nhé.",
-          "time": "15/10/2026 17:40",
-          "timestamp": "15/10/2026 17:40",
-          "clueRefId": "CLUE-ZOLA-01"
-        },
-        {
-          "id": "msg_003_0015",
-          "sender": "them",
-          "text": "E tới rồi a.",
-          "time": "15/10/2026 19:20",
-          "timestamp": "15/10/2026 19:20"
-        },
-        {
-          "id": "msg_003_0016",
-          "sender": "them",
-          "text": "Vừa lắm a, cảm ơn a nha.",
-          "time": "15/10/2026 21:30",
-          "timestamp": "15/10/2026 21:30"
-        },
-        {
-          "id": "msg_003_0017",
-          "sender": "me",
-          "text": "Ok e, mai gặp.",
-          "time": "15/10/2026 21:32",
-          "timestamp": "15/10/2026 21:32"
-        },
-        {
-          "id": "msg_003_0018",
-          "sender": "them",
-          "text": "A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.",
-          "time": "15/10/2026 23:41",
-          "timestamp": "15/10/2026 23:41"
+          "text": "Ok, t7 a đi được.",
+          "time": "15/10/2026 23:30",
+          "timestamp": "15/10/2026 23:30"
         }
       ]
     },
@@ -392,7 +412,7 @@
       "contactId": "contact_013",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 22:58",
-      "unreadCount": 0,
+      "unreadCount": 1,
       "historyPriority": "regular",
       "messages": [
         {
@@ -430,6 +450,51 @@
           "time": "15/10/2026 22:58",
           "clueRefId": "CLUE-ZOLA-11",
           "timestamp": "15/10/2026 22:58"
+        }
+      ]
+    },
+    {
+      "threadId": "thread_048",
+      "contactId": "contact_028",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "unreadCount": 0,
+      "historyPriority": "low",
+      "timestamp": "15/10/2026 22:45",
+      "messages": [
+        {
+          "id": "msg_048_0001",
+          "sender": "them",
+          "text": "{{husband.shortName}} ơi, anh mới mua thêm tay cầm máy game.",
+          "time": "10/10/2026 20:00",
+          "timestamp": "10/10/2026 20:00"
+        },
+        {
+          "id": "msg_048_0002",
+          "sender": "me",
+          "text": "Xịn thế anh.",
+          "time": "10/10/2026 20:05",
+          "timestamp": "10/10/2026 20:05"
+        },
+        {
+          "id": "msg_048_0003",
+          "sender": "them",
+          "text": "Chủ nhật qua nhà anh đua xe không em? Rủ cả vợ em.",
+          "time": "15/10/2026 22:41",
+          "timestamp": "15/10/2026 22:41"
+        },
+        {
+          "id": "msg_048_0004",
+          "sender": "me",
+          "text": "Vâng anh, để em hỏi vợ em đã.",
+          "time": "15/10/2026 22:44",
+          "timestamp": "15/10/2026 22:44"
+        },
+        {
+          "id": "msg_048_0005",
+          "sender": "them",
+          "text": "Ok, nhà anh ngõ 68 thôi, đi bộ 2 phút.",
+          "time": "15/10/2026 22:45",
+          "timestamp": "15/10/2026 22:45"
         }
       ]
     },
@@ -1012,7 +1077,7 @@
         {
           "id": "msg_005_0082",
           "sender": "me",
-          "text": "Chưa em, sếp Hùng đang chốt nốt.",
+          "text": "Chưa em, sếp Tuấn Anh đang chốt nốt.",
           "time": "15/10/2026 20:46",
           "clueRefId": "CLUE-ZOLA-09",
           "timestamp": "15/10/2026 20:46"
@@ -1222,6 +1287,129 @@
       ]
     },
     {
+      "threadId": "thread_003",
+      "contactId": "contact_011",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "timestamp": "15/10/2026 21:33",
+      "unreadCount": 0,
+      "historyPriority": "regular",
+      "messages": [
+        {
+          "id": "msg_003_0001",
+          "sender": "them",
+          "text": "A ơi landing page bị lỗi form đăng ký, a xem giúp e với",
+          "time": "12/10/2026 09:40",
+          "timestamp": "12/10/2026 09:40"
+        },
+        {
+          "id": "msg_003_0002",
+          "sender": "me",
+          "text": "Ok e, gửi a link với ảnh lỗi nhé.",
+          "time": "12/10/2026 09:52",
+          "timestamp": "12/10/2026 09:52"
+        },
+        {
+          "id": "msg_003_0003",
+          "sender": "them",
+          "text": "E gửi qua mail rồi a. Phần CTA trên banner a check giúp luôn nhé",
+          "time": "12/10/2026 09:55",
+          "timestamp": "12/10/2026 09:55"
+        },
+        {
+          "id": "msg_003_0004",
+          "sender": "me",
+          "text": "Fix xong form rồi, e test lại nhé.",
+          "time": "12/10/2026 14:20",
+          "timestamp": "12/10/2026 14:20"
+        },
+        {
+          "id": "msg_003_0005",
+          "sender": "them",
+          "text": "Chạy ok rồi a, cảm ơn a.",
+          "time": "12/10/2026 14:35",
+          "timestamp": "12/10/2026 14:35"
+        },
+        {
+          "id": "msg_003_0006",
+          "sender": "them",
+          "text": "Trưa nay a ăn gì? E order cơm bên dưới luôn nha",
+          "time": "13/10/2026 12:10",
+          "timestamp": "13/10/2026 12:10"
+        },
+        {
+          "id": "msg_003_0007",
+          "sender": "me",
+          "text": "Cho a 1 suất như hôm trc.",
+          "time": "13/10/2026 12:12",
+          "timestamp": "13/10/2026 12:12"
+        },
+        {
+          "id": "msg_003_0008",
+          "sender": "them",
+          "text": "Thứ 5 tròn 1 tháng rồi đó a. A nhớ vụ khao nhé",
+          "time": "14/10/2026 21:12",
+          "timestamp": "14/10/2026 21:12"
+        },
+        {
+          "id": "msg_003_0009",
+          "sender": "me",
+          "text": "Tối đó a vướng họp sprint rồi e.",
+          "time": "14/10/2026 21:15",
+          "timestamp": "14/10/2026 21:15"
+        },
+        {
+          "id": "msg_003_0010",
+          "sender": "them",
+          "text": "Vâng, để hôm khác ạ.",
+          "time": "14/10/2026 21:16",
+          "timestamp": "14/10/2026 21:16"
+        },
+        {
+          "id": "msg_003_0011",
+          "sender": "them",
+          "text": "Bản build sáng nay lên staging chưa a? Bên e cần chụp màn hình làm bài đăng",
+          "time": "15/10/2026 09:30",
+          "timestamp": "15/10/2026 09:30"
+        },
+        {
+          "id": "msg_003_0012",
+          "sender": "me",
+          "text": "Lên rồi e.",
+          "time": "15/10/2026 09:41",
+          "timestamp": "15/10/2026 09:41"
+        },
+        {
+          "id": "msg_003_0013",
+          "sender": "me",
+          "text": "Tối nay a xong sớm. Vụ khao làm luôn nhé?",
+          "time": "15/10/2026 17:35",
+          "timestamp": "15/10/2026 17:35"
+        },
+        {
+          "id": "msg_003_0014",
+          "sender": "them",
+          "text": "Ok a, e đặt chỗ hôm trước lúc 7h30 nha.",
+          "time": "15/10/2026 17:40",
+          "timestamp": "15/10/2026 17:40",
+          "clueRefId": "CLUE-ZOLA-01"
+        },
+        {
+          "id": "msg_003_0015",
+          "sender": "me",
+          "text": "Mai a xem lại banner cho e nhé.",
+          "time": "15/10/2026 21:31",
+          "timestamp": "15/10/2026 21:31"
+        },
+        {
+          "id": "msg_003_0016",
+          "sender": "them",
+          "text": "Vâng ạ, e gửi file từ sáng.",
+          "time": "15/10/2026 21:33",
+          "timestamp": "15/10/2026 21:33"
+        }
+      ]
+    },
+    {
       "threadId": "thread_007",
       "contactId": "contact_007",
       "avatarGradient": "from-slate-400 to-slate-600",
@@ -1288,7 +1476,7 @@
         {
           "id": "msg_007_0009",
           "sender": "them",
-          "text": "A ơi a đặt giúp e lẵng hoa sáp sinh nhật anh Hùng nhé. Để tên Mai lễ tân nhận cho kín, anh Hùng hay xuống sảnh lắm 😅",
+          "text": "A ơi a đặt giúp e lẵng hoa sáp sinh nhật anh Tuấn Anh nhé. Để tên Mai lễ tân nhận cho kín, anh Tuấn Anh hay xuống sảnh lắm 😅",
           "time": "14/10/2026 15:02",
           "timestamp": "14/10/2026 15:02"
         },
@@ -1309,7 +1497,7 @@
         {
           "id": "msg_007_0012",
           "sender": "them",
-          "text": "A ơi, 6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Hùng 😤 Sinh nhật dời sang T2 vì a ấy đi công tác rồi.",
+          "text": "A ơi, 6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Tuấn Anh 😤 Sinh nhật dời sang T2 vì a ấy đi công tác rồi.",
           "time": "15/10/2026 19:58",
           "timestamp": "15/10/2026 19:58"
         },
@@ -2436,6 +2624,81 @@
       "contactId": "contact_014",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
+    },
+    {
+      "contactId": "contact_019",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_020",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_021",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_022",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_023",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_024",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_025",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_026",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_027",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_028",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_029",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_030",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_031",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_032",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
+    },
+    {
+      "contactId": "contact_033",
+      "avatarGradient": "from-slate-400 to-slate-600",
+      "historyPriority": "low"
     }
   ]
 }
