@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="shirt-lit" x1="120" y1="146" x2="120" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5bb2e6"/>
+      <stop offset="52%" stop-color="#2f7db3"/>
+      <stop offset="100%" stop-color="#143a59"/>
+    </linearGradient>
+    <linearGradient id="skin-noir" x1="120" y1="54" x2="120" y2="148" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#eab38f"/>
+      <stop offset="58%" stop-color="#c9855c"/>
+      <stop offset="100%" stop-color="#6e3d26"/>
+    </linearGradient>
+    <linearGradient id="hair-noir" x1="90" y1="34" x2="148" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#27364f"/>
+      <stop offset="35%" stop-color="#0f1522"/>
+      <stop offset="100%" stop-color="#05070c"/>
+    </linearGradient>
+    <linearGradient id="table-steel" x1="120" y1="214" x2="120" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="18%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#06090e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shoulders & Sky-Blue Linen Shirt (matching husband wallpaper v3) -->
+  <path d="M36 226 C40 176 66 154 95 148 L120 156 L145 148 C174 154 200 176 204 226 Z" fill="url(#shirt-lit)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+  <!-- Deep Comic Noir Shadow Folds on Shirt -->
+  <path d="M38 224 C45 188 64 168 84 160 L74 224 Z" fill="#0b1f33" opacity="0.72"/>
+  <path d="M202 224 C195 188 176 168 156 160 L166 224 Z" fill="#0b1f33" opacity="0.72"/>
+  <path d="M62 178 L76 196 M68 188 L80 203 M176 178 L162 196" stroke="#05070c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Neck & Harsh Under-Chin Noir Shadow -->
+  <path d="M101 128 L101 158 L120 170 L139 158 L139 128 Z" fill="url(#skin-noir)" stroke="#05070c" stroke-width="3"/>
+  <path d="M102 132 Q120 152 138 132 L138 147 Q120 159 102 147 Z" fill="#2a140d" opacity="0.82"/>
+
+  <!-- Open Linen Collar & Placket -->
+  <path d="M95 146 L82 170 L108 176 L120 166 Z" fill="#6ec2f2" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M145 146 L158 170 L132 176 L120 166 Z" fill="#499bd0" stroke="#05070c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M116 166 L116 218 M125 166 L125 218" stroke="#05070c" stroke-width="2"/>
+  <circle cx="120.5" cy="180" r="2.3" fill="#f8fafc" stroke="#05070c" stroke-width="1.2"/>
+
+  <!-- Chest Pocket with Dark Square Sunglasses Hooked (Callback to Wallpaper) -->
+  <path d="M140 178 L164 178 L164 202 L152 207 L140 202 Z" fill="#236494" stroke="#05070c" stroke-width="2.2" stroke-linejoin="round"/>
+  <rect x="145" y="171" width="14" height="11" rx="2.5" fill="#090d14" stroke="#05070c" stroke-width="2"/>
+  <path d="M147 173 L154 173 L151 180 L147 180 Z" fill="#38bdf8" opacity="0.32"/>
+
+  <!-- Crossed Confident Arms Above Interrogation Table -->
+  <path d="M56 218 C64 194 92 188 146 192 C164 194 178 202 184 218 Z" fill="#388cc2" stroke="#05070c" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M68 218 C82 198 118 196 170 204 L176 218 Z" fill="#1d547d" stroke="#05070c" stroke-width="2.8" stroke-linejoin="round"/>
+  <path d="M88 197 L102 208 M136 198 L150 210" stroke="#05070c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Ears -->
+  <path d="M77 95 C71 95 69 108 74 115 C76 118 80 118 81 115" fill="#b57149" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M163 95 C169 95 171 108 166 115 C164 118 160 118 159 115" fill="#9c5c38" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Square-Jawed Head (Husband Likeness) -->
+  <path d="M80 76 C80 54 98 46 120 46 C142 46 160 54 160 76 L158 112 C157 126 146 136 132 141 C124 144 116 144 108 141 C94 136 83 126 82 112 Z" fill="url(#skin-noir)" stroke="#05070c" stroke-width="3.5" stroke-linejoin="round"/>
+
+  <!-- Top-Down Spotlight Forehead Highlight & Jawline Comic Shading -->
+  <ellipse cx="120" cy="70" rx="25" ry="10" fill="#fde2c8" opacity="0.38"/>
+  <path d="M83 110 C85 126 98 135 120 139 C142 135 155 126 157 110 L156 118 C153 131 141 139 120 143 C99 139 87 131 84 118 Z" fill="#3a1d12" opacity="0.55"/>
+  <!-- Comic Chin Shadow Hatch -->
+  <path d="M113 136 L127 136" stroke="#3a1d12" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+
+  <!-- Side-Parted Neat Vietnamese Tech-Lead Hair -->
+  <path d="M78 96 C74 74 76 52 92 42 C104 34 132 32 149 42 C164 50 166 72 162 96 C159 80 154 68 144 63 C131 66 112 65 97 58 C91 66 83 78 78 96 Z" fill="url(#hair-noir)" stroke="#05070c" stroke-width="3.2" stroke-linejoin="round"/>
+  <!-- Hair Part & Spotlight Rim Sheen -->
+  <path d="M96 46 L99 58" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+  <path d="M104 41 C118 37 136 39 147 46" stroke="#64748b" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- Confident Brows & Deep Noir Eye Socket Shadows -->
+  <path d="M90 88 Q101 85 111 88 L109 93 Q100 91 91 93 Z" fill="#2c160e" opacity="0.48"/>
+  <path d="M129 88 Q139 85 150 88 L149 93 Q140 91 131 93 Z" fill="#2c160e" opacity="0.48"/>
+  <path d="M90 84 Q101 80 111 84" stroke="#05070c" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M129 84 Q139 80 150 84" stroke="#05070c" stroke-width="3.6" stroke-linecap="round"/>
+
+  <!-- Calm, Sharp Confident Eyes -->
+  <path d="M92 94 Q101 90 110 94 Q101 98 92 94 Z" fill="#f8fafc" stroke="#05070c" stroke-width="2.2"/>
+  <circle cx="101" cy="94" r="3.2" fill="#090d16"/>
+  <circle cx="102.2" cy="92.8" r="1.1" fill="#ffffff"/>
+
+  <path d="M130 94 Q139 90 148 94 Q139 98 130 94 Z" fill="#f8fafc" stroke="#05070c" stroke-width="2.2"/>
+  <circle cx="139" cy="94" r="3.2" fill="#090d16"/>
+  <circle cx="140.2" cy="92.8" r="1.1" fill="#ffffff"/>
+
+  <!-- Nose with Comic Shadow Plane -->
+  <path d="M120 92 L118 109 L125 111" fill="#995836" opacity="0.55"/>
+  <path d="M120 91 L117 108 C117 111 123 112 126 109" stroke="#05070c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Composed Confident Half-Smile -->
+  <path d="M105 122 Q120 127 136 119" stroke="#05070c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M135 117 Q139 119 137 123" stroke="#05070c" stroke-width="2" stroke-linecap="round"/>
+  <path d="M114 128 Q120 130 127 128" stroke="#5c2d1c" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Cold Steel Interrogation Table Foreground -->
+  <rect x="10" y="216" width="220" height="24" fill="url(#table-steel)"/>
+  <line x1="10" y1="216" x2="230" y2="216" stroke="#94a3b8" stroke-width="2" opacity="0.7"/>
+</svg>

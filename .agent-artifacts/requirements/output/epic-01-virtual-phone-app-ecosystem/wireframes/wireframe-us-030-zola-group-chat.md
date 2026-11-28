@@ -73,7 +73,7 @@
 │                                                                        │
 │ ┌────────────────────────────────────────────────────────────┐         │
 │ │ Lan Hương (#D97706 Orange)                                 │         │
-│ │ Tối nay sếp Hoàng nói bận việc riêng không đi ăn cùng      │         │
+│ │ Tối nay sếp Thịnh nói bận việc riêng không đi ăn cùng      │         │
 │ │ team được nè [Wink]                                        │         │
 │ │ 22:10                                                      │         │
 │ └────────────────────────────────────────────────────────────┘         │
@@ -129,7 +129,7 @@
   - First line: Participant contact name in their assigned color token (12px Bold).
   - Body text: 14px regular (`#0F172A`).
   - Bottom metadata: Timestamp (11px gray `#8A9098`) + reaction badge pill.
-- **Outgoing Message Bubbles (Husband Hoàng)**:
+- **Outgoing Message Bubbles (Husband Thịnh)**:
   - Right-aligned; light blue background (`#D2F4FF`), border-radius 14px (top-right 4px).
   - Body text: 14px regular (`#0F172A`).
   - Metadata: Timestamp + delivery receipt (`[Read]`).

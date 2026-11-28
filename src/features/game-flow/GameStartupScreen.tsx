@@ -1,10 +1,25 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { IoArrowForwardOutline } from 'react-icons/io5';
-import startupHeroUrl from './assets/startup-hero.jpg';
+import {
+  IoFolderOpenOutline,
+  IoPlay,
+  IoStar,
+  IoVolumeHighOutline,
+  IoVolumeMuteOutline,
+} from 'react-icons/io5';
+import startupHeroUrl from './assets/startup-hero.webp';
+import gameLogoUrl from './assets/game-logo.webp';
+import { CTA_PRIMARY, CTA_SECONDARY } from './case-files/ctaStyles';
 
 export interface GameStartupScreenProps {
   onStart: () => void;
+  onContinue?: () => void;
+  hasOngoingGame?: boolean;
+  ongoingLevelNumber?: number;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
+  earnedStars?: number;
+  maxStars?: number;
   preloadAssets?: string[];
   versionLabel?: string;
 }
@@ -153,20 +168,27 @@ export interface StartupActionAreaProps {
   progress: number;
   isReady: boolean;
   isStarting: boolean;
+  hasOngoingGame?: boolean;
+  ongoingLevelNumber?: number;
   onStartClick: () => void;
+  onContinueClick?: () => void;
 }
 
 export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
   progress,
   isReady,
   isStarting,
+  hasOngoingGame = false,
+  ongoingLevelNumber,
   onStartClick,
+  onContinueClick,
 }) => {
   const prefersReducedMotion = useReducedMotion();
   const clampedProgress = Math.max(0, Math.min(100, Math.round(progress)));
+  const showContinue = Boolean(hasOngoingGame && onContinueClick);
 
   return (
-    <div className="w-full min-h-[68px] flex flex-col justify-end items-center md:items-start">
+    <div className="w-full min-h-[116px] flex flex-col justify-end items-center md:items-start">
       <AnimatePresence mode="wait" initial={false}>
         {!isReady ? (
           <motion.div
@@ -175,12 +197,11 @@ export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.2, ease: EASE_OUT }}
-            className="w-full max-w-[260px] space-y-2.5"
-            aria-live="polite"
+            className="w-full max-w-[264px] space-y-2"
           >
-            <div className="flex items-center justify-between text-ios-footnote text-white/75">
+            <div className="flex items-center justify-between text-ios-footnote text-game-text-secondary">
               <span>Đang tải</span>
-              <span className="tabular-nums text-white/90">{clampedProgress}%</span>
+              <span className="tabular-nums font-medium text-game-text">{clampedProgress}%</span>
             </div>
             <div
               role="progressbar"
@@ -188,7 +209,7 @@ export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={clampedProgress}
-              className="h-1 w-full overflow-hidden rounded-full bg-white/15"
+              className="h-1.5 w-full overflow-hidden rounded-full bg-white/10"
             >
               <motion.div
                 className="h-full w-full origin-left rounded-full bg-game-crimson"
@@ -201,25 +222,46 @@ export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
         ) : (
           <motion.div
             key="startup-ready"
-            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
+            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.26, ease: EASE_OUT }}
-            className="w-full flex justify-center md:justify-start"
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.24, ease: EASE_OUT }}
+            className="w-full max-w-[272px] flex flex-col items-center md:items-start gap-3"
           >
+            {showContinue && (
+              <motion.button
+                type="button"
+                disabled={isStarting}
+                onClick={onContinueClick}
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.98, y: 1 }}
+                transition={{ duration: 0.12 }}
+                className={`${CTA_PRIMARY} w-full disabled:opacity-75`}
+              >
+                <IoPlay aria-hidden="true" className="w-[18px] h-[18px] shrink-0" />
+                <span>
+                  {ongoingLevelNumber ? `Tiếp tục · Màn ${ongoingLevelNumber}` : 'Tiếp tục'}
+                </span>
+              </motion.button>
+            )}
+
             <motion.button
               type="button"
               disabled={isStarting}
               onClick={onStartClick}
-              whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-              transition={{ duration: 0.08 }}
-              className="group touch-target-min w-auto min-w-[240px] min-h-[52px] px-8 py-3 inline-flex items-center justify-center gap-3 rounded-sm bg-black/55 backdrop-blur-md border border-white/25 border-l-4 border-l-game-crimson text-ios-headline font-semibold tracking-wide text-white shadow-[0_12px_32px_rgba(0,0,0,0.45)] transition-colors duration-200 hover:bg-game-paper hover:text-game-ink hover:border-game-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-game-paper disabled:opacity-75"
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.98, y: 1 }}
+              transition={{ duration: 0.12 }}
+              className={
+                showContinue
+                  ? `game-btn-secondary ${CTA_SECONDARY} w-full min-h-[52px] px-6 text-game-paper disabled:opacity-75`
+                  : `${CTA_PRIMARY} w-full disabled:opacity-75`
+              }
             >
-              <span>Chạm để bắt đầu</span>
-              <IoArrowForwardOutline
-                aria-hidden="true"
-                className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none"
-              />
+              {showContinue ? (
+                <IoFolderOpenOutline aria-hidden="true" className="w-[18px] h-[18px] shrink-0 text-game-text-secondary" />
+              ) : (
+                <IoPlay aria-hidden="true" className="w-[18px] h-[18px] shrink-0" />
+              )}
+              <span>Bắt đầu</span>
             </motion.button>
           </motion.div>
         )}
@@ -230,6 +272,13 @@ export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
 
 export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
   onStart,
+  onContinue,
+  hasOngoingGame = false,
+  ongoingLevelNumber,
+  isMuted = false,
+  onToggleMute,
+  earnedStars = 0,
+  maxStars = 9,
   preloadAssets,
 }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -240,10 +289,19 @@ export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
   const onStartRef = useRef(onStart);
   onStartRef.current = onStart;
 
+  const onContinueRef = useRef(onContinue);
+  onContinueRef.current = onContinue;
+
+  const pendingActionRef = useRef<'start' | 'continue'>('start');
+
   const startGuardRef = useRef<(() => boolean) | null>(null);
   if (!startGuardRef.current) {
     startGuardRef.current = createStartGuard(() => {
-      onStartRef.current();
+      if (pendingActionRef.current === 'continue' && onContinueRef.current) {
+        onContinueRef.current();
+      } else {
+        onStartRef.current();
+      }
     });
   }
 
@@ -264,6 +322,16 @@ export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
 
   const handleStartClick = useCallback(() => {
     if (!isReady) return;
+    pendingActionRef.current = 'start';
+    const triggered = startGuardRef.current?.() ?? false;
+    if (triggered) {
+      setIsStarting(true);
+    }
+  }, [isReady]);
+
+  const handleContinueClick = useCallback(() => {
+    if (!isReady || !onContinueRef.current) return;
+    pendingActionRef.current = 'continue';
     const triggered = startGuardRef.current?.() ?? false;
     if (triggered) {
       setIsStarting(true);
@@ -273,93 +341,110 @@ export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
   return (
     <main
       aria-label="Màn hình khởi động Bắt được Tiểu tam"
-      className="w-full h-[100dvh] bg-game-backdrop text-white font-sans relative overflow-hidden select-none"
+      className="w-full h-[100dvh] bg-game-backdrop text-game-text font-sans relative overflow-hidden select-none"
     >
-      {/* Full-bleed midnight bedroom comic-noir hero artwork */}
+      {/* Full-bleed midnight bedroom scene */}
       <motion.img
         src={startupHeroUrl}
         alt=""
         aria-hidden="true"
-        initial={prefersReducedMotion ? { opacity: 1, scale: 1 } : { opacity: 0.85, scale: 1.06 }}
+        initial={prefersReducedMotion ? { opacity: 1, scale: 1 } : { opacity: 0.9, scale: 1.03 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: prefersReducedMotion ? 0 : 1.1, ease: EASE_OUT }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.7, ease: EASE_OUT }}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center md:object-[68%_center]"
       />
 
-      {/* Mobile top & bottom legibility scrims preserving the lit middle scene */}
+      {/* Mobile top & bottom legibility scrims preserving the middle scene */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-game-backdrop/85 via-game-backdrop/15 to-game-backdrop/95 md:hidden"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-game-backdrop/85 via-game-backdrop/10 to-game-backdrop/95 md:hidden"
       />
 
-      {/* Desktop asymmetric noir vignette: calm dark left-third, dramatic lit right scene */}
+      {/* Desktop asymmetric scrim: calm dark left-third, lit bedroom scene on right */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-r from-game-backdrop/95 via-game-backdrop/70 to-transparent"
+        className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-r from-game-backdrop/95 via-game-backdrop/65 to-transparent"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-t from-game-backdrop/80 via-transparent to-game-backdrop/45"
+        className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-t from-game-backdrop/75 via-transparent to-game-backdrop/40"
       />
 
-      {/* Subtle analog film-grain noise texture */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04]"
-      >
-        <filter id="startup-film-grain">
-          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#startup-film-grain)" />
-      </svg>
+      {/* Top-right quiet utility bar */}
+      {(onToggleMute || earnedStars > 0) && (
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+          {earnedStars > 0 && (
+            <div
+              aria-label={`Đã đạt ${earnedStars} trên ${maxStars} sao`}
+              className="min-h-[44px] px-3 rounded-xl bg-game-dossier/85 border border-white/10 inline-flex items-center gap-1.5 text-ios-footnote font-medium text-game-text tabular-nums"
+            >
+              <IoStar aria-hidden="true" className="w-4 h-4 text-game-amber shrink-0" />
+              <span>
+                {earnedStars}/{maxStars}
+              </span>
+            </div>
+          )}
 
-      {/* Responsive editorial column: mobile top/bottom split, desktop left-third */}
-      <div className="relative z-10 flex h-full w-full flex-col justify-between items-center text-center px-6 pt-12 pb-24 md:max-w-xl md:items-start md:text-left md:justify-center md:px-16 md:py-0">
-        {/* Stylized noir casefile title lockup */}
+          {onToggleMute && (
+            <button
+              type="button"
+              onClick={onToggleMute}
+              aria-label="Tắt âm thanh"
+              aria-pressed={isMuted}
+              className="touch-target-min w-11 h-11 rounded-xl bg-game-dossier/85 border border-white/10 inline-flex items-center justify-center text-game-text-secondary hover:bg-game-elevated hover:text-game-text transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-game-paper"
+            >
+              {isMuted ? (
+                <IoVolumeMuteOutline aria-hidden="true" className="w-5 h-5" />
+              ) : (
+                <IoVolumeHighOutline aria-hidden="true" className="w-5 h-5 text-game-text" />
+              )}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Responsive layout: mobile top/bottom split, desktop left-third */}
+      <div className="relative z-10 flex h-full w-full flex-col justify-between items-center text-center px-6 pt-16 pb-16 md:max-w-xl md:items-start md:text-left md:justify-center md:px-16 md:py-0">
+        {/* Illustrated comic-noir game title logo */}
         <motion.header
-          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
+          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: prefersReducedMotion ? 0 : 0.36, delay: prefersReducedMotion ? 0 : 0.08, ease: EASE_OUT }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.34, delay: prefersReducedMotion ? 0 : 0.06, ease: EASE_OUT }}
           className="flex flex-col items-center md:items-start"
         >
-          <div className="inline-flex items-center gap-2.5 text-ios-caption-1 font-semibold uppercase tracking-[0.2em] text-game-paper/80">
-            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-game-crimson" />
-            <span aria-hidden="true" className="h-px w-5 bg-game-crimson/80" />
-            <span>HỒ SƠ ĐÊM KHUYA · 23:45</span>
-          </div>
-
-          <h1 className="mt-4 flex flex-col items-center md:items-start leading-none">
-            <span className="text-3xl md:text-5xl font-light tracking-wide text-white/90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.75)]">
-              Bắt được
-            </span>
-            <span className="mt-1.5 inline-flex flex-col items-center md:items-start">
-              <span className="font-handwriting text-6xl md:text-7xl leading-none text-game-paper drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]">
-                Tiểu tam
-              </span>
-              <span
-                aria-hidden="true"
-                className="mt-2 h-1.5 w-44 md:w-56 -rotate-1 rounded-sm bg-game-crimson shadow-[0_2px_14px_rgba(225,29,72,0.5)]"
-              />
-            </span>
+          <h1 className="m-0">
+            <img
+              src={gameLogoUrl}
+              alt="Bắt được Tiểu tam"
+              width={960}
+              height={539}
+              fetchPriority="high"
+              draggable={false}
+              className="w-[272px] sm:w-[308px] md:w-[360px] h-auto select-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]"
+            />
           </h1>
 
-          <p className="mt-5 max-w-sm md:max-w-md text-ios-callout md:text-ios-title-3 font-normal text-white/75 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            Chồng vừa ngủ say, cuộc điều tra bắt đầu...
-          </p>
         </motion.header>
 
-        {/* Preloader / restrained editorial noir CTA */}
+        {/* Preloader / Tactile Game CTA Stack */}
         <motion.footer
-          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
+          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: prefersReducedMotion ? 0 : 0.32, delay: prefersReducedMotion ? 0 : 0.16, ease: EASE_OUT }}
-          className="w-full md:mt-10"
+          transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.14, ease: EASE_OUT }}
+          className="flex w-full flex-col items-center gap-5 md:mt-10 md:items-start"
         >
+          {/* Tagline sits in the dark band above the CTA so it never crosses the hero art */}
+          <p className="max-w-xs text-ios-subheadline font-medium text-game-text [text-shadow:0_1px_8px_rgba(0,0,0,0.9)] md:max-w-sm md:text-ios-callout">
+            Chồng vừa ngủ say, cuộc điều tra bắt đầu
+          </p>
           <StartupActionArea
             progress={progress}
             isReady={isReady}
             isStarting={isStarting}
+            hasOngoingGame={hasOngoingGame}
+            ongoingLevelNumber={ongoingLevelNumber}
             onStartClick={handleStartClick}
+            onContinueClick={onContinue ? handleContinueClick : undefined}
           />
         </motion.footer>
       </div>
@@ -368,3 +453,5 @@ export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
 };
 
 export default GameStartupScreen;
+
+

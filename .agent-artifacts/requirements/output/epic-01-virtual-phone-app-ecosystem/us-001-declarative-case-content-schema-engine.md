@@ -78,7 +78,7 @@ As a **Player**, I want to load cases and clues from declarative configuration s
 **AC 1**: Successful Level 1 Case Schema Ingestion and Initialization
 
 ```gherkin
-Given a static CaseConfig dataset with caseId "case_01", husbandId "husband_hoang", levelNumber 1, and deviceMetadata
+Given a static CaseConfig dataset with caseId "case_01", husbandId "husband_01", levelNumber 1, and deviceMetadata
 When the game runtime initializes the active investigation session
 Then the schema engine populates the suspect pool with at least 1 initial suspect
 And the system initializes the suspicion strike limit to exactly 5 strikes
@@ -101,7 +101,7 @@ Then the system enforces an allowed strike boundary of exactly 3 strikes
 **AC 3**: Ground Truth Integrity and Suspect Culprit Mapping
 
 ```gherkin
-Given a CaseConfig dataset with groundTruth containing verdict "cheating" and culpritSuspectId "suspect_huong"
+Given a CaseConfig dataset with groundTruth containing verdict "cheating" and culpritSuspectId "suspect_01"
 When the schema engine evaluates the groundTruth object
 Then the system verifies culpritSuspectId matches an existing entry in the suspectPool
 And the system stores the narrative roast string for end-of-case evaluation
@@ -118,7 +118,7 @@ Then the system blocks shell initialization and displays modal dialog: "Không t
 **AC 5**: Level Catalog Manifest Exposure for Level Selector
 
 ```gherkin
-Given the application runtime requests the case catalog for husbandId "husband_hoang"
+Given the application runtime requests the case catalog for husbandId "husband_01"
 When the schema engine executes the getAvailableLevels query
 Then the schema engine returns an ordered list containing 3 level metadata objects
 And each entry specifies the levelNumber, levelTitle, allowedStrikes, and unlockRequirementLevel

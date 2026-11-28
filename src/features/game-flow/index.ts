@@ -11,6 +11,4 @@ export {
   buildLevelCards,
   buildCaseBriefing,
   buildLockscreenConfig,
-  getLevel0Status,
-  setLevel0Status,
 } from './gameFlowData';

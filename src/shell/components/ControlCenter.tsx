@@ -199,9 +199,9 @@ export function ControlCenter({
       style={{ pointerEvents: open ? 'auto' : 'none' }}
       onKeyDown={onKeyDown}
     >
-      {/* 1. Hardware-accelerated smooth CSS blurred backdrop: stationary layer so backdrop-blur never snaps */}
+      {/* 1. Frosted iOS glassmorphic backdrop scrim */}
       <div
-        className={`absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-300 ease-out ${
+        className={`absolute inset-0 bg-slate-950/40 backdrop-blur-xl transition-opacity duration-300 ease-out ${
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{ touchAction: 'none' }}
@@ -274,7 +274,7 @@ export function ControlCenter({
               <button
                 key={index}
                 type="button"
-                className={`flex min-h-[120px] flex-col items-start justify-between rounded-[28px] border border-white/20 bg-white/15 p-5 text-left shadow-lg hover:bg-white/25 active:scale-95 ${index === 0 ? 'col-span-2' : ''}`}
+                className={`flex min-h-[120px] flex-col items-start justify-between rounded-[28px] border border-white/25 bg-white/15 backdrop-blur-md p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_8px_24px_rgba(0,0,0,0.22)] hover:bg-white/25 active:scale-95 ${index === 0 ? 'col-span-2' : ''}`}
                 onClick={() => {
                   if (suppressActionClick.current) {
                     suppressActionClick.current = false;

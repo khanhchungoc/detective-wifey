@@ -4,7 +4,6 @@ import { readAppData } from './data';
 import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
 import { getAppBrand } from '../../shared/branding';
 import { IoRibbonOutline, IoBriefcase } from 'react-icons/io5';
-import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { StoryEvidenceTarget, UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/investigation';
 
 const BRAND = getAppBrand('professional-network');
@@ -12,17 +11,13 @@ const BRAND = getAppBrand('professional-network');
 export const ProfessionalNetworkApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const networkData = readAppData(caseData.appsData?.['professional-network'] || {});
   const posts = networkData.posts || [];
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const swipeHandlers = useSwipeBack({ onBack: onReturnHome, exitsApp: true });
-
   return (
     <div
-      {...swipeHandlers}
       className="flex flex-col h-full w-full bg-[#F3F2F0] text-[#191919] select-none font-sans"
     >
       <header className="flex items-center justify-between px-3 h-14 bg-[#0A66C2] text-white shadow-md shrink-0">

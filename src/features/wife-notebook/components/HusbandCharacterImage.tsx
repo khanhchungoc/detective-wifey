@@ -2,18 +2,18 @@ import React from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { ConfrontationMood } from '../../../shared/contracts/case-schema';
 import { NARRATIVE_IN, NARRATIVE_OUT, POP, REDUCED_FADE } from '../confrontationMotion';
-import hoangConfidentSvg from '../assets/hoang-comic-confident.svg';
-import hoangSmugSvg from '../assets/hoang-comic-smug.svg';
-import hoangNervousSvg from '../assets/hoang-comic-nervous.svg';
-import hoangBrokenSvg from '../assets/hoang-comic-broken.svg';
+import husbandConfidentSvg from '../assets/husband-01-comic-confident.svg';
+import husbandSmugSvg from '../assets/husband-01-comic-smug.svg';
+import husbandNervousSvg from '../assets/husband-01-comic-nervous.svg';
+import husbandBrokenSvg from '../assets/husband-01-comic-broken.svg';
 
 export type HusbandMood = ConfrontationMood | 'surprised';
 
-export const HOANG_COMIC_ASSETS: Record<ConfrontationMood, string> = {
-  confident: hoangConfidentSvg,
-  smug: hoangSmugSvg,
-  nervous: hoangNervousSvg,
-  broken: hoangBrokenSvg,
+export const HUSBAND_COMIC_ASSETS: Record<ConfrontationMood, string> = {
+  confident: husbandConfidentSvg,
+  smug: husbandSmugSvg,
+  nervous: husbandNervousSvg,
+  broken: husbandBrokenSvg,
 };
 
 export interface HusbandCharacterImageProps {
@@ -24,11 +24,11 @@ export interface HusbandCharacterImageProps {
 }
 
 const MOOD_DESCRIPTIONS: Record<HusbandMood, string> = {
-  confident: 'Hoàng khoanh tay điềm tĩnh tự tin chối tội dưới ánh đèn thẩm vấn',
-  smug: 'Hoàng nhếch mép cười cợt kệch cỡm khi thiếu chứng cứ',
-  surprised: 'Hoàng giật mình phân bua dưới ánh đèn thẩm vấn',
-  nervous: 'Hoàng toát mồ hôi lúng túng kéo cổ áo bao biện',
-  broken: 'Hoàng cúi đầu bật khóc chắp tay suy sụp xin tha',
+  confident: 'Thịnh khoanh tay điềm tĩnh tự tin chối tội dưới ánh đèn thẩm vấn',
+  smug: 'Thịnh nhếch mép cười cợt kệch cỡm khi thiếu chứng cứ',
+  surprised: 'Thịnh giật mình phân bua dưới ánh đèn thẩm vấn',
+  nervous: 'Thịnh toát mồ hôi lúng túng kéo cổ áo bao biện',
+  broken: 'Thịnh cúi đầu bật khóc chắp tay suy sụp xin tha',
 };
 
 const SPOTLIGHT_ACCENT: Record<HusbandMood, { beam: string; rim: string }> = {
@@ -45,7 +45,7 @@ function resolveComicMood(mood: HusbandMood): ConfrontationMood {
 }
 
 /**
- * Noir Comic Portrait of Husband Hoàng in a dark interrogation room with overhead spotlight.
+ * Noir Comic Portrait of Husband Thịnh in a dark interrogation room with overhead spotlight.
  * Animates exclusively compositor-safe `transform` and `opacity`, honoring `useReducedMotion()`.
  */
 export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({
@@ -56,7 +56,7 @@ export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({
 }) => {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const comicMood = resolveComicMood(mood);
-  const portraitSrc = HOANG_COMIC_ASSETS[comicMood];
+  const portraitSrc = HUSBAND_COMIC_ASSETS[comicMood];
   const accent = SPOTLIGHT_ACCENT[mood];
 
   return (

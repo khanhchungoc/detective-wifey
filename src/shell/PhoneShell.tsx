@@ -7,19 +7,19 @@ import { detectDeviceMode, detectFullscreen, isMobileDevice, shouldShowStatusBar
 import { systemForeground } from './systemChrome';
 import { StatusBar } from './components/StatusBar';
 import { AppIconSquircle } from './components/AppIconSquircle';
-import { NotificationBanner } from './components/NotificationBanner';
+import { NotificationBanner } from '../shared/ui/NotificationBanner';
 import { NotebookTab } from './components/NotebookTab';
 import { ControlCenter, isControlSwipe, setNotificationHintSeen } from './components/ControlCenter';
 import { PwaGuideSheet } from './components/PwaGuideSheet';
 import { ExitConfirmModal } from './components/ExitConfirmModal';
 import { PhoneLockscreen } from './components/PhoneLockscreen';
+import { FALLBACK_NARRATIVE_START_ISO, msUntilNextNarrativeMinute, narrativeNow } from './narrativeClock';
 import { usePwa } from './usePwa';
 import { useNavigationGuard } from './useNavigationGuard';
 import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
 import { useDialogFocus } from '../shared/ui/useDialogFocus';
-import { useSwipeBack } from '../shared/gestures/useSwipeBack';
 import { useSwipeHome } from '../shared/gestures/useSwipeHome';
-import defaultWallpaper from './assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
+import defaultWallpaper from './assets/husband-01-technosoft-selfie-wallpaper-v3.webp';
 import { IoCamera, IoSearchOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
 export interface PhoneShellProps {
@@ -36,6 +36,7 @@ export interface PhoneShellProps {
   renderLevelSelector: (onClose: () => void) => ReactNode;
   onLaunchApp: (appId: AppId) => void;
   onReturnHome: () => void;
+  onGoToStartScreen?: () => void;
   onRestartLevel: () => void;
   onOpenNotebook: () => void;
   onCloseNotebook?: () => void;
@@ -49,6 +50,7 @@ export interface PhoneShellProps {
   currentStrikes?: number;
   maxStrikes?: number;
   onUnlockPhone?: (targetAppId?: string) => void;
+  onLockscreenBack?: () => void;
   onLockscreenPasscodeFail?: () => void;
   onOpenBriefing?: () => void;
   onRequestLevelSelector?: () => void;
@@ -59,7 +61,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   deviceMetadata, activeAppId, activeAppDefinition, activeUpperApps, activeDockApps,
   grayedOutAppIds,
   systemAlertToast, incomingNotification, children, overlays, renderLevelSelector,
-  onLaunchApp: handleLaunchApp, onReturnHome, onRestartLevel,
+  onLaunchApp: handleLaunchApp, onReturnHome, onGoToStartScreen, onRestartLevel,
   onOpenNotebook, onCloseNotebook, notebookOpen = false, notebookEvidenceCount = 0, notebookCaseNumber = 1, onNotify,
   enableNavigationGuard = true,
   isLocked = false,
@@ -67,6 +69,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   currentStrikes = 5,
   maxStrikes = 5,
   onUnlockPhone,
+  onLockscreenBack,
   onLockscreenPasscodeFail,
   onOpenBriefing,
   onRequestLevelSelector,
@@ -82,7 +85,9 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   const [showLevelSheet, setShowLevelSheet] = useMotionState(false, 'sheet');
   const [showPwaGuide, setShowPwaGuide] = useMotionState(false, 'sheet');
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState(() => new Date());
+  const narrativeStartIso = lockscreenConfig?.narrativeStartIso ?? FALLBACK_NARRATIVE_START_ISO;
+  const [mountedAtMs] = useState(() => Date.now());
+  const [currentDate, setCurrentDate] = useState(() => narrativeNow(narrativeStartIso, mountedAtMs, mountedAtMs));
   const prevLockedRef = useRef(isLocked);
   const [unlockBurstKey, setUnlockBurstKey] = useState(0);
   useEffect(() => {
@@ -159,10 +164,11 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   useEffect(() => {
     let timer: number;
     const updateClock = () => {
-      const now = new Date();
-      setCurrentDate(previous => Math.floor(previous.getTime() / 60_000) === Math.floor(now.getTime() / 60_000) ? previous : now);
+      const nowMs = Date.now();
+      const next = narrativeNow(narrativeStartIso, mountedAtMs, nowMs);
+      setCurrentDate(previous => Math.floor(previous.getTime() / 60_000) === Math.floor(next.getTime() / 60_000) ? previous : next);
       window.clearTimeout(timer);
-      if (!document.hidden) timer = window.setTimeout(updateClock, 60_000 - now.getTime() % 60_000);
+      if (!document.hidden) timer = window.setTimeout(updateClock, msUntilNextNarrativeMinute(narrativeStartIso, mountedAtMs, nowMs));
     };
     updateClock();
     window.addEventListener('focus', updateClock);
@@ -172,7 +178,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
       window.removeEventListener('focus', updateClock);
       document.removeEventListener('visibilitychange', updateClock);
     };
-  }, []);
+  }, [narrativeStartIso, mountedAtMs]);
 
   useEffect(() => {
     const handleFsChange = () => setIsFullscreen(detectFullscreen());
@@ -216,7 +222,6 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   }, [incomingNotification]);
 
   const shellGesturesEnabled = activeAppId !== 'home' && !notebookOpen && !controlCenterOpen && !sheetOpen;
-  const shellAppSwipeHandlers = useSwipeBack({ onBack: onReturnHome, enabled: shellGesturesEnabled });
   const shellHomeSwipeHandlers = useSwipeHome({
     onHome: onReturnHome,
     enabled: shellGesturesEnabled,
@@ -225,10 +230,16 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   });
 
   useEffect(() => {
-    document.querySelector('meta[name="theme-color"]')?.setAttribute(
-      'content', activeAppDefinition?.themeColor || deviceMetadata.pwaThemeColor || '#0f172a',
-    );
-  }, [activeAppDefinition, deviceMetadata.pwaThemeColor]);
+    const topChrome = notebookOpen
+      ? '#080b0f'
+      : activeAppDefinition?.themeColor || deviceMetadata.pwaThemeColor || '#0f172a';
+    const bottomChrome = notebookOpen
+      ? '#080b0f'
+      : activeAppDefinition?.bottomBarColor || activeAppDefinition?.themeColor || '#090d16';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', topChrome);
+    document.documentElement.style.backgroundColor = bottomChrome;
+    if (document.body) document.body.style.backgroundColor = bottomChrome;
+  }, [notebookOpen, activeAppDefinition, deviceMetadata.pwaThemeColor]);
 
   return (
     <div
@@ -337,6 +348,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                       <AppIconSquircle
                         app={app}
                         isGrayedOut={isGrayedOut}
+                        isOpen={activeAppId === app.appId}
                         onClick={() => {
                           if (isGrayedOut) {
                             onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
@@ -376,6 +388,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
                         app={app}
                         hideLabel
                         isGrayedOut={isGrayedOut}
+                        isOpen={activeAppId === app.appId}
                         onClick={() => {
                           if (isGrayedOut) {
                             onNotify(`${app.displayName}: Tính năng đang phát triển cho các màn sau.`);
@@ -414,14 +427,12 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           className="absolute inset-0 z-10 flex flex-col overflow-hidden shadow-2xl"
           style={{
             display: activeAppId === 'home' ? 'none' : undefined,
-            backgroundColor: appTheme,
+            backgroundColor: bottomTheme,
             ...(isIOS ? { paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' } : {}),
             touchAction: 'pan-y',
           }}
-          // The whole card slides on swipe-back so the app background never stays behind as a bar.
-          {...shellAppSwipeHandlers}
         >
-          <div data-app-status-background aria-hidden="true" className="shrink-0" style={{ height: 'var(--phone-system-top)' }} />
+          <div data-app-status-background aria-hidden="true" className="shrink-0" style={{ height: 'var(--phone-system-top)', backgroundColor: appTheme }} />
           <div data-app-viewport tabIndex={-1} className="relative min-h-0 flex-1 flex flex-col overflow-hidden outline-none" style={{ touchAction: 'pan-y' }}>
             <AppErrorBoundary
               onErrorFallback={() => {
@@ -461,7 +472,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
         isFullscreen={isFullscreen}
         showStatusBar={showStatusBar}
         onToggleFullscreen={handleToggleFullscreen}
-        onGoHome={onReturnHome}
+        onGoHome={onGoToStartScreen ?? onReturnHome}
         onOpenLevels={() => {
           if (onRequestLevelSelector) {
             onRequestLevelSelector();
@@ -480,6 +491,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           currentStrikes={currentStrikes}
           maxStrikes={maxStrikes}
           onUnlock={onUnlockPhone}
+          onBack={onLockscreenBack}
           onPasscodeFailStrike={onLockscreenPasscodeFail ?? (() => {})}
         />
       )}

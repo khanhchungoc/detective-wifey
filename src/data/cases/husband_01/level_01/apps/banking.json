@@ -1,0 +1,639 @@
+{
+  "accountNumber": "1903****8899",
+  "balance": "18.500.000 đ",
+  "unreadBadge": 0,
+  "isAppLocked": false,
+  "transactions": [
+    {
+      "id": "tx_001",
+      "date": "15/10/2026",
+      "time": "22:05",
+      "amount": "-28.000 đ",
+      "beneficiary": "CUA HANG TIEN LOI",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 22:05"
+    },
+    {
+      "id": "tx_002",
+      "date": "15/10/2026",
+      "time": "21:15",
+      "amount": "-100.000 đ",
+      "beneficiary": "NHA MANG",
+      "memo": "Nap tien dien thoai",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 21:15"
+    },
+    {
+      "id": "tx_003",
+      "date": "15/10/2026",
+      "time": "20:48",
+      "amount": "-640.000 đ",
+      "beneficiary": "COM NIEU PHO CO",
+      "memo": "Thanh toan the",
+      "status": "Thành công",
+      "clueRefId": "CLUE-BANK-07",
+      "timestamp": "15/10/2026 20:48"
+    },
+    {
+      "id": "tx_004",
+      "date": "15/10/2026",
+      "time": "20:30",
+      "amount": "-500.000 đ",
+      "beneficiary": "NGUYEN LAN ANH",
+      "memo": "CK",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 20:30"
+    },
+    {
+      "id": "tx_005",
+      "date": "15/10/2026",
+      "time": "20:10",
+      "amount": "-1.200.000 đ",
+      "beneficiary": "NGUYEN BAO NGOC",
+      "memo": "CK",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 20:10"
+    },
+    {
+      "id": "tx_006",
+      "date": "15/10/2026",
+      "time": "15:30",
+      "amount": "-1.500.000 đ",
+      "beneficiary": "TRAN VAN TUAN",
+      "memo": "Coc",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 15:30"
+    },
+    {
+      "id": "tx_007",
+      "date": "15/10/2026",
+      "time": "13:05",
+      "amount": "+55.000 đ",
+      "beneficiary": "TRAN VAN NAM",
+      "memo": "Com hom qua",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 13:05"
+    },
+    {
+      "id": "tx_008",
+      "date": "15/10/2026",
+      "time": "07:35",
+      "amount": "-30.000 đ",
+      "beneficiary": "BANH MI",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "15/10/2026 07:35"
+    },
+    {
+      "id": "tx_009",
+      "date": "14/10/2026",
+      "time": "19:10",
+      "amount": "+89.000 đ",
+      "beneficiary": "SAN MUA SAM",
+      "memo": "Hoan don huy",
+      "status": "Thành công",
+      "timestamp": "14/10/2026 19:10"
+    },
+    {
+      "id": "tx_010",
+      "date": "14/10/2026",
+      "time": "18:20",
+      "amount": "-60.000 đ",
+      "beneficiary": "NUOC UONG",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "14/10/2026 18:20"
+    },
+    {
+      "id": "tx_011",
+      "date": "13/10/2026",
+      "time": "18:55",
+      "amount": "-5.000 đ",
+      "beneficiary": "BAI XE MINH AN",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "13/10/2026 18:55"
+    },
+    {
+      "id": "tx_012",
+      "date": "13/10/2026",
+      "time": "17:45",
+      "amount": "-1.500.000 đ",
+      "beneficiary": "CALIFORNIA FITNESS",
+      "memo": "Goi PT thang 10",
+      "status": "Thành công",
+      "timestamp": "13/10/2026 17:45"
+    },
+    {
+      "id": "tx_013",
+      "date": "13/10/2026",
+      "time": "12:15",
+      "amount": "-45.000 đ",
+      "beneficiary": "COM VAN PHONG",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "13/10/2026 12:15"
+    },
+    {
+      "id": "tx_014",
+      "date": "12/10/2026",
+      "time": "17:30",
+      "amount": "-326.000 đ",
+      "beneficiary": "SIEU THI",
+      "memo": "Thanh toan the",
+      "status": "Thành công",
+      "timestamp": "12/10/2026 17:30"
+    },
+    {
+      "id": "tx_015",
+      "date": "12/10/2026",
+      "time": "08:50",
+      "amount": "-2.500.000 đ",
+      "beneficiary": "NGUYEN BAO NGOC",
+      "memo": "Tien phong thang 10",
+      "status": "Thành công",
+      "timestamp": "12/10/2026 08:50"
+    },
+    {
+      "id": "tx_016",
+      "date": "11/10/2026",
+      "time": "07:40",
+      "amount": "-70.000 đ",
+      "beneficiary": "CUA HANG XANG DAU",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "11/10/2026 07:40"
+    },
+    {
+      "id": "tx_017",
+      "date": "10/10/2026",
+      "time": "09:12",
+      "amount": "-1.450.000 đ",
+      "beneficiary": "EVN HA NOI",
+      "memo": "Thanh toan tien dien",
+      "status": "Thành công",
+      "timestamp": "10/10/2026 09:12"
+    },
+    {
+      "id": "tx_018",
+      "date": "10/10/2026",
+      "time": "09:10",
+      "amount": "-280.000 đ",
+      "beneficiary": "VNPT",
+      "memo": "Cuoc internet thang 10",
+      "status": "Thành công",
+      "timestamp": "10/10/2026 09:10"
+    },
+    {
+      "id": "tx_019",
+      "date": "10/10/2026",
+      "time": "08:45",
+      "amount": "-31.500.000 đ",
+      "beneficiary": "TRAN MINH THU",
+      "memo": "Sinh hoat thang 10",
+      "status": "Thành công",
+      "timestamp": "10/10/2026 08:45"
+    },
+    {
+      "id": "tx_020",
+      "date": "10/10/2026",
+      "time": "08:30",
+      "amount": "+35.000.000 đ",
+      "beneficiary": "CONG TY CP CONG NGHE TECHNOSOFT",
+      "memo": "Luong thang 10 Nguyen Huy Thinh",
+      "status": "Thành công",
+      "timestamp": "10/10/2026 08:30"
+    },
+    {
+      "id": "tx_021",
+      "date": "09/10/2026",
+      "time": "18:15",
+      "amount": "-85.000 đ",
+      "beneficiary": "Cua hang thuc pham",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "09/10/2026 18:15"
+    },
+    {
+      "id": "tx_022",
+      "date": "09/10/2026",
+      "time": "08:00",
+      "amount": "-35.000 đ",
+      "beneficiary": "Ca phe dau ngo",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "09/10/2026 08:00"
+    },
+    {
+      "id": "tx_023",
+      "date": "08/10/2026",
+      "time": "18:25",
+      "amount": "+50.000 đ",
+      "beneficiary": "Bach Dev",
+      "memo": "Chia tien mua giay in",
+      "status": "Thành công",
+      "timestamp": "08/10/2026 18:25"
+    },
+    {
+      "id": "tx_024",
+      "date": "08/10/2026",
+      "time": "12:10",
+      "amount": "-55.000 đ",
+      "beneficiary": "Bun ca",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "08/10/2026 12:10"
+    },
+    {
+      "id": "tx_025",
+      "date": "07/10/2026",
+      "time": "18:10",
+      "amount": "-220.000 đ",
+      "beneficiary": "Sieu thi",
+      "memo": "Thanh toan the",
+      "status": "Thành công",
+      "timestamp": "07/10/2026 18:10"
+    },
+    {
+      "id": "tx_026",
+      "date": "07/10/2026",
+      "time": "07:45",
+      "amount": "-30.000 đ",
+      "beneficiary": "Banh mi",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "07/10/2026 07:45"
+    },
+    {
+      "id": "tx_027",
+      "date": "06/10/2026",
+      "time": "17:20",
+      "amount": "-60.000 đ",
+      "beneficiary": "Nuoc uong",
+      "memo": "Doi binh",
+      "status": "Thành công",
+      "timestamp": "06/10/2026 17:20"
+    },
+    {
+      "id": "tx_028",
+      "date": "06/10/2026",
+      "time": "12:15",
+      "amount": "-48.000 đ",
+      "beneficiary": "Com van phong",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "06/10/2026 12:15"
+    },
+    {
+      "id": "tx_029",
+      "date": "05/10/2026",
+      "time": "19:00",
+      "amount": "-40.000 đ",
+      "beneficiary": "San bong",
+      "memo": "Gop tien san",
+      "status": "Thành công",
+      "timestamp": "05/10/2026 19:00"
+    },
+    {
+      "id": "tx_030",
+      "date": "05/10/2026",
+      "time": "08:00",
+      "amount": "-32.000 đ",
+      "beneficiary": "Ca phe dau ngo",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "05/10/2026 08:00"
+    },
+    {
+      "id": "tx_031",
+      "date": "04/10/2026",
+      "time": "18:30",
+      "amount": "-65.000 đ",
+      "beneficiary": "Cua hang rau",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "04/10/2026 18:30"
+    },
+    {
+      "id": "tx_032",
+      "date": "04/10/2026",
+      "time": "10:10",
+      "amount": "-198.000 đ",
+      "beneficiary": "Sieu thi",
+      "memo": "Do dung nha bep",
+      "status": "Thành công",
+      "timestamp": "04/10/2026 10:10"
+    },
+    {
+      "id": "tx_033",
+      "date": "03/10/2026",
+      "time": "17:20",
+      "amount": "-70.000 đ",
+      "beneficiary": "Cua hang xang dau",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "03/10/2026 17:20"
+    },
+    {
+      "id": "tx_034",
+      "date": "03/10/2026",
+      "time": "12:05",
+      "amount": "-45.000 đ",
+      "beneficiary": "Com van phong",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "03/10/2026 12:05"
+    },
+    {
+      "id": "tx_035",
+      "date": "02/10/2026",
+      "time": "18:10",
+      "amount": "-96.000 đ",
+      "beneficiary": "Giat la",
+      "memo": "Giat chan va ao",
+      "status": "Thành công",
+      "timestamp": "02/10/2026 18:10"
+    },
+    {
+      "id": "tx_036",
+      "date": "02/10/2026",
+      "time": "08:10",
+      "amount": "-35.000 đ",
+      "beneficiary": "Ca phe dau ngo",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "02/10/2026 08:10"
+    },
+    {
+      "id": "tx_037",
+      "date": "01/10/2026",
+      "time": "12:15",
+      "amount": "-50.000 đ",
+      "beneficiary": "Com van phong",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "01/10/2026 12:15"
+    },
+    {
+      "id": "tx_038",
+      "date": "01/10/2026",
+      "time": "07:40",
+      "amount": "-30.000 đ",
+      "beneficiary": "Banh mi",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "01/10/2026 07:40"
+    },
+    {
+      "id": "tx_039",
+      "date": "30/09/2026",
+      "time": "18:20",
+      "amount": "-75.000 đ",
+      "beneficiary": "Cua hang thuc pham",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "30/09/2026 18:20"
+    },
+    {
+      "id": "tx_040",
+      "date": "30/09/2026",
+      "time": "08:00",
+      "amount": "-120.000 đ",
+      "beneficiary": "Ban Quan Ly",
+      "memo": "Phi gui xe thang 10",
+      "status": "Thành công",
+      "timestamp": "30/09/2026 08:00"
+    },
+    {
+      "id": "tx_041",
+      "date": "29/09/2026",
+      "time": "12:20",
+      "amount": "+55.000 đ",
+      "beneficiary": "Tran Van Nam",
+      "memo": "Chia tien bua trua",
+      "status": "Thành công",
+      "timestamp": "29/09/2026 12:20"
+    },
+    {
+      "id": "tx_042",
+      "date": "29/09/2026",
+      "time": "07:45",
+      "amount": "-28.000 đ",
+      "beneficiary": "Banh mi",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "29/09/2026 07:45"
+    },
+    {
+      "id": "tx_043",
+      "date": "28/09/2026",
+      "time": "18:15",
+      "amount": "-100.000 đ",
+      "beneficiary": "Nha mang",
+      "memo": "Nap dien thoai",
+      "status": "Thành công",
+      "timestamp": "28/09/2026 18:15"
+    },
+    {
+      "id": "tx_044",
+      "date": "28/09/2026",
+      "time": "12:10",
+      "amount": "-48.000 đ",
+      "beneficiary": "Com van phong",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "28/09/2026 12:10"
+    },
+    {
+      "id": "tx_045",
+      "date": "27/09/2026",
+      "time": "18:00",
+      "amount": "-95.000 đ",
+      "beneficiary": "Cua hang thuc pham",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "27/09/2026 18:00"
+    },
+    {
+      "id": "tx_046",
+      "date": "27/09/2026",
+      "time": "10:00",
+      "amount": "-180.000 đ",
+      "beneficiary": "Bao duong xe",
+      "memo": "Thay dau may",
+      "status": "Thành công",
+      "timestamp": "27/09/2026 10:00"
+    },
+    {
+      "id": "tx_047",
+      "date": "26/09/2026",
+      "time": "18:10",
+      "amount": "-268.000 đ",
+      "beneficiary": "Sieu thi",
+      "memo": "Thanh toan the",
+      "status": "Thành công",
+      "timestamp": "26/09/2026 18:10"
+    },
+    {
+      "id": "tx_048",
+      "date": "26/09/2026",
+      "time": "08:00",
+      "amount": "-35.000 đ",
+      "beneficiary": "Ca phe dau ngo",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "26/09/2026 08:00"
+    },
+    {
+      "id": "tx_049",
+      "date": "25/09/2026",
+      "time": "17:30",
+      "amount": "-145.000 đ",
+      "beneficiary": "Nha sach",
+      "memo": "Sach ky thuat",
+      "status": "Thành công",
+      "timestamp": "25/09/2026 17:30"
+    },
+    {
+      "id": "tx_050",
+      "date": "25/09/2026",
+      "time": "12:05",
+      "amount": "-50.000 đ",
+      "beneficiary": "Com van phong",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "25/09/2026 12:05"
+    },
+    {
+      "id": "tx_051",
+      "date": "24/09/2026",
+      "time": "18:05",
+      "amount": "-60.000 đ",
+      "beneficiary": "Nuoc uong",
+      "memo": "Doi binh nuoc",
+      "status": "Thành công",
+      "timestamp": "24/09/2026 18:05"
+    },
+    {
+      "id": "tx_052",
+      "date": "24/09/2026",
+      "time": "07:50",
+      "amount": "-30.000 đ",
+      "beneficiary": "Banh mi",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "24/09/2026 07:50"
+    },
+    {
+      "id": "tx_053",
+      "date": "23/09/2026",
+      "time": "18:20",
+      "amount": "-85.000 đ",
+      "beneficiary": "Cua hang rau",
+      "memo": "Rau va hoa qua",
+      "status": "Thành công",
+      "timestamp": "23/09/2026 18:20"
+    },
+    {
+      "id": "tx_054",
+      "date": "23/09/2026",
+      "time": "12:20",
+      "amount": "-55.000 đ",
+      "beneficiary": "Bun ca",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "23/09/2026 12:20"
+    },
+    {
+      "id": "tx_055",
+      "date": "22/09/2026",
+      "time": "17:20",
+      "amount": "-20.000 đ",
+      "beneficiary": "Bai xe",
+      "memo": "Gui xe",
+      "status": "Thành công",
+      "timestamp": "22/09/2026 17:20"
+    },
+    {
+      "id": "tx_056",
+      "date": "22/09/2026",
+      "time": "08:10",
+      "amount": "-32.000 đ",
+      "beneficiary": "Ca phe dau ngo",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "22/09/2026 08:10"
+    },
+    {
+      "id": "tx_057",
+      "date": "21/09/2026",
+      "time": "12:15",
+      "amount": "-45.000 đ",
+      "beneficiary": "Com van phong",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "21/09/2026 12:15"
+    },
+    {
+      "id": "tx_058",
+      "date": "21/09/2026",
+      "time": "08:00",
+      "amount": "-70.000 đ",
+      "beneficiary": "Cua hang xang dau",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "21/09/2026 08:00"
+    },
+    {
+      "id": "tx_059",
+      "date": "20/09/2026",
+      "time": "18:10",
+      "amount": "-215.000 đ",
+      "beneficiary": "Sieu thi",
+      "memo": "Do dung gia dinh",
+      "status": "Thành công",
+      "timestamp": "20/09/2026 18:10"
+    },
+    {
+      "id": "tx_060",
+      "date": "20/09/2026",
+      "time": "07:40",
+      "amount": "-30.000 đ",
+      "beneficiary": "Banh mi",
+      "memo": "Thanh toan QR",
+      "status": "Thành công",
+      "timestamp": "20/09/2026 07:40"
+    }
+  ],
+  "vaults": [
+    {
+      "vaultId": "vault_001",
+      "vaultName": "Tiết kiệm online • 6 tháng",
+      "currentAmount": "30.000.000 đ",
+      "details": "Kỳ hạn: 6 tháng · Lãi suất: 4,5%/năm\nNgày mở: 01/08/2026\nNgày đáo hạn: 01/02/2027\nTrả lãi cuối kỳ",
+      "depositHistory": [
+        {
+          "id": "dep_001",
+          "date": "01/08/2026",
+          "amount": "30.000.000 đ",
+          "note": "Mở tiền gửi tiết kiệm online"
+        }
+      ]
+    },
+    {
+      "vaultId": "vault_002",
+      "vaultName": "Tiết kiệm online • 12 tháng",
+      "currentAmount": "50.000.000 đ",
+      "details": "Kỳ hạn: 12 tháng · Lãi suất: 5,2%/năm\nNgày mở: 15/09/2026\nNgày đáo hạn: 15/09/2027\nTrả lãi cuối kỳ",
+      "depositHistory": [
+        {
+          "id": "dep_002",
+          "date": "15/09/2026",
+          "amount": "50.000.000 đ",
+          "note": "Mở tiền gửi tiết kiệm online"
+        }
+      ]
+    }
+  ]
+}

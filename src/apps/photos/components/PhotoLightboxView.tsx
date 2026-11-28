@@ -80,6 +80,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   const [isZoomed, setIsZoomed] = useState(false);
   const [manipulating, setManipulating] = useState(false);
   const [dismissedBySwipe, setDismissedBySwipe] = useState(false);
+  const [showAdjacentSlides, setShowAdjacentSlides] = useState(false);
 
   // Compositor-only motion values (zero React re-renders per frame)
   const photoX = useMotionValue(0);
@@ -111,6 +112,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   const isPagingRef = useRef(false);
 
   const stopActiveAnimations = useCallback(() => {
+    isPagingRef.current = false;
     for (let i = 0; i < activeAnimationsRef.current.length; i += 1) {
       activeAnimationsRef.current[i].stop();
     }
@@ -176,9 +178,16 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       dragScale.set(1);
       dragBackdropOpacity.set(1);
       chromeOpacity.set(1);
+      setShowAdjacentSlides(false);
       return;
     }
-    animate(dragX, 0, IOS_SPRING);
+    const xControl = animate(dragX, 0, IOS_SPRING);
+    activeAnimationsRef.current.push(xControl);
+    void xControl.then(() => {
+      if (gestureModeRef.current !== 'horizontal' && !isPagingRef.current) {
+        setShowAdjacentSlides(false);
+      }
+    });
     animate(dragY, 0, IOS_SPRING);
     animate(dragScale, 1, IOS_SPRING);
     animate(dragBackdropOpacity, 1, { duration: 0.22, ease: IOS_EASE });
@@ -200,6 +209,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     chromeOpacity.set(1);
     setIsZoomed(false);
     setManipulating(false);
+    setShowAdjacentSlides(false);
     gestureModeRef.current = 'idle';
   }, [photo.id, stopActiveAnimations, photoX, photoY, photoScale, dragX, dragY, dragScale, dragBackdropOpacity, chromeOpacity]);
 
@@ -214,6 +224,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     const stride = (stageRectRef.current.width || 390) + SLIDE_GAP;
     const targetX = direction > 0 ? -stride : stride;
     isPagingRef.current = true;
+    setShowAdjacentSlides(true);
     const controls = animate(dragX, targetX, { duration: 0.24, ease: IOS_EASE });
     activeAnimationsRef.current.push(controls);
     void controls.then(() => {
@@ -334,12 +345,18 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     }
 
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    try {
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Ignore synthetic or unsupported pointer capture
+    }
 
     if (pointersRef.current.size >= 2) {
       gestureModeRef.current = 'pinch';
       wasPinchRef.current = true;
       movedRef.current = true;
       setManipulating(true);
+      setShowAdjacentSlides(false);
       resetSwipeVisuals();
       event.stopPropagation();
     } else if (viewRef.current.zoom > 1.05) {
@@ -421,10 +438,12 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     if (gestureModeRef.current === 'idle' && movedRef.current) {
       if (dyTotal > 0 && dyTotal > Math.abs(dxTotal) * 1.05) {
         gestureModeRef.current = 'dismiss';
+        setShowAdjacentSlides(false);
       } else if (dyTotal < 0 && Math.abs(dyTotal) > Math.abs(dxTotal) * 1.15) {
         gestureModeRef.current = 'up';
       } else {
         gestureModeRef.current = 'horizontal';
+        setShowAdjacentSlides(true);
       }
     }
 
@@ -461,6 +480,13 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
   };
 
   const finishPointer = (event: React.PointerEvent<HTMLElement>, cancelled: boolean) => {
+    try {
+      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+        event.currentTarget.releasePointerCapture?.(event.pointerId);
+      }
+    } catch {
+      // Ignore if pointer capture already released
+    }
     if (!pointersRef.current.has(event.pointerId)) return;
     pointersRef.current.delete(event.pointerId);
 
@@ -494,6 +520,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
       const dyTotal = event.clientY - pressStartRef.current.y;
       const shouldDismiss = !cancelled && (dyTotal >= DISMISS_DISTANCE || lastMoveRef.current.vy > DISMISS_VELOCITY);
       if (shouldDismiss) {
+        setShowAdjacentSlides(false);
         setDismissedBySwipe(true);
         dragBackdropOpacity.set(0);
         chromeOpacity.set(0);
@@ -531,7 +558,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
     if (!cancelled && !movedRef.current && !wasPinchRef.current) {
       const now = Date.now();
       const prevTap = lastTapRef.current;
-      if (now - prevTap.time < 280 && Math.hypot(event.clientX - prevTap.x, event.clientY - prevTap.y) < 40) {
+      if (now - prevTap.time < 350 && Math.hypot(event.clientX - prevTap.x, event.clientY - prevTap.y) < 44) {
         lastTapRef.current = { time: 0, x: 0, y: 0 };
         handleDoubleTapAt(event.clientX, event.clientY);
       } else {
@@ -609,11 +636,16 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
         exit={{ opacity: 0, y: -8 }}
         transition={{ duration: 0.2, ease: IOS_EASE }}
         style={{ opacity: chromeOpacity }}
-        className="relative h-14 px-3 flex items-center justify-between border-b border-white/10 bg-black/80 backdrop-blur-md shrink-0 z-20"
+        className="relative h-14 px-3 flex items-center justify-between border-b border-white/10 bg-black/90 shrink-0 z-20"
       >
         <button
           type="button"
-          onClick={onBack}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onClick={() => {
+            setShowAdjacentSlides(false);
+            onBack();
+          }}
           className="flex items-center gap-1 min-w-[44px] min-h-[44px] px-2 text-ios-subheadline font-semibold text-[#2979FF] rounded-lg active:scale-95 transition-transform duration-100"
           aria-label="Quay lại Thư viện"
         >
@@ -668,6 +700,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
             animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
             exit={heroExit}
             transition={IOS_SPRING}
+            style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
             className="relative w-full h-full flex items-center justify-center"
           >
             {/* Middle Swipe-Down Dismiss / 3-Slide Horizontal Pager Container */}
@@ -678,11 +711,12 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                 x: dragX,
                 y: dragY,
                 scale: dragScale,
-                willChange: manipulating ? 'transform' : 'auto',
+                willChange: 'transform',
+                backfaceVisibility: 'hidden',
               }}
             >
-              {/* Previous Adjacent Photo Slot (visible immediately as user swipes right) */}
-              {prevPhoto && !isZoomed && (
+              {/* Previous Adjacent Photo Slot (rendered only during horizontal paging so it never peeks during open/dismiss/close) */}
+              {showAdjacentSlides && prevPhoto && !isZoomed && (
                 <div
                   aria-hidden="true"
                   data-lightbox-prev-slide
@@ -718,8 +752,8 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                 />
               </motion.div>
 
-              {/* Next Adjacent Photo Slot (visible immediately as user swipes left) */}
-              {nextPhoto && !isZoomed && (
+              {/* Next Adjacent Photo Slot (rendered only during horizontal paging so it never peeks during open/dismiss/close) */}
+              {showAdjacentSlides && nextPhoto && !isZoomed && (
                 <div
                   aria-hidden="true"
                   data-lightbox-next-slide

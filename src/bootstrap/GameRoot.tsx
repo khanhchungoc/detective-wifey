@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PhoneShell } from '../shell';
-import hoangPortraitUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
+import husbandWallpaperUrl from '../shell/assets/husband-01-technosoft-selfie-wallpaper-v3.webp';
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
-import { LocalStorageAdapter, ResumeSessionModal, type GameStateRepository } from '../features/session';
+import { LocalStorageAdapter, type GameStateRepository } from '../features/session';
 import { PlaySession } from '../features/play-session';
 import { SharedPinLockpad } from '../features/locks';
-import { WifeNotebookModal } from '../features/wife-notebook';
+
+const WifeNotebookModal = lazy(() =>
+  import('../features/wife-notebook').then(m => ({ default: m.WifeNotebookModal })),
+);
 import {
   GameStartupScreen,
   LevelSelectorHub,
@@ -18,12 +21,10 @@ import {
   buildLevelCards,
   buildCaseBriefing,
   buildLockscreenConfig,
-  getLevel0Status,
-  setLevel0Status,
 } from '../features/game-flow';
 import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { AppDefinition, AppId } from '../shared/contracts/app-contracts';
-import type { GameFlowStage, Level0Status, LevelCardItem } from '../shared/contracts/game-flow';
+import type { GameFlowStage, LevelCardItem } from '../shared/contracts/game-flow';
 import { appTransition, transition } from '../shared/motion/transition';
 import { AnchoredOverlay } from '../shared/ui/AnchoredOverlay';
 import { RetainedAppView } from './RetainedAppView';
@@ -35,7 +36,6 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
 }) {
   const prefersReducedMotion = useReducedMotion();
   const [flowStage, setFlowStage] = useState<GameFlowStage>(initialStage);
-  const [level0Status, setLevel0StatusState] = useState<Level0Status>(() => getLevel0Status());
   const [isMuted, setIsMuted] = useState(false);
   const [briefingRecallOpen, setBriefingRecallOpen] = useState(false);
   const [switchLevelConfirmOpen, setSwitchLevelConfirmOpen] = useState(false);
@@ -77,24 +77,27 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     DOCK_APP_IDS.map(getAppDefinition).filter((app): app is AppDefinition => Boolean(app))
   ), []);
 
-  const husbands = useMemo(() => buildHusbandProfiles(hoangPortraitUrl), []);
+  const husbands = useMemo(() => buildHusbandProfiles(), []);
   const levelCards = useMemo(
     () => buildLevelCards(
       game.availableLevels(),
       state.playerProgress.unlockedLevel,
       state.playerProgress.bestStarRatings,
-      level0Status,
     ),
-    [game, state.playerProgress.unlockedLevel, state.playerProgress.bestStarRatings, level0Status],
+    [game, state.playerProgress.unlockedLevel, state.playerProgress.bestStarRatings],
+  );
+  const activeHusband = useMemo(
+    () => husbands.find(h => h.husbandId === caseConfig.husbandId) ?? husbands[0],
+    [husbands, caseConfig.husbandId],
   );
   const activeBriefing = useMemo(
-    () => buildCaseBriefing(caseConfig, caseTitle, hoangPortraitUrl),
-    [caseConfig, caseTitle],
+    () => buildCaseBriefing(caseConfig, caseTitle, activeHusband),
+    [caseConfig, caseTitle, activeHusband],
   );
   const lockscreenConfig = useMemo(
-    () => buildLockscreenConfig(caseConfig, hoangPortraitUrl, (appId) => {
+    () => buildLockscreenConfig(caseConfig, husbandWallpaperUrl, (appId) => {
       const def = APP_REGISTRY[appId];
-      return def ? { iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
+      return def ? { appName: def.displayName, iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
     }),
     [caseConfig],
   );
@@ -112,21 +115,20 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     appTransition('open', id, () => game.launch(id));
   };
 
+  const [lockscreenReturnStage, setLockscreenReturnStage] = useState<'level-selector' | 'level-context'>('level-context');
+
   const handleSelectLevelCard = (card: LevelCardItem) => {
-    if (card.isPractice) {
-      if (level0Status === 'not_started') {
-        setLevel0Status('completed');
-        setLevel0StatusState('completed');
+    // The Màn 0 guide is not playable yet; the selector never emits it, this guards the contract.
+    if (card.isGuide || card.comingSoon) return;
+    if (state.ongoingSession?.caseId === card.caseId) {
+      if (game.resumeOngoing()) {
+        setLockscreenReturnStage('level-selector');
+        setFlowStage('phone-lockscreen');
+        return;
       }
-      game.selectLevel(1);
-      setFlowStage('level-context');
-      return;
-    }
-    if (card.levelNumber === 1 && level0Status === 'not_started') {
-      setLevel0Status('skipped');
-      setLevel0StatusState('skipped');
     }
     if (game.selectLevel(card.levelNumber)) {
+      setLockscreenReturnStage('level-context');
       setFlowStage('level-context');
     }
   };
@@ -139,6 +141,12 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     flowStage === 'phone-lockscreen' || flowStage === 'phone-home'
       ? 'phone-stage'
       : flowStage;
+
+  const earnedStars = useMemo(
+    () => Object.values(state.playerProgress.bestStarRatings).reduce((sum, rating) => sum + rating, 0),
+    [state.playerProgress.bestStarRatings],
+  );
+  const maxStars = useMemo(() => Math.max(1, game.availableLevels().length) * 3, [game]);
 
   return (
     <div className="w-full h-[100dvh] flex justify-center items-center overflow-hidden bg-game-backdrop">
@@ -153,7 +161,18 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
             transition={stageTransition}
           >
             <GameStartupScreen
-              preloadAssets={[hoangPortraitUrl]}
+              preloadAssets={[husbands[0].portraitUrl, husbandWallpaperUrl]}
+              hasOngoingGame={Boolean(state.ongoingSession)}
+              ongoingLevelNumber={state.ongoingSession?.levelNumber}
+              isMuted={isMuted}
+              onToggleMute={() => setIsMuted(prev => !prev)}
+              earnedStars={earnedStars}
+              maxStars={maxStars}
+              onContinue={() => {
+                if (game.resumeOngoing()) {
+                  setFlowStage('phone-home');
+                }
+              }}
               onStart={() => setFlowStage('level-selector')}
             />
           </motion.div>
@@ -170,6 +189,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               husbands={husbands}
               levels={levelCards}
               initialHusbandId={caseConfig.husbandId}
+              ongoingCaseId={state.ongoingSession?.caseId}
               isMuted={isMuted}
               onToggleMute={() => setIsMuted(prev => !prev)}
               onSelectLevel={handleSelectLevelCard}
@@ -188,7 +208,10 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               briefing={activeBriefing}
               mode="entry"
               onBack={() => setFlowStage('level-selector')}
-              onStartInvestigation={() => setFlowStage('phone-lockscreen')}
+              onStartInvestigation={() => {
+                setLockscreenReturnStage('level-context');
+                setFlowStage('phone-lockscreen');
+              }}
             />
           </motion.div>
         ) : (
@@ -207,7 +230,14 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               activeUpperApps={upper} activeDockApps={dock}
               grayedOutAppIds={disabledAppIds}
               systemAlertToast={state.systemAlertToast}
-              onLaunchApp={launch} onReturnHome={returnHome} onRestartLevel={game.restart}
+              onLaunchApp={launch} onReturnHome={returnHome}
+              onGoToStartScreen={() => {
+                game.parkOngoingSession();
+                setOpenNotebookCase(null);
+                setBriefingRecallOpen(false);
+                setFlowStage('startup');
+              }}
+              onRestartLevel={game.restart}
               onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
               onCloseNotebook={() => setOpenNotebookCase(null)}
               notebookOpen={notebookOpen}
@@ -224,6 +254,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   launch(targetAppId as AppId);
                 }
               }}
+              onLockscreenBack={() => setFlowStage(lockscreenReturnStage)}
               onLockscreenPasscodeFail={game.failChallenge}
               onOpenBriefing={() => setBriefingRecallOpen(true)}
               onRequestLevelSelector={() => setSwitchLevelConfirmOpen(true)}
@@ -234,6 +265,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               overlays={<>
                 <AnchoredOverlay key={caseConfig.caseId} open={notebookOpen} anchorSelector="[data-notebook-tab]"
                   label="Bảng bằng chứng" onClose={() => setOpenNotebookCase(null)}>
+                <Suspense fallback={null}>
                 <WifeNotebookModal
                   caseId={caseConfig.caseId}
                   caseTitle={caseTitle}
@@ -258,6 +290,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   onConfrontationVictory={game.recordConfrontationVerdict}
                   onNextLevel={game.forgiveAndAdvanceLevel}
                 />
+                </Suspense>
                 </AnchoredOverlay>
                 {briefingRecallOpen && (
                   <LevelContextBriefing
@@ -281,8 +314,6 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   expectedPin={pendingChallenge.challenge.expectedAnswer} currentStrikes={state.strikes}
                   maxStrikes={caseConfig.allowedStrikes} onSuccess={id => transition('sheet-out', () => game.solveChallenge(id))}
                   onFailStrike={game.failChallenge} onCancel={() => transition('sheet-out', game.cancelChallenge)} />}
-                {state.resumableSession && flowStage === 'phone-home' && <ResumeSessionModal session={state.resumableSession}
-                  onResume={() => transition('fade', game.resume)} onRestart={() => transition('fade', game.restart)} />}
               </>}
             >
               {Object.values(APP_REGISTRY).map(({ appId, component: AppComponent }) => <RetainedAppView

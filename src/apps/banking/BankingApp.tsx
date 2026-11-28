@@ -1,5 +1,5 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useMemo, type ComponentType } from 'react';
+import { useMemo, useState, type ComponentType } from 'react';
 import {
   IoCard,
   IoCardOutline,
@@ -49,8 +49,8 @@ const tabs: { id: BankingTab; label: string; icon: ComponentType<{ className?: s
 export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlock, unlockedChallenges }: VirtualAppProps) {
   const rawData: unknown = caseData.appsData?.banking;
   const data = useMemo(() => readBankingData(rawData), [rawData]);
-  const [activeTab, setActiveTab] = useMotionState<BankingTab>('home', 'fade');
-  const [filter, setFilter] = useMotionState<TransactionFilter>('all', 'fade');
+  const [activeTab, setActiveTab] = useState<BankingTab>('home');
+  const [filter, setFilter] = useState<TransactionFilter>('all');
   const [selectedTx, setSelectedTx] = useMotionState<BankingTransaction | null>(null, 'sheet');
   const [selectedVaultId, setSelectedVaultId] = useMotionState<string | null>(null, 'navigation');
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
@@ -77,8 +77,8 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     else onReturnHome();
   };
 
-  const swipe = useSwipeBack({ onBack: handleBack, enabled: !selectedTx && !evidenceItem && !selectedVault, exitsApp: !selectedVaultId && activeTab === 'home' });
   const vaultSwipe = useSwipeBack({ onBack: () => setSelectedVaultId(null), enabled: Boolean(selectedVault) });
+  const profileSwipe = useSwipeBack({ onBack: () => navigate('home'), enabled: activeTab === 'profile' && !selectedTx && !evidenceItem && !selectedVault });
 
   const selectVault = (vault: BankingVault) => {
     setSelectedVaultId(vault.id);
@@ -99,7 +99,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
 
   return (
     <div
-      {...swipe}
+      {...(activeTab === 'profile' ? profileSwipe : {})}
       className="app-banking relative flex h-full min-h-0 w-full flex-col overflow-hidden select-none font-sans bg-[#F5F6F8]"
       onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); handleBack(); } }}
       onKeyDownCapture={event => { if (event.key === 'Escape' && evidenceItem) { event.stopPropagation(); setEvidenceItem(null); } }}

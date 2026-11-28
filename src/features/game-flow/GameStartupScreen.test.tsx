@@ -19,25 +19,31 @@ describe('GameStartupScreen (US-035)', () => {
     vi.restoreAllMocks();
   });
 
-  it('renders full-bleed responsive noir hero, stylized title lockup, and initial loading state', () => {
-    const html = renderToStaticMarkup(<GameStartupScreen onStart={vi.fn()} />);
+  it('renders full-bleed noir hero, rendered illustrated game logo, quiet utility controls, and initial loading state', () => {
+    const html = renderToStaticMarkup(
+      <GameStartupScreen
+        onStart={vi.fn()}
+        isMuted={false}
+        onToggleMute={vi.fn()}
+        earnedStars={5}
+        maxStars={9}
+      />,
+    );
 
     expect(html).not.toContain('sm:max-w-[480px]');
     expect(html).toContain('w-full h-[100dvh]');
     expect(html).toContain('md:object-[68%_center]');
-    expect(html).toContain('startup-film-grain');
-    expect(html).toContain('md:max-w-xl');
-    expect(html).toContain('pb-24');
-    expect(html).toContain('HỒ SƠ ĐÊM KHUYA · 23:45');
-    expect(html).toContain('Bắt được');
-    expect(html).toContain('Tiểu tam');
-    expect(html).toContain('Chồng vừa ngủ say, cuộc điều tra bắt đầu...');
-    expect(html).toContain('font-handwriting');
+    expect(html).toContain('alt="Bắt được Tiểu tam"');
+    expect(html).toContain('Chồng vừa ngủ say, cuộc điều tra bắt đầu');
     expect(html).toContain('bg-game-crimson');
+    expect(html).toContain('aria-label="Tắt âm thanh"');
+    expect(html).toContain('aria-pressed="false"');
+    expect(html).toContain('5/9');
     expect(html).toContain('Đang tải');
     expect(html).toContain('0%');
-    expect(html).not.toContain('Chạm để bắt đầu');
-    expect(html).not.toContain('Hồ sơ 01');
+    expect(html).not.toContain('HỒ SƠ ĐÊM KHUYA');
+    expect(html).not.toContain('Bắt đầu');
+    expect(html).not.toContain('Tiếp tục');
   });
 
   it('advances default preloader to 100% without auto-starting', () => {
@@ -62,23 +68,44 @@ describe('GameStartupScreen (US-035)', () => {
     cleanup();
   });
 
-  it('renders restrained editorial noir CTA once ready', () => {
+  it('renders only primary Bắt đầu button when there is no ongoing game', () => {
     const html = renderToStaticMarkup(
       <StartupActionArea
         progress={100}
         isReady={true}
         isStarting={false}
+        hasOngoingGame={false}
         onStartClick={vi.fn()}
+        onContinueClick={vi.fn()}
       />,
     );
 
-    expect(html).toContain('Chạm để bắt đầu');
+    expect(html).toContain('Bắt đầu');
+    expect(html).not.toContain('Tiếp tục');
+    expect(html).toContain('game-btn-primary');
     expect(html).toContain('touch-target-min');
-    expect(html).toContain('rounded-sm');
-    expect(html).toContain('bg-black/55');
-    expect(html).toContain('border-l-game-crimson');
-    expect(html).toContain('hover:bg-game-paper');
     expect(html).not.toContain('role="progressbar"');
+  });
+
+  it('renders both Tiếp tục (primary) and Bắt đầu (secondary) when an ongoing game exists', () => {
+    const html = renderToStaticMarkup(
+      <StartupActionArea
+        progress={100}
+        isReady={true}
+        isStarting={false}
+        hasOngoingGame={true}
+        ongoingLevelNumber={2}
+        onStartClick={vi.fn()}
+        onContinueClick={vi.fn()}
+      />,
+    );
+
+    expect(html).toContain('Tiếp tục');
+    expect(html).toContain('Màn 2');
+    expect(html).toContain('Bắt đầu');
+    expect(html).toContain('game-btn-primary');
+    expect(html).toContain('game-btn-secondary');
+    expect(html.indexOf('Tiếp tục')).toBeLessThan(html.indexOf('Bắt đầu'));
   });
 
   it('unlocks audio and debounces rapid double-taps so onStart fires strictly once', () => {

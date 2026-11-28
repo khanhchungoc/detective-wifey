@@ -5,8 +5,8 @@ import {
   IoPeopleOutline,
   IoStorefrontOutline,
 } from 'react-icons/io5';
-import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.jpg';
-import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.jpg';
+import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.webp';
+import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.webp';
 
 const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
   { index: 0, names: ['Anh Tuấn Thợ Điện'] }, // Anonymous electrician tools preserve the alias mystery.
@@ -16,12 +16,12 @@ const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
   { index: 4, names: ['Mai Lễ Tân'] }, // Casual side-angle lobby selfie.
   { index: 5, names: ['Mẹ Ở Quê', 'Mẹ'] }, // Her garden and vegetables.
   { index: 6, names: ['Vợ'] }, // Candid adult couple photo.
-  { index: 7, names: ['Tuấn Đụt'] }, // Amateur football team photo from a distance.
+  { index: 7, names: ['Tuấn Chó'] }, // Amateur football team photo from a distance.
   { index: 8, names: ['Nam Dev'] }, // Cat photo beside a laptop.
   { index: 9, names: ['Bách Dev'] }, // Anime developer avatar.
   { index: 10, names: ['Anh Bách QLDA - Ban Quản Lý Toà Nhà'] }, // Distant team gathering photo.
   { index: 11, names: ['Bác Bảo Vệ Chung Cư'] }, // Everyday security-booth photo.
-  { index: 12, names: ['Đức Nghĩa'] }, // Landscape photo.
+  { index: 12, names: ['Đức Nghĩa', 'Khoa BE'] }, // Landscape photo; an ordinary choice that never leaks who is behind an alias.
   { index: 13, names: ['Bé Mèo Dễ Thương'] }, // Cat profile photo.
   { index: 14, names: ['Bé Trang SV (0904***888)', 'Bé Trang SV'] }, // Off-center cafe selfie.
   { index: 15, names: ['Nguyễn Thị Thu Hương', 'Thu Hương', 'Nguyễn Thị Thu Hương · Marketing', 'Thu Huong'] }, // Marketing specialist persona.
@@ -46,6 +46,8 @@ const groupNames = new Set([
   'Team Dev Technosoft',
   'Gia Đình Ngoại',
   'Cư dân tầng 8',
+  'Cư dân tầng 12 CT2',
+  'Technosoft - Toàn công ty',
 ]);
 
 const flowerShopNames = new Set(['Tiệm Hoa Tươi Mimosa']);
@@ -71,12 +73,6 @@ for (const names of [groupNames, flowerShopNames, propertyOfficeNames, serviceNa
   const normalized = [...names].map(normalize);
   names.clear();
   normalized.forEach((name) => names.add(name));
-}
-
-function hashName(name: string) {
-  let hash = 0;
-  for (const character of name) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
-  return hash;
 }
 
 type ContactAvatarProps = {
@@ -136,7 +132,16 @@ export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false
     );
   }
 
-  const index = avatarIndexByName.get(normalizedName) ?? hashName(normalizedName || 'unknown') % 16;
+  const index = avatarIndexByName.get(normalizedName);
+  // Names without an assigned photo get an initial: borrowing another persona's photo would
+  // show the wrong person (e.g. a colleague wearing the receptionist's face).
+  if (index === undefined) {
+    return (
+      <span aria-hidden="true" className={`${classes} bg-[#D1D5DB] font-semibold text-[#4B5563]`} style={{ ...dimensions, fontSize: fluid ? undefined : size * 0.42 }}>
+        {name.trim().charAt(0).toLocaleUpperCase('vi')}
+      </span>
+    );
+  }
   const column = index % 4;
   const row = Math.floor(index / 4);
   const style: CSSProperties = {

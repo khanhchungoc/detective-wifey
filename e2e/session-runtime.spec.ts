@@ -5,28 +5,11 @@ import {
   launchApp,
   longPressAndPin,
   startCleanPhone,
+  swipeDownControlCenter,
   unlockBySwipeUp,
 } from './helpers/phone';
 
-const SESSION_KEY = 'detective:v1:jealous_wife:session';
-
-/**
- * Replays the start flow after a reload up to the unlocked home screen. The intro "Bỏ qua" tap is
- * retried because a tap right after the intro mounts can be ignored.
- */
-async function replayStartFlow(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Chạm để bắt đầu' }).click();
-  await page.locator('[data-case-id="case_01"]').click();
-  const skip = page.getByRole('button', { name: 'Bỏ qua' });
-  const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
-  await expect(async () => {
-    if (await skip.isVisible()) await skip.click();
-    await expect(openPhone).toBeVisible({ timeout: 1000 });
-  }).toPass();
-  await openPhone.click();
-  await expect(page.locator('[data-phone-lockscreen]')).toBeVisible();
-  await unlockBySwipeUp(page);
-}
+const SESSION_KEY = 'detective:v2:jealous_wife:session';
 
 interface SavedSession {
   caseId: string;
@@ -49,7 +32,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     await launchApp(page, 'phone');
     const row = page
       .locator('[data-app-instance]:not([hidden]) [data-evidence-target="true"]')
-      .filter({ hasText: 'Anh Tuấn' })
+      .filter({ hasText: 'Khoa BE' })
       .first();
     await longPressAndPin(page, row);
     await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
@@ -58,17 +41,23 @@ test.describe('Session & Case Runtime @smoke', () => {
     await expect.poll(async () => (await readSavedSession(page))?.taggedSuspects.length).toBe(1);
     expect((await readSavedSession(page))?.caseId).toBe('case_01');
 
-    // Reload keeps storage (cleared only on the first load of the test) and replays the start flow.
+    // Going back to the start screen via Control Center immediately offers "Tiếp tục" without reloading.
+    const controlCenter = page.getByRole('dialog', { name: 'Trung tâm điều khiển' });
+    await swipeDownControlCenter(page);
+    if (!(await controlCenter.isVisible())) {
+      await swipeDownControlCenter(page);
+    }
+    await controlCenter.getByRole('button', { name: 'Màn hình chính' }).click();
+    await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
+    await page.getByRole('button', { name: /Tiếp tục/ }).click();
+    await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
+
+    // Reload keeps storage (cleared only on the first load of the test) and shows Tiếp tục on the start screen.
     await page.reload();
-    await replayStartFlow(page);
+    await page.getByRole('button', { name: /Tiếp tục/ }).click();
 
-    // The app offers to resume the saved Level 1 session.
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeVisible();
-    await expect(page.getByText(/Màn 1 với 1 manh mối đã ghim/)).toBeVisible();
-    await page.getByRole('button', { name: 'Tiếp tục điều tra' }).click();
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeHidden();
-
-    // Same level, clue still pinned.
+    // Lands directly in the ongoing game without an in-phone resume modal, with the clue still pinned.
+    await expect(page.getByText('Tiếp Tục Điều Tra?')).toHaveCount(0);
     await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
     await page.locator('[data-notebook-tab]').click();
     await expect(page.locator('[aria-label^="Định vị bảng"]')).toHaveAttribute('aria-label', /1 manh mối/);
@@ -76,7 +65,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('offers Resume on a seeded session and supports restarting the level', async ({ page }) => {
+  test('offers Tiếp tục on a seeded session and resumes in-progress level directly into lockscreen from level selector', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
@@ -93,7 +82,7 @@ test.describe('Session & Case Runtime @smoke', () => {
         taggedSuspects: [
           {
             suspectId: 'tag_seed_1',
-            displayName: 'Anh Tuấn Thợ Điện',
+            displayName: 'Khoa BE',
             sourceApp: 'internet-messaging',
             timestamp: 1000,
           },
@@ -106,36 +95,40 @@ test.describe('Session & Case Runtime @smoke', () => {
     }, SESSION_KEY);
     await page.reload();
 
-    await replayStartFlow(page);
+    await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
+    await page.getByRole('button', { name: 'Bắt đầu' }).click();
+    await page.locator('[data-husband-id="husband_01"]').click();
+    await page.locator('[data-level-tab="case_01"]').click();
 
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeVisible();
-    await expect(page.getByText(/1 manh mối đã ghim/)).toBeVisible();
-    await page.getByRole('button', { name: 'Bắt đầu lại màn này' }).click();
-    await expect(page.getByText('Tiếp Tục Điều Tra?')).toBeHidden();
-    await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /0 manh mối/);
+    const caseCta = page.locator('[data-case-id="case_01"]');
+    await expect(caseCta).toContainText('Tiếp tục điều tra');
+    await caseCta.click();
 
-    // Restart clears the saved session.
-    await expect.poll(() => readSavedSession(page)).toBeNull();
+    // Skips briefing and dives straight into phone lockscreen with saved progress intact.
+    await expect(page.locator('[data-phone-lockscreen]')).toBeVisible();
+    await unlockBySwipeUp(page);
+    await expect(page.getByText('Tiếp Tục Điều Tra?')).toHaveCount(0);
+    await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
 
     expect(errors).toEqual([]);
   });
 
-  test('gates locked levels in the level picker with a warning banner', async ({ page }) => {
+  test('shows later levels as coming soon in the case file browser', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
     await page.goto('/');
-    await page.getByRole('button', { name: 'Chạm để bắt đầu' }).click();
+    await page.getByRole('button', { name: 'Bắt đầu' }).click();
+    await page.locator('[data-husband-id="husband_01"]').click();
+    await page.locator('[data-level-tab="case_02"]').click();
 
-    const locked = page.locator('[data-level-unlocked="false"]').first();
-    await expect(locked).toBeVisible();
-    await expect(locked).toHaveAttribute('aria-disabled', 'true');
-    // aria-disabled (not the disabled attribute) keeps the card tappable so it can explain itself.
-    await locked.click({ force: true });
-
-    await expect(page.getByRole('alert')).toHaveText('Bạn cần vượt qua màn chơi trước để mở khóa màn này');
-    // Still on the picker: no briefing or lock screen opened.
-    await expect(page.getByRole('button', { name: /Mở điện thoại/ })).toHaveCount(0);
+    const comingSoon = page.locator('[data-level-file="case_02"]');
+    await expect(comingSoon).toHaveAttribute('data-level-coming-soon', 'true');
+    await expect(comingSoon).toContainText('Sắp ra mắt');
+    // A coming-soon file has no start button and tapping it opens nothing.
+    await expect(comingSoon.locator('[data-case-id]')).toHaveCount(0);
+    await comingSoon.click();
+    await expect(page.getByRole('button', { name: /Bắt đầu điều tra/ })).toHaveCount(0);
     await expect(page.locator('[data-phone-lockscreen]')).toHaveCount(0);
 
     expect(errors).toEqual([]);

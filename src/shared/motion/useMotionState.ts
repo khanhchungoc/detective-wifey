@@ -11,7 +11,11 @@ export function useMotionState<T>(initial: T | (() => T), mode: 'navigation' | '
     const next = typeof action === 'function' ? (action as (state: T) => T)(previous) : action;
     if (Object.is(previous, next)) return;
     latest.current = next;
-    const kind = mode === 'sheet' || mode === 'overlay' ? (next == null || next === false ? 'sheet-out' : 'sheet-in')
+    if (mode === 'sheet') {
+      setValue(next);
+      return;
+    }
+    const kind = mode === 'overlay' ? (next == null || next === false ? 'sheet-out' : 'sheet-in')
       : mode === 'fade' ? 'fade' : navigationMotion(previous, next);
     transition(kind, () => setValue(next));
   }, [mode]);

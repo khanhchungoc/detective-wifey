@@ -1,4 +1,4 @@
-import { useId, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useCallback, useId, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { useSwipeBack } from '../gestures/useSwipeBack';
 
@@ -10,15 +10,78 @@ interface BottomSheetProps {
 }
 
 const DISMISS_DISTANCE = 80;
+const SHEET_OPEN_MS = 300;
+const SHEET_CLOSE_MS = 240;
+const SHEET_OPEN_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+const SHEET_CLOSE_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
-/** Shared accessible drawer: the contents scroll independently of its drag handle. */
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+
+/** Shared accessible drawer: compositor-thread WAAPI slide open/close, independent scroll from drag handle. */
 export function BottomSheet({ title, onClose, children, suspended = false }: BottomSheetProps) {
   const titleId = useId();
+  const backdropRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
-  const swipe = useSwipeBack({ onBack: onClose, enabled: !suspended });
+  const closingRef = useRef(false);
+  const animsRef = useRef<Animation[]>([]);
+
+  const cancelAnims = useCallback(() => {
+    for (const anim of animsRef.current) anim.cancel();
+    animsRef.current = [];
+  }, []);
+
+  const requestClose = useCallback(() => {
+    if (closingRef.current) return;
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    if (prefersReducedMotion() || !panel || typeof panel.animate !== 'function') {
+      onClose();
+      return;
+    }
+    closingRef.current = true;
+    cancelAnims();
+    panel.style.pointerEvents = 'none';
+    panel.style.transform = 'translate3d(0, 100%, 0)';
+    const panelAnim = panel.animate(
+      [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(0, 100%, 0)' }],
+      { duration: SHEET_CLOSE_MS, easing: SHEET_CLOSE_EASE },
+    );
+    const nextAnims: Animation[] = [panelAnim];
+    if (backdrop && typeof backdrop.animate === 'function') {
+      backdrop.style.opacity = '0';
+      nextAnims.push(backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: SHEET_CLOSE_MS, easing: SHEET_CLOSE_EASE }));
+    }
+    animsRef.current = nextAnims;
+    const finish = () => {
+      closingRef.current = false;
+      onClose();
+    };
+    void panelAnim.finished.then(finish, finish);
+  }, [cancelAnims, onClose]);
+
+  const swipe = useSwipeBack({ onBack: requestClose, enabled: !suspended });
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    if (prefersReducedMotion() || !panel || typeof panel.animate !== 'function') return undefined;
+    cancelAnims();
+    const anims: Animation[] = [
+      panel.animate(
+        [{ transform: 'translate3d(0, 100%, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
+        { duration: SHEET_OPEN_MS, easing: SHEET_OPEN_EASE },
+      ),
+    ];
+    if (backdrop && typeof backdrop.animate === 'function') {
+      anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: SHEET_OPEN_EASE }));
+    }
+    animsRef.current = anims;
+    return () => cancelAnims();
+  }, [cancelAnims]);
 
   useLayoutEffect(() => {
     if (suspended) return;
@@ -32,7 +95,7 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
-      onClose();
+      requestClose();
     }
     if (event.key !== 'Tab') return;
     const focusable = panelRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), [href], [tabindex="0"]');
@@ -50,8 +113,9 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
 
   return (
     <div
-      className="absolute inset-0 z-40 flex flex-col justify-end bg-black/45 backdrop-blur-sm"
-      onClick={event => { if (!suspended && event.target === event.currentTarget) onClose(); }}
+      ref={backdropRef}
+      className="absolute inset-0 z-40 flex flex-col justify-end bg-black/50 will-change-[opacity]"
+      onClick={event => { if (!suspended && event.target === event.currentTarget) requestClose(); }}
     >
       <div
         {...swipe}
@@ -60,7 +124,8 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
         aria-modal={!suspended}
         aria-labelledby={titleId}
         onKeyDown={handleKeyDown}
-        className="ios-sheet flex max-h-[90%] min-h-0 flex-col rounded-t-[24px] bg-white text-[#111827] shadow-2xl"
+        style={{ backfaceVisibility: 'hidden' }}
+        className="ios-sheet flex max-h-[90%] min-h-0 flex-col rounded-t-[24px] bg-white text-[#111827] shadow-2xl will-change-transform"
       >
         <header
           className="shrink-0 px-4 pb-2 pt-3"
@@ -78,14 +143,14 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
             dragStart.current = null;
             if (start && contentRef.current?.scrollTop === 0 && event.clientY - start.y >= DISMISS_DISTANCE && Math.abs(event.clientX - start.x) < event.clientY - start.y) {
               event.stopPropagation();
-              onClose();
+              requestClose();
             }
           }}
         >
           <div aria-hidden="true" className="mx-auto mb-2 h-[5px] w-9 rounded-full bg-[#E5E7EB]" />
           <div className="flex items-center justify-between gap-2">
             <h2 id={titleId} className="min-w-0 break-words text-xl font-semibold">{title}</h2>
-            <button ref={closeRef} type="button" onClick={onClose} aria-label={`Đóng ${title.toLocaleLowerCase('vi')}`} className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-[14px]">
+            <button ref={closeRef} type="button" onClick={requestClose} aria-label={`Đóng ${title.toLocaleLowerCase('vi')}`} className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-[14px]">
               <IoClose aria-hidden="true" className="h-6 w-6" />
             </button>
           </div>

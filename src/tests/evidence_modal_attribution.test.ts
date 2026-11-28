@@ -29,14 +29,14 @@ describe('Evidence modal attribution boundary', () => {
     const onClose = vi.fn();
     const modal = UniversalEvidenceModal({
       isOpen: true,
-      item: { title: 'Đơn mua order_polo', snippet: 'Áo polo', suspectToTag: '',
-        source: { caseId: 'case_01', recordId: 'order_polo', title: 'Đơn mua order_polo', snippet: 'Áo polo' } },
+      item: { title: 'Đơn mua order_002', snippet: 'Áo polo', suspectToTag: '',
+        source: { caseId: 'case_01', recordId: 'order_002', title: 'Đơn mua order_002', snippet: 'Áo polo' } },
       onPinEvidence, onClose,
     });
     const pin = findButton(modal, 'Ghim');
     expect(pin?.props.disabled).toBe(false);
     (pin?.props.onClick as () => void)();
-    expect(onPinEvidence).toHaveBeenCalledExactlyOnceWith('Đơn mua order_polo');
+    expect(onPinEvidence).toHaveBeenCalledExactlyOnceWith('Đơn mua order_002');
     expect(onClose).toHaveBeenCalledOnce();
   });
 

@@ -73,16 +73,16 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
   });
 
   describe('Investigation Evidence Aggregation & Pinning', () => {
-    const caseId = 'case_hoang_01';
+    const caseId = 'case_01';
 
     it('pins identity-only conversation with empty body and isExplicitConversationPin: true', () => {
       const conversationSource: EvidenceSource = {
         caseId,
-        recordId: 'thread_thu_huong',
+        recordId: 'thread_901',
         title: 'Hương Em',
         snippet: '',
         kind: 'conversation',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         isExplicitConversationPin: true,
       };
@@ -94,7 +94,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const tagged = result.suspects[0];
       expect(tagged.displayName).toBe('Hương Em');
       expect(tagged.sourceApp).toBe('internet-messaging');
-      expect(tagged.conversationId).toBe('thread_thu_huong');
+      expect(tagged.conversationId).toBe('thread_901');
       expect(tagged.isExplicitConversationPin).toBe(true);
       expect(tagged.messages).toEqual([]);
       expect(tagged.evidence?.snippet).toBe('');
@@ -103,11 +103,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     it('aggregates multiple pinned messages from the same conversation into ONE clue card', () => {
       const conversationSource: EvidenceSource = {
         caseId,
-        recordId: 'thread_thu_huong',
+        recordId: 'thread_901',
         title: 'Hương Em',
         snippet: '',
         kind: 'conversation',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         isExplicitConversationPin: true,
       };
@@ -123,7 +123,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Em đợi anh ở khách sạn Metropole.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         eventTime: '12:10',
         eventDate: '28/09',
@@ -142,7 +142,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Đừng quên xóa tin nhắn nhé.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         eventTime: '12:15',
         eventDate: '28/09',
@@ -161,7 +161,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Em đợi anh ở sảnh.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         eventTime: '12:10',
       };
@@ -182,7 +182,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         title: 'Hương Em',
         snippet: 'Tin nhắn trước đó.',
         kind: 'message',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
       };
 
@@ -193,11 +193,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       // Now pin conversation explicitly
       const conversationSource: EvidenceSource = {
         caseId,
-        recordId: 'thread_thu_huong',
+        recordId: 'thread_901',
         title: 'Hương Em',
         snippet: '',
         kind: 'conversation',
-        conversationId: 'thread_thu_huong',
+        conversationId: 'thread_901',
         visibleAlias: 'Hương Em',
         isExplicitConversationPin: true,
       };
@@ -380,7 +380,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           displayName: 'Hương Em',
           sourceApp: 'internet-messaging' as const,
           timestamp: 100,
-          conversationId: 'thread_huong',
+          conversationId: 'thread_902',
           visibleAlias: 'Hương Em',
           isExplicitConversationPin: true,
           messages: [
@@ -388,7 +388,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           ],
           evidence: {
             caseId: 'case_1',
-            recordId: 'thread_huong',
+            recordId: 'thread_902',
             title: 'Hương Em',
             snippet: '',
           },
@@ -398,7 +398,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
       expect(nodes).toHaveLength(1);
       expect(nodes[0].visibleAlias).toBe('Hương Em');
-      expect(nodes[0].conversationId).toBe('thread_huong');
+      expect(nodes[0].conversationId).toBe('thread_902');
       expect(nodes[0].isExplicitConversationPin).toBe(true);
       expect(nodes[0].messages).toHaveLength(1);
       expect(nodes[0].messages![0].text).toBe('Gặp em nhé');
@@ -407,48 +407,48 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     it('derives separate nodes for distinct records sharing the same clueRefId', () => {
       const tagged = [
         {
-          suspectId: 'suspect_huong',
+          suspectId: 'suspect_01',
           displayName: 'Giao dịch: Com Nieu Pho Co',
           sourceApp: 'banking' as const,
           timestamp: 1000,
           evidence: {
             caseId: 'case_01',
-            recordId: 'tx_01',
-            clueRefId: 'CLUE-BANK-06',
+            recordId: 'tx_003',
+            clueRefId: 'CLUE-BANK-07',
             title: 'Giao dịch: Com Nieu Pho Co',
             snippet: '- 640.000 đ 15/10/2026 20:48\nCom Nieu Pho Co Thanh toan the',
           },
         },
         {
-          suspectId: 'suspect_huong',
-          displayName: 'Giao dịch: Nguyen Thi Thu Huong',
+          suspectId: 'suspect_01',
+          displayName: 'Giao dịch: Bé Ngọc',
           sourceApp: 'banking' as const,
           timestamp: 1001,
           evidence: {
             caseId: 'case_01',
-            recordId: 'tx_02',
-            clueRefId: 'CLUE-BANK-06',
-            title: 'Giao dịch: Nguyen Thi Thu Huong',
-            snippet: '+ 160.000 đ 15/10/2026 12:40\nNguyen Thi Thu Huong Hoan phan trua 14/10',
+            recordId: 'tx_005',
+            clueRefId: 'CLUE-BANK-07',
+            title: 'Giao dịch: Bé Ngọc',
+            snippet: '- 1.200.000 đ 15/10/2026 20:10\nCK',
           },
         },
       ];
 
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
       expect(nodes).toHaveLength(2);
-      expect(nodes.map(n => n.nodeId)).toEqual(['node_record_bank_receipt', 'node_bridge_name']);
-      expect(nodes.map(n => n.recordRefId)).toEqual(['tx_01', 'tx_02']);
+      expect(nodes.map(n => n.nodeId)).toEqual(['node_record_bank_receipt', 'node_banking_tx_005']);
+      expect(nodes.map(n => n.recordRefId)).toEqual(['tx_003', 'tx_005']);
     });
   });
 
   describe('CorkboardCanvas & UnorganizedDrawer Wireframe Compliance', () => {
     const sampleConversationNode: CaseGraphNode = {
-      nodeId: 'node_huong',
+      nodeId: 'node_903',
       type: 'record_clue',
       label: 'Hương Em',
       sourceAppId: 'internet-messaging',
-      recordRefId: 'thread_huong',
-      conversationId: 'thread_huong',
+      recordRefId: 'thread_902',
+      conversationId: 'thread_902',
       visibleAlias: 'Hương Em',
       isExplicitConversationPin: true,
       messages: [
@@ -464,7 +464,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     };
 
     it.each([
-      { type: 'record_clue' as const, conversationId: 'thread_huong', sourceAppId: 'internet-messaging', hasAvatar: true },
+      { type: 'record_clue' as const, conversationId: 'thread_902', sourceAppId: 'internet-messaging', hasAvatar: true },
       { type: 'alias' as const, sourceAppId: 'internet-messaging', hasAvatar: true },
       { type: 'suspect' as const, sourceAppId: undefined, hasAvatar: true },
       { type: 'record_clue' as const, visibleAlias: 'Mẹ Ở Quê', sourceAppId: 'phone', hasAvatar: true },
@@ -486,11 +486,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           onSeverEdge={vi.fn()} onNavigateToSource={vi.fn()} onCancelPairing={vi.fn()}
         />,
       );
-      const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={32} shape="square" />);
+      const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={26} shape="square" />);
       expect(html.includes(avatar)).toBe(hasAvatar);
       // App icon is a small badge on the picture's top-right corner, or stands alone without a picture.
       expect(html.includes('absolute -right-1.5 -top-1.5 z-10 h-4 w-4')).toBe(Boolean(node.sourceAppId) && hasAvatar);
-      expect(html.includes('h-6 w-6 rounded-[5px]')).toBe(Boolean(node.sourceAppId) && !hasAvatar);
+      expect(html.includes('h-5 w-5 rounded-[4px]')).toBe(Boolean(node.sourceAppId) && !hasAvatar);
       expect(html.includes('aria-label="Source app"')).toBe(Boolean(node.sourceAppId));
     });
 
@@ -532,7 +532,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           unmaskedSuspectIds={[]}
           activeContradictions={[]}
           selectedEdgeId={null}
-          selectedNodeId="node_huong"
+          selectedNodeId="node_903"
           onSelectNode={vi.fn()}
           onSelectCard={vi.fn()}
           onMoveNode={vi.fn()}
@@ -553,11 +553,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       expect(selectedHtml).toContain('mask-image:linear-gradient');
     });
 
-    it('auto-places tagged clues directly on corkboard canvas below existing cards in 3 centered columns', () => {
+    it('auto-places a tagged clue onto the open bottom row of the wide board, re-centered under the cluster', () => {
       const existingCards: PlacedNode[] = [
-        { nodeId: 'node_existing_1', type: 'record_clue', label: 'Váy lụa 1', x: 245, y: 160 },
-        { nodeId: 'node_existing_2', type: 'record_clue', label: 'Váy lụa 2', x: 495, y: 160 },
-        { nodeId: 'node_existing_3', type: 'record_clue', label: 'Váy lụa 3', x: 745, y: 160 },
+        { nodeId: 'node_existing_1', type: 'record_clue', label: 'Váy lụa 1', x: 296, y: 160 },
+        { nodeId: 'node_existing_2', type: 'record_clue', label: 'Váy lụa 2', x: 500, y: 160 },
+        { nodeId: 'node_existing_3', type: 'record_clue', label: 'Váy lụa 3', x: 704, y: 160 },
       ];
 
       const newClue: CaseGraphNode = {
@@ -568,15 +568,16 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
 
       const placed = placeNewNodesBelow(existingCards, [newClue]);
       expect(placed).toHaveLength(1);
-      expect(placed[0].y).toBeGreaterThan(160);
-      expect(placed[0].x).toBe(495); // Centered under the cluster
+      // Row still has room (up to 6), so the clue joins it at y = 160.
+      expect(placed[0].y).toBe(160);
+      expect(placed[0].x).toBeGreaterThan(704);
     });
 
     it('collapses legacy separate message cards from the same person into EXACTLY ONE card', () => {
       // Recreate the exact 3 legacy tags from the user screenshot:
       // 1. Tag for Anh Tuấn Thợ Điện
-      // 2. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_tuan_m4)
-      // 3. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_tuan_m5)
+      // 2. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_903_m4)
+      // 3. Tag for "Tin nhắn: Anh Tuấn Thợ Điện" (thread_903_m5)
       const legacyTags = [
         {
           suspectId: 'tag_1',
@@ -584,11 +585,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           sourceApp: 'internet-messaging' as const,
           timestamp: 100,
           evidence: {
-            caseId: 'hoang_01',
-            recordId: 'thread_tuan',
+            caseId: 'case_01',
+            recordId: 'thread_004',
             title: 'Anh Tuấn Thợ Điện',
             snippet: 'Áo anh em treo lên rồi, mai mang trả nhé.',
-            clueRefId: 'CLUE-ZOLA-07',
+            clueRefId: 'CLUE-ZOLA-10',
           },
         },
         {
@@ -597,8 +598,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           sourceApp: 'internet-messaging' as const,
           timestamp: 101,
           evidence: {
-            caseId: 'hoang_01',
-            recordId: 'thread_tuan_m4',
+            caseId: 'case_01',
+            recordId: 'thread_004_m4',
             title: 'Tin nhắn: Anh Tuấn Thợ Điện',
             snippet: 'Anh xem giúp em bản xuất bị lệch chữ ở trang cuối với.',
             eventTime: '13/10 10:10',
@@ -610,8 +611,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           sourceApp: 'internet-messaging' as const,
           timestamp: 102,
           evidence: {
-            caseId: 'hoang_01',
-            recordId: 'thread_tuan_m5',
+            caseId: 'case_01',
+            recordId: 'thread_004_m5',
             title: 'Tin nhắn: Anh Tuấn Thợ Điện',
             snippet: 'Đúng là em chọn nhầm vùng. Đủ trang rồi.',
             eventTime: '13/10 10:16',
@@ -623,7 +624,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       const normalized = normalizeTaggedSuspects(legacyTags);
       expect(normalized).toHaveLength(1);
       expect(normalized[0].displayName).toBe('Anh Tuấn Thợ Điện');
-      expect(normalized[0].conversationId).toBe('thread_tuan');
+      expect(normalized[0].conversationId).toBe('thread_004');
       expect(normalized[0].messages).toHaveLength(2);
       expect(normalized[0].messages![0].text).toBe('Anh xem giúp em bản xuất bị lệch chữ ở trang cuối với.');
       expect(normalized[0].messages![1].text).toBe('Đúng là em chọn nhầm vùng. Đủ trang rồi.');
@@ -637,7 +638,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
     });
 
     it('keeps the Zola conversation and order connection speculative', () => {
-      for (const chatId of ['node_alias_tuan', 'node_record_zola_chat']) {
+      for (const chatId of ['node_alias_01', 'node_record_booking']) {
         const { newEdge } = createEdgeBetweenNodes(
           LEVEL_01_KNOWLEDGE_GRAPH, [], chatId, 'node_record_ecommerce_order',
         );
@@ -646,7 +647,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       }
     });
 
-    it('renders crisp settled CSS zoom with 2D translate on the virtual plane (GPU transform applies only during active gestures)', () => {
+    it('renders crisp settled CSS zoom on the card plane and pure GPU scale on the fixed-size chalkboard surface', () => {
       const html = renderToStaticMarkup(
         <CorkboardCanvas
           placedNodes={[placedNode]}
@@ -665,9 +666,17 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
         />,
       );
 
-      expect(html).toContain('transform:translate(-875px, -1050px)');
+      expect(html).toContain('transform:translate3d(-875px, -1050px, 0);will-change:transform');
+      expect(html).toContain('transform:translate3d(-875px, -1050px, 0) scale(1.75);will-change:transform');
       expect(html).toContain('transform-origin:0 0');
       expect(html).toContain('zoom:1.75');
+      expect(html).toContain('class="notebook-board-surface" style="width:1800px;height:1200px"');
+      expect(html).toContain('notebook-board-frame');
+      expect(html).toContain('notebook-board-rail-top');
+      expect(html).toContain('decoding="async"');
+      expect(html).toContain('notebook-lamp-beam');
+      // 3D depth: overhead lamp tube (z-[4]) sits on the office wall BEHIND the board surface (z-[10]).
+      expect(html.indexOf('notebook-lamp-tube')).toBeLessThan(html.indexOf('notebook-board-surface'));
     });
 
     it('renders red strings for both alibi contradictions and verified key smoking-gun links, and yellow for neutral or speculative links', () => {

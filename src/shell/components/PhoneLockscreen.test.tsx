@@ -4,6 +4,8 @@ import type { PhoneLockscreenConfig } from '../../shared/contracts/game-flow';
 import {
   createInitialLockscreenState,
   isLockscreenSwipeUp,
+  lockscreenDragOffset,
+  shouldUnlockOnSwipe,
   lockscreenReducer,
   PasscodePadView,
   PhoneLockscreen,
@@ -11,9 +13,11 @@ import {
 } from './PhoneLockscreen';
 
 const level1Config: PhoneLockscreenConfig = {
+  narrativeStartIso: '2026-10-15T23:45:00',
   narrativeDate: 'Thứ Sáu, 14 tháng 11',
   narrativeTime: '23:45',
   batteryPercent: '42%',
+  wallpaperUrl: '/assets/wallpaper.webp',
   notifications: [
     {
       id: 'notif-1',
@@ -74,9 +78,12 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(html).toContain('Techcornbank');
     expect(html).toContain('from-rose-600 to-red-700');
     expect(html).toContain('Thông báo biến động số dư');
-    expect(html).toContain('bg-slate-950/55');
+    expect(html).toContain('bg-slate-950/55 backdrop-blur-xl');
+    expect(html).toContain('data-lockscreen-wallpaper="true"');
+    expect(html).toContain('data-lockscreen-ui="true"');
+    expect(html.indexOf('data-lockscreen-wallpaper="true"')).toBeLessThan(html.indexOf('data-lockscreen-ui="true"'));
     expect(html).toContain('data-lockscreen-notif-peek="true"');
-    expect(html).toContain('data-lockscreen-flashlight="true"');
+    expect(html).toContain('data-lockscreen-back="true"');
     expect(html).toContain('data-lockscreen-camera="true"');
     expect(html).not.toContain('data-lockscreen-home-bar');
     expect(html).toContain('touch-action:none');
@@ -234,3 +241,25 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(onPasscodeFailStrike).not.toHaveBeenCalled();
   });
 });
+
+describe('lockscreen swipe decision', () => {
+  it('never unlocks while the finger is still dragging (only on release)', () => {
+    expect(shouldUnlockOnSwipe('move', 0, -60)).toBe(false);
+    expect(shouldUnlockOnSwipe('move', 5, -96)).toBe(false);
+    expect(shouldUnlockOnSwipe('move', 0, -300)).toBe(false);
+  });
+
+  it('uses the base threshold on lift and on cancel', () => {
+    expect(shouldUnlockOnSwipe('end', 0, -44)).toBe(true);
+    expect(shouldUnlockOnSwipe('cancel', 0, -60)).toBe(true);
+    expect(shouldUnlockOnSwipe('end', 0, -20)).toBe(false);
+    expect(shouldUnlockOnSwipe('cancel', 90, -50)).toBe(false);
+  });
+
+  it('makes the lockscreen overlay panel follow the finger 1:1 upward only', () => {
+    expect(lockscreenDragOffset(40)).toBe(0);
+    expect(lockscreenDragOffset(-50)).toBe(-50);
+    expect(lockscreenDragOffset(-300)).toBe(-300);
+  });
+});
+

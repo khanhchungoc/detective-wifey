@@ -7,21 +7,21 @@
   ],
   "orders": [
     {
-      "orderId": "POSH-DF01",
+      "orderId": "order_024",
       "title": "Áo thun nam Cotton basic thoáng mát",
       "sku": "Màu Đen • Size L",
       "price": "149.000 đ",
       "status": "Giao hàng thành công",
-      "recipient": "Người nhận: Hoàng (0912***456)",
+      "recipient": "Người nhận: Thịnh (0912***456)",
       "deliveryAddress: ": "Địa chỉ nhà riêng"
     },
     {
-      "orderId": "POSH-DF02",
+      "orderId": "order_025",
       "title": "Cáp sạc Baseus Type-C to Type-C 100W",
       "sku": "Dài 1.5m",
       "price": "95.000 đ",
       "status": "Giao hàng thành công",
-      "recipient": "Người nhận: Hoàng (0912***456)",
+      "recipient": "Người nhận: Thịnh (0912***456)",
       "deliveryAddress": "Địa chỉ nhà riêng"
     }
   ]

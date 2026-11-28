@@ -152,7 +152,7 @@ timestamp: "2026-11-27"
 >   2. **Step 2 (Confrontation Confirmation)**: Tilted Polaroid face-off (Husband vs Suspect) linked by a red string, 5-segment conviction strength indicator (`Tỉ lệ thành công`), **Deductive Linkage Bridges** (`verifiedStringsList` pairing connected clues via relationship bridge badges instead of raw text lists), and a red embossed dossier stamp CTA (`MÀY DÁM LỪA BÀ!`).
 >
 > **Interrogation Room & COD Cold War D-Pad (`ConfrontationModal`, `z-80`)**: Fullscreen 3-tier vertical interrogation room (`max-w-[480px] h-[100dvh]`, `#080B0F` / `#0B1017` dark concrete stage) driven by `caseConfig.confrontationScript` (with automatic fallback to tiered evaluation when `confrontationScript` is absent):
->   1. **Top Tier (Noir Spotlight Stage & Comic Portrait)**: Industrial overhead lamp casting a volumetric top-down spotlight cone (`transform` + `opacity` compositor-only pulse) onto `HusbandCharacterImage` (`hoang-comic-{confident,smug,nervous,broken}.svg` modeled on the OS wallpaper persona), flanked by a `44x44px` close button, discrete header (`ĐỐI CHẤT · HOÀNG`), and `usedStrikes/maxStrikes` pill.
+>   1. **Top Tier (Noir Spotlight Stage & Comic Portrait)**: Industrial overhead lamp casting a volumetric top-down spotlight cone (`transform` + `opacity` compositor-only pulse) onto `HusbandCharacterImage` (`husband-01-comic-{confident,smug,nervous,broken}.svg` modeled on the OS wallpaper persona), flanked by a `44x44px` close button, discrete header (`ĐỐI CHẤT · HOÀNG`), and `usedStrikes/maxStrikes` pill.
 >   2. **Middle Tier (`- • -` Progress Rail & Subtitle Card)**: Elastic minimalist `- • -` progress indicator (`role="progressbar"`, completed steps as `-` dashes, active step as glowing `•` dot, upcoming steps as muted `-` dashes), current beat `topic` header, and a darkroom subtitle card (`font-sans`, `text-ios-callout` / `text-ios-body`, zero hardcoded narrative strings).
 >   3. **Bottom Tier (COD Cold War Cross / D-Pad Selector)**: Central `44x44px` vector tactical reticle (`ColdWarReticleSvg` highlighting active cardinal ticks) surrounded by `up` / `left` / `right` / `down` choice buttons (`min-h-[48px]` to `min-h-[54px]`, `text-ios-footnote` / `text-ios-subheadline`, supporting desktop `ArrowUp`/`ArrowRight`/`ArrowDown`/`ArrowLeft` and `Escape` keys plus `useSwipeBack`).
 
@@ -161,15 +161,15 @@ timestamp: "2026-11-27"
 │ [X]              ĐỐI CHẤT · HOÀNG          [Scale 0/5] │
 │                   ▄▄▄▄▄▄▄▄▄▄▄▄▄▄                       │
 │                ╱   (Spotlight)    ╲                    │
-│               ╱  [ Comic Hoàng ]   ╲                   │
+│               ╱  [ Comic Thịnh ]   ╲                   │
 │              ╱  (confident->broken) ╲                  │
 ├────────────────────────────────────────────────────────┤
 │                     -  •  -  -                         │
 │              ANH TUẤN THỢ ĐIỆN LÀ AI?                  │
 │  ┌──────────────────────────────────────────────────┐  │
-│  │ Vợ: "Hoàng, anh có gì lừa dối tôi không?"        │  │
+│  │ Vợ: "Thịnh, anh có gì lừa dối tôi không?"        │  │
 │  │──────────────────────────────────────────────────│  │
-│  │ Hoàng                             Khoanh tay     │  │
+│  │ Thịnh                             Khoanh tay     │  │
 │  │ "Lừa dối gì? Anh họp tới tối mịt mới về..."      │  │
 │  └──────────────────────────────────────────────────┘  │
 ├────────────────────────────────────────────────────────┤
@@ -184,9 +184,9 @@ timestamp: "2026-11-27"
 
 * **Confrontation Motion Vocabulary (`confrontationMotion.ts` & `HusbandCharacterImage.tsx`)**:
   * **Narrative vs Responsive**: System-driven dialogue, mood cross-fades, and spotlight shifts use `NARRATIVE_IN` (`240ms` ease-out) and faster `NARRATIVE_OUT` (`160ms`, ~0.7x entrance). Direct button touches use `active:scale-[0.97] active:opacity-75` (`85ms`) and `useSwipeBack`.
-  * **Two-Spring Discipline**: `SNAP` (`stiffness: 400, damping: 40, mass: 1`, 0% overshoot) drives D-pad cluster transitions with `40ms` stagger across up to 4 buttons; `POP` (`stiffness: 400, damping: 26, mass: 1`, ~6.8% overshoot <= 8%) is reserved strictly for critical evidence hit recoil on Hoàng (`hitTrigger`) and stamping the final `End` verdict badge.
+  * **Two-Spring Discipline**: `SNAP` (`stiffness: 400, damping: 40, mass: 1`, 0% overshoot) drives D-pad cluster transitions with `40ms` stagger across up to 4 buttons; `POP` (`stiffness: 400, damping: 26, mass: 1`, ~6.8% overshoot <= 8%) is reserved strictly for critical evidence hit recoil on Thịnh (`hitTrigger`) and stamping the final `End` verdict badge.
   * **Compositor & Accessibility Guardrails**: Animates exclusively `transform` and `opacity` (idle breathing, hit recoil, `broken` micro-tremble, spotlight pulse) and collapses all spatial motion to `150ms` opacity cross-fade under `useReducedMotion()`.
 * **Scripted Branching & Legacy Fallback Outcomes**:
-  * **Scripted False Branch (`phase: 'failed'`, `husbandMood: 'smug'`)**: Selecting a red herring, accusing the wrong suspect, or lacking any required canonical edge (`requiredEdgeIds`) triggers Hoàng's `smug` rebuttal, locks `canAccuse = false` (zero accusation/verdict buttons rendered), displays only `[Quay lại điều tra]`, and deducts **+1 strike** upon exiting the room.
+  * **Scripted False Branch (`phase: 'failed'`, `husbandMood: 'smug'`)**: Selecting a red herring, accusing the wrong suspect, or lacking any required canonical edge (`requiredEdgeIds`) triggers Thịnh's `smug` rebuttal, locks `canAccuse = false` (zero accusation/verdict buttons rendered), displays only `[Quay lại điều tra]`, and deducts **+1 strike** upon exiting the room.
   * **Scripted True Chain -> `End` (`confident -> nervous -> broken -> ending -> resolved`)**: Clearing every beat unlocks `script.ending` choices on the D-pad (e.g., divorce vs forgive), then stamps the case verdict (`BẮT QUẢ TANG NGOẠI TÌNH` / `VẠCH TRẦN SUGAR DADDY` / `MINH OAN CHỒNG VÔ TỘI`), 3 stars, Wife Title, comedic roast, `[Tạo thẻ Roast khoe MXH]`, and level progression CTA.
   * **Fallback Tiered Mode (Levels without `confrontationScript`, e.g. Level 2 & Level 3)**: Retains M1 (0 stars + 1 strike), M2 (1-2 stars partial conviction), and M3 (3 stars full confession).

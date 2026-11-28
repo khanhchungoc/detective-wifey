@@ -33,7 +33,7 @@ As a **Player**, I want to open and inspect group chat threads in Zola to examin
 #### AC02: Multi-Participant Message Feed & Visual Styling
 1. The conversation canvas renders with a subtle gray-blue background (`#E5EBF0`), alternating incoming participant bubbles and outgoing husband bubbles.
 2. Incoming participant message bubbles render with white background (`#FFFFFF`), rounded borders, sender display name displayed at the top of the bubble styled with their assigned unique identity color token (e.g. Amber `#B45309`, Emerald `#007A5A`, Orange `#D97706`), message text, and timestamp. Individual participant profile avatars are omitted from the conversation feed.
-3. Outgoing messages from husband Nguyễn Huy Hoàng render aligned to the right with light blue background (`#D2F4FF`), message text, timestamp, and read receipt indicator (`[Read]`).
+3. Outgoing messages from husband Nguyễn Huy Thịnh render aligned to the right with light blue background (`#D2F4FF`), message text, timestamp, and read receipt indicator (`[Read]`).
 4. Chronological date divider capsules render centered with background `#B4B9BF` and 11px white text (e.g. `[ 10:56 ]`, `[ 13:14 13/10/2026 ]`).
 5. Parody mascot stickers (Ami Fat Cat) render centered within the conversation timeline as configured by the level case schema.
 6. Message bubbles support floating reaction badges attached to the bottom-right corner displaying reaction glyphs and counters (e.g., `[Like: 1]`, `[Laugh: 1]`, `[Surp: 2]`).

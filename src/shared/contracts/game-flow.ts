@@ -12,8 +12,6 @@ export type GameFlowStage =
   | 'phone-lockscreen'
   | 'phone-home';
 
-export type Level0Status = 'not_started' | 'skipped' | 'completed';
-
 export interface WifeProfile {
   displayName: string;
   age: number;
@@ -30,9 +28,11 @@ export interface HusbandProfile {
   age: number;
   occupation: string;
   teaserQuote: string;
+  /** SSOT for the husband's persona notes; the case briefing renders these. */
   personaTraits?: string[];
-  wifeAnchor?: string;
+  /** SSOT for the wife's profile; the case briefing renders this. */
   wifeProfile?: WifeProfile;
+  /** Ignored when comingSoon: the selector renders a redacted silhouette instead. */
   portraitUrl: string;
   comingSoon?: boolean;
 }
@@ -45,17 +45,20 @@ export interface LevelCardItem {
   summary: string;
   activeAppCount: number;
   allowedStrikes: number;
-  isPractice?: boolean;
+  /** Màn 0 guide file. Never starts a case; tutorial content is built later. */
+  isGuide?: boolean;
+  /** Visible but not playable yet (e.g. the Màn 0 guide before its content ships). */
+  comingSoon?: boolean;
   unlocked: boolean;
   bestStars?: number;
   lockHint?: string;
-  level0Status?: Level0Status;
-  recommended?: boolean;
 }
 
 export interface IntroDialogueBeat {
   beatId: string;
   speaker: string;
+  /** Picks the portrait shown while this beat plays. */
+  speakerRole: 'husband' | 'wife';
   locationTime: string;
   mood: ConfrontationMood;
   line: string;
@@ -72,13 +75,11 @@ export interface CaseBriefingData {
   husbandOccupation: string;
   husbandPortraitUrl: string;
   personaTraits?: string[];
-  wifeAnchor?: string;
   wifeProfile?: WifeProfile;
+  /** Provoking headline shown first on the briefing. Not rules or tutorial text. */
+  hookQuestion: string;
   statedAlibi: string;
   suspicionHook: string;
-  activeAppCount: number;
-  allowedStrikes: number;
-  lockModeLabel: string;
   introBeats: IntroDialogueBeat[];
 }
 
@@ -95,6 +96,9 @@ export interface LockscreenNotificationItem {
 }
 
 export interface PhoneLockscreenConfig {
+  /** Story clock start as local ISO datetime (e.g. 2026-10-15T23:45:00). SSOT for every in-phone clock. */
+  narrativeStartIso: string;
+  /** Short lockscreen date label derived from narrativeStartIso. */
   narrativeDate: string;
   narrativeTime: string;
   batteryPercent: string;

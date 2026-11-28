@@ -1,26 +1,279 @@
+:root {
+  --in-oklab: ;
+}
+
+@supports (background: linear-gradient(in oklab, white, black)) {
+  :root {
+    --in-oklab: in oklab;
+  }
+}
+
 .wife-notebook {
   color-scheme: dark;
   --notebook-bg: #080b0f;
   --notebook-canvas: #0f151d;
-  --notebook-paper: #f5f1e8;
-  --notebook-border: #c9bfae;
+  --notebook-frame: #1b2129;
+  /* Warm readable aged paper & border so handwritten text stays crisp and legible on the dark board */
+  --notebook-paper: #efe9dc;
+  --notebook-border: #c2b7a3;
   position: relative;
 }
 
-/* Cold War chalkboard evidence board: unlit base + chalk map texture + edge falloff (lit solely by overhead lamp) */
+/* Dark room behind the evidence board (visible past the board frame) */
 .notebook-cardboard {
-  background-color: var(--notebook-canvas);
-  background-image:
-    linear-gradient(to top, rgba(4, 6, 9, 0.88) 0%, rgba(4, 6, 9, 0.36) 24%, transparent 55%),
-    radial-gradient(ellipse 96% 86% at 50% 10%, transparent 38%, rgba(4, 6, 9, 0.78) 100%),
-    url('./assets/chalkboard-map.png');
-  background-size: 100% 100%, 100% 100%, 680px 680px;
+  container-type: size;
+  background-color: var(--notebook-bg);
   box-shadow:
     inset 12px 0 24px rgba(0, 0, 0, 0.68),
     inset -12px 0 24px rgba(0, 0, 0, 0.68);
+  /* Exact neon bar geometry matched to object-cover detective-office-wall.webp (768x1376) */
+  --lamp-width: calc(0.4987 * max(100cqw, 55.814cqh));
+  --lamp-height: calc(0.0065 * max(100cqh, 179.167cqw));
+  --lamp-top: calc(50cqh - 0.4339 * max(100cqh, 179.167cqw));
 }
 
-/* Crisp font rendering and cool-gray physical paper texture for pinned evidence cards */
+@media (min-aspect-ratio: 1/1) {
+  .notebook-cardboard {
+    /* Exact neon bar geometry matched to object-cover detective-office-wall-desktop.webp (1440x804) */
+    --lamp-width: calc(0.2521 * max(100cqw, 179.104cqh));
+    --lamp-height: calc(0.0062 * max(100cqh, 55.833cqw));
+    --lamp-top: calc(50cqh - 0.4552 * max(100cqh, 55.833cqw));
+  }
+}
+
+/* Cold War chalkboard surface: fixed 1800x1200 GPU-scaled layer (no CSS zoom)
+   wrapped in a physical 4-rail mitered dark walnut wooden frame. */
+.notebook-board-surface {
+  position: relative;
+  background-color: var(--notebook-canvas);
+}
+
+.notebook-board-frame {
+  position: absolute;
+  inset: -28px;
+  border-radius: 4px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.72);
+  pointer-events: none;
+}
+
+/* Top & bottom wooden rails: horizontal wood grain running lengthwise */
+.notebook-board-rail-top,
+.notebook-board-rail-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background-color: #362419;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-top {
+  top: 0;
+  border-top: 3px solid #553c2a;
+  border-bottom: 2px solid #1e120b;
+  background-image:
+    linear-gradient(180deg, rgba(132, 98, 70, 0.28) 0%, rgba(42, 28, 19, 0.08) 65%, rgba(12, 7, 4, 0.42) 100%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-bottom {
+  bottom: 0;
+  border-top: 2px solid #493324;
+  border-bottom: 3px solid #1b100a;
+  background-image:
+    linear-gradient(180deg, rgba(92, 66, 46, 0.18) 0%, rgba(28, 18, 12, 0.2) 60%, rgba(8, 4, 2, 0.58) 100%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+/* Left & right wooden stiles: vertical wood grain with 45-degree mitered corners */
+.notebook-board-rail-left,
+.notebook-board-rail-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  background-color: #342217;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-left {
+  left: 0;
+  border-left: 3px solid #4b3424;
+  border-right: 2px solid #1e120b;
+  clip-path: polygon(0 0, 100% 28px, 100% calc(100% - 28px), 0 100%);
+  background-image:
+    linear-gradient(90deg, rgba(114, 82, 58, 0.22) 0%, rgba(36, 24, 16, 0.1) 65%, rgba(12, 7, 4, 0.42) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-rail-right {
+  right: 0;
+  border-left: 2px solid #493324;
+  border-right: 3px solid #1d120b;
+  clip-path: polygon(0 28px, 100% 0, 100% 100%, 0 calc(100% - 28px));
+  background-image:
+    linear-gradient(90deg, rgba(96, 68, 48, 0.18) 0%, rgba(30, 20, 13, 0.14) 65%, rgba(10, 5, 3, 0.5) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(14, 8, 4, 0.26) 0px,
+      rgba(14, 8, 4, 0.26) 2px,
+      transparent 2px,
+      transparent 7px,
+      rgba(98, 70, 48, 0.16) 7px,
+      rgba(98, 70, 48, 0.16) 10px,
+      transparent 10px,
+      transparent 18px
+    );
+}
+
+.notebook-board-recess {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-shadow:
+    inset 0 0 0 3px rgba(12, 7, 4, 0.78),
+    inset 0 6px 14px rgba(0, 0, 0, 0.55);
+}
+
+/* Focus view dims the detective office wall and overhead lamp behind the board (compositor opacity only, no backdrop-filter blur pass). */
+.notebook-wall-veil {
+  background-color: rgba(2, 4, 8, 0.78);
+  opacity: 0;
+  transition: opacity 320ms ease-out;
+  will-change: opacity;
+}
+
+[data-board-mode='focus'] .notebook-wall-veil {
+  opacity: 1;
+}
+
+/* Subtle bar-shaped overhead fluorescent light wash originating across the full width of the neon tube (wall view only) */
+.notebook-lamp-beam {
+  top: var(--lamp-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--lamp-width) * 1.45);
+  height: 52%;
+  background-image:
+    radial-gradient(
+      ellipse 46% 16% at 50% 0% var(--in-oklab),
+      rgba(224, 238, 255, 0.14) 0%,
+      rgba(198, 222, 252, 0.05) 58%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 50% 72% at 50% 0% var(--in-oklab),
+      rgba(196, 220, 250, 0.075) 0%,
+      rgba(176, 206, 244, 0.025) 52%,
+      transparent 100%
+    );
+  mix-blend-mode: screen;
+  opacity: 1;
+  transition: opacity 320ms ease-out;
+  will-change: opacity;
+}
+
+/* Crisp fluorescent bar aligned to the exact shape of the overhead neon fixture */
+.notebook-lamp-tube {
+  top: var(--lamp-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--lamp-width);
+  height: max(4px, var(--lamp-height));
+  border-radius: 1.5px;
+  background-image: linear-gradient(
+    180deg var(--in-oklab),
+    rgba(240, 248, 255, 0.96) 0%,
+    rgba(222, 238, 255, 0.88) 100%
+  );
+  box-shadow:
+    0 0 8px 1px rgba(224, 240, 255, 0.52),
+    0 4px 16px 2px rgba(186, 214, 250, 0.2);
+  opacity: 1;
+  transition: opacity 320ms ease-out;
+  will-change: opacity;
+}
+
+/* Hide room light completely when zoomed into the board */
+[data-board-mode='focus'] .notebook-lamp-beam,
+[data-board-mode='focus'] .notebook-lamp-tube {
+  opacity: 0;
+}
+
+@keyframes notebook-lamp-flicker {
+  0%, 74%, 78%, 82%, 100% { opacity: 1; }
+  75.5% { opacity: 0.72; }
+  77% { opacity: 0.96; }
+  80% { opacity: 0.78; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-board-mode='wall'] .notebook-lamp-beam,
+  [data-board-mode='wall'] .notebook-lamp-tube {
+    animation: notebook-lamp-flicker 7.5s linear infinite;
+  }
+}
+
+/* Subtle screen-fixed edge vignette; never repaints during pan/zoom */
+.notebook-board-shade {
+  background-image:
+    linear-gradient(to top, rgba(4, 6, 9, 0.62) 0%, rgba(4, 6, 9, 0.18) 20%, transparent 45%),
+    radial-gradient(ellipse 98% 88% at 50% 45%, transparent 56%, rgba(4, 6, 9, 0.52) 100%);
+}
+
+/* Crisp font rendering and muted dim-room physical paper texture for pinned evidence cards */
 .corkboard-node-card {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,38 +284,37 @@
 .corkboard-paper-card {
   background-color: var(--notebook-paper);
   background-image:
-    /* Horizontal & diagonal paper fold creases */
-    linear-gradient(178deg, transparent 47%, rgba(120, 96, 68, 0.07) 49%, rgba(255, 255, 255, 0.42) 50.5%, transparent 54%),
-    linear-gradient(104deg, transparent 36%, rgba(120, 96, 68, 0.05) 37.5%, rgba(255, 255, 255, 0.3) 38.5%, transparent 41%),
-    /* Soft aged tea-stain / hoen ố blotches, kept light for contrast with yellow sticky note */
-    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(176, 144, 104, 0.11) 0%, transparent 70%),
-    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(168, 136, 98, 0.09) 0%, transparent 68%),
-    radial-gradient(ellipse 46% 36% at 72% 72%, rgba(160, 128, 92, 0.06) 0%, transparent 72%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, transparent 45%);
+    /* Subtle horizontal & diagonal paper fold creases */
+    linear-gradient(178deg, transparent 47%, rgba(90, 72, 50, 0.06) 49%, rgba(255, 255, 255, 0.24) 50.5%, transparent 54%),
+    linear-gradient(104deg, transparent 36%, rgba(90, 72, 50, 0.04) 37.5%, rgba(255, 255, 255, 0.16) 38.5%, transparent 41%),
+    /* Light aged tea-stain warmth without darkening text contrast */
+    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(145, 118, 82, 0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(135, 110, 76, 0.07) 0%, transparent 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 45%, rgba(40, 32, 22, 0.05) 100%);
   background-size: 100% 100%;
   box-shadow:
-    inset 0 0 14px rgba(138, 112, 82, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    inset 0 0 12px rgba(48, 36, 22, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
-/* Yellow sticky note title tab stuck onto top-left of evidence card */
+/* Warm ochre sticky note title tab stuck onto top-left of evidence card */
 .corkboard-sticky-note {
-  background-color: #f6e271;
+  background-color: #ebda82;
   background-image:
-    linear-gradient(176deg, rgba(190, 150, 20, 0.08) 0%, rgba(255, 252, 220, 0.14) 38%, rgba(210, 170, 30, 0.1) 100%);
+    linear-gradient(176deg, rgba(140, 108, 28, 0.08) 0%, rgba(255, 248, 205, 0.22) 36%, rgba(120, 92, 22, 0.1) 100%);
   border: none;
   box-shadow:
-    2px 4px 6px -2px rgba(0, 0, 0, 0.26),
-    0 1px 2px rgba(0, 0, 0, 0.12);
+    2px 4px 6px -2px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.16);
 }
 
-/* Square white-bordered film photo frame for suspect/contact avatar */
+/* Muted film photo frame for suspect/contact avatar */
 .corkboard-film-frame {
-  background-color: #fbfaf7;
+  background-color: #d2cdc2;
   border: none;
   box-shadow:
-    1px 3px 5px -1px rgba(0, 0, 0, 0.3),
-    0 1px 2px rgba(0, 0, 0, 0.14);
+    1px 3px 5px -1px rgba(0, 0, 0, 0.34),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 /* Darkroom Cold War tray for Polaroid suspect selection inside confirmation modal */
@@ -71,7 +323,7 @@
   background-image:
     radial-gradient(ellipse 88% 52% at 50% 0%, rgba(226, 236, 248, 0.18) 0%, rgba(148, 163, 184, 0.07) 48%, transparent 80%),
     radial-gradient(ellipse 86% 78% at 50% 48%, rgba(148, 163, 184, 0.1) 0%, rgba(15, 23, 42, 0.55) 60%, rgba(5, 7, 10, 0.94) 100%),
-    url('./assets/chalkboard-map.png');
+    url('./assets/chalkboard-map.webp');
   background-size: 100% 100%, 100% 100%, 480px 480px;
   box-shadow:
     inset 0 6px 16px rgba(0, 0, 0, 0.7),

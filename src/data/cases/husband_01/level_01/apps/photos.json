@@ -1,0 +1,106 @@
+{
+  "albums": [
+    {
+      "id": "album_001",
+      "title": "Ảnh gần đây",
+      "photos": [
+        {
+          "id": "photo_001",
+          "title": "Giày đá bóng",
+          "date": "14/10",
+          "description": "14/10 - Đôi giày đá bóng đang phơi trên giá."
+        },
+        {
+          "id": "photo_002",
+          "title": "Bưởi mẹ gửi",
+          "date": "14/10",
+          "description": "14/10 - Bưởi đặt nơi thoáng bên cửa sổ."
+        },
+        {
+          "id": "photo_003",
+          "title": "Bình nóng lạnh hỏng",
+          "date": "13/10",
+          "description": "13/10 - Ảnh chụp bình nóng lạnh hỏng, mẹ gửi."
+        },
+        {
+          "id": "photo_004",
+          "title": "Bảng họp",
+          "date": "13/10",
+          "description": "13/10 - Ghi chú kiểm tra giỏ hàng trên bảng nhóm."
+        },
+        {
+          "id": "photo_005",
+          "title": "Gia đình ở quê",
+          "date": "12/10",
+          "description": "12/10 - Ảnh cả nhà chụp trong sân ở quê."
+        },
+        {
+          "id": "photo_006",
+          "title": "Đồ siêu thị",
+          "date": "12/10",
+          "description": "12/10 - Hai túi đồ siêu thị đặt cạnh cửa bếp."
+        },
+        {
+          "id": "photo_007",
+          "title": "Húng quế ban công",
+          "date": "11/10",
+          "description": "11/10 - Chậu húng quế bên lan can vừa được tưới."
+        },
+        {
+          "id": "photo_008",
+          "title": "Mâm cơm nhà",
+          "date": "11/10",
+          "description": "11/10 - Bữa cơm gia đình với canh và rau luộc."
+        },
+        {
+          "id": "photo_009",
+          "title": "Hộp bàn phím",
+          "date": "10/10",
+          "description": "10/10 - Hộp và tờ hướng dẫn ghép nối hai máy."
+        },
+        {
+          "id": "photo_010",
+          "title": "Bàn phím mới",
+          "date": "10/10",
+          "description": "10/10 - Bàn phím cơ màu nâu trên bàn làm việc."
+        },
+        {
+          "id": "photo_011",
+          "title": "Góc bàn làm việc",
+          "date": "27/09",
+          "description": "Bàn được dọn gọn sau khi thay dây sạc."
+        },
+        {
+          "id": "photo_012",
+          "title": "Lối vào sân bóng",
+          "date": "26/09",
+          "description": "Ảnh chụp bảng thông báo ở sân."
+        },
+        {
+          "id": "photo_013",
+          "title": "Sách kỹ thuật",
+          "date": "25/09",
+          "description": "Sách đang đọc có đánh dấu chương kiểm thử."
+        },
+        {
+          "id": "photo_014",
+          "title": "Túi đồ đi tập",
+          "date": "24/09",
+          "description": "Khăn và bình nước đã chuẩn bị."
+        },
+        {
+          "id": "photo_015",
+          "title": "Bữa sáng",
+          "date": "23/09",
+          "description": "Bánh mì và cốc cà phê ở nhà."
+        },
+        {
+          "id": "photo_016",
+          "title": "Chậu cây mới",
+          "date": "22/09",
+          "description": "Chậu húng quế vừa thay đất."
+        }
+      ]
+    }
+  ]
+}

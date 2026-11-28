@@ -30,7 +30,7 @@ Deliver an authentic, immersive game boot loading experience and branded parody 
 | Persona / Role | Commercial Model | Demographics & Literacy | Devices & Hardware | Ergonomics & Preferences | Accessibility & Constraints | Jobs To Be Done (JTBD) & Pain Points | Status |
 |---|---|---|---|---|---|---|---|
 | **Player (Jealous Wife)** | B2C (Casual Detective Gamer) | Casual mobile/web user; familiar with Vietnamese domestic comedy/drama tropes | Responsive mobile viewport (393px × 852px base) or centered desktop shell | Single-handed touch navigation; clear visual contrast; expects authentic smartphone feel | `prefers-reduced-motion` compliance; tap target $\ge 44 \times 44\text{px}$; no disruptive delays | Experience believable smartphone immersion and dramatic detective entry without sluggish loading delays | Confirmed |
-| **Husband (Nguyễn Huy Hoàng)** | Game Character / Target | Tech worker / corporate employee | Simulated iOS smartphone shell | N/A | N/A | Provide believable smartphone illusion hiding incriminating secrets | Confirmed |
+| **Husband (Nguyễn Huy Thịnh)** | Game Character / Target | Tech worker / corporate employee | Simulated iOS smartphone shell | N/A | N/A | Provide believable smartphone illusion hiding incriminating secrets | Confirmed |
 
 ### Activities
 - Loading the web game URL and observing asset preloading.

@@ -2,12 +2,14 @@ import type { CaseConfig, LevelMetadata } from '../../shared/contracts/case-sche
 import type {
   CaseBriefingData,
   HusbandProfile,
-  Level0Status,
   LevelCardItem,
+  LockscreenNotificationItem,
   PhoneLockscreenConfig,
   WifeProfile,
 } from '../../shared/contracts/game-flow';
-import wifeMinhThuUrl from './assets/wife-minh-thu.jpg';
+import wifeMinhThuUrl from './assets/wife-minh-thu.webp';
+// 3:4 head-and-shoulders dossier portrait (not the phone wallpaper).
+import husbandPortraitUrl from './assets/husband-01-dossier-portrait.webp';
 
 const WIFE_MINH_THU: WifeProfile = {
   displayName: 'Trần Minh Thư',
@@ -21,36 +23,23 @@ const WIFE_MINH_THU: WifeProfile = {
   ],
 };
 
-const LEVEL_0_STATUS_KEY = 'detective:v1:level0_status';
+// Story calendar: 15/10 is the night of Level 1 (a Thursday in 2026).
+const NARRATIVE_DATE_ISO = '2026-10-15';
 
-export function getLevel0Status(): Level0Status {
-  try {
-    const raw = typeof window !== 'undefined' ? window.localStorage.getItem(LEVEL_0_STATUS_KEY) : null;
-    if (raw === 'skipped' || raw === 'completed' || raw === 'not_started') return raw;
-  } catch {
-    // storage unavailable
-  }
-  return 'not_started';
+/** Short lockscreen date label, e.g. "Th 5, 15 thg 10". */
+export function formatNarrativeShortDate(date: Date): string {
+  const weekday = date.getDay() === 0 ? 'CN' : `Th ${date.getDay() + 1}`;
+  return `${weekday}, ${date.getDate()} thg ${date.getMonth() + 1}`;
 }
 
-export function setLevel0Status(status: Level0Status): void {
-  try {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(LEVEL_0_STATUS_KEY, status);
-    }
-  } catch {
-    // storage unavailable
-  }
-}
-
-export function buildHusbandProfiles(hoangPortraitUrl: string): HusbandProfile[] {
+export function buildHusbandProfiles(): HusbandProfile[] {
   return [
     {
-      husbandId: 'husband_hoang',
+      husbandId: 'husband_01',
       caseCode: 'HỒ SƠ #01',
-      displayName: 'Nguyễn Huy Hoàng',
-      fullName: 'Nguyễn Huy Hoàng',
-      age: 29,
+      displayName: 'Thịnh Doom',
+      fullName: 'Nguyễn Huy Thịnh',
+      age: 31,
       occupation: 'Tech Lead · Technosoft (Hà Nội)',
       teaserQuote: '"Sợ vợ số 1, lương nộp 90%, nhưng hay úp màn hình và kêu OT fix bug."',
       personaTraits: [
@@ -58,43 +47,42 @@ export function buildHusbandProfiles(hoangPortraitUrl: string): HusbandProfile[]
         'Hay úp màn hình, mang máy vào nhà tắm',
         'Cửa miệng: "OT fix bug cho kịp sprint"',
       ],
-      wifeAnchor: 'Vợ Minh Thư (28t): Áo/váy size M · Giày 37 · CT2 An Bình',
       wifeProfile: WIFE_MINH_THU,
-      portraitUrl: hoangPortraitUrl,
+      portraitUrl: husbandPortraitUrl,
     },
     {
-      husbandId: 'husband_minh',
+      husbandId: 'husband_02',
       caseCode: 'HỒ SƠ #02',
       displayName: 'Trần Quang Minh',
       fullName: 'Trần Quang Minh',
       age: 34,
       occupation: 'Giám đốc Kinh doanh',
       teaserQuote: '"Hồ sơ đang được thu thập."',
-      personaTraits: ['Đang cập nhật hồ sơ điều tra'],
-      portraitUrl: hoangPortraitUrl,
+      portraitUrl: husbandPortraitUrl,
       comingSoon: true,
     },
   ];
 }
 
+export const GUIDE_CARD_TEASER = 'Lần đầu soi điện thoại chồng? Học nghề ở đây trước.';
+
 export function buildLevelCards(
   availableLevels: LevelMetadata[],
   unlockedMaxLevel: number,
   starRatings: Record<string, number>,
-  level0Status: Level0Status,
 ): LevelCardItem[] {
-  const practiceCard: LevelCardItem = {
-    caseId: 'case_00_practice',
-    husbandId: 'husband_hoang',
+  // Màn 0 is the in-phone guide. Its content is built later, so the file is visible but not playable.
+  const guideCard: LevelCardItem = {
+    caseId: 'case_00_guide',
+    husbandId: 'husband_01',
     levelNumber: 0,
-    levelTitle: 'Tập điều tra',
-    summary: 'Làm quen thao tác soi manh mối và đối chất.',
-    activeAppCount: 3,
-    allowedStrikes: 5,
-    isPractice: true,
+    levelTitle: 'Hướng dẫn điều tra',
+    summary: GUIDE_CARD_TEASER,
+    activeAppCount: 0,
+    allowedStrikes: 0,
+    isGuide: true,
+    comingSoon: true,
     unlocked: true,
-    level0Status,
-    recommended: level0Status === 'not_started',
   };
 
   const normalCards: LevelCardItem[] = availableLevels.map((lvl) => {
@@ -106,60 +94,56 @@ export function buildLevelCards(
       husbandId: lvl.husbandId,
       levelNumber: lvl.levelNumber,
       levelTitle: cleanTitle || lvl.levelTitle,
-      summary: lvl.storySnippet,
+      // The selector file shows story only; difficulty and rule text stay out of it.
+      summary: lvl.storySnippet.replace(/^Độ khó:[^)]*\)\.\s*/, ''),
       activeAppCount,
       allowedStrikes: lvl.allowedStrikes,
       unlocked,
       bestStars: starRatings[lvl.caseId] ?? 0,
-      lockHint: unlocked ? undefined : `Hoàn thành Màn ${lvl.levelNumber - 1}`,
+      comingSoon: lvl.comingSoon,
+      lockHint: unlocked || lvl.comingSoon ? undefined : `Hoàn thành Màn ${lvl.levelNumber - 1}`,
     };
   });
 
-  return [practiceCard, ...normalCards];
+  return [guideCard, ...normalCards];
 }
+
+export const BRIEFING_HOOK_QUESTION = 'Bạn có đủ tỉnh táo để tìm ra bằng chứng?';
 
 export function buildCaseBriefing(
   caseConfig: CaseConfig,
   levelTitle: string,
-  husbandPortraitUrl: string,
+  husband: HusbandProfile,
 ): CaseBriefingData {
-  const activeAppCount = Math.max(1, caseConfig.activeAppIds?.length ?? 4);
-  const hasLockscreenPin = caseConfig.levelNumber >= 2;
-
   return {
     caseId: caseConfig.caseId,
     levelNumber: caseConfig.levelNumber,
     levelTitle,
     husbandId: caseConfig.husbandId,
     husbandName: `Chồng ${caseConfig.husbandName}`,
-    husbandFullName: 'Nguyễn Huy Hoàng',
-    husbandAge: 29,
-    husbandOccupation: 'Tech Lead · Technosoft (Hà Nội)',
-    husbandPortraitUrl,
-    personaTraits: [
-      'Tự nhận sợ vợ số 1, nộp 90% lương tháng',
-      'Hay úp màn hình điện thoại xuống bàn',
-      'Cửa miệng: "Anh đang OT fix bug giỏ hàng"',
-    ],
-    wifeAnchor: 'Vợ Minh Thư: size M · giày 37 · chung cư An Bình',
-    wifeProfile: WIFE_MINH_THU,
+    husbandFullName: husband.fullName ?? husband.displayName,
+    husbandAge: husband.age,
+    husbandOccupation: husband.occupation,
+    husbandPortraitUrl: husband.portraitUrl,
+    personaTraits: husband.personaTraits,
+    wifeProfile: husband.wifeProfile,
+    hookQuestion: BRIEFING_HOOK_QUESTION,
     statedAlibi: 'Họp phòng dự án công ty fix bug giỏ hàng tới tối muộn.',
     suspicionHook:
       '23:45 đêm. Chồng vừa ngủ say nhưng màn hình điện thoại liên tục sáng lên với loạt thông báo bị ẩn nội dung.',
-    activeAppCount,
-    allowedStrikes: caseConfig.allowedStrikes,
-    lockModeLabel: hasLockscreenPin ? 'Mật khẩu 4 số' : 'FaceID / Vuốt mở',
     introBeats: [
       {
         beatId: 'intro_1',
         speaker: `Chồng ${caseConfig.husbandName}`,
+        speakerRole: 'husband',
         locationTime: '23:40 - Phòng ngủ',
         mood: 'confident',
         line: '"Vợ ơi, tối nay anh họp fix bug ở công ty mệt quá, anh đi ngủ trước đây. Điện thoại anh để trên bàn sạc nha."',
       },
       {
         beatId: 'intro_2',
-        speaker: 'Vợ (Minh Thư)',
+        speaker: `Vợ (${husband.wifeProfile?.displayName.split(' ').slice(-2).join(' ') ?? 'Minh Thư'})`,
+        speakerRole: 'wife',
         locationTime: '23:44 - Phòng ngủ',
         mood: 'nervous',
         line: '"Ngủ nhanh thế? Mà sao điện thoại anh vừa sáng màn hình liên tục, lại còn ẩn hết nội dung thông báo..."',
@@ -169,6 +153,7 @@ export function buildCaseBriefing(
 }
 
 export interface LockscreenAppIconMeta {
+  appName?: string;
   iconAsset?: string;
   themeGradient?: string;
 }
@@ -179,34 +164,31 @@ export function buildLockscreenConfig(
   resolveAppIcon?: (appId: string) => LockscreenAppIconMeta | undefined,
 ): PhoneLockscreenConfig {
   const isHarderLevel = caseConfig.levelNumber >= 2;
-  const zolaMeta = resolveAppIcon?.('internet-messaging');
-  const bankMeta = resolveAppIcon?.('banking');
+  // Lock screen mirrors the case's own notification hooks, privacy-masked (no sender, no body).
+  const notifications: LockscreenNotificationItem[] = (caseConfig.notifications ?? []).map((toast) => {
+    const meta = resolveAppIcon?.(toast.sourceAppId);
+    const time = toast.senderTitle.match(/\b\d{1,2}:\d{2}\b/)?.[0];
+    const isMessage = toast.sourceAppId === 'internet-messaging' || toast.sourceAppId === 'messages';
+    return {
+      id: `lock_${toast.toastId}`,
+      appId: toast.sourceAppId,
+      appName: meta?.appName ?? toast.sourceAppId,
+      iconAsset: meta?.iconAsset,
+      themeGradient: meta?.themeGradient,
+      maskedBody: isMessage ? 'Bạn có 1 tin nhắn mới' : 'Có 1 thông báo mới',
+      timeLabel: time ?? 'Vừa xong',
+    };
+  });
 
+  const narrativeTime = caseConfig.deviceMetadata.narrativeTime || '23:45';
+  const narrativeStartIso = `${NARRATIVE_DATE_ISO}T${narrativeTime}:00`;
   return {
-    narrativeDate: 'Th 5, 15 thg 10',
-    narrativeTime: caseConfig.deviceMetadata.narrativeTime || '23:45',
+    narrativeStartIso,
+    narrativeDate: formatNarrativeShortDate(new Date(narrativeStartIso)),
+    narrativeTime,
     batteryPercent: caseConfig.deviceMetadata.batteryPercent || '42%',
     wallpaperUrl,
-    notifications: [
-      {
-        id: 'lock_notif_zola',
-        appId: 'internet-messaging',
-        appName: 'Zola',
-        iconAsset: zolaMeta?.iconAsset,
-        themeGradient: zolaMeta?.themeGradient,
-        maskedBody: 'Bạn có 3 tin nhắn mới',
-        timeLabel: 'Vừa xong',
-      },
-      {
-        id: 'lock_notif_bank',
-        appId: 'banking',
-        appName: 'Techcornbank',
-        iconAsset: bankMeta?.iconAsset,
-        themeGradient: bankMeta?.themeGradient,
-        maskedBody: 'Có 1 thông báo mới',
-        timeLabel: '20:48',
-      },
-    ],
+    notifications,
     ...(isHarderLevel
       ? {
           passcode: caseConfig.lockChallenges[0]?.expectedAnswer || '1510',

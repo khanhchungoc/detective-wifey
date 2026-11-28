@@ -1,7 +1,8 @@
 import { useMotionState } from '../../../shared/motion/useMotionState';
 import React from 'react';
-import { IoCallOutline, IoCheckmark, IoCheckmarkDone, IoChevronBack, IoEllipsisHorizontal, IoEllipsisVertical, IoHappyOutline, IoImageOutline, IoLocation, IoMicOutline, IoTimeOutline, IoVideocamOutline } from 'react-icons/io5';
-import { MessagingThread, type MessagingMessage } from '../types';
+import { IoCallOutline, IoCheckmark, IoCheckmarkDone, IoChevronBack, IoEllipsisHorizontal, IoEllipsisVertical, IoHappyOutline, IoImageOutline, IoLocation, IoMicOutline, IoPushOutline, IoTimeOutline, IoVideocamOutline } from 'react-icons/io5';
+import { MessagingThread, type MessagingContact, type MessagingMessage } from '../types';
+import { groupSenderLabel } from '../groupChat';
 import { chatImage } from '../assets/chatImages';
 import { MessagingImageViewer } from './MessagingImageViewer';
 import { MessagingLocationModal } from './MessagingLocationModal';
@@ -17,6 +18,9 @@ interface MessagingChatThreadViewProps {
   onBack: () => void;
   onTagSuspect: (suspectName: string, source?: EvidenceSource) => void;
   caseId?: string;
+  contacts?: MessagingContact[];
+  onSwipeProgress?: (progress: number, displacement: number) => void;
+  onSwipeEnd?: (committed: boolean) => void;
 }
 
 export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = ({
@@ -24,6 +28,9 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
   onBack,
   onTagSuspect,
   caseId,
+  contacts = [],
+  onSwipeProgress,
+  onSwipeEnd,
 }) => {
   const [selectedLocation, setSelectedLocation] = useMotionState<{
     venueName: string;
@@ -34,6 +41,21 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
   const [evidenceSheetItem, setEvidenceSheetItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
   const [selectedImage, setSelectedImage] = React.useState<MessagingMessage | null>(null);
   const messagesContainerRef = React.useRef<HTMLElement | null>(null);
+
+  const [highlightedId, setHighlightedId] = React.useState<string | null>(null);
+  const isGroup = Boolean(thread.isGroup);
+  const labelOf = (msg: MessagingMessage) => (msg.sender === 'me' ? '' : groupSenderLabel(msg, contacts));
+  const pinnedMessage = isGroup && thread.pinnedMessageId
+    ? thread.messages.find(msg => msg.id === thread.pinnedMessageId)
+    : undefined;
+
+  const jumpToMessage = React.useCallback((id: string) => {
+    const target = Array.from(messagesContainerRef.current?.querySelectorAll<HTMLElement>('[data-message-id]') ?? [])
+      .find(el => el.dataset.messageId === id);
+    target?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+    setHighlightedId(id);
+    window.setTimeout(() => setHighlightedId(null), 1800);
+  }, []);
 
   const scrollToBottom = React.useCallback(() => {
     const el = messagesContainerRef.current;
@@ -63,6 +85,8 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
       onBack();
     },
     enabled: !selectedImage && !evidenceSheetItem && !selectedLocation,
+    onSwipeProgress,
+    onSwipeEnd,
   });
 
   const evidenceSheet = evidenceSheetItem && <MessagingEvidenceSheet
@@ -98,7 +122,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                 {thread.contactName}
               </h2>
               <p className="text-ios-caption-1 text-white/85 truncate">
-                Bấm để xem thông tin
+                {isGroup && thread.memberCount ? `${thread.memberCount} thành viên` : 'Bấm để xem thông tin'}
               </p>
             </div>
           </div>
@@ -154,6 +178,24 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
         </StoryEvidenceTarget>
       )}
 
+      {/* Pinned message bar (group threads) */}
+      {pinnedMessage && (
+        <button
+          type="button"
+          data-testid="pinned-message-bar"
+          data-pinned-message-id={pinnedMessage.id}
+          onClick={() => jumpToMessage(pinnedMessage.id)}
+          aria-label={`Tin nhắn đã ghim của ${labelOf(pinnedMessage) || 'bạn'}. Chạm để xem`}
+          className="flex items-center gap-2 px-3 min-h-11 bg-white border-b border-slate-200 text-left shrink-0 active:bg-slate-50"
+        >
+          <IoPushOutline className="w-4 h-4 text-[#0088FF] shrink-0" aria-hidden="true" />
+          <span className="min-w-0 flex-1 text-ios-footnote text-[#0F172A] truncate">
+            {labelOf(pinnedMessage) && <span className="font-semibold">{labelOf(pinnedMessage)}: </span>}
+            {pinnedMessage.text}
+          </span>
+        </button>
+      )}
+
       {/* Messages Canvas */}
       <main
         ref={messagesContainerRef}
@@ -167,7 +209,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
           </span>
         </div>
 
-        {thread.messages.map((msg) => {
+        {thread.messages.map((msg, index) => {
           const isMe = msg.sender === 'me';
           const image = msg.type === 'image' ? chatImage(msg.imageAsset) : undefined;
 
@@ -238,42 +280,61 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
           }
 
           const msgTime = msg.timestamp || msg.time || '';
+          const senderLabel = isGroup ? labelOf(msg) : '';
+          const prev = thread.messages[index - 1];
+          const showSender = Boolean(senderLabel) && (!prev || prev.sender === 'me' || groupSenderLabel(prev, contacts) !== senderLabel);
+          const quoted = isGroup && msg.replyToId ? thread.messages.find(m => m.id === msg.replyToId) : undefined;
+          const evidenceName = senderLabel || thread.contactName;
           const displayTime = formatDisplayTime(msgTime, 'timeOnly');
 
           // Standard Message Bubble
           return (
             <div
               key={msg.id}
-              className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
+              data-message-id={msg.id}
+              className={`flex ${isMe ? 'justify-end' : 'justify-start'} gap-1.5 rounded-xl transition-shadow ${highlightedId === msg.id ? 'ring-2 ring-[#0088FF]/60' : ''}`}
             >
+              {isGroup && !isMe && (
+                <div className="w-7 shrink-0 self-end" aria-hidden="true">
+                  {showSender && <ContactAvatar name={senderLabel} size={28} />}
+                </div>
+              )}
+              <div className={`flex flex-col min-w-0 max-w-[80%] ${isMe ? 'items-end' : 'items-start'}`}>
+              {showSender && (
+                <span data-testid="group-sender-label" className="px-1 mb-0.5 text-ios-caption-1 font-semibold text-[#52525B] truncate max-w-full">
+                  {senderLabel}
+                </span>
+              )}
               <StoryEvidenceTarget
                 item={{
-                  title: thread.contactName,
+                  title: evidenceName,
                   snippet: msg.text,
-                  suspectToTag: thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Hoàng)' : 'Vợ'),
+                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Thịnh)' : 'Vợ')),
                   subtitle: msgTime,
-                  kind: 'message',
+                  kind: image ? 'photo' : 'message',
                   conversationId: thread.threadId,
-                  visibleAlias: thread.contactName,
+                  visibleAlias: evidenceName,
                   eventTime: msgTime,
                   direction: isMe ? 'outgoing' : 'incoming',
                   sender: isMe ? 'me' : 'them',
+                  imageSrc: image,
                   source: caseId ? {
                     caseId,
                     recordId: msg.id,
                     clueRefId: msg.clueRefId || undefined,
-                    kind: 'message',
+                    kind: image ? 'photo' : 'message',
                     conversationId: thread.threadId,
-                    visibleAlias: thread.contactName,
+                    visibleAlias: evidenceName,
                     eventTime: msgTime,
-                    title: thread.contactName,
+                    title: evidenceName,
                     snippet: msg.text,
                     direction: isMe ? 'outgoing' : 'incoming',
                     sender: isMe ? 'me' : 'them',
+                    imageSrc: image,
                   } : undefined,
                 }}
                 onTriggerEvidence={setEvidenceSheetItem}
-                className="max-w-[80%]"
+                className="w-full"
               >
                 <div
                   title="Nhấn giữ để ghim vào Sổ tay"
@@ -287,6 +348,12 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                     <img src={image} alt={msg.imageAlt || msg.text} draggable={false} loading="lazy" onLoad={handleImageLoad}
                       className="max-h-72 w-full max-w-[280px] rounded-lg object-contain" />
                   </button>}
+                  {quoted && (
+                    <div data-testid="reply-quote" className="mb-1.5 border-l-2 border-[#0088FF] bg-slate-100 rounded-sm px-2 py-1 text-ios-caption-1 text-[#52525B]">
+                      {labelOf(quoted) && <div className="font-semibold truncate">{labelOf(quoted)}</div>}
+                      <div className="truncate">{quoted.text}</div>
+                    </div>
+                  )}
                   <div className="select-none">{msg.text || (msg.type === 'image' && !image ? 'Không thể hiển thị ảnh.' : '')}</div>
 
                   {/* Bubble Footer: Time & Read status */}
@@ -311,6 +378,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                   </div>
                 </div>
               </StoryEvidenceTarget>
+              </div>
             </div>
           );
         })}

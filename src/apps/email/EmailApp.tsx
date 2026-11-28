@@ -13,18 +13,11 @@ import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/in
 export const EmailApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const emailData = readAppData(caseData.appsData?.email || {});
   const emails = emailData.emails || [];
   const [selectedMail, setSelectedMail] = useMotionState<(typeof emails)[number] | null>(null, 'navigation');
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
-
-  const rootSwipeHandlers = useSwipeBack({
-    onBack: onReturnHome,
-    enabled: !selectedMail,
-    exitsApp: true,
-  });
 
   const detailSwipeHandlers = useSwipeBack({
     onBack: () => setSelectedMail(null),
@@ -35,7 +28,6 @@ export const EmailApp: React.FC<VirtualAppProps> = ({
     <div className="relative flex flex-col h-full w-full bg-[#FFFFFF] text-[#202124] select-none font-sans overflow-hidden">
       {/* Base Layer: Email Inbox List */}
       <div
-        {...rootSwipeHandlers}
         className="flex flex-col h-full w-full bg-[#FFFFFF] min-h-0 relative overflow-hidden"
         inert={Boolean(selectedMail)}
         aria-hidden={Boolean(selectedMail)}

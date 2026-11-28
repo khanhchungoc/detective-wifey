@@ -1,13 +1,13 @@
 import { record, records, text, textFields } from '../../shared/data/read';
 import type { UniversalEvidenceItem } from '../../shared/contracts/evidence';
 import type { NormalizedPhotosState, PhotoAlbum, PhotoExif, PhotoItem } from './types';
-import photosAnniversary from './assets/photos-anniversary.jpg';
-import photosDinnerClaypot from './assets/photos-dinner-claypot.jpg';
-import photosEveryday01 from './assets/photos-everyday-01.jpg';
-import photosEveryday02 from './assets/photos-everyday-02.jpg';
-import photosEveryday03 from './assets/photos-everyday-03.jpg';
-import photosEveryday04 from './assets/photos-everyday-04.jpg';
-import photosForensic from './assets/photos-forensic.jpg';
+import photosAnniversary from './assets/photos-anniversary.webp';
+import photosDinnerClaypot from './assets/photos-dinner-claypot.webp';
+import photosEveryday01 from './assets/photos-everyday-01.webp';
+import photosEveryday02 from './assets/photos-everyday-02.webp';
+import photosEveryday03 from './assets/photos-everyday-03.webp';
+import photosEveryday04 from './assets/photos-everyday-04.webp';
+import photosForensic from './assets/photos-forensic.webp';
 
 export type PhotoArtwork = Readonly<{
   src: string;
@@ -37,30 +37,30 @@ const anniversary = spriteArtwork(photosAnniversary, '3:4');
 const forensic = spriteArtwork(photosForensic, '3:4');
 
 const photoArtworkById: Readonly<Record<string, PhotoArtwork>> = {
-  photo_0: everyday01.topLeft,
-  photo_1: everyday01.topRight,
-  photo_2: everyday01.bottomLeft,
-  photo_3: everyday01.bottomRight,
-  photo_4: everyday02.topLeft,
-  photo_5: everyday02.topRight,
-  photo_6: everyday03.topRight,
-  photo_7: everyday03.topLeft,
-  photo_8: everyday02.bottomRight,
-  photo_9: everyday04.topLeft,
-  photo_history_0: everyday04.bottomRight,
-  photo_history_1: everyday02.bottomLeft,
-  photo_history_2: everyday03.bottomRight,
-  photo_history_3: everyday03.bottomLeft,
-  photo_history_4: everyday04.topRight,
-  photo_history_5: everyday04.bottomLeft,
+  photo_010: everyday01.topLeft,
+  photo_009: everyday01.topRight,
+  photo_008: everyday01.bottomLeft,
+  photo_007: everyday01.bottomRight,
+  photo_006: everyday02.topLeft,
+  photo_005: everyday02.topRight,
+  photo_004: everyday03.topRight,
+  photo_003: everyday03.topLeft,
+  photo_002: everyday02.bottomRight,
+  photo_001: everyday04.topLeft,
+  photo_016: everyday04.bottomRight,
+  photo_015: everyday02.bottomLeft,
+  photo_014: everyday03.bottomRight,
+  photo_013: everyday03.bottomLeft,
+  photo_012: everyday04.topRight,
+  photo_011: everyday04.bottomLeft,
   p1: anniversary.topLeft,
   p2: anniversary.topRight,
-  df_p1: everyday01.topLeft,
-  df_p2: everyday01.topRight,
-  df_p3: everyday02.topLeft,
-  df_p4: everyday02.topRight,
-  df_p5: anniversary.topLeft,
-  df_p6: anniversary.topRight,
+  photo_017: everyday01.topLeft,
+  photo_018: everyday01.topRight,
+  photo_019: everyday02.topLeft,
+  photo_020: everyday02.topRight,
+  photo_021: anniversary.topLeft,
+  photo_022: anniversary.topRight,
 };
 
 const photoArtworkByClue: Readonly<Record<string, PhotoArtwork>> = {
@@ -272,7 +272,7 @@ export function readPhotosData(value: unknown): NormalizedPhotosState {
 
     albums = [
       {
-        id: 'album_recent',
+        id: 'album_002',
         title: 'Gần đây',
         isLocked: false,
         photos: publicPhotos,

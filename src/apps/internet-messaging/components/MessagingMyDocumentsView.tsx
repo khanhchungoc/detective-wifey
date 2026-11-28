@@ -10,6 +10,8 @@ interface MessagingMyDocumentsViewProps {
   documents: MessagingCloudDocument[];
   onBack: () => void;
   onTagSuspect: (suspectName: string) => void;
+  onSwipeProgress?: (progress: number, displacement: number) => void;
+  onSwipeEnd?: (committed: boolean) => void;
 }
 
 type CategoryTab = 'all' | 'photos' | 'files' | 'links' | 'notes' | 'collections';
@@ -18,15 +20,17 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
   documents,
   onBack,
   onTagSuspect,
+  onSwipeProgress,
+  onSwipeEnd,
 }) => {
-  const [activeCategory, setActiveCategory] = useMotionState<CategoryTab>('all', 'fade');
+  const [activeCategory, setActiveCategory] = useState<CategoryTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showSearch, setShowSearch] = useMotionState(false, 'fade');
+  const [showSearch, setShowSearch] = useState(false);
   const [likedDocIds, setLikedDocIds] = useState<Record<string, boolean>>({});
   const [evidenceSheetDoc, setEvidenceSheetDoc] = useMotionState<MessagingCloudDocument | null>(null, 'sheet');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const swipeHandlers = useSwipeBack({ onBack });
+  const swipeHandlers = useSwipeBack({ onBack, onSwipeProgress, onSwipeEnd });
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -378,7 +382,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                                   5.000.000 VNĐ
                                 </div>
                                 <div className="text-ios-caption-2 text-slate-500">
-                                  Người nộp: Nguyễn Huy Hoàng
+                                  Người nộp: Nguyễn Huy Thịnh
                                 </div>
                               </div>
                               <div className="text-ios-caption-2 text-[#52525B] flex justify-between">

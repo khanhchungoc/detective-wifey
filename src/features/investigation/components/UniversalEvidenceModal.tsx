@@ -27,14 +27,16 @@ export const UniversalEvidenceModal = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const appVisible = useContext(AppVisibilityContext);
 
+  const isVisible = Boolean(isOpen && item && appVisible);
+
   useEffect(() => {
-    if (!isOpen || !item || !appVisible) return;
+    if (!isVisible) return;
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialogRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
     return () => previous?.focus();
-  }, [isOpen, item, appVisible]);
+  }, [isVisible]);
 
-  if (!isOpen || !item || !appVisible) return null;
+  if (!isVisible || !item) return null;
 
   const hasAttribution = item.suspectToTag.trim().length > 0;
   const hasSource = Boolean(item.source?.caseId && item.source.recordId && item.source.title.trim());
@@ -67,7 +69,7 @@ export const UniversalEvidenceModal = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="universal-evidence-title"
-        className="ios-evidence-modal w-full max-w-[340px] max-h-[calc(100%-2rem)] overflow-y-auto bg-[#F2F2F7] rounded-[26px] p-5 shadow-2xl flex flex-col gap-3.5"
+        className="ios-evidence-modal animate-scaleUp w-full max-w-[340px] max-h-[calc(100%-2rem)] overflow-y-auto bg-[#F2F2F7] rounded-[26px] p-5 shadow-2xl flex flex-col gap-3.5"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={e => {
           if (e.key === 'Escape') {

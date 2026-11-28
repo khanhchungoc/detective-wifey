@@ -2,21 +2,21 @@
   "unreadBadge": 0,
   "emails": [
     {
-      "id": "df_mail_01",
+      "id": "email_026",
       "sender": "Phòng Nhân Sự Công Ty <hr@techcorpvietnam.com>",
       "subject": "Thông báo: Kế hoạch khám sức khỏe định kỳ năm 2026",
       "snippet": "Kính gửi toàn thể CBNV, lịch khám sức khỏe tổng quát sẽ diễn ra vào thứ 7 tuần tới tại Bệnh viện Thu Cúc...",
       "time": "Hôm qua"
     },
     {
-      "id": "df_mail_02",
+      "id": "email_027",
       "sender": "GitHub <notifications@github.com>",
       "subject": "[GitHub] Your monthly billing receipt for Copilot",
       "snippet": "Thanks for using GitHub! Your receipt for $10.00 is attached to this email.",
       "time": "3 ngày trước"
     },
     {
-      "id": "df_mail_03",
+      "id": "email_028",
       "sender": "Spotify <no-reply@spotify.com>",
       "subject": "Gói Premium Family của bạn đã được gia hạn",
       "snippet": "Gói nghe nhạc không quảng cáo dành cho gia đình của bạn tiếp tục hoạt động trong tháng này.",
