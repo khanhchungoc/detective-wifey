@@ -4,11 +4,19 @@ import type { MotionValue } from 'motion/react';
 import { IoLockClosedOutline } from 'react-icons/io5';
 import type { LevelCardItem } from '../../../shared/contracts/game-flow';
 import { INK_TEXT_STRONG, PaperSurface } from './FolderParts';
+import { TAB_H, TAB_W, TURNED_TAB_CLIP, tabButtonBox, tabShapeLeft, tabTurnedBox } from './tabShape';
 
-/** Tab outline: sloped shoulders, open at the bottom so it flows into its own sheet. */
-const TAB_CLIP = 'polygon(0 100%, 0 32%, 9px 0, calc(100% - 9px) 0, 100% 32%, 100% 100%)';
-/** Full tab width (Tailwind w-24). Tabs are staggered across the sheet width and overlap each other. */
-const TAB_W = '6rem';
+export const TAB_LABEL_CLASS = `flex h-full items-center justify-center gap-1 whitespace-nowrap px-2 pb-1 pt-2 text-ios-footnote uppercase tabular-nums ${INK_TEXT_STRONG}`;
+
+/** Label of a tab: "Màn N" plus a lock when the case is locked. */
+export const TabLabel: React.FC<{ level: LevelCardItem }> = ({ level }) => (
+  <>
+    {`Màn ${level.levelNumber}`}
+    {!level.unlocked && !level.isGuide && (
+      <IoLockClosedOutline aria-label="Đã khóa" className="h-3 w-3 shrink-0" />
+    )}
+  </>
+);
 
 interface LevelTabProps {
   level: LevelCardItem;
@@ -19,54 +27,59 @@ interface LevelTabProps {
   onSelect: () => void;
 }
 
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
 /**
- * The index tab of ONE sheet. It uses the sheet's paper and joins the sheet's top edge without a
- * line. The button only owns the part of the tab that is not covered by the tab in front (so hit
- * areas never fight); the paper shape extends left under that tab.
+ * Tappable tab of ONE sheet. While the sheet lies on the stack its tab is part of the sheet's own
+ * silhouette (see LevelFile) and the label turns with it. Once the sheet is turned over, this
+ * component draws the tab left behind: plain darker paper tucked behind the sheet in front, with the
+ * label. The button owns only the part of the tab not covered by the tab in front.
  */
 export const LevelTab: React.FC<LevelTabProps> = ({ level, index, total, selected, flip, onSelect }) => {
-  const locked = !level.unlocked && !level.isGuide;
+  const box = tabButtonBox(index, total);
+  const turnedBox = tabTurnedBox(index, total);
+  const left = useTransform(flip, (f) => (f >= 0.5 ? turnedBox.left : box.left));
+  const width = useTransform(flip, (f) => (f >= 0.5 ? turnedBox.width : box.width));
   const paper = level.isGuide ? 'bg-game-paper-slip' : 'bg-game-manila';
-  const span = `(100% - ${TAB_W})`;
-  const step = total > 1 ? `calc(${span} / ${total - 1})` : TAB_W;
-  const first = index === 0 || total <= 1;
-  // The turning sheet's tab must paint above everything, then settle back into the tab row.
-  const zIndex = useTransform(flip, (f) => (f > 0 && f < 1 ? 101 : 30 - Math.min(index, 20)));
-  const turned = useTransform(flip, (f) => 0.16 * f);
-  const dip = useTransform(flip, (f) => (f >= 1 ? 3 : Math.sin(Math.PI * f) * 3 + f * 3));
+  const shown = useTransform(flip, (f) => clamp01((f - 0.5) * 2));
+  const darker = useTransform(flip, (f) => 0.16 * f);
+  // The turning sheet's tab paints above everything, then settles behind the sheets (turned tabs: higher index in front).
+  const zVisual = useTransform(flip, (f) => (f > 0 && f < 1 ? 101 : 1 + Math.min(index, 3)));
 
   return (
-    <motion.button
-      type="button"
-      role="tab"
-      data-level-tab={level.caseId}
-      aria-selected={selected}
-      onClick={onSelect}
-      style={{
-        left: first ? 0 : `calc(${span} * ${index / (total - 1)} + ${TAB_W} - ${step})`,
-        width: first ? TAB_W : step,
-        zIndex,
-        y: dip,
-      }}
-      className={`pointer-events-auto absolute -bottom-0.5 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
-        selected ? 'h-14' : 'h-12'
-      }`}
-    >
-      <span
+    <>
+      <motion.span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 w-24"
-        style={{ filter: 'drop-shadow(-2px 0 1.5px rgba(40,28,10,0.28))' }}
+        className="pointer-events-none absolute top-4"
+        style={{
+          left: tabShapeLeft(index, total),
+          width: TAB_W,
+          height: `calc(${TAB_H} + 4px)`,
+          opacity: shown,
+          zIndex: zVisual,
+          filter: 'drop-shadow(0 0 0.75px rgba(50,36,14,0.55))',
+        }}
       >
-        <span className="absolute inset-0 bg-game-ink/45" style={{ clipPath: TAB_CLIP }} />
-        <span className={`absolute inset-x-px bottom-0 top-px ${paper}`} style={{ clipPath: TAB_CLIP }}>
+        <span className={`absolute inset-0 ${paper}`} style={{ clipPath: TURNED_TAB_CLIP }}>
           <PaperSurface worn={false} />
-          <motion.span className="absolute inset-0 bg-game-ink" style={{ opacity: turned }} />
+          <motion.span className="absolute inset-0 bg-game-ink" style={{ opacity: darker }} />
         </span>
-      </span>
-      <span className={`relative flex h-full items-center justify-center gap-1 whitespace-nowrap px-2 pb-1 pt-2 text-ios-footnote uppercase tabular-nums ${INK_TEXT_STRONG}`}>
-        {`Màn ${level.levelNumber}`}
-        {locked && <IoLockClosedOutline aria-label="Đã khóa" className="h-3 w-3 shrink-0" />}
-      </span>
-    </motion.button>
+      </motion.span>
+      <motion.button
+        type="button"
+        role="tab"
+        data-level-tab={level.caseId}
+        aria-selected={selected}
+        onClick={onSelect}
+        style={{ left, width }}
+        className={`pointer-events-auto absolute top-4 z-30 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
+          selected ? 'h-14' : 'h-12'
+        }`}
+      >
+        <motion.span className={`block ${TAB_LABEL_CLASS}`} style={{ opacity: shown }}>
+          <TabLabel level={level} />
+        </motion.span>
+      </motion.button>
+    </>
   );
 };

@@ -125,6 +125,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 level={level}
                 subjectPortraitUrl={husband.portraitUrl}
                 index={idx}
+                total={levels.length}
                 isActive={idx === index}
                 flip={binder.flips[idx]}
                 reduced={reduced}
