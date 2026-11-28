@@ -1,8 +1,11 @@
 /* Canonical project iOS curves. Snapshot layers never intercept gestures. */
 :root {
   --ease-ios-spring: cubic-bezier(.32, .72, 0, 1);
+  --ease-sheet-fluid: cubic-bezier(.22, .61, .36, 1);
   --ease-ios-default: cubic-bezier(.4, 0, .2, 1);
   --ease-ios-in-out: cubic-bezier(.42, 0, .58, 1);
+  --ios-sheet-open-duration: .38s;
+  --ios-sheet-close-duration: .3s;
   --ios-app-open-duration: .48s;
   --ios-app-close-duration: .5s;
   --ios-app-duration: var(--ios-app-open-duration);
@@ -236,12 +239,12 @@ html[data-swipe-motion][data-motion='close']::view-transition-new(phone-app-icon
 ::view-transition-new(phone-sheet), ::view-transition-new(evidence-modal),
 ::view-transition-new(lock-screen),
 ::view-transition-new(notification-banner) { animation: none; }
-::view-transition-new(phone-sheet):only-child { animation: ios-sheet-in .32s var(--ease-ios-spring) both; }
-::view-transition-old(phone-sheet):only-child { opacity: 1; animation: ios-sheet-out .25s var(--ease-ios-default) both; }
+::view-transition-new(phone-sheet):only-child { animation: ios-sheet-in var(--ios-sheet-open-duration) var(--ease-sheet-fluid) both; }
+::view-transition-old(phone-sheet):only-child { opacity: 1; animation: ios-sheet-out var(--ios-sheet-close-duration) var(--ease-ios-default) both; }
 ::view-transition-new(evidence-modal):only-child { animation: ios-dialog-in .22s var(--ease-ios-spring) both; }
 ::view-transition-old(evidence-modal):only-child { opacity: 1; animation: ios-dialog-out .22s var(--ease-ios-default) both; }
-::view-transition-new(lock-screen):only-child { animation: ios-sheet-in .32s var(--ease-ios-spring) both; }
-::view-transition-old(lock-screen):only-child { opacity: 1; animation: ios-sheet-out .25s var(--ease-ios-default) both; }
+::view-transition-new(lock-screen):only-child { animation: ios-sheet-in var(--ios-sheet-open-duration) var(--ease-sheet-fluid) both; }
+::view-transition-old(lock-screen):only-child { opacity: 1; animation: ios-sheet-out var(--ios-sheet-close-duration) var(--ease-ios-default) both; }
 ::view-transition-new(notification-banner):only-child { animation: ios-banner-in .32s var(--ease-ios-spring) both; }
 ::view-transition-old(notification-banner):only-child { opacity: 1; animation: ios-banner-out .25s var(--ease-ios-default) both; }
 /* A successful horizontal gesture continues horizontally from its captured
@@ -270,7 +273,7 @@ html[data-swipe-motion][data-motion='close']::view-transition-old(phone-app) {
    remain settled for their lifetime, so capture cleanup cannot restart an entrance. */
 .animate-fadeIn { animation: ios-fade-in .2s var(--ease-ios-default) both; }
 .animate-fadeOut { animation: ios-app-fade-out .2s var(--ease-ios-default) both; }
-.animate-slideUp { animation: ios-sheet-in .32s var(--ease-ios-spring) both; }
+.animate-slideUp { animation: ios-sheet-in var(--ios-sheet-open-duration) var(--ease-sheet-fluid) both; }
 .animate-slideDown { animation: ios-banner-in .32s var(--ease-ios-spring) both; }
 .animate-slideDownOut { animation: ios-banner-out .22s var(--ease-ios-default) both; }
 .animate-scaleUp { animation: ios-dialog-in .28s var(--ease-ios-spring) both; }

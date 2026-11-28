@@ -168,6 +168,9 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
   }, [detailKey]);
 
   const handleDetailSwipeProgress = (progress: number, displacement: number) => {
+    if (activeAnimsRef.current.length > 0) {
+      cancelActiveAnims();
+    }
     swipeProgressRef.current = progress;
     swipeDisplacementRef.current = displacement;
     if (scrimRef.current) {
@@ -253,7 +256,8 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
       <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
         {/* Base Layer: Screens with Bottom Tab Bar (z-10 stacking context stays strictly behind z-20 detail views) */}
         <div
-          className="absolute inset-0 z-10 flex flex-col min-h-0 overflow-hidden"
+          style={{ backfaceVisibility: 'hidden' }}
+          className="absolute inset-0 z-10 flex flex-col min-h-0 overflow-hidden transform-gpu"
           inert={isDetailActive}
           aria-hidden={isDetailActive}
         >
@@ -337,6 +341,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
           <div
             ref={detailLayerRef}
             key={detailKey}
+            style={{ backfaceVisibility: 'hidden' }}
             className="absolute inset-0 z-20 will-change-transform"
           >
             {selectedThreadId && activeThread ? (

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { IoChevronBackOutline } from 'react-icons/io5';
 import type { HusbandProfile, LevelCardItem } from '../../../shared/contracts/game-flow';
-import { INK_TEXT_STRONG, PaperSurface } from './FolderParts';
+import { INK_TEXT_STRONG, PaperSurface, paperEdgeMaskStyle } from './FolderParts';
 import { LevelTab } from './LevelTab';
 import { CTA_SECONDARY } from './ctaStyles';
 import { LevelFile } from './LevelFile';
@@ -139,7 +139,15 @@ export const LevelStage: React.FC<LevelStageProps> = ({
         and the folder cover sits at z-200 while opening.
       */}
       <div className="relative mx-4 min-h-0 flex-1">
-        <div className="absolute inset-x-0 bottom-0 top-12 z-10 rounded-xl border border-game-ink/30 bg-game-kraft shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]">
+        {/* Soft ambient shadow behind the masked kraft folder board without per-frame filter cost. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-[2px] bottom-[2px] top-[50px] z-10 rounded-[4px] shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+        />
+        <div
+          style={paperEdgeMaskStyle(0)}
+          className="absolute inset-x-0 bottom-0 top-12 z-10 rounded-[4px] bg-game-kraft"
+        >
           <PaperSurface />
         </div>
 
@@ -195,12 +203,13 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               ref={coverRef}
               aria-hidden="true"
               style={{
+                ...paperEdgeMaskStyle(1),
                 transformOrigin: 'left center',
                 backfaceVisibility: 'hidden',
                 zIndex: 200,
                 willChange: 'transform, opacity',
               }}
-              className="pointer-events-none absolute inset-x-0 bottom-0 top-12 flex items-center justify-center rounded-xl border border-game-ink/30 bg-game-manila shadow-lg"
+              className="pointer-events-none absolute inset-x-0 bottom-0 top-12 flex items-center justify-center rounded-[4px] bg-game-manila"
             >
               <PaperSurface />
               <span className={`relative text-ios-title-2 uppercase ${INK_TEXT_STRONG}`}>{caseCode}</span>

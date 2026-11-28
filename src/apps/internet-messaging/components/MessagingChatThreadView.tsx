@@ -99,7 +99,8 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
     <div
       {...swipeHandlers}
       data-detail-layer
-      className="absolute inset-0 z-20 flex flex-col h-full w-full bg-[#E5EBF0] text-[#0F172A] select-none font-sans overflow-hidden shadow-2xl"
+      style={{ touchAction: 'pan-y', backfaceVisibility: 'hidden' }}
+      className="absolute inset-0 z-20 flex flex-col h-full w-full bg-[#E5EBF0] text-[#0F172A] select-none font-sans overflow-hidden shadow-2xl transform-gpu will-change-transform"
     >
       {/* Header */}
       <header className="flex items-center justify-between px-2 h-14 bg-[#0088FF] text-white shrink-0 shadow-sm z-20">

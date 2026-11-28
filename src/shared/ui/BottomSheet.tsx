@@ -1,6 +1,13 @@
 import { useCallback, useId, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { useSwipeBack } from '../gestures/useSwipeBack';
+import {
+  SHEET_BACKDROP_OPEN_MS,
+  SHEET_CLOSE_EASE,
+  SHEET_CLOSE_MS,
+  SHEET_OPEN_EASE,
+  SHEET_OPEN_MS,
+} from '../motion/sheetMotion';
 
 interface BottomSheetProps {
   title: string;
@@ -10,10 +17,6 @@ interface BottomSheetProps {
 }
 
 const DISMISS_DISTANCE = 80;
-const SHEET_OPEN_MS = 300;
-const SHEET_CLOSE_MS = 240;
-const SHEET_OPEN_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
-const SHEET_CLOSE_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
@@ -77,7 +80,7 @@ export function BottomSheet({ title, onClose, children, suspended = false }: Bot
       ),
     ];
     if (backdrop && typeof backdrop.animate === 'function') {
-      anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: SHEET_OPEN_EASE }));
+      anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: SHEET_BACKDROP_OPEN_MS, easing: SHEET_OPEN_EASE }));
     }
     animsRef.current = anims;
     return () => cancelAnims();
