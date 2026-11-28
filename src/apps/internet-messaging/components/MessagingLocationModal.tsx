@@ -99,8 +99,8 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
       <div
         {...swipeHandlers}
         ref={panelRef}
-        style={{ backfaceVisibility: 'hidden' }}
-        className="ios-sheet w-full bg-white rounded-t-2xl p-4 shadow-2xl border-t border-slate-200 flex flex-col space-y-4 max-h-[85%] overflow-y-auto will-change-transform"
+        style={{ backfaceVisibility: 'hidden', contain: 'layout paint' }}
+        className="ios-sheet w-full bg-white rounded-t-2xl p-4 shadow-2xl border-t border-slate-200 flex flex-col space-y-4 max-h-[85%] overflow-y-auto transform-gpu will-change-transform"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
