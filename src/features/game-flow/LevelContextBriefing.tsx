@@ -121,129 +121,107 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
       initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.22, ease: EASE_OUT_CINEMATIC }}
-      className="mx-auto w-full max-w-4xl grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10"
+      className="mx-auto flex w-full max-w-2xl flex-col gap-5"
     >
-      {/* Primary Column: Subject Header + Tonight's Alibi + Suspicion (Above the fold) */}
-      <div className="md:col-span-7 flex flex-col gap-5">
-        <div className="flex items-center gap-4 pb-5 border-b border-white/10">
-          <img
-            src={briefing.husbandPortraitUrl}
-            alt={husbandDisplayName}
-            className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-game-backdrop object-cover object-top"
-          />
-          <div className="min-w-0 flex-1">
-            <p className="text-ios-caption-1 font-medium text-game-text-secondary tabular-nums">
-              Màn {briefing.levelNumber} · Hồ sơ điều tra
-            </p>
-            <h2 className="mt-0.5 text-ios-title-3 font-semibold text-game-text truncate">
-              {husbandDisplayName}
-            </h2>
-            <p className="mt-0.5 text-ios-footnote text-game-text-secondary tabular-nums truncate">
-              {typeof briefing.husbandAge === 'number'
-                ? `${briefing.husbandAge} tuổi · ${briefing.husbandOccupation}`
-                : briefing.husbandOccupation}
-            </p>
-          </div>
+      {/* Compact subject header (name is already shown on the selector) */}
+      <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+        <img
+          src={briefing.husbandPortraitUrl}
+          alt={husbandDisplayName}
+          className="h-12 w-12 shrink-0 rounded-xl border border-white/10 bg-game-backdrop object-cover object-top"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-ios-footnote font-medium text-game-text-secondary tabular-nums">
+            Màn {briefing.levelNumber} · Hồ sơ điều tra
+          </p>
+          <h2 className="truncate text-ios-headline font-semibold text-game-text">
+            {husbandDisplayName}
+          </h2>
+          <p className="truncate text-ios-footnote text-game-text-secondary tabular-nums">
+            {typeof briefing.husbandAge === 'number'
+              ? `${briefing.husbandAge} tuổi · ${briefing.husbandOccupation}`
+              : briefing.husbandOccupation}
+          </p>
         </div>
-
-        <section className="pb-5 border-b border-white/10">
-          <p className="text-ios-caption-1 font-medium text-game-text-secondary">
-            Lời khai tối nay
-          </p>
-          <p className="mt-2 text-ios-callout font-normal leading-relaxed text-game-text">
-            &ldquo;{briefing.statedAlibi}&rdquo;
-          </p>
-        </section>
-
-        <section className="border-l-2 border-game-crimson pl-4">
-          <p className="text-ios-caption-1 font-medium text-game-crimson">
-            Nghi vấn
-          </p>
-          <p className="mt-2 text-ios-callout font-normal leading-relaxed text-game-text">
-            {briefing.suspicionHook}
-          </p>
-        </section>
       </div>
 
-      {/* Secondary Column: Quiet Reference (Persona + Wife) */}
-      <aside className="md:col-span-5 pt-5 border-t border-white/10 md:pt-0 md:border-t-0 md:border-l md:border-white/10 md:pl-8 flex flex-col gap-5">
-        {personaTraits.length > 0 && (
-          <section data-briefing-persona="true">
-            <p className="text-ios-caption-1 font-medium text-game-text-secondary">
-              Hồ sơ nhân vật
-            </p>
-            <ul className="mt-2.5 space-y-2">
-              {personaTraits.map((trait) => (
+      <h3
+        data-briefing-hook="true"
+        className="border-y-2 border-game-crimson/70 py-4 font-sans text-ios-title-1 font-extrabold leading-tight text-game-paper"
+      >
+        {briefing.hookQuestion}
+      </h3>
+
+      <section data-briefing-suspicion="true" className="border-l-2 border-game-crimson pl-4">
+        <p className="text-ios-footnote font-semibold text-game-crimson">Nghi vấn</p>
+        <p className="mt-1.5 text-ios-callout font-normal leading-relaxed text-game-text">
+          {briefing.suspicionHook}
+        </p>
+      </section>
+
+      <section data-briefing-alibi="true">
+        <p className="text-ios-footnote font-semibold text-game-text">Lời khai tối nay</p>
+        <p className="mt-1.5 text-ios-callout font-normal leading-relaxed text-game-text">
+          &ldquo;{briefing.statedAlibi}&rdquo;
+        </p>
+      </section>
+
+      {personaTraits.length > 0 && (
+        <section data-briefing-persona="true" className="border-t border-white/10 pt-5">
+          <p className="text-ios-footnote font-semibold text-game-text">Hồ sơ nhân vật</p>
+          <ul className="mt-2.5 space-y-2">
+            {personaTraits.map((trait) => (
+              <li
+                key={trait}
+                className="flex items-start gap-2.5 text-ios-footnote leading-relaxed text-game-text/90"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-text-secondary"
+                />
+                <span>{trait}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {wifeProfile && (
+        <section data-briefing-wife-profile="true" className="border-t border-white/10 pt-5">
+          <p className="text-ios-footnote font-semibold text-game-text">Hồ sơ người vợ</p>
+          <div className="mt-3 flex items-center gap-3">
+            <img
+              src={wifeProfile.portraitUrl}
+              alt={wifeProfile.displayName}
+              className="h-11 w-11 shrink-0 rounded-xl border border-white/10 bg-game-backdrop object-cover object-top"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-ios-footnote font-medium text-game-text tabular-nums">
+                {wifeProfile.displayName} · {wifeProfile.age} tuổi
+              </p>
+              <p className="truncate text-ios-footnote text-game-text-secondary">
+                {wifeProfile.occupation}
+              </p>
+            </div>
+          </div>
+          {wifeProfile.anchors.length > 0 && (
+            <ul data-briefing-wife-anchor="true" className="mt-3 space-y-1.5">
+              {wifeProfile.anchors.map((anchor) => (
                 <li
-                  key={trait}
+                  key={anchor}
                   className="flex items-start gap-2.5 text-ios-footnote leading-relaxed text-game-text/90"
                 >
                   <span
                     aria-hidden="true"
-                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-text-muted"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-text-secondary"
                   />
-                  <span>{trait}</span>
+                  <span>{anchor}</span>
                 </li>
               ))}
             </ul>
-          </section>
-        )}
-
-        {wifeProfile ? (
-          <section
-            data-briefing-wife-profile="true"
-            className="pt-5 border-t border-white/10"
-          >
-            <p className="text-ios-caption-1 font-medium text-game-text-secondary">
-              Hồ sơ người vợ
-            </p>
-            <div className="mt-3 flex items-center gap-3">
-              <img
-                src={wifeProfile.portraitUrl}
-                alt={wifeProfile.displayName}
-                className="h-11 w-11 shrink-0 rounded-xl border border-white/10 bg-game-backdrop object-cover object-top"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-ios-footnote font-medium text-game-text tabular-nums">
-                  {wifeProfile.displayName} · {wifeProfile.age} tuổi
-                </p>
-                <p className="truncate text-ios-caption-1 text-game-text-secondary">
-                  {wifeProfile.occupation}
-                </p>
-              </div>
-            </div>
-            {wifeProfile.anchors.length > 0 && (
-              <ul
-                data-briefing-wife-anchor="true"
-                className="mt-3 space-y-1.5"
-              >
-                {wifeProfile.anchors.map((anchor) => (
-                  <li
-                    key={anchor}
-                    className="flex items-start gap-2.5 text-ios-footnote leading-relaxed text-game-text/85"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-text-muted"
-                    />
-                    <span>{anchor}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        ) : briefing.wifeAnchor ? (
-          <section
-            data-briefing-wife-anchor="true"
-            className="pt-5 border-t border-white/10 text-ios-footnote leading-relaxed text-game-text-secondary"
-          >
-            <p className="mb-1.5 text-ios-caption-1 font-medium text-game-text-secondary">
-              Hồ sơ người vợ
-            </p>
-            <p>{briefing.wifeAnchor}</p>
-          </section>
-        ) : null}
-      </aside>
+          )}
+        </section>
+      )}
     </motion.article>
   );
 
@@ -294,6 +272,10 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
   const currentBeat = isIntroPhase ? briefing.introBeats[safeIndex] : null;
   const isFirstBeat = safeIndex === 0;
   const isLastBeat = safeIndex === totalBeats - 1;
+  const showWife = currentBeat?.speakerRole === 'wife' && Boolean(wifeProfile?.portraitUrl);
+  const portraitUrl = showWife && wifeProfile ? wifeProfile.portraitUrl : briefing.husbandPortraitUrl;
+  const portraitName = showWife && wifeProfile ? wifeProfile.displayName : husbandDisplayName;
+  const portraitCaption = showWife && wifeProfile ? wifeProfile.occupation : briefing.husbandOccupation;
 
   return (
     <AnimatePresence mode="wait">
@@ -343,24 +325,32 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
             </div>
           </header>
 
-          {/* Upper Portrait Center Stage */}
+          {/* Portrait follows the speaker; smaller so the dialogue line is the focus */}
           <div className="relative z-10 flex min-h-0 w-full flex-1 flex-col items-center justify-center px-4 py-2">
             <div
               data-intro-portrait-stage="true"
-              className="relative h-80 w-64 max-h-[54dvh] overflow-hidden rounded-2xl border border-white/15 bg-game-dossier shadow-2xl sm:h-96 sm:w-72 md:h-[420px] md:w-80"
+              className="relative h-60 w-48 max-h-[40dvh] overflow-hidden rounded-2xl border border-white/15 bg-game-dossier shadow-2xl sm:h-72 sm:w-56 md:h-80 md:w-64"
             >
-              <img
-                src={briefing.husbandPortraitUrl}
-                alt={husbandDisplayName}
-                className="h-full w-full object-cover object-top"
-              />
+              <AnimatePresence initial={false}>
+                <motion.img
+                  key={portraitUrl}
+                  src={portraitUrl}
+                  alt={portraitName}
+                  data-intro-portrait={currentBeat.speakerRole}
+                  initial={prefersReducedMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+                  transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeOut' }}
+                  className="absolute inset-0 h-full w-full object-cover object-top"
+                />
+              </AnimatePresence>
 
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-game-backdrop via-game-backdrop/85 to-transparent px-4 pb-3.5 pt-16 text-center">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-game-backdrop via-game-backdrop/85 to-transparent px-4 pb-3 pt-12 text-center">
                 <p className="text-ios-subheadline font-semibold leading-snug text-game-text">
-                  {husbandDisplayName}
+                  {portraitName}
                 </p>
                 <p className="mt-0.5 text-ios-caption-1 font-normal text-game-text-secondary">
-                  {briefing.husbandOccupation}
+                  {portraitCaption}
                 </p>
               </div>
             </div>

@@ -423,9 +423,6 @@ export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
             />
           </h1>
 
-          <p className="mt-4 max-w-xs md:max-w-sm text-ios-subheadline md:text-ios-callout font-normal text-game-text-secondary">
-            Chồng vừa ngủ say, cuộc điều tra bắt đầu
-          </p>
         </motion.header>
 
         {/* Preloader / Tactile Game CTA Stack */}
@@ -433,8 +430,12 @@ export const GameStartupScreen: React.FC<GameStartupScreenProps> = ({
           initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.14, ease: EASE_OUT }}
-          className="w-full md:mt-10"
+          className="flex w-full flex-col items-center gap-5 md:mt-10 md:items-start"
         >
+          {/* Tagline sits in the dark band above the CTA so it never crosses the hero art */}
+          <p className="max-w-xs text-ios-subheadline font-medium text-game-text [text-shadow:0_1px_8px_rgba(0,0,0,0.9)] md:max-w-sm md:text-ios-callout">
+            Chồng vừa ngủ say, cuộc điều tra bắt đầu
+          </p>
           <StartupActionArea
             progress={progress}
             isReady={isReady}
