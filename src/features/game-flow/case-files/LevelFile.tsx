@@ -20,7 +20,8 @@ interface LevelFileProps {
   subjectPortraitUrl: string;
   index: number;
   isActive: boolean;
-  pos: MotionValue<number>;
+  /** 0 = on the stack, 1 = turned over. */
+  flip: MotionValue<number>;
   reduced: boolean;
   lockedFeedback: string | null;
   isShaking: boolean;
@@ -40,7 +41,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   subjectPortraitUrl,
   index,
   isActive,
-  pos,
+  flip,
   reduced,
   lockedFeedback,
   isShaking,
@@ -48,20 +49,16 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   onFileTap,
   onStart,
 }) => {
-  const offset = useTransform(pos, (p) => index - p);
-  // Upcoming files (o > 0) peek behind the current one; flipped files (o < 0) swing away on the left edge.
-  const x = useTransform(offset, (o) => (reduced ? '0%' : o >= 0 ? `${o * 4}%` : `${clamp(o, -1.5, 0) * 105}%`));
-  const y = useTransform(offset, (o) => (reduced || o < 0 ? 0 : -Math.min(o, 3) * 7));
-  const scale = useTransform(offset, (o) => (reduced || o < 0 ? 1 : 1 - Math.min(o, 3) * 0.035));
-  const rotateZ = useTransform(offset, (o) => (reduced || o < 0 ? 0 : Math.min(o, 3) * 1.1 * (index % 2 === 0 ? 1 : -1)));
-  const rotateY = useTransform(offset, (o) => (reduced || o >= 0 ? 0 : clamp(o, -1.5, 0) * 40));
-  const opacity = useTransform(offset, (o) => {
-    if (reduced) return Math.max(0, 1 - Math.abs(o) * 1.6);
-    // A turned page stays solid while it covers the next one, then fades once it is mostly gone.
-    if (o < 0) return Math.min(1, Math.max(0, 1 + (o + 0.6) * 2.5));
-    return Math.max(0, 1 - Math.max(0, o - 2) * 1);
+  // Binder sheet: flip 0 = flat on the stack, 1 = turned over on its left edge. Reduced motion only fades.
+  const x = useTransform(flip, (f) => (reduced ? '0%' : `${-f * 6}%`));
+  const rotateY = useTransform(flip, (f) => (reduced ? 0 : -f * 100));
+  const opacity = useTransform(flip, (f) => {
+    if (reduced) return 1 - f;
+    // A turning sheet stays solid until it is edge-on, then fades out of the way.
+    return f < 0.6 ? 1 : Math.max(0, 1 - (f - 0.6) * 2.5);
   });
-  const zIndex = useTransform(offset, (o) => (o >= 0 ? 20 - Math.round(o * 4) : 30 + Math.round(o * 4)));
+  // A sheet in motion paints above the whole stack and the tabs; at rest it returns to its layer.
+  const zIndex = useTransform(flip, (f) => (f >= 1 ? 5 : f > 0 ? 100 : 20 - Math.min(index, 15)));
 
   const isGuide = Boolean(level.isGuide);
   const locked = !level.unlocked && !isGuide;
@@ -77,10 +74,12 @@ export const LevelFile: React.FC<LevelFileProps> = ({
       aria-hidden={!isActive}
       onClick={isActive ? onFileTap : undefined}
       style={{
-        x, y, scale, rotateZ, rotateY, opacity, zIndex,
+        x, rotateY, opacity, zIndex,
+        // Deeper sheets stick out a little below, so the stack reads as stacked paper.
+        bottom: -Math.min(index, 3) * 3,
         transformOrigin: 'left center',
       }}
-      className={`absolute inset-0 flex flex-col overflow-hidden rounded-lg border border-game-ink/25 ${paperTone} shadow-[0_10px_24px_-10px_rgba(0,0,0,0.65)] will-change-transform select-none`}
+      className={`absolute inset-0 flex flex-col overflow-hidden rounded-b-lg border border-game-ink/25 ${paperTone} shadow-[0_10px_24px_-10px_rgba(0,0,0,0.65)] will-change-transform select-none`}
     >
       <PaperSurface />
       <Staple className="absolute left-3 top-2 h-3 w-8 -rotate-6" />

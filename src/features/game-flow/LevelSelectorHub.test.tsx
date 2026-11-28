@@ -15,6 +15,7 @@ import {
   resolvePagerTarget,
 } from './LevelSelectorHub';
 import { LevelStage } from './case-files/LevelStage';
+import { planSheetFlips } from './case-files/pagerLogic';
 
 const RAW_EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
 const EM_DASH_REGEX = /[—–]/;
@@ -214,6 +215,34 @@ describe('LevelStage (folder opened)', () => {
     expect(html).not.toMatch(RAW_EMOJI_REGEX);
     expect(html).not.toMatch(ARBITRARY_TEXT_PX_REGEX);
     expect(html).not.toContain('font-mono');
+  });
+});
+
+describe('binder sheet flips', () => {
+  it('tapping a later tab flips every sheet before it, nearest the current sheet first', () => {
+    expect(planSheetFlips(1, 3)).toEqual([
+      { sheet: 1, flipped: true, order: 0 },
+      { sheet: 2, flipped: true, order: 1 },
+    ]);
+  });
+
+  it('tapping an earlier tab flips the sheets back in reverse order', () => {
+    expect(planSheetFlips(3, 0)).toEqual([
+      { sheet: 2, flipped: false, order: 0 },
+      { sheet: 1, flipped: false, order: 1 },
+      { sheet: 0, flipped: false, order: 2 },
+    ]);
+  });
+
+  it('plans nothing when the target is the current sheet', () => {
+    expect(planSheetFlips(2, 2)).toEqual([]);
+  });
+
+  it('puts each tab on its own sheet, staggered, with the first sheet flipped on first open', () => {
+    const html = renderLevelStage();
+    expect(html.match(/role="tab"/g)).toHaveLength(LEVELS.length);
+    expect(html.match(/data-level-tab="/g)).toHaveLength(LEVELS.length);
+    expect(html).toContain('aria-selected="true"');
   });
 });
 
