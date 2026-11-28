@@ -27,13 +27,22 @@ export async function clearStorageOnFirstLoad(page: Page): Promise<void> {
 }
 
 /**
+ * From the case file browser: open the active husband folder, flip to the level file and start it.
+ */
+export async function startCaseFromSelector(page: Page, caseId = 'case_01'): Promise<void> {
+  await page.getByRole('button', { name: 'Mở hồ sơ' }).click();
+  await page.locator(`[data-level-tab="${caseId}"]`).click();
+  await page.locator(`[data-case-id="${caseId}"]`).click();
+}
+
+/**
  * Walks the real start flow up to the phone lock screen:
- * "Bắt đầu" -> level card -> skip intro -> briefing "Mở điện thoại".
+ * "Bắt đầu" -> open husband folder -> level file -> skip intro -> briefing "Mở điện thoại".
  */
 export async function openLevelToLockscreen(page: Page, caseId = 'case_01'): Promise<Locator> {
   await page.goto('/');
   await page.getByRole('button', { name: 'Bắt đầu' }).click();
-  await page.locator(`[data-case-id="${caseId}"]`).click();
+  await startCaseFromSelector(page, caseId);
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
   const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
   // The intro may be skipped on replays, and a "Bỏ qua" tap right after it mounts can be ignored,

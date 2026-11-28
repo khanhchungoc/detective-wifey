@@ -4,6 +4,7 @@ import {
   collectErrors,
   launchApp,
   longPressAndPin,
+  startCaseFromSelector,
   startCleanPhone,
   unlockBySwipeUp,
 } from './helpers/phone';
@@ -16,7 +17,7 @@ const SESSION_KEY = 'detective:v1:jealous_wife:session';
  */
 async function replayStartFlow(page: Page): Promise<void> {
   await page.getByRole('button', { name: 'Bắt đầu' }).click();
-  await page.locator('[data-case-id="case_01"]').click();
+  await startCaseFromSelector(page, 'case_01');
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
   const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
   await expect(async () => {
