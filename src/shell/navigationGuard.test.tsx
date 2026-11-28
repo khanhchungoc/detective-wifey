@@ -202,8 +202,8 @@ describe('ExitConfirmModal Component', () => {
       <ExitConfirmModal isOpen={true} onStay={() => {}} onLeave={() => {}} />
     );
 
-    expect(html).toContain('backdrop-blur-md');
-    expect(html).toContain('bg-slate-900/95');
+    expect(html).toContain('glass-scrim');
+    expect(html).toContain('glass-elevated');
     // Workspace invariant: strictly zero em dashes
     expect(html).not.toContain('—');
   });

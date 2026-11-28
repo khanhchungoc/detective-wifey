@@ -180,7 +180,7 @@ export function ControlCenter({
       {showChevron && (
         <span
           data-notification-swipe-hint
-          className="mt-1 flex h-4 w-7 items-center justify-center rounded-full bg-slate-900/80 border border-white/20 text-white/90 shadow-sm animate-[bounce_1s_ease-in-out_3]"
+          className="glass-elevated mt-1 flex h-4 w-7 items-center justify-center rounded-full text-white/90 animate-[bounce_1s_ease-in-out_3]"
           aria-hidden="true"
         >
           <IoChevronDown className="h-3 w-3" />
@@ -199,9 +199,9 @@ export function ControlCenter({
       style={{ pointerEvents: open ? 'auto' : 'none' }}
       onKeyDown={onKeyDown}
     >
-      {/* 1. Frosted iOS glassmorphic backdrop scrim */}
+      {/* 1. Frosted iOS 27 Liquid Glass backdrop scrim */}
       <div
-        className={`absolute inset-0 bg-slate-950/40 backdrop-blur-xl transition-opacity duration-300 ease-out ${
+        className={`glass-scrim absolute inset-0 transition-opacity duration-300 ease-out ${
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{ touchAction: 'none' }}
@@ -274,7 +274,7 @@ export function ControlCenter({
               <button
                 key={index}
                 type="button"
-                className={`flex min-h-[120px] flex-col items-start justify-between rounded-[28px] border border-white/25 bg-white/15 backdrop-blur-md p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_8px_24px_rgba(0,0,0,0.22)] hover:bg-white/25 active:scale-95 ${index === 0 ? 'col-span-2' : ''}`}
+                className={`glass-subtle flex min-h-[120px] flex-col items-start justify-between rounded-[28px] p-5 text-left transition-[filter,transform] hover:brightness-110 active:scale-95 ${index === 0 ? 'col-span-2' : ''}`}
                 onClick={() => {
                   if (suppressActionClick.current) {
                     suppressActionClick.current = false;

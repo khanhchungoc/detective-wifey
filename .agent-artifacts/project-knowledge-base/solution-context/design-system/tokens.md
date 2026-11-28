@@ -50,15 +50,18 @@ For components rendering over light surfaces (e.g. `.glass-toast-light`, modal a
 
 ---
 
-## 2. Dialed-Down iOS Frosted Glass Hierarchy
+## 2. iOS 27 Liquid Glass Hierarchy
 
-To preserve native mobile fidelity while ensuring lightweight performance across web browsers, the system uses a compact 3-tier frosted glass hierarchy:
+To match iOS 27 Liquid Glass while keeping zero-JS runtime performance across mobile and desktop browsers, the Phone OS shell uses CSS custom properties (`--ios27-glass-*`) with perceptual `oklab` gradients, darkened outer separation hairlines, bright top specular rims, layered shadows, and automatic `@media (prefers-reduced-transparency: reduce), (prefers-contrast: more)` opaque fallbacks:
 
-| Glass Tier | Class Name | CSS Recipe | Target Components |
+| Glass Tier | Class Name | Core Tokens & Recipe | Target Components |
 |---|---|---|---|
-| **Subtle Glass** | `.glass-subtle` | `background: rgba(255, 255, 255, 0.12);`<br>`backdrop-filter: blur(16px);`<br>`border: 1px solid rgba(255, 255, 255, 0.18);` | Dock tray, Search pill, Keypad circular buttons |
-| **Elevated Glass** | `.glass-elevated` | `background: rgba(30, 41, 59, 0.90);`<br>`backdrop-filter: blur(20px);`<br>`border: 1px solid rgba(255, 255, 255, 0.12);`<br>`box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);` | Shared PIN keypad modal, Bottom sheets, Context menus |
-| **Light Toast Glass** | `.glass-toast-light` | `background: rgba(255, 255, 255, 0.95);`<br>`backdrop-filter: blur(16px);`<br>`border: 1px solid #E2E8F0;`<br>`box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);` | Notification banner toasts, Floating timestamps |
+| **Subtle Liquid Glass** | `.glass-subtle` | `--ios27-glass-blur-regular` (`24px`), `saturate(185%) brightness(1.06)`, `oklab` top-to-bottom sheen, bright top specular rim, darkened outer hairline | Home Search pill, Lockscreen widgets & circular buttons, Control Center tiles, Clock widget (`.phone-clock-widget`) |
+| **Dock Liquid Glass** | `.glass-dock` | `--ios27-glass-blur-dock` (`32px`), `saturate(185%) brightness(1.06)`, crisp lit rim, darkened outer edge, deep floating shadow | Home Dock tray |
+| **Elevated Liquid Glass** | `.glass-elevated` | `--ios27-glass-blur-elevated` (`28px`), `saturate(165%)`, dark tinted `oklab` sheen, specular top rim, darkened outer edge | System Alert pill, Lockscreen notification cards, AssistiveTouch orb, Exit modal, PWA sheet |
+| **Floating Menu Glass** | `.assistive-menu-glass` | `--ios27-glass-blur-dock` (`32px`), `saturate(170%)`, 145deg `oklab` dark sheen, bright specular rim | AssistiveTouch expanded menu |
+| **Light Liquid Glass** | `.glass-toast-light` | `--ios27-glass-blur-elevated` (`28px`), `saturate(185%)`, light `oklab` sheen, crisp white specular rim, dark outer hairline | Top Notification Banner toasts |
+| **Backdrop Scrim Glass** | `.glass-scrim` | `--ios27-glass-scrim-fill`, `--ios27-glass-blur-scrim` (`22px`), `saturate(140%)` | Control Center, Exit modal, and PWA sheet backdrops |
 
 ---
 

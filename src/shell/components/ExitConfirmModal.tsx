@@ -29,12 +29,12 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
       onClick={onStay}
       onKeyDown={handleKeyDown}
       {...swipeHandlers}
-      className="absolute inset-0 z-[100] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn select-none font-sans"
+      className="glass-scrim absolute inset-0 z-[100] flex items-center justify-center p-4 animate-fadeIn select-none font-sans"
     >
       <div
         ref={dialogRef}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-xs bg-slate-900/95 border border-white/20 rounded-2xl p-5 shadow-2xl space-y-4 text-white text-center animate-popIn backdrop-blur-xl"
+        className="glass-elevated w-full max-w-xs rounded-2xl p-5 space-y-4 text-white text-center animate-popIn"
       >
         <div className="w-12 h-12 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center">
           <IoWarningOutline className="w-6 h-6" />

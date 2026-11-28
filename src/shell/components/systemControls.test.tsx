@@ -95,9 +95,8 @@ describe('system control gesture ownership', () => {
         onOpenChange={() => {}}
       />
     );
-    expect(html).toContain('bg-slate-950/40');
-    expect(html).toContain('backdrop-blur-xl');
-    expect(html).toContain('backdrop-blur-md');
+    expect(html).toContain('glass-scrim');
+    expect(html).toContain('glass-subtle');
   });
 
   it('renders status bar trigger covering system bar height and meeting touch target minimums', () => {
