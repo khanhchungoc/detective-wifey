@@ -10,6 +10,13 @@ import type { PhotoItem } from '../types';
 import { buildPhotoEvidenceItem } from '../data';
 import { PhotoPreview } from './PhotoPreview';
 import { StoryEvidenceTarget, type UniversalEvidenceItem } from '../../../features/investigation';
+import {
+  SHEET_BACKDROP_OPEN_MS,
+  SHEET_CLOSE_BEZIER,
+  SHEET_CLOSE_MS,
+  SHEET_OPEN_BEZIER,
+  SHEET_OPEN_MS,
+} from '../../../shared/motion/sheetMotion';
 
 interface PhotoInfoDrawerProps {
   photo: PhotoItem;
@@ -22,7 +29,8 @@ interface PhotoInfoDrawerProps {
   onShowToast?: (message: string) => void;
 }
 
-const SHEET_SPRING = { type: 'spring' as const, stiffness: 360, damping: 34, mass: 0.9 };
+const SHEET_OPEN_TRANSITION = { duration: SHEET_OPEN_MS / 1000, ease: SHEET_OPEN_BEZIER };
+const SHEET_CLOSE_TRANSITION = { duration: SHEET_CLOSE_MS / 1000, ease: SHEET_CLOSE_BEZIER };
 const DISMISS_DISTANCE = 80;
 const DISMISS_VELOCITY = 0.45;
 
@@ -116,7 +124,7 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
     if (prefersReducedMotion) {
       sheetY.set(0);
     } else {
-      animate(sheetY, 0, SHEET_SPRING);
+      animate(sheetY, 0, SHEET_OPEN_TRANSITION);
     }
   };
 
@@ -126,7 +134,11 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: SHEET_BACKDROP_OPEN_MS / 1000, ease: SHEET_CLOSE_BEZIER }
+      }
       className="absolute inset-0 z-40 flex flex-col justify-end"
     >
       {/* Dimmed Scrim Backdrop */}
@@ -142,10 +154,10 @@ export const PhotoInfoDrawer: React.FC<PhotoInfoDrawerProps> = ({
         role="dialog"
         aria-modal="true"
         aria-label="Thông tin ảnh"
-        initial={{ y: '100%' }}
+        initial={prefersReducedMotion ? false : { y: '100%' }}
         animate={{ y: 0 }}
-        exit={{ y: '100%', transition: { duration: 0.24, ease: [0.4, 0, 0.2, 1] } }}
-        transition={SHEET_SPRING}
+        exit={{ y: '100%', transition: prefersReducedMotion ? { duration: 0 } : SHEET_CLOSE_TRANSITION }}
+        transition={prefersReducedMotion ? { duration: 0 } : SHEET_OPEN_TRANSITION}
         style={{ y: sheetY, willChange: 'transform' }}
         className="relative max-h-[85%] bg-[#000000] text-white rounded-t-3xl shadow-2xl border-t border-white/10 flex flex-col overflow-hidden"
       >

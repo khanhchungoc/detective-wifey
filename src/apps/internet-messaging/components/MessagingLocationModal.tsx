@@ -1,6 +1,13 @@
 import React from 'react';
 import { IoChevronBack, IoClose, IoLocation, IoNavigateOutline } from 'react-icons/io5';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
+import {
+  SHEET_BACKDROP_OPEN_MS,
+  SHEET_CLOSE_EASE,
+  SHEET_CLOSE_MS,
+  SHEET_OPEN_EASE,
+  SHEET_OPEN_MS,
+} from '../../../shared/motion/sheetMotion';
 
 interface MessagingLocationModalProps {
   isOpen: boolean;
@@ -44,12 +51,12 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
     panel.style.transform = 'translate3d(0, 100%, 0)';
     const panelAnim = panel.animate(
       [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(0, 100%, 0)' }],
-      { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+      { duration: SHEET_CLOSE_MS, easing: SHEET_CLOSE_EASE },
     );
     const anims: Animation[] = [panelAnim];
     if (backdrop && typeof backdrop.animate === 'function') {
       backdrop.style.opacity = '0';
-      anims.push(backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }));
+      anims.push(backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: SHEET_CLOSE_MS, easing: SHEET_CLOSE_EASE }));
     }
     animsRef.current = anims;
     const finish = () => {
@@ -71,11 +78,11 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
     const anims: Animation[] = [
       panel.animate(
         [{ transform: 'translate3d(0, 100%, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
-        { duration: 300, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' },
+        { duration: SHEET_OPEN_MS, easing: SHEET_OPEN_EASE },
       ),
     ];
     if (backdrop && typeof backdrop.animate === 'function') {
-      anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' }));
+      anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: SHEET_BACKDROP_OPEN_MS, easing: SHEET_OPEN_EASE }));
     }
     animsRef.current = anims;
     return () => cancelAnims();

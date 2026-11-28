@@ -86,13 +86,12 @@ export const LevelFile: React.FC<LevelFileProps> = ({
       }}
       className="absolute inset-x-0 -top-12 will-change-transform select-none"
     >
-      {/* Sheet and tab are ONE clipped piece: one paper colour, one grain, crisp inset rim. */}
+      {/* Sheet and tab are ONE deckled piece: one paper colour, cellulose grain, warm worn rim. */}
       <div
         className={`absolute inset-0 flex flex-col overflow-hidden ${paperTone}`}
         style={{
           clipPath: sheetClip(index, total),
-          boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.42), inset 0 0 0 1px rgba(50,36,14,0.34)",
+          boxShadow: "inset 0 0 12px rgba(96,66,22,0.18)",
         }}
       >
         <PaperSurface />

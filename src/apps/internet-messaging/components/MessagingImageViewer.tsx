@@ -60,7 +60,8 @@ export function MessagingImageViewer({ message, contactName, onClose, onEvidence
   };
 
   const viewer = <div {...swipe} ref={dialog} role="dialog" aria-label="Xem ảnh" aria-modal={!suspended} aria-hidden={suspended} inert={suspended}
-    className="absolute inset-0 z-50 overflow-hidden bg-black text-white animate-fadeIn"
+    style={{ backfaceVisibility: 'hidden' }}
+    className="absolute inset-0 z-50 overflow-hidden bg-black text-white animate-fadeIn transform-gpu will-change-transform"
     onKeyDown={event => {
       if (suspended) return;
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
