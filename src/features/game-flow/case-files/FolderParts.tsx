@@ -8,60 +8,45 @@ import React from 'react';
 const svgUri = (svg: string) => `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 
 /**
- * Paper speckle: isotropic fine fibre noise (same frequency on both axes, so no streaks), dark brown,
- * very low alpha. A 256px tile with stitching so repeats are invisible at this contrast.
+ * Paper speckle: tiny static vector flecks (zero SVG <filter>/<feTurbulence> so Chrome Android
+ * never stalls the raster thread tiling procedural noise during animations).
  */
 const SPECK_URI = svgUri(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><filter id="s" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="21" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.36  0 0 0 0 0.27  0 0 0 0 0.14  0 0 0 -3 1.3"/></filter><rect width="256" height="256" filter="url(#s)"/></svg>`,
+  `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" fill="rgba(92,69,36,0.16)"><rect x="7" y="11" width="1.5" height="1.5"/><rect x="29" y="5" width="1" height="1"/><rect x="53" y="17" width="1.5" height="1"/><rect x="79" y="9" width="1" height="1.5"/><rect x="14" y="34" width="1" height="1"/><rect x="41" y="28" width="1.5" height="1.5"/><rect x="68" y="39" width="1" height="1"/><rect x="88" y="27" width="1.5" height="1"/><rect x="21" y="58" width="1.5" height="1"/><rect x="48" y="51" width="1" height="1.5"/><rect x="74" y="63" width="1.5" height="1.5"/><rect x="9" y="81" width="1" height="1"/><rect x="35" y="76" width="1.5" height="1"/><rect x="61" y="84" width="1" height="1.5"/><rect x="85" y="79" width="1.5" height="1"/><rect x="58" y="4" width="1" height="1"/><rect x="3" y="48" width="1.5" height="1"/><rect x="91" y="53" width="1" height="1.5"/></svg>`,
 );
-
-/** Rough ink: erodes a stamp with speckles. Used as a mask on a static element. */
-const INK_MASK_URI = svgUri(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="m" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="5" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.2 0 0 0 2.75"/></filter><rect width="160" height="160" filter="url(#m)"/></svg>`,
-);
-
-/** A few faint foxing spots (age freckles), fixed positions so the sheet looks the same on every render. */
-const FOXING =
-  'radial-gradient(circle at 18% 24%, rgba(150,100,40,0.13) 0, transparent 9px), radial-gradient(circle at 71% 12%, rgba(150,100,40,0.10) 0, transparent 14px), radial-gradient(circle at 84% 63%, rgba(150,100,40,0.12) 0, transparent 11px), radial-gradient(circle at 33% 82%, rgba(150,100,40,0.09) 0, transparent 16px), radial-gradient(circle at 9% 57%, rgba(150,100,40,0.08) 0, transparent 7px)';
 
 /** Soft darker edges, as if the sheet yellowed from the rim inward. */
-const VIGNETTE = 'radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(112,80,30,0.2) 100%)';
+const VIGNETTE = 'radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(112,80,30,0.18) 100%)';
 
 /** One faint horizontal fold: a thin shadow line with a highlight right below it. */
 const CREASE =
   'linear-gradient(to bottom, transparent calc(50% - 3px), rgba(90,62,22,0.1) calc(50% - 1px), rgba(255,255,255,0.28) calc(50% + 1px), transparent calc(50% + 4px))';
 
 /**
- * The ONE paper look used by folder, files, tabs and the briefing sheet: flat paper colour (set by the
- * parent's bg token) + fine isotropic speckle + faint foxing + darker rim. Static layers only.
- * Parent must be `relative`; pass `behind` (with `isolate` on the parent) when the content is not itself positioned.
+ * The ONE paper look used by folder, files, tabs and the briefing sheet: single static layer
+ * with subtle vector grain + soft vignette. Zero SVG filters or inset shadow blurs.
  */
 export const PaperSurface: React.FC<{ worn?: boolean; crease?: boolean; behind?: boolean }> = ({
   worn = true,
   crease = false,
   behind = false,
 }) => (
-  <>
-    <span
-      aria-hidden="true"
-      className={`pointer-events-none absolute inset-0 rounded-[inherit] ${behind ? '-z-10' : ''}`}
-      style={{
-        backgroundImage: `${worn ? `${FOXING}, ` : ''}${SPECK_URI}`,
-        backgroundSize: worn ? 'auto, auto, auto, auto, auto, 256px 256px' : '256px 256px',
-        opacity: 0.42,
-      }}
-    />
-    {worn && (
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 rounded-[inherit] ${behind ? '-z-10' : ''}`}
-        style={{
-          backgroundImage: crease ? `${CREASE}, ${VIGNETTE}` : VIGNETTE,
-          boxShadow: 'inset 0 0 10px rgba(122,86,28,0.22)',
-        }}
-      />
-    )}
-  </>
+  <span
+    aria-hidden="true"
+    className={`pointer-events-none absolute inset-0 rounded-[inherit] ${behind ? '-z-10' : ''}`}
+    style={{
+      backgroundImage: worn
+        ? crease
+          ? `${CREASE}, ${VIGNETTE}, ${SPECK_URI}`
+          : `${VIGNETTE}, ${SPECK_URI}`
+        : SPECK_URI,
+      backgroundSize: worn
+        ? crease
+          ? 'auto, auto, 96px 96px'
+          : 'auto, 96px 96px'
+        : '96px 96px',
+    }}
+  />
 );
 
 /**
@@ -114,13 +99,7 @@ export const RubberStamp: React.FC<{
 }> = ({ children, tone, className, dataAttrs }) => (
   <span
     {...dataAttrs}
-    style={{
-      WebkitMaskImage: INK_MASK_URI,
-      maskImage: INK_MASK_URI,
-      WebkitMaskSize: '160px 160px',
-      maskSize: '160px 160px',
-    }}
-    className={`inline-block rounded-sm border-2 px-2 py-0.5 font-dossier text-ios-caption-2 font-extrabold uppercase ${
+    className={`inline-block rounded-sm border-2 px-2 py-0.5 font-dossier text-ios-caption-2 font-extrabold uppercase opacity-85 ${
       tone === 'red' ? 'border-game-crimson-deep text-game-crimson-deep' : 'border-game-ink text-game-ink'
     } ${className ?? ''}`}
   >
@@ -131,12 +110,12 @@ export const RubberStamp: React.FC<{
 /** Typed label strip glued on the folder. */
 export const LabelStrip: React.FC<{ className?: string; children: React.ReactNode }> = ({ className, children }) => (
   <div
-    className={`relative rounded-[2px] border border-game-ink/20 bg-game-label-strip px-3 py-1.5 shadow-[0_2px_3px_-1px_rgba(60,40,10,0.45)] ${className ?? ''}`}
+    className={`relative rounded-[2px] border border-game-ink/20 bg-game-label-strip px-3 py-1.5 shadow-sm ${className ?? ''}`}
   >
     <span
       aria-hidden="true"
       className="pointer-events-none absolute inset-0"
-      style={{ backgroundImage: SPECK_URI, backgroundSize: '256px 256px', opacity: 0.8 }}
+      style={{ backgroundImage: SPECK_URI, backgroundSize: '96px 96px', opacity: 0.7 }}
     />
     <div className="relative">{children}</div>
   </div>
@@ -175,19 +154,20 @@ export const AttachedPhoto: React.FC<{
   tilt?: string;
 }> = ({ src, className, tilt = '-rotate-2' }) => (
   <figure
-    className={`relative ${tilt} rounded-[2px] bg-game-film-frame p-1.5 shadow-[0_6px_12px_-4px_rgba(60,40,10,0.6),0_1px_2px_rgba(60,40,10,0.4)] ${className ?? ''}`}
+    className={`relative ${tilt} rounded-[2px] bg-game-film-frame p-1.5 shadow-md ${className ?? ''}`}
   >
     <div className="relative aspect-[3/4] h-full overflow-hidden bg-game-backdrop">
       {src ? (
-        <img src={src} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover object-center" />
+        <img
+          src={src}
+          alt=""
+          decoding="async"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
       ) : (
         <RedactedSilhouette className="absolute inset-0 h-full w-full" />
       )}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.25)' }}
-      />
     </div>
     <Paperclip className="absolute -top-5 right-3 z-10 h-11 w-5" />
   </figure>

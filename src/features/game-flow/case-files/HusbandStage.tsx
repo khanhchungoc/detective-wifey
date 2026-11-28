@@ -2,7 +2,7 @@ import React from 'react';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 import type { HusbandProfile } from '../../../shared/contracts/game-flow';
 import { HusbandFolder } from './HusbandFolder';
-import { HUSBAND_SLOT_PCT, usePager } from './usePager';
+import { usePager } from './usePager';
 
 interface HusbandStageProps {
   husbands: HusbandProfile[];
@@ -26,6 +26,7 @@ export const HusbandStage: React.FC<HusbandStageProps> = ({
     index: activeIndex,
     total: husbands.length,
     reduced,
+    strideRatio: 0.69,
     onIndexChange,
   });
   const canCycle = husbands.length > 1;
@@ -41,36 +42,25 @@ export const HusbandStage: React.FC<HusbandStageProps> = ({
         style={{ touchAction: 'pan-y' }}
         className="relative min-h-0 w-full flex-1 overflow-hidden px-1"
       >
-        <div
-          ref={pager.trackRef}
-          style={{
-            transform: `translate3d(${-activeIndex * HUSBAND_SLOT_PCT}%, 0px, 0px)`,
-            backfaceVisibility: 'hidden',
-          }}
-          className="relative h-full w-full will-change-transform"
-        >
-          {husbands.map((husband, idx) => (
-            <div
-              key={husband.husbandId}
-              style={{ left: `${idx * HUSBAND_SLOT_PCT}%` }}
-              className="absolute inset-y-0 flex w-full justify-center"
-            >
-              <HusbandFolder
-                husband={husband}
-                index={idx}
-                isActive={idx === activeIndex}
-                onActivate={() => {
-                  if (pager.consumeDragClick()) return;
-                  if (idx === activeIndex) {
-                    if (!husband.comingSoon) onOpen();
-                  } else {
-                    pager.goTo(idx);
-                  }
-                }}
-              />
-            </div>
-          ))}
-        </div>
+        {husbands.map((husband, idx) => (
+          <HusbandFolder
+            key={husband.husbandId}
+            husband={husband}
+            index={idx}
+            offset={idx - activeIndex}
+            isActive={idx === activeIndex}
+            reduced={reduced}
+            cardRef={pager.registerCard(idx)}
+            onActivate={() => {
+              if (pager.consumeDragClick()) return;
+              if (idx === activeIndex) {
+                if (!husband.comingSoon) onOpen();
+              } else {
+                pager.goTo(idx);
+              }
+            }}
+          />
+        ))}
       </div>
 
       <div className="mx-auto flex w-full max-w-md shrink-0 flex-col gap-2 px-4">

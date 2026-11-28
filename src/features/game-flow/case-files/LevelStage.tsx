@@ -197,7 +197,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 zIndex: 200,
                 willChange: 'transform, opacity',
               }}
-              className="pointer-events-none absolute inset-x-0 bottom-0 top-12 flex items-center justify-center rounded-xl border border-game-ink/30 bg-game-manila shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+              className="pointer-events-none absolute inset-x-0 bottom-0 top-12 flex items-center justify-center rounded-xl border border-game-ink/30 bg-game-manila shadow-lg"
             >
               <PaperSurface />
               <span className={`relative text-ios-title-2 uppercase ${INK_TEXT_STRONG}`}>{caseCode}</span>
