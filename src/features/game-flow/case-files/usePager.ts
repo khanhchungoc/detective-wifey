@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react';
-import { animate, useMotionValue } from 'motion/react';
-import type { AnimationPlaybackControls, MotionValue } from 'motion/react';
 import {
   DRAG_START_PX,
   applyRubberBand,
@@ -9,8 +7,12 @@ import {
   resolvePagerTarget,
 } from './pagerLogic';
 
-const PAGER_SPRING = { type: 'spring' as const, stiffness: 320, damping: 34, mass: 0.9 };
-const REDUCED_FADE = { duration: 0.15, ease: 'easeOut' as const };
+const PAGER_DURATION_MS = 520;
+const PAGER_REDUCED_MS = 180;
+const PAGER_EASE = 'cubic-bezier(0.45, 0, 0.25, 1)';
+
+/** Horizontal offset between adjacent folder slots as a percentage of stage width. */
+export const HUSBAND_SLOT_PCT = 88;
 
 export interface PagerHandlers {
   onPointerDown: (e: ReactPointerEvent<HTMLElement>) => void;
@@ -20,8 +22,8 @@ export interface PagerHandlers {
 }
 
 export interface Pager {
-  /** Fractional page position (0 = first page). Updated per frame without React renders. */
-  pos: MotionValue<number>;
+  /** Single horizontal track moved on the GPU compositor thread via native WAAPI. */
+  trackRef: RefObject<HTMLDivElement | null>;
   goTo: (index: number) => void;
   handlers: PagerHandlers;
   /** True when the last pointer gesture was a drag, so the following click must be ignored. */
@@ -40,10 +42,11 @@ interface DragState {
   dragging: boolean;
 }
 
+const trackTransform = (pos: number) => `translate3d(${(-pos * HUSBAND_SLOT_PCT).toFixed(3)}%, 0px, 0px)`;
+
 /**
- * Horizontal drag-follow pager. The finger drives `pos` directly (no React renders while
- * dragging, no layout reads); release springs to the nearest page. Reduced motion skips
- * drag-follow and only fades between pages.
+ * Horizontal compositor-thread pager. Moves a single track container with `translate3d` via
+ * native WAAPI (zero JS rAF loop, zero per-card scale/3D re-rasterization) for 120Hz Android.
  */
 export function usePager(params: {
   index: number;
@@ -53,14 +56,15 @@ export function usePager(params: {
   strideRatio?: number;
   onIndexChange: (index: number) => void;
 }): Pager {
-  const { index, total, reduced, strideRatio = 0.62, onIndexChange } = params;
-  const pos = useMotionValue(index);
+  const { index, total, reduced, strideRatio = HUSBAND_SLOT_PCT / 100, onIndexChange } = params;
   const surfaceRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
   const widthRef = useRef(0);
+  const currentPosRef = useRef(index);
+  const targetRef = useRef(index);
+  const activeAnimRef = useRef<Animation | null>(null);
   const dragRef = useRef<DragState | null>(null);
   const draggedRef = useRef(false);
-  const controlsRef = useRef<AnimationPlaybackControls | null>(null);
-  const targetRef = useRef(index);
   const onChangeRef = useRef(onIndexChange);
 
   useEffect(() => {
@@ -77,25 +81,49 @@ export function usePager(params: {
     return () => observer.disconnect();
   }, []);
 
+  const cancelAnim = useCallback(() => {
+    if (activeAnimRef.current) {
+      activeAnimRef.current.cancel();
+      activeAnimRef.current = null;
+    }
+  }, []);
+
   const settle = useCallback(
-    (target: number, velocity = 0) => {
-      controlsRef.current?.stop();
+    (target: number) => {
+      cancelAnim();
+      const fromPos = currentPosRef.current;
       targetRef.current = target;
-      controlsRef.current = animate(
-        pos,
-        target,
-        reduced ? REDUCED_FADE : { ...PAGER_SPRING, velocity },
+      currentPosRef.current = target;
+      const track = trackRef.current;
+      if (!track) return;
+
+      const endTransform = trackTransform(target);
+      track.style.transform = endTransform;
+
+      if (fromPos === target || typeof track.animate !== 'function') return;
+
+      if (reduced) {
+        activeAnimRef.current = track.animate([{ opacity: 0.5 }, { opacity: 1 }], {
+          duration: PAGER_REDUCED_MS,
+          easing: 'ease-in-out',
+        });
+        return;
+      }
+
+      activeAnimRef.current = track.animate(
+        [{ transform: trackTransform(fromPos) }, { transform: endTransform }],
+        { duration: PAGER_DURATION_MS, easing: PAGER_EASE },
       );
     },
-    [pos, reduced],
+    [cancelAnim, reduced],
   );
 
-  // External index changes (dots, tabs, arrows) animate here; drag releases already set targetRef.
+  // External index changes (dots, arrows, side-card taps) animate here.
   useEffect(() => {
     if (targetRef.current !== index) settle(index);
   }, [index, settle]);
 
-  useEffect(() => () => controlsRef.current?.stop(), []);
+  useEffect(() => () => cancelAnim(), [cancelAnim]);
 
   const stride = useCallback(() => widthRef.current * strideRatio, [strideRatio]);
 
@@ -103,13 +131,13 @@ export function usePager(params: {
     () => ({
       onPointerDown: (e) => {
         if (total <= 1 || !e.isPrimary) return;
-        controlsRef.current?.stop();
+        cancelAnim();
         draggedRef.current = false;
         dragRef.current = {
           pointerId: e.pointerId,
           startX: e.clientX,
           startY: e.clientY,
-          startPos: pos.get(),
+          startPos: currentPosRef.current,
           lastX: e.clientX,
           lastT: e.timeStamp,
           velocityX: 0,
@@ -134,14 +162,18 @@ export function usePager(params: {
         d.lastT = e.timeStamp;
         if (reduced) return;
         const s = stride();
-        if (s > 0) pos.set(applyRubberBand(d.startPos - dx / s, total));
+        if (s > 0 && trackRef.current) {
+          const nextPos = applyRubberBand(d.startPos - dx / s, total);
+          currentPosRef.current = nextPos;
+          trackRef.current.style.transform = trackTransform(nextPos);
+        }
       },
       onPointerUp: (e) => {
         const d = dragRef.current;
         dragRef.current = null;
         if (!d || d.pointerId !== e.pointerId) return;
         if (!d.dragging) {
-          settle(clampPageIndex(Math.round(pos.get()), total));
+          settle(clampPageIndex(Math.round(currentPosRef.current), total));
           return;
         }
         const s = stride();
@@ -152,7 +184,7 @@ export function usePager(params: {
           stridePx: s,
           total,
         });
-        settle(target, s > 0 ? -d.velocityX / s : 0);
+        settle(target);
         if (target !== index) onChangeRef.current(target);
       },
       onPointerCancel: (e) => {
@@ -162,7 +194,7 @@ export function usePager(params: {
         settle(clampPageIndex(Math.round(d.startPos), total));
       },
     }),
-    [index, pos, reduced, settle, stride, total],
+    [cancelAnim, index, reduced, settle, stride, total],
   );
 
   const consumeDragClick = useCallback(() => {
@@ -180,5 +212,5 @@ export function usePager(params: {
     [index, total],
   );
 
-  return { pos, goTo, handlers, consumeDragClick, surfaceRef };
+  return { trackRef, goTo, handlers, consumeDragClick, surfaceRef };
 }

@@ -13,7 +13,7 @@ import {
 } from './pagerLogic';
 import { useBinder } from './useBinder';
 
-const COVER_OPEN_MS = 520;
+const COVER_OPEN_MS = 640;
 const COVER_REDUCED_MS = 200;
 const COVER_OPEN_EASE = 'cubic-bezier(0.45, 0, 0.25, 1)';
 

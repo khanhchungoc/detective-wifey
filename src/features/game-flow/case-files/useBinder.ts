@@ -9,8 +9,8 @@ import {
 } from './pagerLogic';
 import type { PagerHandlers } from './usePager';
 
-const SHUFFLE_DURATION_MS = 420;
-const SNAP_DURATION_MS = 300;
+const SHUFFLE_DURATION_MS = 560;
+const SNAP_DURATION_MS = 380;
 const SHUFFLE_EASE = 'cubic-bezier(0.45, 0, 0.25, 1)';
 const INCOMING_LIFT_PX = -34;
 const OUTGOING_TUCK_PX = 16;
