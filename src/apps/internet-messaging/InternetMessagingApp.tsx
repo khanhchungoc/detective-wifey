@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { AnimatePresence, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import { useMotionState } from '../../shared/motion/useMotionState';
 import { readMessagingData } from './data';
 import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
@@ -112,9 +113,37 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
     statusText: 'Đang làm việc...',
   };
 
+  const prefersReducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useMotionState<MessagingTab>('messages', 'fade');
-  const [selectedThreadId, setSelectedThreadId] = useMotionState<string | null>(null, 'navigation');
-  const [showCloudDrawer, setShowCloudDrawer] = useMotionState(false, 'navigation');
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
+  const [showCloudDrawer, setShowCloudDrawer] = useState(false);
+  const detailX = useMotionValue<number | string>(0);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  const swipeDisplacementRef = useRef(0);
+
+  const detailTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.28, ease: [0.32, 0.72, 0, 1] as const };
+
+  const handleDetailSwipeProgress = (progress: number, displacement: number) => {
+    swipeDisplacementRef.current = displacement;
+    if (scrimRef.current) {
+      scrimRef.current.style.opacity = String(Math.max(0, 1 - progress));
+    }
+  };
+
+  const handleDetailSwipeEnd = (committed: boolean) => {
+    if (committed) {
+      // Carry the live finger offset onto the exiting motion layer so there is zero snap when useSwipeBack clears the child transform.
+      detailX.set(swipeDisplacementRef.current);
+      swipeDisplacementRef.current = 0;
+    } else {
+      swipeDisplacementRef.current = 0;
+      if (scrimRef.current) {
+        scrimRef.current.style.opacity = '1';
+      }
+    }
+  };
 
   // Active chat thread if any
   const activeThread =
@@ -147,10 +176,16 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
                 threads={threads}
                 otherThreads={otherThreads}
                 cloudDocuments={cloudDocuments}
-                onSelectThread={(id) => setSelectedThreadId(id)}
+                onSelectThread={(id) => {
+                  swipeDisplacementRef.current = 0;
+                  setSelectedThreadId(id);
+                }}
                 onTagSuspect={handleTag}
                 onReturnHome={onReturnHome}
-                onOpenMyDocuments={() => setShowCloudDrawer(true)}
+                onOpenMyDocuments={() => {
+                  swipeDisplacementRef.current = 0;
+                  setShowCloudDrawer(true);
+                }}
               />
             )}
 
@@ -181,7 +216,10 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
               <MessagingProfileView
                 currentUser={currentUser}
                 cloudDocuments={cloudDocuments}
-                onOpenCloudDrawer={() => setShowCloudDrawer(true)}
+                onOpenCloudDrawer={() => {
+                  swipeDisplacementRef.current = 0;
+                  setShowCloudDrawer(true);
+                }}
                 onReturnHome={onReturnHome}
                 onTagSuspect={handleTag}
               />
@@ -196,33 +234,66 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
           />
 
           {/* Dimmed Scrim Overlay over previous screen when a detail screen is active */}
-          {isDetailActive && (
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-black/40 z-10 pointer-events-none transition-opacity duration-200"
-            />
-          )}
+          <AnimatePresence>
+            {isDetailActive && (
+              <motion.div
+                ref={scrimRef}
+                key="zola-detail-scrim"
+                aria-hidden="true"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={detailTransition}
+                className="absolute inset-0 bg-black/35 z-10 pointer-events-none"
+              />
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Top Layer: Active Chat Thread */}
-        {selectedThreadId && activeThread && (
-          <MessagingChatThreadView
-            caseId={caseData.caseId}
-            contacts={contacts}
-            thread={activeThread}
-            onBack={() => setSelectedThreadId(null)}
-            onTagSuspect={handleTag}
-          />
-        )}
+        {/* Top Layer: Active Chat Thread & My Documents (compositor-only GPU slide, zero View Transition teardown flicker) */}
+        <AnimatePresence>
+          {selectedThreadId && activeThread && (
+            <motion.div
+              key={`thread-${activeThread.threadId}`}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={detailTransition}
+              style={{ x: detailX }}
+              className="absolute inset-0 z-20 will-change-transform"
+            >
+              <MessagingChatThreadView
+                caseId={caseData.caseId}
+                contacts={contacts}
+                thread={activeThread}
+                onBack={() => setSelectedThreadId(null)}
+                onTagSuspect={handleTag}
+                onSwipeProgress={handleDetailSwipeProgress}
+                onSwipeEnd={handleDetailSwipeEnd}
+              />
+            </motion.div>
+          )}
 
-        {/* Top Layer: My Documents */}
-        {showCloudDrawer && (
-          <MessagingMyDocumentsView
-            documents={cloudDocuments}
-            onBack={() => setShowCloudDrawer(false)}
-            onTagSuspect={handleTag}
-          />
-        )}
+          {showCloudDrawer && (
+            <motion.div
+              key="zola-cloud-drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={detailTransition}
+              style={{ x: detailX }}
+              className="absolute inset-0 z-20 will-change-transform"
+            >
+              <MessagingMyDocumentsView
+                documents={cloudDocuments}
+                onBack={() => setShowCloudDrawer(false)}
+                onTagSuspect={handleTag}
+                onSwipeProgress={handleDetailSwipeProgress}
+                onSwipeEnd={handleDetailSwipeEnd}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

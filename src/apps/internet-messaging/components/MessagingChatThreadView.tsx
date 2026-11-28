@@ -19,6 +19,8 @@ interface MessagingChatThreadViewProps {
   onTagSuspect: (suspectName: string, source?: EvidenceSource) => void;
   caseId?: string;
   contacts?: MessagingContact[];
+  onSwipeProgress?: (progress: number, displacement: number) => void;
+  onSwipeEnd?: (committed: boolean) => void;
 }
 
 export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = ({
@@ -27,6 +29,8 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
   onTagSuspect,
   caseId,
   contacts = [],
+  onSwipeProgress,
+  onSwipeEnd,
 }) => {
   const [selectedLocation, setSelectedLocation] = useMotionState<{
     venueName: string;
@@ -81,6 +85,8 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
       onBack();
     },
     enabled: !selectedImage && !evidenceSheetItem && !selectedLocation,
+    onSwipeProgress,
+    onSwipeEnd,
   });
 
   const evidenceSheet = evidenceSheetItem && <MessagingEvidenceSheet

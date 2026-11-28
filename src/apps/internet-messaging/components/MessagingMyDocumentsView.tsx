@@ -10,6 +10,8 @@ interface MessagingMyDocumentsViewProps {
   documents: MessagingCloudDocument[];
   onBack: () => void;
   onTagSuspect: (suspectName: string) => void;
+  onSwipeProgress?: (progress: number, displacement: number) => void;
+  onSwipeEnd?: (committed: boolean) => void;
 }
 
 type CategoryTab = 'all' | 'photos' | 'files' | 'links' | 'notes' | 'collections';
@@ -18,6 +20,8 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
   documents,
   onBack,
   onTagSuspect,
+  onSwipeProgress,
+  onSwipeEnd,
 }) => {
   const [activeCategory, setActiveCategory] = useMotionState<CategoryTab>('all', 'fade');
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,7 +30,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
   const [evidenceSheetDoc, setEvidenceSheetDoc] = useMotionState<MessagingCloudDocument | null>(null, 'sheet');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const swipeHandlers = useSwipeBack({ onBack });
+  const swipeHandlers = useSwipeBack({ onBack, onSwipeProgress, onSwipeEnd });
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
