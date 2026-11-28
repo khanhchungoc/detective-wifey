@@ -4,6 +4,7 @@ import {
   collectErrors,
   launchApp,
   longPressAndPin,
+  startCaseFromSelector,
   startCleanPhone,
   unlockBySwipeUp,
 } from './helpers/phone';
@@ -16,7 +17,7 @@ const SESSION_KEY = 'detective:v1:jealous_wife:session';
  */
 async function replayStartFlow(page: Page): Promise<void> {
   await page.getByRole('button', { name: 'Bắt đầu' }).click();
-  await page.locator('[data-case-id="case_01"]').click();
+  await startCaseFromSelector(page, 'case_01');
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
   const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
   await expect(async () => {
@@ -112,18 +113,20 @@ test.describe('Session & Case Runtime @smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('gates locked levels in the level picker with a warning banner', async ({ page }) => {
+  test('gates locked levels in the case file browser with a warning banner', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
     await page.goto('/');
     await page.getByRole('button', { name: 'Bắt đầu' }).click();
+    await page.getByRole('button', { name: 'Mở hồ sơ' }).click();
+    await page.locator('[data-level-tab="case_02"]').click();
 
-    const locked = page.locator('[data-level-unlocked="false"]').first();
-    await expect(locked).toBeVisible();
-    await expect(locked).toHaveAttribute('aria-disabled', 'true');
-    // aria-disabled (not the disabled attribute) keeps the card tappable so it can explain itself.
-    await locked.click({ force: true });
+    const locked = page.locator('[data-level-file="case_02"]');
+    await expect(locked).toHaveAttribute('data-level-unlocked', 'false');
+    // A locked file has no start button; tapping the file explains why.
+    await expect(locked.locator('[data-case-id]')).toHaveCount(0);
+    await locked.click();
 
     await expect(page.getByRole('alert')).toHaveText('Bạn cần vượt qua màn chơi trước để mở khóa màn này');
     // Still on the picker: no briefing or lock screen opened.

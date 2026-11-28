@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { animate, AnimatePresence, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import {
   IoBackspaceOutline,
   IoBagHandleOutline,
@@ -49,6 +49,11 @@ export const PIN_ERROR_MESSAGE = 'Mã PIN không chính xác. Nghi ngờ tăng l
 export const FACEID_SCAN_DELAY_MS = 350;
 export const SHAKE_RESET_DELAY_MS = 420;
 export const SWIPE_UP_THRESHOLD_PX = -44;
+/** A drag that passes this unlocks before the finger lifts, so a browser-cancelled gesture still counts. */
+export const SWIPE_UP_COMMIT_PX = -96;
+/** Share of the finger travel the lock content follows, and the furthest it may travel. */
+const DRAG_FOLLOW_RATIO = 0.6;
+const DRAG_MAX_OFFSET_PX = -140;
 
 const SNAP_SPRING = { type: 'spring' as const, stiffness: 400, damping: 40 };
 const EASE_OUT_IOS = [0.22, 1, 0.36, 1] as const;
@@ -84,6 +89,22 @@ export function createInitialLockscreenState(): LockscreenState {
 
 export function isLockscreenSwipeUp(dx: number, dy: number): boolean {
   return dy <= SWIPE_UP_THRESHOLD_PX && Math.abs(dy) >= Math.abs(dx);
+}
+
+export type LockscreenSwipePhase = 'move' | 'end' | 'cancel';
+
+/**
+ * Decides whether a drag unlocks. While moving it needs the longer commit distance; on lift or on a
+ * browser cancel (mobile browsers cancel pointer drags they claim) it needs only the base threshold.
+ */
+export function shouldUnlockOnSwipe(phase: LockscreenSwipePhase, dx: number, dy: number): boolean {
+  if (phase === 'move') return dy <= SWIPE_UP_COMMIT_PX && Math.abs(dy) >= Math.abs(dx);
+  return isLockscreenSwipeUp(dx, dy);
+}
+
+/** Vertical offset (px, negative = up) the lock content shows while the finger drags. */
+export function lockscreenDragOffset(dy: number): number {
+  return Math.max(DRAG_MAX_OFFSET_PX, Math.min(0, dy) * DRAG_FOLLOW_RATIO);
 }
 
 export function prefersReducedMotion(): boolean {
@@ -405,6 +426,8 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
     createInitialLockscreenState,
   );
   const swipeStartRef = useRef<{ x: number; y: number; id: number } | null>(null);
+  const swipeLastRef = useRef<{ dx: number; dy: number } | null>(null);
+  const dragY = useMotionValue(0);
   const [flashlightOn, setFlashlightOn] = useState(false);
   const hasPasscode = Boolean(config.passcode);
   const isScanning = state.mode === 'scanning';
@@ -478,25 +501,49 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
     dispatch({ type: 'CANCEL_PASSCODE' });
   }, []);
 
+  const finishSwipe = (phase: 'end' | 'cancel') => {
+    const start = swipeStartRef.current;
+    const last = swipeLastRef.current;
+    swipeStartRef.current = null;
+    swipeLastRef.current = null;
+    if (!start || state.mode !== 'lockscreen') return;
+    if (last && shouldUnlockOnSwipe(phase, last.dx, last.dy)) {
+      handleRequestUnlock();
+      return;
+    }
+    if (dragY.get() !== 0) animate(dragY, 0, SNAP_SPRING);
+  };
+
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (state.mode !== 'lockscreen' || event.button !== 0 || !event.isPrimary) return;
     swipeStartRef.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
+    swipeLastRef.current = null;
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = swipeStartRef.current;
+    if (!start || start.id !== event.pointerId || state.mode !== 'lockscreen') return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    swipeLastRef.current = { dx, dy };
+    if (shouldUnlockOnSwipe('move', dx, dy)) {
+      swipeStartRef.current = null;
+      swipeLastRef.current = null;
+      if (hasPasscode) animate(dragY, 0, SNAP_SPRING);
+      handleRequestUnlock();
+      return;
+    }
+    if (!shouldReduceMotion) dragY.set(lockscreenDragOffset(dy));
   };
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     const start = swipeStartRef.current;
-    swipeStartRef.current = null;
-    if (!start || start.id !== event.pointerId || state.mode !== 'lockscreen') return;
-    const dx = event.clientX - start.x;
-    const dy = event.clientY - start.y;
-    if (isLockscreenSwipeUp(dx, dy)) {
-      handleRequestUnlock();
-    }
+    if (!start || start.id !== event.pointerId) return;
+    swipeLastRef.current = { dx: event.clientX - start.x, dy: event.clientY - start.y };
+    finishSwipe('end');
   };
 
-  const handlePointerCancel = () => {
-    swipeStartRef.current = null;
-  };
+  const handlePointerCancel = () => finishSwipe('cancel');
 
   const visibleNotifications: LockscreenNotificationItem[] = config.notifications.slice(0, 2);
 
@@ -506,6 +553,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
       data-phone-lockscreen="true"
       data-lockscreen-mode={state.mode}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
       // Without this, mobile browsers claim the vertical drag as a scroll and cancel the pointer.
@@ -549,8 +597,8 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
             onCancel={handleCancelPasscode}
           />
         ) : (
+          <motion.div key="lockscreen" style={{ y: dragY }} className="relative z-10 flex flex-1 flex-col">
           <motion.div
-            key="lockscreen"
             initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
             animate={
               isScanning
@@ -857,6 +905,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
 
               </div>
             </div>
+          </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

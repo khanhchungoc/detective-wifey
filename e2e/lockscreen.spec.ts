@@ -25,4 +25,17 @@ test.describe('Lock screen @smoke', () => {
 
     expect(errors).toEqual([]);
   });
+
+  test('unlocks on a touch swipe that starts mid-screen over a notification, and the home clock shows story time', async ({ page }) => {
+    await clearStorageOnFirstLoad(page);
+    const lock = await openLevelToLockscreen(page);
+    const vp = page.viewportSize();
+    if (!vp) throw new Error('No viewport');
+    const x = vp.width / 2;
+    await touchSwipe(page, { x, y: vp.height * 0.7 }, { x, y: vp.height * 0.7 - 260 });
+    await expect(lock).toHaveCount(0);
+    const clock = page.locator('.phone-clock-widget');
+    await expect(clock).toContainText('23:4');
+    await expect(clock).toContainText('15 tháng 10');
+  });
 });

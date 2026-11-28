@@ -4,6 +4,8 @@ import type { PhoneLockscreenConfig } from '../../shared/contracts/game-flow';
 import {
   createInitialLockscreenState,
   isLockscreenSwipeUp,
+  lockscreenDragOffset,
+  shouldUnlockOnSwipe,
   lockscreenReducer,
   PasscodePadView,
   PhoneLockscreen,
@@ -11,6 +13,7 @@ import {
 } from './PhoneLockscreen';
 
 const level1Config: PhoneLockscreenConfig = {
+  narrativeStartIso: '2026-10-15T23:45:00',
   narrativeDate: 'Thứ Sáu, 14 tháng 11',
   narrativeTime: '23:45',
   batteryPercent: '42%',
@@ -234,3 +237,26 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(onPasscodeFailStrike).not.toHaveBeenCalled();
   });
 });
+
+describe('lockscreen swipe decision', () => {
+  it('unlocks mid-drag once past the commit distance, so a browser-cancelled drag still counts', () => {
+    expect(shouldUnlockOnSwipe('move', 0, -60)).toBe(false);
+    expect(shouldUnlockOnSwipe('move', 5, -96)).toBe(true);
+    expect(shouldUnlockOnSwipe('move', 120, -100)).toBe(false);
+  });
+
+  it('uses the base threshold on lift and on cancel', () => {
+    expect(shouldUnlockOnSwipe('end', 0, -44)).toBe(true);
+    expect(shouldUnlockOnSwipe('cancel', 0, -60)).toBe(true);
+    expect(shouldUnlockOnSwipe('end', 0, -20)).toBe(false);
+    expect(shouldUnlockOnSwipe('cancel', 90, -50)).toBe(false);
+  });
+
+  it('makes the lock content follow the finger upward only, with a cap', () => {
+    expect(lockscreenDragOffset(40)).toBe(0);
+    expect(lockscreenDragOffset(-50)).toBeLessThan(0);
+    expect(lockscreenDragOffset(-50)).toBeGreaterThan(-50);
+    expect(lockscreenDragOffset(-1000)).toBe(-140);
+  });
+});
+

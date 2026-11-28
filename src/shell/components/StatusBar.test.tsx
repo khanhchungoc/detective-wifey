@@ -13,11 +13,11 @@ describe('status bar contrast', () => {
   });
 
   it.each(['#000000', '#464EB8', '#ED1C24', '#0088FF', '#EE4D2D', 'transparent'])('uses light indicators on %s', backgroundColor => {
-    expect(renderToStaticMarkup(<StatusBar backgroundColor={backgroundColor} />)).toContain('color:#FFFFFF');
+    expect(renderToStaticMarkup(<StatusBar currentDate={new Date(2026, 9, 15, 23, 45)} backgroundColor={backgroundColor} />)).toContain('color:#FFFFFF');
   });
 
   it('keeps app contrast while leaving the background to the moving app surface', () => {
-    const html = renderToStaticMarkup(<StatusBar backgroundColor="#FFFFFF" overlay />);
+    const html = renderToStaticMarkup(<StatusBar currentDate={new Date(2026, 9, 15, 23, 45)} backgroundColor="#FFFFFF" overlay />);
     expect(html).toContain('background-color:transparent');
     expect(html).toContain('color:#000000');
     expect(html).not.toContain('transition-colors');

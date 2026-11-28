@@ -1,6 +1,6 @@
 # Pre-Level Case File Revamp - Implementation Plan
 
-Status: Approved by product owner on 2026-11-28. Implementation in progress on `feat/pre-level-case-file-revamp`.
+Status: Implemented on `feat/pre-level-case-file-revamp` (2026-11-28). Swipe-up unlock: not reproducible in emulation at stg head; hardened, real-device confirmation pending.
 
 ## Why
 

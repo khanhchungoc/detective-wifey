@@ -2,7 +2,6 @@ import type { CaseConfig, LevelMetadata } from '../../shared/contracts/case-sche
 import type {
   CaseBriefingData,
   HusbandProfile,
-  Level0Status,
   LevelCardItem,
   LockscreenNotificationItem,
   PhoneLockscreenConfig,
@@ -22,26 +21,13 @@ const WIFE_MINH_THU: WifeProfile = {
   ],
 };
 
-const LEVEL_0_STATUS_KEY = 'detective:v1:level0_status';
+// Story calendar: 15/10 is the night of Level 1 (a Thursday in 2026).
+const NARRATIVE_DATE_ISO = '2026-10-15';
 
-export function getLevel0Status(): Level0Status {
-  try {
-    const raw = typeof window !== 'undefined' ? window.localStorage.getItem(LEVEL_0_STATUS_KEY) : null;
-    if (raw === 'skipped' || raw === 'completed' || raw === 'not_started') return raw;
-  } catch {
-    // storage unavailable
-  }
-  return 'not_started';
-}
-
-export function setLevel0Status(status: Level0Status): void {
-  try {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(LEVEL_0_STATUS_KEY, status);
-    }
-  } catch {
-    // storage unavailable
-  }
+/** Short lockscreen date label, e.g. "Th 5, 15 thg 10". */
+export function formatNarrativeShortDate(date: Date): string {
+  const weekday = date.getDay() === 0 ? 'CN' : `Th ${date.getDay() + 1}`;
+  return `${weekday}, ${date.getDate()} thg ${date.getMonth() + 1}`;
 }
 
 export function buildHusbandProfiles(hoangPortraitUrl: string): HusbandProfile[] {
@@ -59,7 +45,6 @@ export function buildHusbandProfiles(hoangPortraitUrl: string): HusbandProfile[]
         'Hay úp màn hình, mang máy vào nhà tắm',
         'Cửa miệng: "OT fix bug cho kịp sprint"',
       ],
-      wifeAnchor: 'Vợ Minh Thư (28t): Áo/váy size M · Giày 37 · CT2 An Bình',
       wifeProfile: WIFE_MINH_THU,
       portraitUrl: hoangPortraitUrl,
     },
@@ -71,31 +56,31 @@ export function buildHusbandProfiles(hoangPortraitUrl: string): HusbandProfile[]
       age: 34,
       occupation: 'Giám đốc Kinh doanh',
       teaserQuote: '"Hồ sơ đang được thu thập."',
-      personaTraits: ['Đang cập nhật hồ sơ điều tra'],
       portraitUrl: hoangPortraitUrl,
       comingSoon: true,
     },
   ];
 }
 
+export const GUIDE_CARD_TEASER = 'Lần đầu soi điện thoại chồng? Học nghề ở đây trước.';
+
 export function buildLevelCards(
   availableLevels: LevelMetadata[],
   unlockedMaxLevel: number,
   starRatings: Record<string, number>,
-  level0Status: Level0Status,
 ): LevelCardItem[] {
-  const practiceCard: LevelCardItem = {
-    caseId: 'case_00_practice',
+  // Màn 0 is the in-phone guide. Its content is built later, so the file is visible but not playable.
+  const guideCard: LevelCardItem = {
+    caseId: 'case_00_guide',
     husbandId: 'husband_hoang',
     levelNumber: 0,
-    levelTitle: 'Tập điều tra',
-    summary: 'Làm quen thao tác soi manh mối và đối chất.',
-    activeAppCount: 3,
-    allowedStrikes: 5,
-    isPractice: true,
+    levelTitle: 'Hướng dẫn điều tra',
+    summary: GUIDE_CARD_TEASER,
+    activeAppCount: 0,
+    allowedStrikes: 0,
+    isGuide: true,
+    comingSoon: true,
     unlocked: true,
-    level0Status,
-    recommended: level0Status === 'not_started',
   };
 
   const normalCards: LevelCardItem[] = availableLevels.map((lvl) => {
@@ -107,7 +92,8 @@ export function buildLevelCards(
       husbandId: lvl.husbandId,
       levelNumber: lvl.levelNumber,
       levelTitle: cleanTitle || lvl.levelTitle,
-      summary: lvl.storySnippet,
+      // The selector file shows story only; difficulty and rule text stay out of it.
+      summary: lvl.storySnippet.replace(/^Độ khó:[^)]*\)\.\s*/, ''),
       activeAppCount,
       allowedStrikes: lvl.allowedStrikes,
       unlocked,
@@ -116,51 +102,45 @@ export function buildLevelCards(
     };
   });
 
-  return [practiceCard, ...normalCards];
+  return [guideCard, ...normalCards];
 }
+
+export const BRIEFING_HOOK_QUESTION = 'Bạn có đủ tỉnh táo để tìm ra bằng chứng?';
 
 export function buildCaseBriefing(
   caseConfig: CaseConfig,
   levelTitle: string,
-  husbandPortraitUrl: string,
+  husband: HusbandProfile,
 ): CaseBriefingData {
-  const activeAppCount = Math.max(1, caseConfig.activeAppIds?.length ?? 4);
-  const hasLockscreenPin = caseConfig.levelNumber >= 2;
-
   return {
     caseId: caseConfig.caseId,
     levelNumber: caseConfig.levelNumber,
     levelTitle,
     husbandId: caseConfig.husbandId,
     husbandName: `Chồng ${caseConfig.husbandName}`,
-    husbandFullName: 'Nguyễn Huy Hoàng',
-    husbandAge: 29,
-    husbandOccupation: 'Tech Lead · Technosoft (Hà Nội)',
-    husbandPortraitUrl,
-    personaTraits: [
-      'Tự nhận sợ vợ số 1, nộp 90% lương tháng',
-      'Hay úp màn hình điện thoại xuống bàn',
-      'Cửa miệng: "Anh đang OT fix bug giỏ hàng"',
-    ],
-    wifeAnchor: 'Vợ Minh Thư: size M · giày 37 · chung cư An Bình',
-    wifeProfile: WIFE_MINH_THU,
+    husbandFullName: husband.fullName ?? husband.displayName,
+    husbandAge: husband.age,
+    husbandOccupation: husband.occupation,
+    husbandPortraitUrl: husband.portraitUrl,
+    personaTraits: husband.personaTraits,
+    wifeProfile: husband.wifeProfile,
+    hookQuestion: BRIEFING_HOOK_QUESTION,
     statedAlibi: 'Họp phòng dự án công ty fix bug giỏ hàng tới tối muộn.',
     suspicionHook:
       '23:45 đêm. Chồng vừa ngủ say nhưng màn hình điện thoại liên tục sáng lên với loạt thông báo bị ẩn nội dung.',
-    activeAppCount,
-    allowedStrikes: caseConfig.allowedStrikes,
-    lockModeLabel: hasLockscreenPin ? 'Mật khẩu 4 số' : 'FaceID / Vuốt mở',
     introBeats: [
       {
         beatId: 'intro_1',
         speaker: `Chồng ${caseConfig.husbandName}`,
+        speakerRole: 'husband',
         locationTime: '23:40 - Phòng ngủ',
         mood: 'confident',
         line: '"Vợ ơi, tối nay anh họp fix bug ở công ty mệt quá, anh đi ngủ trước đây. Điện thoại anh để trên bàn sạc nha."',
       },
       {
         beatId: 'intro_2',
-        speaker: 'Vợ (Minh Thư)',
+        speaker: `Vợ (${husband.wifeProfile?.displayName.split(' ').slice(-2).join(' ') ?? 'Minh Thư'})`,
+        speakerRole: 'wife',
         locationTime: '23:44 - Phòng ngủ',
         mood: 'nervous',
         line: '"Ngủ nhanh thế? Mà sao điện thoại anh vừa sáng màn hình liên tục, lại còn ẩn hết nội dung thông báo..."',
@@ -197,9 +177,12 @@ export function buildLockscreenConfig(
     };
   });
 
+  const narrativeTime = caseConfig.deviceMetadata.narrativeTime || '23:45';
+  const narrativeStartIso = `${NARRATIVE_DATE_ISO}T${narrativeTime}:00`;
   return {
-    narrativeDate: 'Th 5, 15 thg 10',
-    narrativeTime: caseConfig.deviceMetadata.narrativeTime || '23:45',
+    narrativeStartIso,
+    narrativeDate: formatNarrativeShortDate(new Date(narrativeStartIso)),
+    narrativeTime,
     batteryPercent: caseConfig.deviceMetadata.batteryPercent || '42%',
     wallpaperUrl,
     notifications,

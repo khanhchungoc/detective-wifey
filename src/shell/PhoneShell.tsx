@@ -13,6 +13,7 @@ import { ControlCenter, isControlSwipe, setNotificationHintSeen } from './compon
 import { PwaGuideSheet } from './components/PwaGuideSheet';
 import { ExitConfirmModal } from './components/ExitConfirmModal';
 import { PhoneLockscreen } from './components/PhoneLockscreen';
+import { FALLBACK_NARRATIVE_START_ISO, msUntilNextNarrativeMinute, narrativeNow } from './narrativeClock';
 import { usePwa } from './usePwa';
 import { useNavigationGuard } from './useNavigationGuard';
 import { AppErrorBoundary } from '../shared/ui/AppErrorBoundary';
@@ -81,7 +82,9 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   const [showLevelSheet, setShowLevelSheet] = useMotionState(false, 'sheet');
   const [showPwaGuide, setShowPwaGuide] = useMotionState(false, 'sheet');
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState(() => new Date());
+  const narrativeStartIso = lockscreenConfig?.narrativeStartIso ?? FALLBACK_NARRATIVE_START_ISO;
+  const [mountedAtMs] = useState(() => Date.now());
+  const [currentDate, setCurrentDate] = useState(() => narrativeNow(narrativeStartIso, mountedAtMs, mountedAtMs));
   const prevLockedRef = useRef(isLocked);
   const [unlockBurstKey, setUnlockBurstKey] = useState(0);
   useEffect(() => {
@@ -158,10 +161,11 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   useEffect(() => {
     let timer: number;
     const updateClock = () => {
-      const now = new Date();
-      setCurrentDate(previous => Math.floor(previous.getTime() / 60_000) === Math.floor(now.getTime() / 60_000) ? previous : now);
+      const nowMs = Date.now();
+      const next = narrativeNow(narrativeStartIso, mountedAtMs, nowMs);
+      setCurrentDate(previous => Math.floor(previous.getTime() / 60_000) === Math.floor(next.getTime() / 60_000) ? previous : next);
       window.clearTimeout(timer);
-      if (!document.hidden) timer = window.setTimeout(updateClock, 60_000 - now.getTime() % 60_000);
+      if (!document.hidden) timer = window.setTimeout(updateClock, msUntilNextNarrativeMinute(narrativeStartIso, mountedAtMs, nowMs));
     };
     updateClock();
     window.addEventListener('focus', updateClock);
@@ -171,7 +175,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
       window.removeEventListener('focus', updateClock);
       document.removeEventListener('visibilitychange', updateClock);
     };
-  }, []);
+  }, [narrativeStartIso, mountedAtMs]);
 
   useEffect(() => {
     const handleFsChange = () => setIsFullscreen(detectFullscreen());

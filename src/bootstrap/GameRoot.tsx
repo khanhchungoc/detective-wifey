@@ -18,12 +18,10 @@ import {
   buildLevelCards,
   buildCaseBriefing,
   buildLockscreenConfig,
-  getLevel0Status,
-  setLevel0Status,
 } from '../features/game-flow';
 import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { AppDefinition, AppId } from '../shared/contracts/app-contracts';
-import type { GameFlowStage, Level0Status, LevelCardItem } from '../shared/contracts/game-flow';
+import type { GameFlowStage, LevelCardItem } from '../shared/contracts/game-flow';
 import { appTransition, transition } from '../shared/motion/transition';
 import { AnchoredOverlay } from '../shared/ui/AnchoredOverlay';
 import { RetainedAppView } from './RetainedAppView';
@@ -35,7 +33,6 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
 }) {
   const prefersReducedMotion = useReducedMotion();
   const [flowStage, setFlowStage] = useState<GameFlowStage>(initialStage);
-  const [level0Status, setLevel0StatusState] = useState<Level0Status>(() => getLevel0Status());
   const [isMuted, setIsMuted] = useState(false);
   const [briefingRecallOpen, setBriefingRecallOpen] = useState(false);
   const [switchLevelConfirmOpen, setSwitchLevelConfirmOpen] = useState(false);
@@ -83,13 +80,16 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
       game.availableLevels(),
       state.playerProgress.unlockedLevel,
       state.playerProgress.bestStarRatings,
-      level0Status,
     ),
-    [game, state.playerProgress.unlockedLevel, state.playerProgress.bestStarRatings, level0Status],
+    [game, state.playerProgress.unlockedLevel, state.playerProgress.bestStarRatings],
+  );
+  const activeHusband = useMemo(
+    () => husbands.find(h => h.husbandId === caseConfig.husbandId) ?? husbands[0],
+    [husbands, caseConfig.husbandId],
   );
   const activeBriefing = useMemo(
-    () => buildCaseBriefing(caseConfig, caseTitle, hoangPortraitUrl),
-    [caseConfig, caseTitle],
+    () => buildCaseBriefing(caseConfig, caseTitle, activeHusband),
+    [caseConfig, caseTitle, activeHusband],
   );
   const lockscreenConfig = useMemo(
     () => buildLockscreenConfig(caseConfig, hoangPortraitUrl, (appId) => {
@@ -113,19 +113,8 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
   };
 
   const handleSelectLevelCard = (card: LevelCardItem) => {
-    if (card.isPractice) {
-      if (level0Status === 'not_started') {
-        setLevel0Status('completed');
-        setLevel0StatusState('completed');
-      }
-      game.selectLevel(1);
-      setFlowStage('level-context');
-      return;
-    }
-    if (card.levelNumber === 1 && level0Status === 'not_started') {
-      setLevel0Status('skipped');
-      setLevel0StatusState('skipped');
-    }
+    // The Màn 0 guide is not playable yet; the selector never emits it, this guards the contract.
+    if (card.isGuide || card.comingSoon) return;
     if (game.selectLevel(card.levelNumber)) {
       setFlowStage('level-context');
     }

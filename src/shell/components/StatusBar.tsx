@@ -4,12 +4,13 @@ import { watchDeviceBattery, type BatteryNavigator } from '../deviceBattery';
 import { systemForeground } from '../systemChrome';
 
 interface StatusBarProps {
-  currentDate?: Date;
+  /** Story time. Required so the phone never shows the real device date. */
+  currentDate: Date;
   backgroundColor?: string;
   overlay?: boolean;
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({ currentDate = new Date(), backgroundColor = 'transparent', overlay = false }) => {
+export const StatusBar: React.FC<StatusBarProps> = ({ currentDate, backgroundColor = 'transparent', overlay = false }) => {
   const batteryMaskId = React.useId();
   const batteryBodyClipId = `${batteryMaskId}-body`;
   const time = currentDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });

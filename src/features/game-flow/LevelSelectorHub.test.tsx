@@ -1,23 +1,23 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
-import type {
-  HusbandProfile,
-  LevelCardItem,
-} from '../../shared/contracts/game-flow';
+import type { HusbandProfile, LevelCardItem } from '../../shared/contracts/game-flow';
 import {
+  FLICK_VELOCITY_PX_S,
   LOCKED_LEVEL_FEEDBACK,
   LevelSelectorHub,
   SELECT_DEBOUNCE_MS,
-  SWIPE_THRESHOLD_PX,
+  applyRubberBand,
+  canStartLevel,
+  clampPageIndex,
   evaluateLevelCardClick,
-  formatLevel0StatusLabel,
-  resolveHorizontalSwipeDelta,
+  resolveDefaultLevelIndex,
   resolveInitialHusbandIndex,
-  stepCarouselIndex,
+  resolvePagerTarget,
 } from './LevelSelectorHub';
+import { LevelStage } from './case-files/LevelStage';
 
 const RAW_EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
-const EM_DASH_REGEX = /[\u2014\u2013]/;
+const EM_DASH_REGEX = /[—–]/;
 const ARBITRARY_TEXT_PX_REGEX = /text-\[\d+px\]/;
 
 const HUSBANDS: HusbandProfile[] = [
@@ -25,26 +25,16 @@ const HUSBANDS: HusbandProfile[] = [
     husbandId: 'hoang',
     caseCode: 'HỒ SƠ #01',
     displayName: 'Nguyễn Huy Hoàng',
-    fullName: 'Nguyễn Huy Hoàng',
     age: 29,
     occupation: 'Tech Lead · Technosoft (Hà Nội)',
     teaserQuote: 'Anh chỉ đi họp với đối tác thôi mà em.',
-    personaTraits: [
-      'Tự nhận sợ vợ số 1, nộp 90% lương',
-      'Hay úp màn hình, mang máy vào nhà tắm',
-      'Cửa miệng: "OT fix bug cho kịp sprint"',
-    ],
-    wifeAnchor: 'Vợ Minh Thư (28t): Áo/váy size M · Giày 37 · CT2 An Bình',
+    personaTraits: ['Hay úp màn hình, mang máy vào nhà tắm'],
     wifeProfile: {
       displayName: 'Lê Minh Thư',
       age: 28,
       occupation: 'Kế toán trưởng',
       portraitUrl: '/assets/avatars/minhthu.png',
-      anchors: [
-        'Áo/váy size M',
-        'Giày size 37',
-        'Chung cư CT2 An Bình City, Bắc Từ Liêm',
-      ],
+      anchors: ['Áo/váy size M'],
     },
     portraitUrl: '/assets/avatars/hoang.png',
   },
@@ -55,7 +45,6 @@ const HUSBANDS: HusbandProfile[] = [
     age: 38,
     occupation: 'Kiến trúc sư trưởng',
     teaserQuote: 'Công trình ở xa, cuối tuần anh mới về.',
-    personaTraits: ['Đang cập nhật hồ sơ điều tra'],
     portraitUrl: '/assets/avatars/tuan.png',
     comingSoon: true,
   },
@@ -66,14 +55,13 @@ const LEVELS: LevelCardItem[] = [
     caseId: 'hoang_00',
     husbandId: 'hoang',
     levelNumber: 0,
-    levelTitle: 'Tập điều tra',
-    summary: 'Học cách soi bằng chứng và gắn thẻ nghi phạm.',
-    activeAppCount: 2,
-    allowedStrikes: 3,
-    isPractice: true,
+    levelTitle: 'Hướng dẫn điều tra',
+    summary: 'Lần đầu soi điện thoại chồng? Học nghề ở đây trước.',
+    activeAppCount: 0,
+    allowedStrikes: 0,
+    isGuide: true,
+    comingSoon: true,
     unlocked: true,
-    recommended: true,
-    level0Status: 'not_started',
   },
   {
     caseId: 'hoang_01',
@@ -99,225 +87,196 @@ const LEVELS: LevelCardItem[] = [
   },
 ];
 
-describe('LevelSelectorHub (US-036)', () => {
-  describe('Responsive Layout, Husband Case File Folder & Separate Wife Profile', () => {
-    it('renders responsive 12-column workspace, bigger husband dossier folder with stamp/paperclip, and structured dossier fields', () => {
-      const html = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={LEVELS}
-          initialHusbandId="hoang"
-          isMuted={false}
-          onToggleMute={vi.fn()}
-          onSelectLevel={vi.fn()}
-        />,
-      );
+const renderHub = (initialHusbandId = 'hoang') =>
+  renderToStaticMarkup(
+    <LevelSelectorHub
+      husbands={HUSBANDS}
+      levels={LEVELS}
+      initialHusbandId={initialHusbandId}
+      isMuted={false}
+      onToggleMute={vi.fn()}
+      onSelectLevel={vi.fn()}
+    />,
+  );
 
-      // Responsive flat darkroom workspace
-      expect(html).toContain('max-w-4xl');
-      expect(html).toContain('lg:grid-cols-12');
-      expect(html).toContain('lg:col-span-7');
-      expect(html).toContain('lg:col-span-5');
-      expect(html).not.toContain('max-w-[480px]');
+const renderLevelStage = (initialIndex?: number) =>
+  renderToStaticMarkup(
+    <LevelStage
+      husband={HUSBANDS[0]}
+      levels={LEVELS}
+      reduced={false}
+      onBack={vi.fn()}
+      onSelectLevel={vi.fn()}
+      initialIndex={initialIndex}
+    />,
+  );
 
-      // Header & controls
-      expect(html).toContain('Chọn màn');
-      expect(html).not.toContain('Hồ sơ điều tra');
-      expect(html).not.toContain('Danh sách vụ án');
-      expect(html).toContain('aria-label="Tắt âm thanh"');
-      expect(html).toContain('aria-label="Chồng trước"');
-      expect(html).toContain('aria-label="Chồng tiếp theo"');
-
-      // Flat husband switcher + levels above fold + reference traits
-      expect(html).toContain('data-case-folder-tab="true"');
-      expect(html).toContain('Hồ sơ #01');
-      expect(html).toContain('Đang theo dõi');
-      expect(html).toContain('Hồ sơ tính cách');
-      expect(html).toContain('Nguyễn Huy Hoàng');
-      expect(html).toContain('29 tuổi');
-      expect(html).toContain('Tech Lead · Technosoft (Hà Nội)');
-      expect(html).toContain('Tự nhận sợ vợ số 1, nộp 90% lương');
-      expect(html).toContain('Hay úp màn hình, mang máy vào nhà tắm');
-      expect(html).not.toContain('Anh chỉ đi họp với đối tác thôi mà em.');
-      // Levels appear before secondary reference notes in DOM order
-      expect(html.indexOf('data-case-id="hoang_01"')).toBeLessThan(html.indexOf('data-husband-persona="true"'));
-
-      // Accessibility & design guardrails
-      expect(html).toContain('touch-action:pan-y');
-      expect(html).toContain('role="tablist"');
-      expect(html).not.toContain('font-mono');
-      expect(RAW_EMOJI_REGEX.test(html)).toBe(false);
-      expect(EM_DASH_REGEX.test(html)).toBe(false);
-      expect(ARBITRARY_TEXT_PX_REGEX.test(html)).toBe(false);
-    });
-
-    it('renders separate Wife Profile section with wife portrait image and forensic anchors when husband.wifeProfile is present', () => {
-      const html = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={LEVELS}
-          initialHusbandId="hoang"
-          onSelectLevel={vi.fn()}
-        />,
-      );
-
-      expect(html).toContain('data-wife-profile="true"');
-      expect(html).toContain('Hồ sơ người vợ');
-      expect(html).toContain('src="/assets/avatars/minhthu.png"');
-      expect(html).toContain('alt="Lê Minh Thư"');
-      expect(html).toContain('Lê Minh Thư');
-      expect(html).toContain('28 tuổi · Kế toán trưởng');
-      expect(html).toContain('data-wife-anchors="true"');
-      expect(html).toContain('Áo/váy size M');
-      expect(html).toContain('Giày size 37');
-      expect(html).toContain('Chung cư CT2 An Bình City, Bắc Từ Liêm');
-    });
-
-    it('renders coming-soon status, omits wife profile section, and hides level rows when husband.comingSoon is true', () => {
-      const html = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={LEVELS}
-          initialHusbandId="tuan"
-          onSelectLevel={vi.fn()}
-        />,
-      );
-
-      expect(html).toContain('Hồ sơ #02');
-      expect(html).toContain('Trần Quốc Tuấn');
-      expect(html).toContain('38 tuổi');
-      expect(html).toContain('data-coming-soon-stamp="true"');
-      expect(html).toContain('Sắp ra mắt');
-      expect(html).not.toContain('data-wife-profile="true"');
-      expect(html).not.toContain('Bữa trưa bí ẩn');
-    });
-
-    it('navigates carousel via button steps and horizontal pointer swipe threshold (>= 44px)', () => {
-      expect(resolveInitialHusbandIndex(HUSBANDS, 'tuan')).toBe(1);
-      expect(resolveInitialHusbandIndex(HUSBANDS, 'unknown')).toBe(0);
-
-      // Button navigation wraps cleanly
-      expect(stepCarouselIndex(0, 1, HUSBANDS.length)).toBe(1);
-      expect(stepCarouselIndex(1, 1, HUSBANDS.length)).toBe(0);
-      expect(stepCarouselIndex(0, -1, HUSBANDS.length)).toBe(1);
-
-      // Swipe left (dx <= -44) advances to next husband (+1)
-      expect(resolveHorizontalSwipeDelta(200, 100, 200 - SWIPE_THRESHOLD_PX, 105)).toBe(1);
-      // Swipe right (dx >= 44) goes to previous husband (-1)
-      expect(resolveHorizontalSwipeDelta(100, 100, 100 + SWIPE_THRESHOLD_PX, 110)).toBe(-1);
-      // Below threshold or mostly vertical does not swipe
-      expect(resolveHorizontalSwipeDelta(100, 100, 130, 100)).toBe(0);
-      expect(resolveHorizontalSwipeDelta(100, 100, 150, 200)).toBe(0);
-    });
+describe('LevelSelectorHub husband stage', () => {
+  it('opens on the husband stage with the case file header and one primary CTA', () => {
+    const html = renderHub();
+    expect(html).toContain('data-selector-stage="husbands"');
+    expect(html).toContain('Hồ sơ vụ án');
+    expect(html).not.toContain('Chọn màn');
+    expect(html).toContain('aria-label="Tắt âm thanh"');
+    expect(html).toContain('>Mở hồ sơ<');
+    expect(html).not.toContain('>Đổi hồ sơ<');
+    expect(html).toContain('data-husband-id="hoang"');
+    expect(html).not.toContain('data-husband-id="tuan"');
+    expect(html).toContain('HỒ SƠ #01');
+    expect(html).toContain('Đang theo dõi');
+    expect(html).toContain('Nguyễn Huy Hoàng');
+    expect(html).toContain('/assets/avatars/hoang.png');
+    expect(html).toContain('aria-label="Chồng trước"');
+    expect(html).toContain('aria-label="Chồng tiếp theo"');
   });
 
-  describe('Level 0 Practice Badges & Status Mapping', () => {
-    it('renders yellow sticky-note recommended badge and compact status without filler summary', () => {
-      expect(formatLevel0StatusLabel('not_started')).toBe('Chưa học');
-      expect(formatLevel0StatusLabel('skipped')).toBe('Đã bỏ qua');
-      expect(formatLevel0StatusLabel('completed')).toBe('Đã hoàn thành');
-
-      const html = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={LEVELS}
-          initialHusbandId="hoang"
-          onSelectLevel={vi.fn()}
-        />,
-      );
-
-      expect(html).toContain('Màn 0 · Tập điều tra');
-      expect(html).toContain('data-recommended-badge="true"');
-      expect(html).toContain('bg-game-sticky');
-      expect(html).toContain('Đề xuất');
-      expect(html).toContain('Chưa học');
-      expect(html).not.toContain('Học cách soi bằng chứng');
-
-      const completedLevels = LEVELS.map((lvl) =>
-        lvl.caseId === 'hoang_00'
-          ? { ...lvl, recommended: false, level0Status: 'completed' as const }
-          : lvl,
-      );
-      const completedHtml = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={completedLevels}
-          initialHusbandId="hoang"
-          onSelectLevel={vi.fn()}
-        />,
-      );
-      expect(completedHtml).not.toContain('data-recommended-badge="true"');
-      expect(completedHtml).toContain('Đã hoàn thành');
-    });
+  it('keeps swipe-friendly touch action and no mono, emoji, em dash or arbitrary text sizes', () => {
+    const html = renderHub();
+    expect(html).toContain('touch-action:pan-y');
+    expect(html).not.toContain('font-mono');
+    expect(html).not.toMatch(ARBITRARY_TEXT_PX_REGEX);
+    expect(html).not.toMatch(RAW_EMOJI_REGEX);
+    expect(html).not.toMatch(EM_DASH_REGEX);
   });
 
-  describe('Unlocked & Locked Level Cards and Selection Guard', () => {
-    it('renders compact unlocked level rows with star rating and no filler metadata', () => {
-      const html = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={LEVELS}
-          initialHusbandId="hoang"
-          onSelectLevel={vi.fn()}
-        />,
-      );
+  it('removes persona notes and wife profile from the selector', () => {
+    const html = renderHub();
+    expect(html).not.toContain('Hồ sơ tính cách');
+    expect(html).not.toContain('Hồ sơ người vợ');
+    expect(html).not.toContain('data-husband-persona');
+    expect(html).not.toContain('data-wife-profile');
+    expect(html).not.toContain('Lê Minh Thư');
+    expect(html).not.toContain('Hay úp màn hình');
+  });
 
-      expect(html).toContain('border-l-game-crimson');
-      expect(html).toContain('Màn 1 · Bữa trưa bí ẩn');
-      expect(html).toContain('aria-label="Đạt 2 trên 3 sao"');
-      expect(html).not.toContain('Hóa đơn cơm niêu');
-      expect(html).not.toContain('ứng dụng');
-      expect(html).not.toContain('Chơi ngay');
+  it('renders the coming-soon husband redacted, never with a portrait, and cannot open it', () => {
+    const html = renderHub('tuan');
+    expect(html).toContain('data-husband-id="tuan"');
+    expect(html).not.toContain('/assets/avatars/tuan.png');
+    expect(html).toContain('Sắp ra mắt');
+    expect(html).toContain('data-coming-soon-stamp="true"');
+    expect(html).toContain('Thông tin đang bị che');
+    expect(html).not.toContain('Kiến trúc sư trưởng');
+    expect(html).not.toContain('Công trình ở xa');
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Mở hồ sơ<\/button>/);
+  });
+
+  it('enables the open button for a released husband', () => {
+    expect(renderHub()).not.toMatch(/<button[^>]*disabled=""[^>]*>Mở hồ sơ<\/button>/);
+  });
+});
+
+describe('LevelStage (folder opened)', () => {
+  it('shows a jump tab per file and the back button', () => {
+    const html = renderLevelStage();
+    for (const id of ['hoang_00', 'hoang_01', 'hoang_02']) {
+      expect(html).toContain(`data-level-tab="${id}"`);
+    }
+    expect(html).toContain('Đổi hồ sơ');
+  });
+
+  it('opens on the highest unlocked non-guide case with a single start button', () => {
+    const html = renderLevelStage();
+    expect(html.match(/data-case-id="/g)).toHaveLength(1);
+    expect(html).toContain('data-case-id="hoang_01"');
+    expect(html).toContain('>Điều tra màn này<');
+    expect(html).toContain('Bữa trưa bí ẩn');
+    expect(html).toContain('aria-label="Đạt 2 trên 3 sao"');
+  });
+
+  it('renders the locked file with a stamp and hint but no start button', () => {
+    const html = renderLevelStage(2);
+    expect(html).toContain('Khóa');
+    expect(html).toContain('Hoàn thành Màn 1');
+    expect(html).toContain('data-level-unlocked="false"');
+    expect(html).not.toContain('data-case-id="hoang_02"');
+    expect(html).not.toContain('>Điều tra màn này<');
+  });
+
+  it('renders the guide file as a distinct teaser with no start button', () => {
+    const html = renderLevelStage(0);
+    expect(html).toContain('data-level-guide="true"');
+    expect(html).toContain('Hướng dẫn');
+    expect(html).toContain('Học nghề ở đây trước');
+    expect(html).toContain('Sắp có');
+    expect(html).toContain('bg-game-paper-slip');
+    expect(html).not.toContain('>Điều tra màn này<');
+    expect(html).not.toContain('data-case-id=');
+  });
+
+  it('has no em dash, emoji or arbitrary text sizes', () => {
+    const html = renderLevelStage();
+    expect(html).not.toMatch(EM_DASH_REGEX);
+    expect(html).not.toMatch(RAW_EMOJI_REGEX);
+    expect(html).not.toMatch(ARBITRARY_TEXT_PX_REGEX);
+    expect(html).not.toContain('font-mono');
+  });
+});
+
+describe('case file helpers', () => {
+  it('resolves the initial husband and clamps page indexes', () => {
+    expect(resolveInitialHusbandIndex(HUSBANDS, 'tuan')).toBe(1);
+    expect(resolveInitialHusbandIndex(HUSBANDS, 'unknown')).toBe(0);
+    expect(resolveInitialHusbandIndex([], 'x')).toBe(0);
+    expect(clampPageIndex(5, 2)).toBe(1);
+    expect(clampPageIndex(-1, 2)).toBe(0);
+    expect(clampPageIndex(1, 0)).toBe(0);
+  });
+
+  it('picks the highest unlocked non-guide case as default file', () => {
+    expect(resolveDefaultLevelIndex(LEVELS)).toBe(1);
+    const allUnlocked = LEVELS.map((l) => ({ ...l, unlocked: true }));
+    expect(resolveDefaultLevelIndex(allUnlocked)).toBe(2);
+    const onlyGuide = [LEVELS[0]];
+    expect(resolveDefaultLevelIndex(onlyGuide)).toBe(0);
+    const lockedOnly = [LEVELS[0], { ...LEVELS[1], unlocked: false }];
+    expect(resolveDefaultLevelIndex(lockedOnly)).toBe(1);
+  });
+
+  it('resolves swipe release: distance, flick, edges and tiny movement', () => {
+    const base = { baseIndex: 0, stridePx: 200, total: 3 };
+    // Drag left past 20% of a page goes to the next page
+    expect(resolvePagerTarget({ ...base, dx: -50, velocityX: 0 })).toBe(1);
+    // Drag right goes back, but never below the first page
+    expect(resolvePagerTarget({ ...base, dx: 80, velocityX: 0 })).toBe(0);
+    expect(resolvePagerTarget({ ...base, baseIndex: 1, dx: 80, velocityX: 0 })).toBe(0);
+    // Short drag stays
+    expect(resolvePagerTarget({ ...base, dx: -20, velocityX: 0 })).toBe(0);
+    // Short but fast flick turns the page
+    expect(resolvePagerTarget({ ...base, dx: -20, velocityX: -FLICK_VELOCITY_PX_S })).toBe(1);
+    // Never past the last page, never more than one page per gesture
+    expect(resolvePagerTarget({ ...base, baseIndex: 2, dx: -400, velocityX: -2000 })).toBe(2);
+    expect(resolvePagerTarget({ ...base, dx: -900, velocityX: -2000 })).toBe(1);
+    // Unmeasured surface keeps the page
+    expect(resolvePagerTarget({ ...base, stridePx: 0, dx: -300, velocityX: 0 })).toBe(0);
+  });
+
+  it('applies rubber band resistance only outside the page range', () => {
+    expect(applyRubberBand(0.5, 3)).toBe(0.5);
+    expect(applyRubberBand(-1, 3)).toBeCloseTo(-0.35);
+    expect(applyRubberBand(3, 3)).toBeCloseTo(2.35);
+  });
+
+  it('guards starting levels: guide, locked, coming-soon husband and rapid taps', () => {
+    expect(canStartLevel(LEVELS[0])).toBe(false);
+    expect(canStartLevel(LEVELS[1])).toBe(true);
+    expect(canStartLevel(LEVELS[2])).toBe(false);
+
+    expect(evaluateLevelCardClick(LEVELS[0], false, 0, 1000)).toEqual({ action: 'ignore', feedback: null });
+    expect(evaluateLevelCardClick(LEVELS[2], false, 0, 1000)).toEqual({
+      action: 'locked',
+      feedback: LOCKED_LEVEL_FEEDBACK,
     });
-
-    it('renders locked level rows with short hint and blocks launch with inline alert message', () => {
-      const html = renderToStaticMarkup(
-        <LevelSelectorHub
-          husbands={HUSBANDS}
-          levels={LEVELS}
-          initialHusbandId="hoang"
-          onSelectLevel={vi.fn()}
-        />,
-      );
-
-      expect(html).toContain('data-case-id="hoang_02"');
-      expect(html).toContain('data-level-unlocked="false"');
-      expect(html).toContain('Màn 2 · Chuyến công tác Đà Nẵng');
-      expect(html).toContain('Hoàn thành Màn 1');
-
-      const lockedResult = evaluateLevelCardClick(LEVELS[2], false, 0, 1000);
-      expect(lockedResult).toEqual({
-        action: 'locked',
-        feedback: LOCKED_LEVEL_FEEDBACK,
-      });
-      expect(LOCKED_LEVEL_FEEDBACK).toBe(
-        'Bạn cần vượt qua màn chơi trước để mở khóa màn này',
-      );
+    expect(LOCKED_LEVEL_FEEDBACK).toBe('Bạn cần vượt qua màn chơi trước để mở khóa màn này');
+    expect(evaluateLevelCardClick(LEVELS[1], false, 0, 1000)).toEqual({ action: 'select', feedback: null });
+    expect(evaluateLevelCardClick(LEVELS[1], false, 1000, 1000 + SELECT_DEBOUNCE_MS - 50)).toEqual({
+      action: 'ignore',
+      feedback: null,
     });
-
-    it('allows unlocked level selection and debounces rapid double-taps', () => {
-      const firstTap = evaluateLevelCardClick(LEVELS[1], false, 0, 1000);
-      expect(firstTap).toEqual({ action: 'select', feedback: null });
-
-      const rapidSecondTap = evaluateLevelCardClick(
-        LEVELS[1],
-        false,
-        1000,
-        1000 + SELECT_DEBOUNCE_MS - 50,
-      );
-      expect(rapidSecondTap).toEqual({ action: 'ignore', feedback: null });
-
-      const afterCooldown = evaluateLevelCardClick(
-        LEVELS[1],
-        false,
-        1000,
-        1000 + SELECT_DEBOUNCE_MS,
-      );
-      expect(afterCooldown).toEqual({ action: 'select', feedback: null });
-
-      // Coming-soon husband ignores all taps
-      const comingSoonTap = evaluateLevelCardClick(LEVELS[1], true, 0, 5000);
-      expect(comingSoonTap).toEqual({ action: 'ignore', feedback: null });
+    expect(evaluateLevelCardClick(LEVELS[1], false, 1000, 1000 + SELECT_DEBOUNCE_MS)).toEqual({
+      action: 'select',
+      feedback: null,
     });
+    expect(evaluateLevelCardClick(LEVELS[1], true, 0, 5000)).toEqual({ action: 'ignore', feedback: null });
   });
 });

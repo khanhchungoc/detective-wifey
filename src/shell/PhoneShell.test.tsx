@@ -184,4 +184,20 @@ describe('app surface and stationary system chrome', () => {
   });
 });
 
+describe('story clock', () => {
+  it('shows the story time and date on Home, not the device clock', () => {
+    vi.setSystemTime(new Date(2031, 0, 2, 4, 5));
+    const lockscreenConfig = {
+      narrativeStartIso: '2026-10-15T23:45:00', narrativeDate: 'Thứ Năm, 15 tháng 10', narrativeTime: '23:45',
+      batteryPercent: '42%', notifications: [],
+    };
+    const html = renderToStaticMarkup(
+      <PhoneShell {...props} activeAppId="home" activeAppDefinition={null} lockscreenConfig={lockscreenConfig} />,
+    );
+    vi.useRealTimers();
+    expect(html).toContain('23:45');
+    expect(html).toContain('Thứ Năm, 15 tháng 10');
+    expect(html).not.toContain('04:05');
+  });
+});
 
