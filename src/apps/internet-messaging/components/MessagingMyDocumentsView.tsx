@@ -27,7 +27,7 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useMotionState(false, 'fade');
   const [likedDocIds, setLikedDocIds] = useState<Record<string, boolean>>({});
-  const [evidenceSheetDoc, setEvidenceSheetDoc] = useState<MessagingCloudDocument | null>(null);
+  const [evidenceSheetDoc, setEvidenceSheetDoc] = useMotionState<MessagingCloudDocument | null>(null, 'sheet');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const swipeHandlers = useSwipeBack({ onBack, onSwipeProgress, onSwipeEnd });

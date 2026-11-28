@@ -35,7 +35,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useMotionState<'priority' | 'other'>('priority', 'fade');
   const [searchQuery, setSearchQuery] = useState('');
-  const [evidenceSheetThread, setEvidenceSheetThread] = useState<MessagingThread | null>(null);
+  const [evidenceSheetThread, setEvidenceSheetThread] = useMotionState<MessagingThread | null>(null, 'sheet');
 
   const currentList = activeTab === 'priority' ? threads : otherThreads;
   const threadSource = (thread: MessagingThread): EvidenceSource | undefined => {
