@@ -1,6 +1,5 @@
 import React from "react";
-import { motion, useTransform } from "motion/react";
-import type { MotionValue } from "motion/react";
+import { motion } from "motion/react";
 import {
   IoAlertCircleOutline,
   IoLockClosedOutline,
@@ -21,6 +20,7 @@ import {
 import { CTA_PRIMARY } from "./ctaStyles";
 import { TAB_LABEL_CLASS, TabLabel } from "./LevelTab";
 import { sheetClip, tabButtonBox } from "./tabShape";
+import type { SheetMotion } from "./useBinder";
 
 interface LevelFileProps {
   level: LevelCardItem;
@@ -28,9 +28,7 @@ interface LevelFileProps {
   index: number;
   total: number;
   isActive: boolean;
-  /** 0 = on the stack, 1 = turned over. */
-  flip: MotionValue<number>;
-  reduced: boolean;
+  sheet: SheetMotion;
   lockedFeedback: string | null;
   isShaking: boolean;
   onShakeDone: () => void;
@@ -53,27 +51,13 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   index,
   total,
   isActive,
-  flip,
-  reduced,
+  sheet,
   lockedFeedback,
   isShaking,
   onShakeDone,
   onFileTap,
   onStart,
 }) => {
-  // Binder sheet: flip 0 = flat on the stack, 1 = turned over on its left edge. Reduced motion only fades.
-  const x = useTransform(flip, (f) => (reduced ? "0%" : `${-f * 6}%`));
-  const rotateY = useTransform(flip, (f) => (reduced ? 0 : -f * 100));
-  const opacity = useTransform(flip, (f) => {
-    if (reduced) return 1 - f;
-    // A turning sheet stays solid until it is edge-on, then fades out of the way.
-    return f < 0.6 ? 1 : Math.max(0, 1 - (f - 0.6) * 2.5);
-  });
-  // A sheet in motion paints above the whole stack and the tabs; at rest it returns to its layer.
-  const zIndex = useTransform(flip, (f) =>
-    f >= 1 ? 5 : f > 0 ? 100 : 20 - Math.min(index, 15),
-  );
-
   const isGuide = Boolean(level.isGuide);
   const locked = !level.unlocked && !isGuide;
   const stars = clamp(level.bestStars ?? 0, 0, 3);
@@ -88,13 +72,13 @@ export const LevelFile: React.FC<LevelFileProps> = ({
       aria-hidden={!isActive}
       onClick={isActive ? onFileTap : undefined}
       style={{
-        x,
-        rotateY,
-        opacity,
-        zIndex,
-        // Deeper sheets stick out a little below, so the stack reads as stacked paper.
-        bottom: -Math.min(index, 3) * 3,
-        transformOrigin: "left center",
+        x: sheet.x,
+        y: sheet.y,
+        scale: sheet.scale,
+        rotate: sheet.rotate,
+        zIndex: sheet.zIndex,
+        bottom: 0,
+        transformOrigin: "center bottom",
         // One static outline + shadow that follows the whole silhouette, tab included.
         filter:
           "drop-shadow(0 0 0.75px rgba(50,36,14,0.6)) drop-shadow(0 8px 9px rgba(0,0,0,0.38))",
@@ -107,6 +91,12 @@ export const LevelFile: React.FC<LevelFileProps> = ({
         style={{ clipPath: sheetClip(index, total) }}
       >
         <PaperSurface />
+        <motion.span
+          aria-hidden="true"
+          data-level-shade={level.caseId}
+          className="pointer-events-none absolute inset-0 bg-game-ink"
+          style={{ opacity: sheet.shade }}
+        />
         <span
           aria-hidden="true"
           className="absolute top-0 h-12"

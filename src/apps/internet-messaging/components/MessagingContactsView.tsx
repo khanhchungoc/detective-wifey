@@ -21,7 +21,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
   onTagSuspect,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useMotionState<'all' | 'friends' | 'oa'>('all', 'fade');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'friends' | 'oa'>('all');
   const [evidenceSheetContact, setEvidenceSheetContact] = useMotionState<MessagingContact | null>(null, 'sheet');
 
   // Filter contacts by query

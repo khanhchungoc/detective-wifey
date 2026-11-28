@@ -85,10 +85,9 @@ export const LevelStage: React.FC<LevelStageProps> = ({
 
       {/*
         Stacking: this wrapper must NOT create a stacking context. The static back board sits at z-10;
-        the 3D layer (perspective) above it holds the tab row and the sheets. Inside it every sheet and
-        tab has its own z-index; a turning sheet and its tab go to z-100+, the folder cover to z-200,
-        so anything in motion paints above all tabs. The layer ignores pointer events except on the
-        tabs and the swipe surface.
+        the stack layer above it holds the tab hit targets and the sheets. Every sheet and its
+        matching transparent tab button share the same per-sheet zIndex (active = 30, behind = 20 - dist),
+        and the folder cover sits at z-200 while opening.
       */}
       <div className="relative mx-4 min-h-0 flex-1">
         <div className="absolute inset-x-0 bottom-0 top-12 z-10 rounded-xl border border-game-ink/30 bg-game-kraft shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]">
@@ -99,7 +98,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
           className="pointer-events-none absolute inset-0 z-40"
           style={{ perspective: reduced ? undefined : '1200px' }}
         >
-          <div role="tablist" aria-label="Danh sách màn" className="pointer-events-none absolute inset-x-3 top-0 h-16">
+          <div role="tablist" aria-label="Danh sách màn" className="pointer-events-none absolute inset-x-3 top-0 z-40 h-16">
             {levels.map((level, idx) => (
               <LevelTab
                 key={level.caseId}
@@ -107,7 +106,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 index={idx}
                 total={levels.length}
                 selected={idx === index}
-                flip={binder.flips[idx]}
+                zIndex={binder.sheets[idx].zIndex}
                 onSelect={() => binder.goTo(idx)}
               />
             ))}
@@ -127,8 +126,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 index={idx}
                 total={levels.length}
                 isActive={idx === index}
-                flip={binder.flips[idx]}
-                reduced={reduced}
+                sheet={binder.sheets[idx]}
                 lockedFeedback={idx === index ? lockedFeedback : null}
                 isShaking={shakingId === level.caseId}
                 onShakeDone={() => setShakingId(null)}

@@ -11,10 +11,10 @@ import './communications.css';
 const callLabels: Record<string, string> = { incoming: 'Cuộc gọi đến', outgoing: 'Cuộc gọi đi', missed: 'Cuộc gọi nhỡ' };
 export function CommsApp(props: VirtualAppProps) {
   const data = readCommunicationData(props.caseData);
-  const [tab, setTab] = useMotionState<'calls' | 'contacts'>('calls', 'fade');
-  const [missedOnly, setMissedOnly] = useMotionState(false, 'fade');
+  const [tab, setTab] = useState<'calls' | 'contacts'>('calls');
+  const [missedOnly, setMissedOnly] = useState(false);
   const [contact, setContact] = useMotionState<Contact | null>(null, 'sheet');
-  const [notesOpen, setNotesOpen] = useMotionState(true, 'fade');
+  const [notesOpen, setNotesOpen] = useState(true);
   const [feedback, setFeedback] = useState('');
   const evidence = useCommunicationEvidence(props.caseData.caseId, props.onTagSuspect, 'phone');
   const calls = data.calls.filter(call => !missedOnly || call.direction === 'missed');

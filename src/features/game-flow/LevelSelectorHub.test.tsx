@@ -15,7 +15,7 @@ import {
   resolvePagerTarget,
 } from './LevelSelectorHub';
 import { LevelStage } from './case-files/LevelStage';
-import { planSheetFlips } from './case-files/pagerLogic';
+import { resolveSheetRestPose } from './case-files/pagerLogic';
 
 const RAW_EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
 const EM_DASH_REGEX = /[—–]/;
@@ -218,31 +218,47 @@ describe('LevelStage (folder opened)', () => {
   });
 });
 
-describe('binder sheet flips', () => {
-  it('tapping a later tab flips every sheet before it, nearest the current sheet first', () => {
-    expect(planSheetFlips(1, 3)).toEqual([
-      { sheet: 1, flipped: true, order: 0 },
-      { sheet: 2, flipped: true, order: 1 },
-    ]);
+describe('physical manila-folder stack', () => {
+  it('places the active sheet in front and stacks inactive sheets behind by distance', () => {
+    expect(resolveSheetRestPose(1, 1)).toEqual({ zIndex: 30, y: 0, scale: 1, shade: 0 });
+    expect(resolveSheetRestPose(0, 1)).toEqual({ zIndex: 19, y: 2, scale: 0.986, shade: 0.06 });
+    expect(resolveSheetRestPose(2, 1)).toEqual({ zIndex: 19, y: 2, scale: 0.986, shade: 0.06 });
+    expect(resolveSheetRestPose(3, 1)).toEqual({ zIndex: 18, y: 4, scale: 0.972, shade: 0.12 });
+    expect(resolveSheetRestPose(6, 1)).toEqual({ zIndex: 15, y: 6, scale: 0.958, shade: 0.18 });
   });
 
-  it('tapping an earlier tab flips the sheets back in reverse order', () => {
-    expect(planSheetFlips(3, 0)).toEqual([
-      { sheet: 2, flipped: false, order: 0 },
-      { sheet: 1, flipped: false, order: 1 },
-      { sheet: 0, flipped: false, order: 2 },
-    ]);
+  it('keeps one real clipped tab per sheet with no duplicate turned-tab clone', () => {
+    const html = renderLevelStage(1);
+    expect(html.match(/data-level-file="/g)).toHaveLength(LEVELS.length);
+    expect(html.match(/data-level-shade="/g)).toHaveLength(LEVELS.length);
+    expect(html.match(/clip-path:polygon\(/g)).toHaveLength(LEVELS.length);
+    // Transparent tab hit targets have no nested label/paper clone inside the button.
+    const tabButtons = html.match(/<button[^>]*role="tab"[^>]*>/g) ?? [];
+    expect(tabButtons).toHaveLength(LEVELS.length);
+    expect(html).not.toMatch(/role="tab"[^>]*>[^<]*<span/);
   });
 
-  it('plans nothing when the target is the current sheet', () => {
-    expect(planSheetFlips(2, 2)).toEqual([]);
-  });
+  it('renders transparent role="tab" hit targets matching sheet z-index and tracks aria-selected', () => {
+    const stageAtOne = renderLevelStage(1);
+    expect(stageAtOne.match(/role="tab"/g)).toHaveLength(LEVELS.length);
+    expect(stageAtOne.match(/data-level-tab="/g)).toHaveLength(LEVELS.length);
+    expect(stageAtOne.match(/aria-selected="true"/g)).toHaveLength(1);
+    expect(stageAtOne.match(/aria-selected="false"/g)).toHaveLength(LEVELS.length - 1);
+    expect(stageAtOne).toMatch(/data-level-tab="hoang_01"[^>]*aria-selected="true"/);
+    expect(stageAtOne).toMatch(/data-level-tab="hoang_00"[^>]*aria-selected="false"/);
+    expect(stageAtOne).toMatch(/data-level-tab="hoang_02"[^>]*aria-selected="false"/);
+    expect(stageAtOne).toMatch(/data-level-tab="hoang_01"[^>]*z-index:30/);
+    expect(stageAtOne).toMatch(/data-level-tab="hoang_00"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-tab="hoang_02"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-file="hoang_01"[^>]*z-index:30/);
+    expect(stageAtOne).toMatch(/data-level-file="hoang_00"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-file="hoang_02"[^>]*z-index:19/);
 
-  it('puts each tab on its own sheet, staggered, with the first sheet flipped on first open', () => {
-    const html = renderLevelStage();
-    expect(html.match(/role="tab"/g)).toHaveLength(LEVELS.length);
-    expect(html.match(/data-level-tab="/g)).toHaveLength(LEVELS.length);
-    expect(html).toContain('aria-selected="true"');
+    const stageAtTwo = renderLevelStage(2);
+    expect(stageAtTwo).toMatch(/data-level-tab="hoang_02"[^>]*aria-selected="true"/);
+    expect(stageAtTwo).toMatch(/data-level-tab="hoang_01"[^>]*aria-selected="false"/);
+    expect(stageAtTwo).toMatch(/data-level-tab="hoang_02"[^>]*z-index:30/);
+    expect(stageAtTwo).toMatch(/data-level-tab="hoang_00"[^>]*z-index:18/);
   });
 });
 
