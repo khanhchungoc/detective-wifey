@@ -241,10 +241,20 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     expect(pin('msg_company_pin', 'Nguyễn Thị Thu Hương - Marketing Executive', 'HR', 3, second.suspects).added).toBe(false);
   });
 
-  it('Khoa BE gets a neutral initial avatar, never a portrait of the real person', () => {
+  it('Khoa BE gets an ordinary landscape photo like other contacts, never the real person\'s portrait', () => {
     const alias = renderToStaticMarkup(<ContactAvatar name="Khoa BE" size={44} />);
-    expect(alias).not.toContain('background-image');
-    expect(alias).toContain('>K<');
+    const portrait = renderToStaticMarkup(<ContactAvatar name="Nguyễn Thị Thu Hương" size={44} />);
+    const landscape = renderToStaticMarkup(<ContactAvatar name="Đức Nghĩa" size={44} />);
+    expect(alias).toContain('background-image');
+    expect(alias).toBe(landscape);
+    expect(alias).not.toBe(portrait);
+  });
+
+  it('a name without an assigned photo gets an initial, not another persona\'s photo', () => {
+    const unknown = renderToStaticMarkup(<ContactAvatar name="Bách" size={44} />);
+    expect(unknown).not.toContain('background-image');
+    expect(unknown).toContain('>B<');
+    expect(renderToStaticMarkup(<ContactAvatar name="Bách Dev" size={44} />)).not.toBe(renderToStaticMarkup(<ContactAvatar name="Mai Lễ Tân" size={44} />));
     expect(renderToStaticMarkup(<ContactAvatar name="Nguyễn Thị Thu Hương" size={44} />)).toContain('background-image');
     expect(renderToStaticMarkup(<ContactAvatar name="Anh Tuấn Thợ Điện" size={44} />)).toContain('background-image');
   });

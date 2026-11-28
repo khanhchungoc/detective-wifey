@@ -14,7 +14,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
       nodeId: 'node_alias_khoa',
       type: 'alias',
       label: 'Khoa BE',
-      subtitle: 'Zola: đặt bàn tầng 2, "chỗ cũ"',
+      subtitle: 'Zola: hẹn khao, book bàn "chỗ hôm trước"',
       sourceAppId: 'internet-messaging',
       recordRefId: 'thread_khoa',
       clueRefId: 'CLUE-ZOLA-01',
@@ -64,7 +64,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
     {
       nodeId: 'node_record_khoa_booking',
       type: 'record_clue',
-      label: 'Khoa BE: book bàn 7h30, tầng 2',
+      label: 'Khoa BE: book bàn 7h30, chỗ hôm trước',
       subtitle: 'Hẹn "chỗ cũ" tối 15/10',
       sourceAppId: 'internet-messaging',
       recordRefId: 'msg_khoa_booking',

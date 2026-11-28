@@ -842,7 +842,7 @@ export function evaluateConfrontation({
       wifeTitle = 'Nữ thám tử ghen tuông';
       narrativeRoast =
         groundTruth.narrativeRoast ||
-        'Khoa BE gì mà mặc váy size S, đặt bàn tầng 2 và tròn một tháng đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?';
+        'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?';
     } else if (stars === 2) {
       // 2 Stars: Partial victory (Đã vạch trần một phần)
       husbandMood = 'nervous';

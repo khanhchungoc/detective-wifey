@@ -59,27 +59,27 @@ level: 1
 | `ACT-06` | 13/10 21:00 - 21:05 | Vợ | Vợ xin chồng về sớm đi khám thứ Năm; Hoàng: "Thứ 5 anh có họp sprint rồi vợ ơi" | - | `internet-messaging` | `thread_wife` (Sinh hoạt / cài cảm xúc) | Lúc này họp sprint là thật |
 | `ACT-07` | 14/10 15:02 - 15:10 | Lan Anh | Lan Anh nhờ Hoàng đặt hoa sáp sinh nhật anh Hùng, để tên Mai lễ tân nhận cho kín vì anh Hùng hay xuống sảnh | - | `internet-messaging` | `thread_lan_anh` (Giải oan Mai) | Quà chung của Team Dev |
 | `ACT-08` | 14/10 15:20 | Shop Hoa Sáp | Đặt lẵng hoa sáp, người nhận `Đỗ Thị Mai`, SĐT `0988990011`, thiệp "Chúc mừng sinh nhật! - Team Dev" | Shop -> sảnh Minh An | `ecommerce` | `order_03`, `seller_hoa` (`CLUE-POSH-06`) | Người nhận nữ là lễ tân nhận hộ |
-| `EVT-03` | 14/10 21:12 - 21:16 | Hương ("Khoa BE") | "Thứ 5 tròn 1 tháng đó a 🥹"; Hoàng: "Tối đó a vướng họp sprint rồi e 😞" | - | `internet-messaging` | `thread_khoa` | Kỷ niệm 1 tháng quen nhau (15/09), không phải 1 tháng vào công ty (08/09) |
+| `EVT-03` | 14/10 21:12 - 21:16 | Hương ("Khoa BE") | "Thứ 5 tròn 1 tháng rồi đó a. A nhớ vụ khao nhé"; Hoàng: "Tối đó a vướng họp sprint rồi e." | - | `internet-messaging` | `thread_khoa` | Kỷ niệm 1 tháng quen nhau (15/09), không phải 1 tháng vào công ty (08/09) |
 | `EVT-04` | D 11:35 - 11:42 | Mai Lễ Tân | Mai báo 2 kiện: 1 túi dài người nhận Mai (hoa), 1 hộp nhỏ người nhận khác nhưng shipper dặn đưa Hoàng. Hoàng: "Của a cả, chiều a xuống lấy" | Sảnh Minh An: hộp váy (shipper -> Mai -> Hoàng) | `internet-messaging` | `thread_mai` (Giải oan Mai + gợi ý phụ) | Hoàng chặn gói quà mang tên người khác |
 | `ACT-09` | D 15:05 | Mai Lễ Tân | Hoàng lấy hộp nhỏ; túi hoa Mai cất kho tới thứ Hai như chị Lan Anh dặn | Sảnh | `internet-messaging` | `thread_mai` (Giải oan Mai) | Hoa ở lại sảnh, váy đi theo Hoàng |
 | `ACT-10` | D 15:30 - 15:35 | Anh Tuấn Thợ Điện | Hoàng chuyển cọc 1.500.000đ; Tuấn: "Anh nhận cọc rồi nhé" | Ngân hàng | `banking` + `internet-messaging` | `tx_tuan_coc`, `thread_tuan_dien` (Giải oan thợ điện) | Nội dung chuyển khoản chỉ ghi "Coc" |
 | `ACT-11` | D 16:05 - 16:21 | Vợ | "Em khám xong rồi. Tối về em có chuyện muốn nói 🙂" | Bệnh viện | `internet-messaging` | `thread_wife` (Cài cảm xúc) | Thư biết mình có thai 6 tuần |
 | `EVT-05` | D 17:30 - 17:33 | Team Dev | Nam: "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae"; Hoàng: "Ok ông 👍" | - | `internet-messaging` | `thread_dev` / `msg_dev_cancel` (`CLUE-ZOLA-09`) | Hoàng biết không còn cuộc họp nào |
-| `EVT-06` | D 17:35 - 17:40 | Hương ("Khoa BE") | Hoàng: "Họp hủy rồi. Tối nay chỗ cũ nhé?"; Khoa: "E book bàn 7h30 rồi nhé a. Tầng 2 như lần trước." | Quán Cơm Niêu Phố Cổ (không nêu tên trong chat) | `internet-messaging` | `thread_khoa` / `msg_khoa_booking` (`CLUE-ZOLA-01`) | Cuộc họp bị hủy biến thành buổi hẹn |
+| `EVT-06` | D 17:35 - 17:40 | Hương ("Khoa BE") | Hoàng: "Họp hủy rồi. Tối nay khao luôn nhé?"; Khoa: "Ok a, e book bàn 7h30 chỗ hôm trước nhé." | Quán Cơm Niêu Phố Cổ (không nêu tên trong chat) | `internet-messaging` | `thread_khoa` / `msg_khoa_booking` (`CLUE-ZOLA-01`) | Cuộc họp bị hủy biến thành buổi hẹn |
 | `ACT-12` | D 18:00 | Hoàng rời văn phòng | Lan Anh sau đó nhắn thấy Hoàng về từ 6h | Sảnh Minh An | - | (Không có bản ghi trực tiếp) | Không có app nào ghi vị trí 18:00 - 19:20 (khoảng trống có chủ đích) |
 | `ACT-13` | D 18:20 - 18:45 | Thảo PT | "A tới chưa? E đợi a nãy giờ 😤"; "A ko tới thì e trừ buổi nha a" | Gym tầng 5 | `internet-messaging` | `thread_thao` (Bẫy nghi ngờ trong giờ tối) | Hoàng quên lịch tập |
 | `EVT-07` | D 18:52 - 18:56 | Vợ | Vợ: canh cua mồng tơi, mấy giờ về; Hoàng: "Tối nay họp sprint với cả team, chắc 9h. Vợ ăn trước nhé ❤️" | - | `internet-messaging` | `thread_wife` / `msg_wife_1855` (`CLUE-ZOLA-09`) | Lời khai giả lần 1 (sau khi họp đã hủy) |
 | `ACT-14` | D 19:05 | California Fitness | SMS báo vắng mặt buổi PT 18:00, buổi đã bị trừ | - | `messages` | `sms_gym_absent` (`CLUE-MSG-02`) | Giải oan Thảo; Hoàng không ở gym |
-| `EVT-08` | D 19:18 - 19:20 | Hương ("Khoa BE") | Hoàng gọi 26 giây; Khoa: "E tới rồi, a lên thẳng tầng 2 nha" | Cơm Niêu Phố Cổ, tầng 2 | `phone` + `internet-messaging` | `call_khoa_early`, `thread_khoa` | Gặp nhau, trao hộp váy |
+| `EVT-08` | D 19:18 - 19:20 | Hương ("Khoa BE") | Hoàng gọi 26 giây; Khoa: "E tới rồi a." | Cơm Niêu Phố Cổ, tầng 2 | `phone` + `internet-messaging` | `call_khoa_early`, `thread_khoa` | Gặp nhau, trao hộp váy |
 | `ACT-15` | D 19:50 - 20:13 | Bé Ngọc | Ngọc xin 1,2tr học lại môn Vĩ mô; Hoàng chuyển 20:10; tin cuối "Nhớ là a đừng kể gì nha 🙊" | Ngân hàng | `internet-messaging` + `banking` | `thread_ngoc`, `tx_ngoc` (`CLUE-ZOLA-10`) | Bản xem trước bị cắt trông như che giấu; đọc trọn luồng thấy "mẹ mà biết thì e toi" |
 | `ACT-16` | D 19:58 - 20:31 | Lan Anh | "6h thấy a về sớm thế, mỗi a chưa đóng quỹ sinh nhật anh Hùng 😤"; Hoàng chuyển 500k lúc 20:30: "A ứng luôn cho cả nhóm" | Ngân hàng | `internet-messaging` + `banking` | `thread_lan_anh`, `tx_lan_anh` (Giải oan Lan Anh + phá ngoại phạm phụ) | Chuyển tiền cho phụ nữ giữa buổi tối, nhưng là quỹ chung |
 | `EVT-09` | D 20:45 - 20:46 | Vợ | Vợ: "Họp xong chưa anh?"; Hoàng: "Chưa em, sếp Hùng đang chốt nốt." | - | `internet-messaging` | `thread_wife` / `msg_wife_2046` (`CLUE-ZOLA-09`) | Lời khai giả lần 2; sếp Hùng đã bay Đà Nẵng |
 | `EVT-10` | D 20:48 | Cơm Niêu Phố Cổ | Quẹt thẻ 640.000đ | Quán | `banking` | `tx_01` (`CLUE-BANK-07`) | Smoking Gun ngoại phạm: 2 phút sau lời khai họp |
-| `EVT-11` | D 21:30 - 21:32 | Hương ("Khoa BE") | Khoa: "Vừa in luôn a ạ, khéo chọn ghê 🥹"; Hoàng: "Về cẩn thận nhé e." | - | `internet-messaging` | `thread_khoa` | Hương mặc thử váy size S; câu không nêu tên món đồ |
+| `EVT-11` | D 21:30 - 21:32 | Hương ("Khoa BE") | Khoa: "Vừa lắm a, cảm ơn a nha."; Hoàng: "Ok e, mai gặp." | - | `internet-messaging` | `thread_khoa` | Hương mặc thử váy size S; câu không nêu tên món đồ |
 | `EVT-12` | D 22:10 | Vợ | Hoàng: "Anh về tới hầm rồi." | Hầm xe CT2 An Bình | `internet-messaging` | `thread_wife` | Về nhà, quên áo khoác ở quán, Hương cầm về |
 | `ACT-17` | D 22:58 | Anh Tuấn Thợ Điện | "Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu." | - | `internet-messaging` | `thread_tuan_dien`, `toast_01` (`CLUE-ZOLA-11`) | Mồi meme: "bà ấy" nghe như "bà xã", thực ra là mẹ Hoàng |
 | `EVT-13` | D 23:20 | Hương ("Khoa BE") | Hoàng gọi 96 giây từ ban công | - | `phone` | `call_khoa_late` (`CLUE-PHONE-01`) | Hỏi về chiếc áo khoác bỏ quên |
-| `EVT-14` | D 23:41 | Hương ("Khoa BE") | "Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty." | - | `internet-messaging` | `thread_khoa`, `toast_02` | Thông báo khởi phát thứ hai, không tự là bằng chứng |
+| `EVT-14` | D 23:41 | Hương ("Khoa BE") | "A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha." | - | `internet-messaging` | `thread_khoa`, `toast_02` | Thông báo khởi phát thứ hai, không tự là bằng chứng |
 | `ACT-18` | D 23:45 | Thư | Hoàng vào tắm, máy 8% pin cắm sạc ngoài phòng; Thư cầm máy | Phòng ngủ 1206 CT2 | - | `deviceMetadata` | Thời điểm kiểm tra máy |
 
 ---
@@ -101,20 +101,20 @@ flowchart TD
     T6["15:30 - ACT-10<br/>Cọc 1,5tr cho TRAN VAN TUAN<br/>📱 banking (tx_tuan_coc)"]
     T7["16:05 - ACT-11<br/>Vợ: Tối về em có chuyện muốn nói<br/>📱 internet-messaging (thread_wife)"]
     T8["17:30 - EVT-05<br/>Team Dev: họp sprint dời sang T2, Hoàng: Ok ông<br/>📱 internet-messaging (thread_dev)"]
-    T9["17:35 - 17:40 - EVT-06<br/>Hoàng: Họp hủy rồi, chỗ cũ nhé? Khoa: book bàn 7h30 tầng 2<br/>📱 internet-messaging (thread_khoa)"]
+    T9["17:35 - 17:40 - EVT-06<br/>Hoàng: Họp hủy rồi, khao luôn nhé? Khoa: book bàn 7h30 chỗ hôm trước<br/>📱 internet-messaging (thread_khoa)"]
   end
 
   subgraph D_DAY_NIGHT ["3. Tối D-Day: ngoại phạm giả & các bẫy nghi ngờ"]
     T10["18:20 - 19:05 - ACT-13, ACT-14<br/>Thảo đợi ở gym; SMS báo vắng mặt<br/>📱 internet-messaging + messages"]
     T11["18:55 - EVT-07<br/>Báo vợ: họp sprint với cả team<br/>📱 internet-messaging (thread_wife)"]
-    T12["19:18 - 19:20 - EVT-08<br/>Gọi Khoa BE 26s; Khoa: lên thẳng tầng 2<br/>📱 phone + internet-messaging"]
+    T12["19:18 - 19:20 - EVT-08<br/>Gọi Khoa BE 26s; Khoa: E tới rồi a<br/>📱 phone + internet-messaging"]
     T13["20:10 - 20:31 - ACT-15, ACT-16<br/>Chuyển Ngọc 1,2tr; chuyển Lan Anh 500k<br/>📱 banking + internet-messaging"]
     T14["20:46 - EVT-09<br/>Báo vợ: sếp Hùng đang chốt nốt<br/>📱 internet-messaging (thread_wife)"]
     T15["20:48 - EVT-10<br/>Quẹt thẻ 640.000đ COM NIEU PHO CO<br/>📱 banking (tx_01)"]
-    T16["21:30 - EVT-11<br/>Khoa BE: Vừa in luôn a ạ<br/>📱 internet-messaging"]
+    T16["21:30 - EVT-11<br/>Khoa BE: Vừa lắm a<br/>📱 internet-messaging"]
     T17["22:58 - ACT-17 (toast_01)<br/>Anh Tuấn Thợ Điện: không để bà ấy biết đâu<br/>📱 internet-messaging"]
     T18["23:20 - EVT-13<br/>Gọi Khoa BE 96s<br/>📱 phone (call_khoa_late)"]
-    T19["23:41 - EVT-14 (toast_02)<br/>Khoa BE: Đồ anh để quên em cất rồi nhé<br/>📱 internet-messaging"]
+    T19["23:41 - EVT-14 (toast_02)<br/>Khoa BE: A để quên áo khoác ở quán<br/>📱 internet-messaging"]
   end
 
   T0 --> T1 --> T2 --> T3 --> T4 --> T5 --> T6 --> T7 --> T8 --> T9 --> T10 --> T11 --> T12 --> T13 --> T14 --> T15 --> T16 --> T17 --> T18 --> T19
@@ -159,7 +159,7 @@ flowchart LR
 
   subgraph CLUE_NODES ["4. 🔍 NÚT MANH MỐI & LIÊN KẾT (CLUE NODES & EDGES)"]
     Record_Order["node_record_ecommerce_order (CLUE-POSH-05)<br/>Váy lụa be size S, người nhận Hương 0988886677, thiệp 15/09 - 15/10"]
-    Record_Booking["node_record_khoa_booking (CLUE-ZOLA-01)<br/>Khoa BE: book bàn 7h30, tầng 2 như lần trước"]
+    Record_Booking["node_record_khoa_booking (CLUE-ZOLA-01)<br/>Khoa BE: book bàn 7h30, chỗ hôm trước như lần trước"]
     Record_DevCancel["node_record_dev_cancel (CLUE-ZOLA-09)<br/>17:30 họp sprint dời sang T2, Hoàng: Ok ông"]
     Record_Wife1855["node_record_wife_1855 (CLUE-ZOLA-09)<br/>18:55: họp sprint với cả team"]
     Record_Wife2046["node_record_wife_alibi (CLUE-ZOLA-09)<br/>20:46: sếp Hùng đang chốt nốt"]

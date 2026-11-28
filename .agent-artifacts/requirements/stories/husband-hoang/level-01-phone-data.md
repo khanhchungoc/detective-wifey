@@ -16,23 +16,28 @@ Mỗi dòng có giờ và người nói; ngày ghi ở đầu dòng. Bản xem t
 
 ### `thread_khoa` - Khoa BE
 
-Liên hệ `contact_10`, SĐT `0988886677`. Danh tính tác giả: `suspect_huong`. Không ảnh đại diện người thật (dùng avatar chữ "K"). Văn phong như đồng nghiệp trẻ; các chỗ lỡ lời chỉ là gợi hướng.
+Liên hệ `contact_10`, SĐT `0988886677`. Danh tính tác giả: `suspect_huong`. Ảnh đại diện là ảnh phong cảnh đồng quê (như nhiều liên hệ khác có ảnh thật), không phải avatar chữ. Luồng đọc như trao đổi công việc giữa hai đồng nghiệp; không emoji tình cảm, không từ ngữ yêu đương. Các chỗ lỡ lời chỉ là gợi hướng: "dev backend" lại hỏi banner/CTA và chụp màn hình làm bài đăng (việc Marketing); "tròn 1 tháng" chỉ có nghĩa khi đối chiếu thiệp "15/09 - 15/10"; "Vừa lắm a" chỉ có nghĩa khi tìm ra đơn váy.
 
-- 12/10 09:40 - Khoa: "A ơi file banner e gửi a check giúp phần CTA nhé"
-- 12/10 09:52 - Hoàng: "Ok e, trưa a xem."
+- 12/10 09:40 - Khoa: "A ơi landing page bị lỗi form đăng ký, a xem giúp e với"
+- 12/10 09:52 - Hoàng: "Ok e, gửi a link với ảnh lỗi nhé."
+- 12/10 09:55 - Khoa: "E gửi qua mail rồi a. Phần CTA trên banner a check giúp luôn nhé"
+- 12/10 14:20 - Hoàng: "Fix xong form rồi, e test lại nhé."
+- 12/10 14:35 - Khoa: "Chạy ok rồi a, cảm ơn a."
 - 13/10 12:10 - Khoa: "Trưa nay a ăn gì? E order cơm bên dưới luôn nha"
 - 13/10 12:12 - Hoàng: "Cho a 1 suất như hôm trc."
-- 14/10 21:12 - Khoa: "Thứ 5 tròn 1 tháng đó a 🥹"
-- 14/10 21:15 - Hoàng: "Tối đó a vướng họp sprint rồi e 😞"
-- 14/10 21:16 - Khoa: "Vâng ạ 😔"
-- D 17:35 - Hoàng: "Họp hủy rồi. Tối nay chỗ cũ nhé?"
-- D 17:40 - Khoa: "E book bàn 7h30 rồi nhé a. Tầng 2 như lần trước." (`msg_khoa_booking`, `CLUE-ZOLA-01`)
-- D 19:20 - Khoa: "E tới rồi, a lên thẳng tầng 2 nha"
-- D 21:30 - Khoa: "Vừa in luôn a ạ, khéo chọn ghê 🥹"
-- D 21:32 - Hoàng: "Về cẩn thận nhé e."
-- D 23:41 - Khoa: "Đồ anh để quên em cất rồi nhé. Mai em mang lên công ty." (`toast_02`)
+- 14/10 21:12 - Khoa: "Thứ 5 tròn 1 tháng rồi đó a. A nhớ vụ khao nhé"
+- 14/10 21:15 - Hoàng: "Tối đó a vướng họp sprint rồi e."
+- 14/10 21:16 - Khoa: "Vâng, để hôm khác ạ."
+- D 09:30 - Khoa: "Bản build sáng nay lên staging chưa a? Bên e cần chụp màn hình làm bài đăng"
+- D 09:41 - Hoàng: "Lên rồi e."
+- D 17:35 - Hoàng: "Họp hủy rồi. Tối nay khao luôn nhé?"
+- D 17:40 - Khoa: "Ok a, e book bàn 7h30 chỗ hôm trước nhé." (`msg_khoa_booking`, `CLUE-ZOLA-01`)
+- D 19:20 - Khoa: "E tới rồi a."
+- D 21:30 - Khoa: "Vừa lắm a, cảm ơn a nha."
+- D 21:32 - Hoàng: "Ok e, mai gặp."
+- D 23:41 - Khoa: "A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha." (`toast_02`)
 
-Ghi chú tác giả: "tròn 1 tháng" có thể bị hiểu là 1 tháng vào công ty, nhưng tin ghim HR ghi ngày vào là 08/09, còn thiệp váy ghi 15/09. "Đồ để quên" là áo khoác Hoàng bỏ lại ở quán. Chat không nêu tên quán, không nói "váy", không có từ ngữ yêu đương.
+Ghi chú tác giả: "tròn 1 tháng" có thể bị hiểu là 1 tháng dự án hoặc 1 tháng vào công ty, nhưng tin ghim HR ghi ngày vào là 08/09, còn thiệp váy ghi 15/09. Chat không nêu tên quán, không nói "váy".
 
 ### `thread_company` - Technosoft - Toàn công ty (nhóm, 46 thành viên)
 
@@ -46,7 +51,9 @@ Tin của `contact_10` hiển thị theo tên danh bạ "Khoa BE" (đúng hành 
 - D 10:22 - Bách Dev: "Đã share 👍"
 - D 11:00 - Ban Hành chính: "Bãi xe B1 sáng mai sơn lại vạch, mọi người gửi xe B2 nhé."
 
-### `thread_dev` - Team Dev Technosoft (nhóm: Hoàng, Nam, Bách)
+### `thread_dev` - Team Dev Technosoft (nhóm: Hoàng, Nam, Bách; tắt thông báo)
+
+Người gửi hiện theo tên danh bạ (`senderContactId`: Nam Dev `contact_3`, Bách Dev `contact_13`).
 
 - D 09:05 - Nam: "Bản fix cart lên staging rùi nhé ae."
 - D 09:12 - Hoàng: "Nhờ ae test thêm case update quantity nhé."
@@ -54,6 +61,8 @@ Tin của `contact_10` hiển thị theo tên danh bạ "Khoa BE" (đúng hành 
 - D 17:30 - Nam: "Sếp Hùng 6h bay Đà Nẵng, họp sprint tối nay dời sang T2 nhé ae." (`msg_dev_cancel`, `CLUE-ZOLA-09`)
 - D 17:32 - Hoàng: "Ok ông 👍"
 - D 17:33 - Bách: "Ngon, về sớm 🎉"
+- D 23:43 - Nam: "Ae ơi staging lại lỗi giỏ hàng, mai sáng check giúp nhé"
+- D 23:44 - Bách: "Ok a, e note lại rồi"
 
 ### `thread_wife` - Vợ
 
@@ -147,11 +156,15 @@ Liên hệ `contact_8`, SĐT `0988990011`.
 - D 21:18 - Tuấn: "Tuần sau nhớ mang áo xanh, tuần trc lẫn đội suốt."
 - D 21:34 - Hoàng: "Rùi, giày còn đang phơi."
 
-### `thread_building` - Cư dân tầng 12 CT2
+### `thread_building` - Cư dân tầng 12 CT2 (tắt thông báo)
 
 - D 07:45 - Ban quản lý: "Sáng thứ bảy bảo trì thang B từ 9h đến 11h."
 - D 07:52 - Căn 1204: "Thang A vẫn hoạt động chứ ạ?"
 - D 08:00 - Ban quản lý: "Vâng, thang A hoạt động bình thường."
+- D 23:42 - Căn 1208: "Xe biển 29X1-468.xx đang chắn lối hầm B1, chủ xe xuống dời giúp ạ"
+- D 23:45 - Ban quản lý: "Bảo vệ đang liên hệ chủ xe ạ."
+
+Thứ tự hộp thư theo giờ tin cuối: hai nhóm tắt thông báo có tin sau 23:41 nên "Khoa BE" đứng thứ ba, không nằm trên cùng. Không tăng số chưa đọc cho luồng có manh mối.
 
 Tỷ lệ: 12 luồng, 2 luồng mang manh mối kết tội (`thread_khoa`, `thread_wife`) cộng tin rải rác trong 2 nhóm; các luồng còn lại là sinh hoạt hoặc giải oan.
 
@@ -288,5 +301,5 @@ Giữ nguyên bản trước (bài kiểm thử giao diện, tin tuyển fronten
 - **Lịch trùng**: 13/10 Thảo chốt PT 18:00 thứ Năm vì 19:00 có họp sprint. 14/10 Hương nhắc tròn 1 tháng; Hoàng từ chối vì họp.
 - **Biến cố**: 17:30 D họp bị hủy. 17:35 Hoàng chủ động hẹn Hương, quên buổi PT, và không báo vợ dù vợ đang chờ nói tin vui.
 - **Buổi tối**: 18:00 rời văn phòng (Lan Anh thấy). 18:00 - 19:20 không app nào ghi vị trí. 19:18 gọi Hương, 19:20 Hương báo đã tới, hai người ăn ở tầng 2 Cơm Niêu Phố Cổ; Hoàng trao hộp váy. Trong bữa, Hoàng chuyển tiền cho Ngọc và Lan Anh bằng điện thoại. 20:46 nói dối vợ lần 2; 20:48 trả tiền bằng thẻ.
-- **Kết thúc buổi tối**: Hoàng về tới hầm 22:10, quên áo khoác ở quán; Hương cầm về và mặc thử váy ("Vừa in luôn"). 23:20 Hoàng gọi Hương từ ban công hỏi áo; 23:41 Hương nhắn đã cất. 23:45 Hoàng vào tắm, máy 8% pin cắm sạc ngoài phòng.
+- **Kết thúc buổi tối**: Hoàng về tới hầm 22:10, quên áo khoác ở quán; Hương cầm về và mặc thử váy ("Vừa lắm a"). 23:20 Hoàng gọi Hương từ ban công hỏi áo; 23:41 Hương nhắn đã cất. 23:45 Hoàng vào tắm, máy 8% pin cắm sạc ngoài phòng.
 - **Hậu kết (sau đối chất)**: Hoàng chặn số "Khoa BE". Hương chuyển `+1.000 đ` kèm lời nhắn "Anh chan so em that a?" - mở đầu Màn 2.
