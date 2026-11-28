@@ -78,7 +78,7 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(new Set(clues)).toEqual(new Set([
       'CLUE-ZOLA-01', 'CLUE-ZOLA-08', 'CLUE-ZOLA-09', 'CLUE-ZOLA-10', 'CLUE-ZOLA-11',
       'CLUE-POSH-05', 'CLUE-POSH-06', 'CLUE-BANK-07', 'CLUE-PHONE-01', 'CLUE-MSG-02',
-      'CLUE-GRAP-04', 'CLUE-BROW-05',
+      'CLUE-BROW-05',
     ]));
     expect(banking.transactions.filter(row => row.clueRefId).map(row => row.id)).toEqual(['tx_003']);
     expect(banking.transactions.some(row => row.suspectName)).toBe(false);
@@ -98,7 +98,7 @@ describe('Level 1 story content through runtime adapters', () => {
   it('keeps the culprit phone and legal name confined to the intended records', () => {
     const owners = (needle: string) => recordsContaining(data, needle)
       .map(row => String(row.callId ?? row.orderId ?? row.id ?? row.contactId ?? row.threadId)).sort();
-    expect(owners('0988886677')).toEqual(['call_001', 'call_003', 'contact_011', 'contact_011', 'contact_011', 'order_005', 'trip_021']);
+    expect(owners('0988886677')).toEqual(['call_001', 'call_003', 'contact_011', 'contact_011', 'contact_011', 'order_005']);
     expect(owners('Thu Hương')).toEqual(['msg_012_0001', 'order_005']);
     expect(JSON.stringify(data)).not.toMatch(/Marketing(?! Executive)/);
     const khoaContacts = messaging.contacts!.filter(contact => contact.id === 'contact_011');

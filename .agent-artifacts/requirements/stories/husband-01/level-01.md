@@ -110,7 +110,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 ### 4.1. Phân cấp Độ khó
 - **Phân bậc Màn chơi**: Màn 1 (Khởi động, nhỉnh độ khó so với bản trước)
 - **Số lượt nghi ngờ tối đa (`allowedStrikes`)**: 5
-- **Số app có manh mối kết tội**: 6 (`internet-messaging`, `ecommerce`, `banking`, `phone`, `ride-hailing`, `web-browser`); `messages` chỉ chứa bằng chứng giải oan. Mỗi cạnh bắt buộc có ít nhất 2 đường tới (ví dụ SĐT "Khoa BE" khớp cả `order_005` lẫn `trip_021`; họp bị hủy thấy ở nhóm Team Dev và ở tin sếp Tuấn Anh "đang ở Đà Nẵng" trong nhóm poker).
+- **Số app có manh mối kết tội**: 5 (`internet-messaging`, `ecommerce`, `banking`, `phone`, `web-browser`); `messages` chỉ chứa bằng chứng giải oan. `ride-hailing` (Grap) chưa hoàn thiện nên bị khóa xám ở Màn 1. Cạnh họp bị hủy có 2 đường tới: nhóm Team Dev và tin sếp Tuấn Anh "đang ở Đà Nẵng" trong nhóm poker.
 - **Số câu đố mã khóa (`lockChallenges`)**: 0
 - **Độ khó tăng thêm (theo yêu cầu duyệt)**: mồi meme thợ điện ở thông báo đầu; 5 bẫy nghi ngờ, mỗi bẫy có một khoảnh khắc trông có tội và đều nằm trong ngày D; 3 cạnh bắt buộc thay vì 2; nội dung chuyển khoản chung chung ("CK", "Coc"), phải đọc chat để giải oan.
 - **Thời gian giải án mục tiêu**: 5-7 phút.
@@ -124,8 +124,8 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 | `banking` | Manh mối + Giải oan | `ACT-01`, `ACT-10`, `ACT-15`, `ACT-16`, `EVT-10` | Giao dịch có tên đối tác và nội dung | Không |
 | `phone` | Manh mối phụ (cầu nối SĐT) | `EVT-08`, `EVT-13` | Nhật ký cuộc gọi, danh bạ có SĐT đầy đủ | Không |
 | `messages` | Giải oan | `ACT-14` | SMS dịch vụ | Không |
-| `ride-hailing` | Manh mối phụ (cầu nối SĐT) + Sinh hoạt | `EVT-07b` | `trip_021` đặt hộ, hiện SĐT người đi | Không |
 | `web-browser` | Manh mối phụ (lệch size) + Sinh hoạt | `ACT-04b` | `hist_026` bảng size váy lụa | Không |
+| `ride-hailing` | Khóa xám (app chưa hoàn thiện) | - | - | - |
 | `photos`, `personal-notes`, `email`, `professional-network`, `team-collaboration` | Chỉ sinh hoạt | - | Sinh hoạt theo [level-01-phone-data.md](level-01-phone-data.md) | Bỏ manh mối ảnh cơm niêu của bản cũ; không còn phụ thuộc ghim ảnh |
 
 ### 4.3. Thông số Thiết bị & Thông báo Mồi nhử (Zero-Spoiler Hook)
@@ -200,7 +200,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
 ## 6. Lộ trình Phá án & Bảng Điều tra Nối dây
 
 - **Đường suy luận chính**:
-  1. Hai thông báo trên màn hình khóa. Người chơi theo meme mở "Anh Tuấn Thợ Điện" trước, đọc trọn luồng và luồng Mẹ để giải oan. "Khoa BE" nằm giữa hộp thư (thứ 9), sau các nhóm bạn bè chat khuya; mở ra chỉ thấy trao đổi công việc và hẹn "khao" ở "chỗ hôm trước"; phải đối chiếu với đơn váy, thiệp, chuyến xe đặt hộ và biên lai mới thấy nghĩa.
+  1. Hai thông báo trên màn hình khóa. Người chơi theo meme mở "Anh Tuấn Thợ Điện" trước, đọc trọn luồng và luồng Mẹ để giải oan. "Khoa BE" nằm giữa hộp thư (thứ 9), sau các nhóm bạn bè chat khuya; mở ra chỉ thấy trao đổi công việc và hẹn "khao" ở "chỗ hôm trước"; phải đối chiếu với đơn váy, thiệp, bảng size đã xem và biên lai mới thấy nghĩa.
   2. Mua sắm: đơn váy size S giao sảnh công ty, người nhận `Nguyễn Thị Thu Hương`, SĐT `0988886677`. So với mỏ neo vợ size M. Đối chiếu SĐT với danh bạ "Khoa BE" -> **SG1** (`edge_order_phone`).
   3. Nhóm "Technosoft - Toàn công ty": tin ghim HR có tên thật + chức danh; "Khoa BE" đăng việc Marketing, HR gọi là "Hương" -> **SG2** (`edge_order_name`).
   4. Chat vợ 20:46 "sếp Tuấn Anh đang chốt nốt" + ngân hàng 20:48 quẹt thẻ COM NIEU PHO CO -> **SG3** (`edge_alibi_contradiction`). Bằng chứng cộng thêm: Team Dev 17:30 hủy họp, sếp bay Đà Nẵng.
@@ -236,7 +236,7 @@ Vợ chuyển xưng hô từ `em` sang `tôi` khi đối chất (giận lạnh),
    python -B .agents/skills/level-designer/scripts/sync_clues.py verify-spec ".agent-artifacts/requirements/stories/husband-01/level-01.md"
    python -B .agents/skills/level-designer/scripts/sync_clues.py validate --file ".agent-artifacts/requirements/stories/husband-01/level-01.md"
    ```
-2. Clue IDs dùng trong màn: `CLUE-ZOLA-01`, `CLUE-ZOLA-08`, `CLUE-ZOLA-09`, `CLUE-ZOLA-10`, `CLUE-ZOLA-11`, `CLUE-POSH-05`, `CLUE-POSH-06`, `CLUE-BANK-07`, `CLUE-PHONE-01`, `CLUE-MSG-02`, `CLUE-GRAP-04` (`trip_021` đặt xe hộ, SĐT người đi trùng "Khoa BE"), `CLUE-BROW-05` (`hist_026` xem bảng size S trước giờ đặt đơn).
+2. Clue IDs dùng trong màn: `CLUE-ZOLA-01`, `CLUE-ZOLA-08`, `CLUE-ZOLA-09`, `CLUE-ZOLA-10`, `CLUE-ZOLA-11`, `CLUE-POSH-05`, `CLUE-POSH-06`, `CLUE-BANK-07`, `CLUE-PHONE-01`, `CLUE-MSG-02`, `CLUE-BROW-05` (`hist_026` xem bảng size S trước giờ đặt đơn).
 3. Huy hiệu đỏ (badge) chỉ phản ánh dữ liệu chưa đọc thật: Zola = 8 (Cư dân 2, Team Dev 2, Poker 3, thợ điện 1), các app khác 0. "Khoa BE" không bao giờ có tin chưa đọc.
 3. Kết quả đọc duyệt ngữ nghĩa: đã đi xuôi dòng thời gian và ngược từ hai thông báo; không có bản ghi sau 23:45 D; giờ hai thông báo trùng giờ tin trong luồng; số `0988886677` chỉ thuộc "Khoa BE" và người nhận `order_005`; xưng hô `em - anh` với thợ điện và `con - mẹ` với Mẹ đã kiểm. Khoảng trống có chủ đích: vị trí Thịnh 18:00 - 19:20 không được app nào ghi.
 4. Khoảng trống runtime đã biết: `edge_group_name` không nối được trên Bảng Điều tra vì cả nhóm `thread_012` là một thẻ; cạnh này không bắt buộc. `edge_order_name` và `edge_alias_group` vẫn chạy từ thẻ nhóm.

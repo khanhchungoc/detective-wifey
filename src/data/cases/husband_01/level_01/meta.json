@@ -70,6 +70,7 @@
     "team-collaboration"
   ],
   "grayedOutAppIds": [
+    "ride-hailing",
     "personal-notes",
     "email",
     "professional-network",
