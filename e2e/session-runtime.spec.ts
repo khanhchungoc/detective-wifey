@@ -19,7 +19,7 @@ async function replayStartFlow(page: Page): Promise<void> {
   await page.getByRole('button', { name: 'Bắt đầu' }).click();
   await startCaseFromSelector(page, 'case_01');
   const skip = page.getByRole('button', { name: 'Bỏ qua' });
-  const openPhone = page.getByRole('button', { name: /Mở điện thoại/ });
+  const openPhone = page.getByRole('button', { name: /Bắt đầu điều tra/ });
   await expect(async () => {
     if (await skip.isVisible()) await skip.click();
     await expect(openPhone).toBeVisible({ timeout: 1000 });
@@ -130,7 +130,7 @@ test.describe('Session & Case Runtime @smoke', () => {
 
     await expect(page.getByRole('alert')).toHaveText('Bạn cần vượt qua màn chơi trước để mở khóa màn này');
     // Still on the picker: no briefing or lock screen opened.
-    await expect(page.getByRole('button', { name: /Mở điện thoại/ })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Bắt đầu điều tra/ })).toHaveCount(0);
     await expect(page.locator('[data-phone-lockscreen]')).toHaveCount(0);
 
     expect(errors).toEqual([]);
