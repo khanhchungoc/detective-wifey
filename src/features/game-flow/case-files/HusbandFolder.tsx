@@ -11,18 +11,25 @@ import {
   RubberStamp,
   Staple,
 } from './FolderParts';
+import { husbandCardOpacity, husbandCardTransform, husbandCardZIndex } from './usePager';
 
 interface HusbandFolderProps {
   husband: HusbandProfile;
   index: number;
+  offset: number;
   isActive: boolean;
+  reduced: boolean;
+  cardRef: (el: HTMLDivElement | null) => void;
   onActivate: () => void;
 }
 
 export const HusbandFolder: React.FC<HusbandFolderProps> = ({
   husband,
   index,
+  offset,
   isActive,
+  reduced,
+  cardRef,
   onActivate,
 }) => {
   const comingSoon = Boolean(husband.comingSoon);
@@ -38,6 +45,7 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
 
   return (
     <div
+      ref={cardRef}
       role={isActive ? 'button' : undefined}
       tabIndex={isActive && !comingSoon ? 0 : -1}
       aria-label={isActive ? `Mở hồ sơ ${husband.displayName}` : undefined}
@@ -46,8 +54,14 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
       data-husband-folder={husband.husbandId}
       onClick={onActivate}
       onKeyDown={isActive ? onKeyDown : undefined}
-      style={{ contain: 'layout paint', backfaceVisibility: 'hidden' }}
-      className={`relative flex h-full w-[86%] max-w-[24rem] flex-col select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
+      style={{
+        transform: husbandCardTransform(offset, reduced),
+        opacity: husbandCardOpacity(offset, reduced),
+        zIndex: husbandCardZIndex(offset),
+        contain: 'layout paint',
+        backfaceVisibility: 'hidden',
+      }}
+      className={`absolute inset-y-0 left-0 right-0 mx-auto flex w-[86%] max-w-[24rem] flex-col will-change-transform select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
         isActive && !comingSoon ? 'cursor-pointer' : ''
       }`}
     >
@@ -63,7 +77,7 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
       </div>
 
       <div
-        className="relative flex min-h-0 flex-1 flex-col gap-3 rounded-xl rounded-tl-none border border-game-ink/25 bg-game-manila p-4 shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+        className="relative flex min-h-0 flex-1 flex-col gap-3 rounded-xl rounded-tl-none border border-game-ink/25 bg-game-manila p-4 shadow-lg"
       >
         <PaperSurface />
         <Staple className="absolute left-3 top-2.5 h-3 w-8 -rotate-12" />
