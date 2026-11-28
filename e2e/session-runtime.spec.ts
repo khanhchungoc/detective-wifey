@@ -4,30 +4,11 @@ import {
   collectErrors,
   launchApp,
   longPressAndPin,
-  startCaseFromSelector,
   startCleanPhone,
   unlockBySwipeUp,
 } from './helpers/phone';
 
 const SESSION_KEY = 'detective:v1:jealous_wife:session';
-
-/**
- * Replays the start flow after a reload up to the unlocked home screen. The intro "Bỏ qua" tap is
- * retried because a tap right after the intro mounts can be ignored.
- */
-async function replayStartFlow(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Bắt đầu' }).click();
-  await startCaseFromSelector(page, 'case_01');
-  const skip = page.getByRole('button', { name: 'Bỏ qua' });
-  const openPhone = page.getByRole('button', { name: /Bắt đầu điều tra/ });
-  await expect(async () => {
-    if (await skip.isVisible()) await skip.click();
-    await expect(openPhone).toBeVisible({ timeout: 1000 });
-  }).toPass();
-  await openPhone.click();
-  await expect(page.locator('[data-phone-lockscreen]')).toBeVisible();
-  await unlockBySwipeUp(page);
-}
 
 interface SavedSession {
   caseId: string;
@@ -72,7 +53,7 @@ test.describe('Session & Case Runtime @smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('offers Tiếp tục on a seeded session and starts fresh via Bắt đầu without an in-phone modal', async ({ page }) => {
+  test('offers Tiếp tục on a seeded session and resumes in-progress level directly into lockscreen from level selector', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
@@ -103,12 +84,19 @@ test.describe('Session & Case Runtime @smoke', () => {
     await page.reload();
 
     await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
-    await replayStartFlow(page);
+    await page.getByRole('button', { name: 'Bắt đầu' }).click();
+    await page.locator('[data-husband-id="husband_hoang"]').click();
+    await page.locator('[data-level-tab="case_01"]').click();
 
-    // No in-phone resume modal appears; picking Level 1 starts fresh and clears the saved session.
+    const caseCta = page.locator('[data-case-id="case_01"]');
+    await expect(caseCta).toContainText('Tiếp tục điều tra');
+    await caseCta.click();
+
+    // Skips briefing and dives straight into phone lockscreen with saved progress intact.
+    await expect(page.locator('[data-phone-lockscreen]')).toBeVisible();
+    await unlockBySwipeUp(page);
     await expect(page.getByText('Tiếp Tục Điều Tra?')).toHaveCount(0);
-    await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /0 manh mối/);
-    await expect.poll(() => readSavedSession(page)).toBeNull();
+    await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
 
     expect(errors).toEqual([]);
   });

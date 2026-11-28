@@ -74,7 +74,7 @@ describe('notebook auto layout', () => {
     const arranged = autoArrangeNodes(nodes, edges);
     const center = calculateClueCardsCenter(arranged);
     const hub = arranged[8];
-    const distance = (node: PlacedNode) => Math.hypot(node.x + 105 - center.x, node.y + 60 - center.y);
+    const distance = (node: PlacedNode) => Math.hypot(node.x + 88 - center.x, node.y + 60 - center.y);
     expect(distance(hub)).toBeLessThan(1);
     for (const leaf of arranged.slice(0, 8)) expect(distance(leaf)).toBeGreaterThan(distance(hub));
     expect(countCrossings(grid, edges)).toBeGreaterThan(0);

@@ -19,18 +19,81 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
   time,
   onClose,
 }) => {
-  const swipeHandlers = useSwipeBack({ onBack: onClose });
+  const backdropRef = React.useRef<HTMLDivElement>(null);
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const closingRef = React.useRef(false);
+  const animsRef = React.useRef<Animation[]>([]);
+
+  const cancelAnims = React.useCallback(() => {
+    for (const anim of animsRef.current) anim.cancel();
+    animsRef.current = [];
+  }, []);
+
+  const requestClose = React.useCallback(() => {
+    if (closingRef.current) return;
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (reduced || !panel || typeof panel.animate !== 'function') {
+      onClose();
+      return;
+    }
+    closingRef.current = true;
+    cancelAnims();
+    panel.style.pointerEvents = 'none';
+    panel.style.transform = 'translate3d(0, 100%, 0)';
+    const panelAnim = panel.animate(
+      [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(0, 100%, 0)' }],
+      { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+    );
+    const anims: Animation[] = [panelAnim];
+    if (backdrop && typeof backdrop.animate === 'function') {
+      backdrop.style.opacity = '0';
+      anims.push(backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }));
+    }
+    animsRef.current = anims;
+    const finish = () => {
+      closingRef.current = false;
+      onClose();
+    };
+    void panelAnim.finished.then(finish, finish);
+  }, [cancelAnims, onClose]);
+
+  const swipeHandlers = useSwipeBack({ onBack: requestClose });
+
+  React.useLayoutEffect(() => {
+    if (!isOpen) return undefined;
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (reduced || !panel || typeof panel.animate !== 'function') return undefined;
+    cancelAnims();
+    const anims: Animation[] = [
+      panel.animate(
+        [{ transform: 'translate3d(0, 100%, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
+        { duration: 300, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' },
+      ),
+    ];
+    if (backdrop && typeof backdrop.animate === 'function') {
+      anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' }));
+    }
+    animsRef.current = anims;
+    return () => cancelAnims();
+  }, [cancelAnims, isOpen]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="absolute inset-0 z-50 bg-black/60 backdrop-blur-md flex flex-col justify-end animate-fadeIn select-none font-sans"
-      onClick={onClose}
+      ref={backdropRef}
+      className="absolute inset-0 z-50 bg-black/55 flex flex-col justify-end select-none font-sans will-change-[opacity]"
+      onClick={requestClose}
     >
       <div
         {...swipeHandlers}
-        className="ios-sheet w-full bg-white rounded-t-2xl p-4 shadow-2xl border-t border-slate-200 animate-slideUp flex flex-col space-y-4 max-h-[85%] overflow-y-auto"
+        ref={panelRef}
+        style={{ backfaceVisibility: 'hidden' }}
+        className="ios-sheet w-full bg-white rounded-t-2xl p-4 shadow-2xl border-t border-slate-200 flex flex-col space-y-4 max-h-[85%] overflow-y-auto will-change-transform"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -38,7 +101,7 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={requestClose}
               className="w-11 h-11 -ml-2 flex items-center justify-center text-slate-600 hover:text-slate-900 active:scale-95 transition-all"
               aria-label="Quay lại"
             >
@@ -51,7 +114,7 @@ export const MessagingLocationModal: React.FC<MessagingLocationModalProps> = ({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={requestClose}
             className="w-11 h-11 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 active:scale-95 transition-all"
             aria-label="Đóng chi tiết bản đồ"
           >

@@ -79,7 +79,7 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(html).toContain('Thông báo biến động số dư');
     expect(html).toContain('bg-slate-950/55');
     expect(html).toContain('data-lockscreen-notif-peek="true"');
-    expect(html).toContain('data-lockscreen-flashlight="true"');
+    expect(html).toContain('data-lockscreen-back="true"');
     expect(html).toContain('data-lockscreen-camera="true"');
     expect(html).not.toContain('data-lockscreen-home-bar');
     expect(html).toContain('touch-action:none');
@@ -239,10 +239,10 @@ describe('PhoneLockscreen (US-038)', () => {
 });
 
 describe('lockscreen swipe decision', () => {
-  it('unlocks mid-drag once past the commit distance, so a browser-cancelled drag still counts', () => {
+  it('never unlocks while the finger is still dragging (only on release)', () => {
     expect(shouldUnlockOnSwipe('move', 0, -60)).toBe(false);
-    expect(shouldUnlockOnSwipe('move', 5, -96)).toBe(true);
-    expect(shouldUnlockOnSwipe('move', 120, -100)).toBe(false);
+    expect(shouldUnlockOnSwipe('move', 5, -96)).toBe(false);
+    expect(shouldUnlockOnSwipe('move', 0, -300)).toBe(false);
   });
 
   it('uses the base threshold on lift and on cancel', () => {
@@ -252,11 +252,10 @@ describe('lockscreen swipe decision', () => {
     expect(shouldUnlockOnSwipe('cancel', 90, -50)).toBe(false);
   });
 
-  it('makes the lock content follow the finger upward only, with a cap', () => {
+  it('makes the lockscreen overlay panel follow the finger 1:1 upward only', () => {
     expect(lockscreenDragOffset(40)).toBe(0);
-    expect(lockscreenDragOffset(-50)).toBeLessThan(0);
-    expect(lockscreenDragOffset(-50)).toBeGreaterThan(-50);
-    expect(lockscreenDragOffset(-1000)).toBe(-140);
+    expect(lockscreenDragOffset(-50)).toBe(-50);
+    expect(lockscreenDragOffset(-300)).toBe(-300);
   });
 });
 

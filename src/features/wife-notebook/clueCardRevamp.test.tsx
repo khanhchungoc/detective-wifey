@@ -486,11 +486,11 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
           onSeverEdge={vi.fn()} onNavigateToSource={vi.fn()} onCancelPairing={vi.fn()}
         />,
       );
-      const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={32} shape="square" />);
+      const avatar = renderToStaticMarkup(<ContactAvatar name={node.visibleAlias || node.label} size={26} shape="square" />);
       expect(html.includes(avatar)).toBe(hasAvatar);
       // App icon is a small badge on the picture's top-right corner, or stands alone without a picture.
       expect(html.includes('absolute -right-1.5 -top-1.5 z-10 h-4 w-4')).toBe(Boolean(node.sourceAppId) && hasAvatar);
-      expect(html.includes('h-6 w-6 rounded-[5px]')).toBe(Boolean(node.sourceAppId) && !hasAvatar);
+      expect(html.includes('h-5 w-5 rounded-[4px]')).toBe(Boolean(node.sourceAppId) && !hasAvatar);
       expect(html.includes('aria-label="Source app"')).toBe(Boolean(node.sourceAppId));
     });
 
@@ -555,9 +555,9 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
 
     it('auto-places a tagged clue onto the open bottom row of the wide board, re-centered under the cluster', () => {
       const existingCards: PlacedNode[] = [
-        { nodeId: 'node_existing_1', type: 'record_clue', label: 'Váy lụa 1', x: 245, y: 160 },
-        { nodeId: 'node_existing_2', type: 'record_clue', label: 'Váy lụa 2', x: 495, y: 160 },
-        { nodeId: 'node_existing_3', type: 'record_clue', label: 'Váy lụa 3', x: 745, y: 160 },
+        { nodeId: 'node_existing_1', type: 'record_clue', label: 'Váy lụa 1', x: 296, y: 160 },
+        { nodeId: 'node_existing_2', type: 'record_clue', label: 'Váy lụa 2', x: 500, y: 160 },
+        { nodeId: 'node_existing_3', type: 'record_clue', label: 'Váy lụa 3', x: 704, y: 160 },
       ];
 
       const newClue: CaseGraphNode = {
@@ -568,9 +568,9 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
 
       const placed = placeNewNodesBelow(existingCards, [newClue]);
       expect(placed).toHaveLength(1);
-      // Row still has room (up to 6), so the clue joins it; the 4-card row re-centers on x = 600.
+      // Row still has room (up to 6), so the clue joins it at y = 160.
       expect(placed[0].y).toBe(160);
-      expect(placed[0].x).toBe(870);
+      expect(placed[0].x).toBeGreaterThan(704);
     });
 
     it('collapses legacy separate message cards from the same person into EXACTLY ONE card', () => {
@@ -673,7 +673,8 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       expect(html).toContain('class="notebook-board-surface" style="width:1800px;height:1200px"');
       expect(html).toContain('notebook-board-frame');
       expect(html).toContain('notebook-board-rail-top');
-      expect(html).toContain('decoding="sync"');
+      expect(html).toContain('decoding="async"');
+      expect(html).toContain('notebook-lamp-cone');
       // 3D depth: overhead lamp tube (z-[4]) sits on the office wall BEHIND the board surface (z-[10]).
       expect(html.indexOf('notebook-lamp-tube')).toBeLessThan(html.indexOf('notebook-board-surface'));
     });

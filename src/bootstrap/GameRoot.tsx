@@ -115,10 +115,20 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     appTransition('open', id, () => game.launch(id));
   };
 
+  const [lockscreenReturnStage, setLockscreenReturnStage] = useState<'level-selector' | 'level-context'>('level-context');
+
   const handleSelectLevelCard = (card: LevelCardItem) => {
     // The Màn 0 guide is not playable yet; the selector never emits it, this guards the contract.
     if (card.isGuide || card.comingSoon) return;
+    if (state.ongoingSession?.caseId === card.caseId) {
+      if (game.resumeOngoing()) {
+        setLockscreenReturnStage('level-selector');
+        setFlowStage('phone-lockscreen');
+        return;
+      }
+    }
     if (game.selectLevel(card.levelNumber)) {
+      setLockscreenReturnStage('level-context');
       setFlowStage('level-context');
     }
   };
@@ -179,6 +189,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               husbands={husbands}
               levels={levelCards}
               initialHusbandId={caseConfig.husbandId}
+              ongoingCaseId={state.ongoingSession?.caseId}
               isMuted={isMuted}
               onToggleMute={() => setIsMuted(prev => !prev)}
               onSelectLevel={handleSelectLevelCard}
@@ -197,7 +208,10 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               briefing={activeBriefing}
               mode="entry"
               onBack={() => setFlowStage('level-selector')}
-              onStartInvestigation={() => setFlowStage('phone-lockscreen')}
+              onStartInvestigation={() => {
+                setLockscreenReturnStage('level-context');
+                setFlowStage('phone-lockscreen');
+              }}
             />
           </motion.div>
         ) : (
@@ -216,7 +230,13 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               activeUpperApps={upper} activeDockApps={dock}
               grayedOutAppIds={disabledAppIds}
               systemAlertToast={state.systemAlertToast}
-              onLaunchApp={launch} onReturnHome={returnHome} onRestartLevel={game.restart}
+              onLaunchApp={launch} onReturnHome={returnHome}
+              onGoToStartScreen={() => {
+                setOpenNotebookCase(null);
+                setBriefingRecallOpen(false);
+                setFlowStage('startup');
+              }}
+              onRestartLevel={game.restart}
               onOpenNotebook={() => setOpenNotebookCase(caseConfig.caseId)}
               onCloseNotebook={() => setOpenNotebookCase(null)}
               notebookOpen={notebookOpen}
@@ -233,6 +253,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
                   launch(targetAppId as AppId);
                 }
               }}
+              onLockscreenBack={() => setFlowStage(lockscreenReturnStage)}
               onLockscreenPasscodeFail={game.failChallenge}
               onOpenBriefing={() => setBriefingRecallOpen(true)}
               onRequestLevelSelector={() => setSwitchLevelConfirmOpen(true)}
