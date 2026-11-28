@@ -179,6 +179,16 @@
       "cost": "38.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "21/09/2026 08:00"
+    },
+    {
+      "id": "trip_021",
+      "time": "15/10/2026 18:58",
+      "cost": "52.000đ",
+      "pickupOrgId": "org_001",
+      "dropoffOrgId": "org_002",
+      "driver": "Đặt hộ · SĐT người đi 0988886677",
+      "timestamp": "15/10/2026 18:58",
+      "clueRefId": "CLUE-GRAP-04"
     }
   ]
 }

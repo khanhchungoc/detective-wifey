@@ -72,3 +72,18 @@ Thành viên: **A9 (Chính), Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấ
 - **Minh**: Hai bạn tên Minh. Luôn dùng "Minh Worm" và "Minh Bằng Cổ", không dùng "Minh" trơn.
 - **Bách**: Màn 1 đã có "Bách Dev" (`contact_014`, nhóm "Team Dev Technosoft"). Trần Bách trùng tên và nghề nên dùng luôn cho liên hệ này, không tạo Bách thứ hai. Chat cũ không mâu thuẫn; có thể thêm chi tiết rau nhà trồng hoặc người yêu mới ở màn sau.
 - **Kế toán**: Đã có "Lan Anh Kế Toán" ở Technosoft. Linh Yoyo làm kế toán ở nơi khác; lưu "Linh Yoyo", không gắn chữ "Kế Toán".
+
+---
+
+## 6. Đã dùng trong Màn 1
+
+Cả 15 bạn chưa có trong game nay là liên hệ danh bạ (Phone + Zola), mỗi người 1 luồng SMS lịch sử 6 tin, chỉ sinh hoạt. Mã: `person_012` - `person_026`, `contact_019` - `contact_033`, luồng SMS `thread_031` - `thread_045` (xem [`master/people.json`](../../../src/data/cases/husband_01/master/people.json) và [`level_01/contacts.json`](../../../src/data/cases/husband_01/level_01/contacts.json)).
+
+| Bạn | Vai trong Màn 1 |
+|---|---|
+| A9, Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấn Chó, Trung Khỉm | Nhóm Zola "Hội Poker Tối Thứ 6" (`thread_046`) chat khuya, tạo thông báo khóa màn hình thứ hai (`toast_002`). Sếp Tuấn Anh báo "đang ở Đà Nẵng", xác nhận gián tiếp họp bị hủy. |
+| Namzua, Tuấn Chó, Trung Khỉm | Nhóm "Cầu lông T3-T5" (`thread_047`). |
+| Minh Bằng Cổ | Luồng 1-1 (`thread_048`) rủ sang nhà chơi game cuối tuần. |
+| Sếp Tuấn Anh | Thay "sếp Hùng" cũ: sếp đi Đà Nẵng làm họp sprint bị dời; sinh nhật sếp là lý do đặt hoa (bẫy Mai Lễ Tân). |
+| Thành, Minh Worm, Phương, Trang, Dương, Phòng, Hồng, Vượng, Linh | Chỉ có trong danh bạ + SMS lịch sử; sẵn sàng cho Màn 2 - 3. |
+

@@ -69,7 +69,6 @@ export const MessagingBottomNav: React.FC<MessagingBottomNavProps> = ({
       >
         <div className="relative">
           <IoGridOutline />
-          <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#D70015]" />
         </div>
         <span className="text-ios-caption-1 font-medium leading-none">Khám phá</span>
       </button>
@@ -100,7 +99,6 @@ export const MessagingBottomNav: React.FC<MessagingBottomNavProps> = ({
       >
         <div className="relative">
           <IoPersonOutline />
-          <span className="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#D70015]" />
         </div>
         <span className="text-ios-caption-1 font-medium leading-none">Cá nhân</span>
       </button>

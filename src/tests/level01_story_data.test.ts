@@ -43,9 +43,9 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(level01.deviceMetadata).toEqual({ narrativeTime: '23:45', batteryPercent: '8%', carrierTag: '5G', pwaThemeColor: '#0f172a' });
     expect(new Set(level01.activeAppIds)).toEqual(new Set(Object.keys(data)));
     expect(messaging.threads!.map(item => item.threadId)).toEqual([
-      // Muted group chatter after 23:41 keeps the alias thread from sitting on top.
-      'thread_001', 'thread_002', 'thread_003', 'thread_004', 'thread_005', 'thread_006', 'thread_007',
-      'thread_008', 'thread_009', 'thread_010', 'thread_011', 'thread_012',
+      // Late friend and group chatter buries the alias thread mid-list.
+      'thread_001', 'thread_002', 'thread_046', 'thread_047', 'thread_004', 'thread_048', 'thread_005',
+      'thread_006', 'thread_003', 'thread_007', 'thread_008', 'thread_009', 'thread_010', 'thread_011', 'thread_012',
     ]);
     expect(messaging.otherThreads!.map(item => item.threadId)).toEqual(['thread_013']);
     expect(banking.transactions.filter(row => num(row.id) <= 20)).toHaveLength(20);
@@ -56,7 +56,7 @@ describe('Level 1 story content through runtime adapters', () => {
       'shopchat_001', 'shopchat_002', 'shopchat_003', 'shopchat_004', 'shopchat_005',
     ]);
     expect(phone.calls.filter(call => num(call.id) <= 14)).toHaveLength(14);
-    expect(phone.contacts).toHaveLength(17);
+    expect(phone.contacts).toHaveLength(32);
     // Every Phone contact opens a readable SMS history (shared phonebook rule).
     expect(new Set(sms.threads.map(item => item.contactId)).size).toBe(phone.contacts.length);
     expect(sms.threads.every(item => item.messages.length >= 6)).toBe(true);
@@ -78,6 +78,7 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(new Set(clues)).toEqual(new Set([
       'CLUE-ZOLA-01', 'CLUE-ZOLA-08', 'CLUE-ZOLA-09', 'CLUE-ZOLA-10', 'CLUE-ZOLA-11',
       'CLUE-POSH-05', 'CLUE-POSH-06', 'CLUE-BANK-07', 'CLUE-PHONE-01', 'CLUE-MSG-02',
+      'CLUE-GRAP-04', 'CLUE-BROW-05',
     ]));
     expect(banking.transactions.filter(row => row.clueRefId).map(row => row.id)).toEqual(['tx_003']);
     expect(banking.transactions.some(row => row.suspectName)).toBe(false);
@@ -97,7 +98,7 @@ describe('Level 1 story content through runtime adapters', () => {
   it('keeps the culprit phone and legal name confined to the intended records', () => {
     const owners = (needle: string) => recordsContaining(data, needle)
       .map(row => String(row.callId ?? row.orderId ?? row.id ?? row.contactId ?? row.threadId)).sort();
-    expect(owners('0988886677')).toEqual(['call_001', 'call_003', 'contact_011', 'contact_011', 'contact_011', 'order_005']);
+    expect(owners('0988886677')).toEqual(['call_001', 'call_003', 'contact_011', 'contact_011', 'contact_011', 'order_005', 'trip_021']);
     expect(owners('Thu Hương')).toEqual(['msg_012_0001', 'order_005']);
     expect(JSON.stringify(data)).not.toMatch(/Marketing(?! Executive)/);
     const khoaContacts = messaging.contacts!.filter(contact => contact.id === 'contact_011');
@@ -128,13 +129,16 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(level01.notifications.map(toast => toast.toastId)).toEqual(['toast_001', 'toast_002']);
     expect(level01.notifications.map(toast => toast.triggerDelaySeconds)).toEqual([3, 5]);
     const [first, second] = level01.notifications;
-    for (const [toast, id, time] of [[first, 'thread_004', '22:58'], [second, 'thread_003', '23:41']] as const) {
+    // The second toast comes from the poker group, so the alias thread is never advertised.
+    for (const [toast, id, time, sender] of [[first, 'thread_004', '22:58', ''], [second, 'thread_046', '23:42', 'A9: ']] as const) {
       const item = thread(id);
       const last = item.messages[item.messages.length - 1];
       expect(toast.senderTitle).toBe(`Tin nhắn • ${time}`);
       expect(stamp(last)).toBe(`15/10/2026 ${time}`);
-      expect(toast.snippetBody).toBe(`${item.contactName}: ${last.text}`);
+      expect(toast.snippetBody).toBe(`${item.contactName}: ${sender}${last.text}`);
+      expect(item.unreadCount).toBeGreaterThan(0);
     }
+    expect(level01.notifications.some(toast => toast.snippetBody.includes('Khoa BE'))).toBe(false);
     expect(level01.epilogueNotification).toEqual({
       sourceAppId: 'banking', senderTitle: 'Ngân hàng • Vừa xong',
       snippetBody: '+1.000 đ từ NGUYEN THI THU HUONG: Anh chan so em that a?',
@@ -146,7 +150,7 @@ describe('Level 1 story content through runtime adapters', () => {
     const times = messaging.threads!.map(item => item.timestamp);
     expect(times).toEqual([...times].sort((a, b) => key(b).localeCompare(key(a))));
     const groups = messaging.threads!.filter(item => item.isGroup);
-    expect(groups.map(item => item.threadId).sort()).toEqual(['thread_001', 'thread_002', 'thread_012']);
+    expect(groups.map(item => item.threadId).sort()).toEqual(['thread_001', 'thread_002', 'thread_012', 'thread_046', 'thread_047']);
     expect(thread('thread_012')).toMatchObject({ memberCount: 46, pinnedMessageId: 'msg_012_0001' });
     const contactIds = new Set(messaging.contacts!.map(contact => contact.id));
     for (const group of groups) {
@@ -173,7 +177,7 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(order.shippingAddress).toBe('Sảnh Technosoft, tầng 1, tòa Minh An, 28 Duy Tân, Hà Nội');
     expect(order.items[0].variantName).toBe('be, size S');
     expect(shop.chats.find(chat => chat.shopId === 'shopchat_004')!.messages.find(message => message.clueRefId)!.text).toContain('15/09 - 15/10');
-    expect(thread('thread_005').messages.find(message => message.id === 'msg_005_0082')!.text).toContain('sếp Hùng đang chốt nốt');
+    expect(thread('thread_005').messages.find(message => message.id === 'msg_005_0082')!.text).toContain('sếp Tuấn Anh đang chốt nốt');
     const dinner = banking.transactions.find(item => item.id === 'tx_003')!;
     expect(dinner.timestamp).toContain('20:48');
     expect(dinner.formattedAmount).toBe('- 640.000 đ');

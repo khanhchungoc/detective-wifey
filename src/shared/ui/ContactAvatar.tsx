@@ -47,13 +47,15 @@ type ContactAvatarProps = {
   name: string;
   /** Photo slot in the avatar sheet. Falls back to the name directory for name-only callers. */
   avatarIndex?: number;
+  /** From data (thread.isGroup); shows the group icon whatever the group is named. */
+  isGroup?: boolean;
   size?: number;
   shape?: 'circle' | 'square';
   fluid?: boolean;
   className?: string;
 };
 
-export function ContactAvatar({ name, avatarIndex, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
+export function ContactAvatar({ name, avatarIndex, isGroup = false, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
   const normalizedName = normalize(name);
   const dimensions: CSSProperties = fluid ? { width: '100%', height: '100%' } : { width: size, height: size, flexShrink: 0 };
   const displayClass = fluid ? 'flex' : 'inline-flex';
@@ -70,7 +72,7 @@ export function ContactAvatar({ name, avatarIndex, size = 44, shape = 'circle', 
     );
   }
 
-  if (groupNames.has(normalizedName)) {
+  if (isGroup || groupNames.has(normalizedName)) {
     return (
       <span aria-hidden="true" className={`${classes} bg-[#EAF2FF] text-[#2563EB]`} style={dimensions}>
         <IoPeopleOutline className="h-[48%] w-[48%]" />

@@ -70,8 +70,6 @@
     "team-collaboration"
   ],
   "grayedOutAppIds": [
-    "ride-hailing",
-    "web-browser",
     "personal-notes",
     "email",
     "professional-network",
@@ -88,8 +86,8 @@
     {
       "toastId": "toast_002",
       "sourceAppId": "internet-messaging",
-      "senderTitle": "Tin nhắn • 23:41",
-      "snippetBody": "Khoa BE: A để quên áo khoác ở quán, e cầm về rồi. Mai e mang lên cty nha.",
+      "senderTitle": "Tin nhắn • 23:42",
+      "snippetBody": "Hội Poker Tối Thứ 6: A9: {{husband.shortName}} còn nợ anh 2 phỉnh tuần trước đấy nhé, đừng có lặn 😏",
       "triggerDelaySeconds": 5
     }
   ],

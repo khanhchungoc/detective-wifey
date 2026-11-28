@@ -81,7 +81,7 @@
           "slot": "left",
           "wifeLine": "Lẵng hoa gửi Đỗ Thị Mai là sao?",
           "onFalse": {
-            "husbandLine": "Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.",
+            "husbandLine": "Hoa sinh nhật sếp Tuấn Anh, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.",
             "husbandMood": "smug"
           }
         },
@@ -103,7 +103,7 @@
         {
           "choiceId": "choice_009",
           "slot": "up",
-          "wifeLine": "20:46 anh nhắn sếp Hùng đang chốt nốt. 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Mà sếp Hùng bay Đà Nẵng từ 6 giờ.",
+          "wifeLine": "20:46 anh nhắn sếp Tuấn Anh đang chốt nốt. 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Mà sếp Tuấn Anh bay Đà Nẵng từ 6 giờ.",
           "requiredEdgeIds": [
             "edge_alibi_contradiction"
           ],

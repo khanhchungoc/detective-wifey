@@ -67,7 +67,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     };
     // 18:55 alone does not contradict the 20:48 card swipe.
     expect(connect()?.isCanonical).toBe(false);
-    wife.push({ recordId: 'msg_005_0082', text: 'Sếp Hùng đang chốt nốt, anh chưa về được.' });
+    wife.push({ recordId: 'msg_005_0082', text: 'Sếp Tuấn Anh đang chốt nốt, anh chưa về được.' });
     expect(connect()).toMatchObject({ isCanonical: true, isSmokingGun: true, edgeId: 'edge_alibi_contradiction' });
     wife.pop();
     expect(connect()?.isCanonical).toBe(false);
@@ -75,7 +75,7 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
 
   it('rejects alibi pairings that do not prove location (online transfers, wrong message)', () => {
     const wife = { suspectId: 'chat', displayName: 'Vợ', sourceApp: 'internet-messaging' as const, timestamp: 1,
-      conversationId: 'thread_005', messages: [{ recordId: 'msg_005_0082', text: 'Sếp Hùng đang chốt nốt.' }] };
+      conversationId: 'thread_005', messages: [{ recordId: 'msg_005_0082', text: 'Sếp Tuấn Anh đang chốt nốt.' }] };
     for (const recordId of ['tx_005', 'tx_004']) {
       const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [wife,
         { suspectId: recordId, displayName: recordId, sourceApp: 'banking', timestamp: 2,

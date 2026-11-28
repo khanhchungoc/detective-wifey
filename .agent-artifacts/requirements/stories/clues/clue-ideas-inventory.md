@@ -11,7 +11,7 @@
 ### 1.1. Zola (Zalo Parody - Private Messaging)
 | Clue ID | Clue Description | Sub-Type | Intended Truth / Twist | Difficulty |
 |---|---|---|---|---|
-| `CLUE-ZOLA-01` | **Disguised Contact Name:** Chat with "Anh Tuấn Thợ Điện" or "Sếp Hùng Cty", but conversation tone is overly affectionate with hearts and cute stickers. | Text / Tone mismatch | Cheating (Colleague / Affair) | Easy |
+| `CLUE-ZOLA-01` | **Disguised Contact Name:** Chat with "Anh Tuấn Thợ Điện" or "Sếp Tuấn Anh Cty", but conversation tone is overly affectionate with hearts and cute stickers. | Text / Tone mismatch | Cheating (Colleague / Affair) | Easy |
 | `CLUE-ZOLA-02` | **Hidden / Locked Chat:** A chat requiring a 4-digit PIN to open. PIN clue found in Notes app (e.g. "Pass vali: 1204"). | Locked Feature | Cheating or Sugar | Medium |
 | `CLUE-ZOLA-03` | **Disappearing Message Notice:** System notice in chat: *"Tin nhắn tự xoá sau 24h đã được bật"*. Remaining messages contain vague fragmented arrangements ("Tối mai chỗ cũ nhé"). | Fragmented Chat | Cheating | Easy |
 | `CLUE-ZOLA-04` | **Shared Location Pin:** Husband sent a real-time location pin to a contact at a luxury hotel / boutique cafe while telling his wife he was "kẹt xe trên đường về". | Metadata / Location | Cheating | Medium |
@@ -60,6 +60,8 @@
 | `CLUE-GRAP-01` | **Late-Night Ride Destinations:** Ride history showing trips booked from 22:30 to 01:00 to love hotels (*"Khách sạn Sao Mai"*, *"Love Hotel Phố Cổ"*). | Ride History | Cheating | Easy |
 | `CLUE-GRAP-02` | **Food Delivery to Alternate Location:** GrapFood order for 2 portions of *"Trà sữa trân châu đường đen 70% đường"* + *"Bánh ngọt"* delivered to an unfamiliar office building with driver note: *"Giao tận tay bạn Mai lễ tân giúp mình"*. | Food Delivery | Cheating | Medium |
 | `CLUE-GRAP-03` | **Ride to Wife's Parents' House (Innocent):** Husband booked a delivery of premium bird's nest (*yến sào*) to his mother-in-law without telling the wife. | Delivery History | Innocent | Medium |
+| `CLUE-GRAP-04` | **Đặt xe hộ:** Chuyến đặt hộ người khác lúc chồng khai đang họp, chi tiết chuyến hiện SĐT người đi trùng một liên hệ ngụy trang. | Metadata / Cross-App | Cheating | Easy |
+
 
 ---
 
@@ -70,6 +72,8 @@
 | `CLUE-BROW-02` | **Incognito Tab Left Open:** An open private tab showing a boutique gift shop or a hotel booking confirmation page. | Open Tabs | Cheating or Innocent | Medium |
 | `CLUE-BROW-03` | **Sugar Dating Forum / AI Chat:** Browsing history on sugar baby / sugar daddy matching platforms, or forum threads: *"kinh nghiệm chu cấp cho sinh viên"*. | Bookmarks / History | Sugar Relationship | Medium |
 | `CLUE-BROW-04` | **Waifu / Anime Romance Search:** Queries like *"cách tỏ tình với nhân vật anime"*, *"top game bạn gái ảo hay nhất 2026"*. | Search Query | Cheating (Non-Human) | Easy |
+| `CLUE-BROW-05` | **Xem bảng size lệch vợ:** Lịch sử xem bảng size một món đồ ngay trước khi đặt đơn; size xem khác size của vợ. | Search History | Cheating | Easy |
+
 
 ---
 

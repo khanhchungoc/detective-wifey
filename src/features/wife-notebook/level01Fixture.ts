@@ -14,7 +14,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
       nodeId: 'node_alias_01',
       type: 'alias',
       label: 'Khoa BE',
-      subtitle: 'Zola: hẹn khao, book bàn "chỗ hôm trước"',
+      subtitle: 'Zola: hẹn khao, đặt "chỗ hôm trước"',
       sourceAppId: 'internet-messaging',
       recordRefId: 'thread_003',
       clueRefId: 'CLUE-ZOLA-01',
@@ -64,7 +64,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
     {
       nodeId: 'node_record_booking',
       type: 'record_clue',
-      label: 'Khoa BE: book bàn 7h30, chỗ hôm trước',
+      label: 'Khoa BE: đặt chỗ hôm trước lúc 7h30',
       subtitle: 'Hẹn "chỗ cũ" tối 15/10',
       sourceAppId: 'internet-messaging',
       recordRefId: 'msg_003_0014',
@@ -94,7 +94,7 @@ export const LEVEL_01_KNOWLEDGE_GRAPH: CaseKnowledgeGraph = {
     {
       nodeId: 'node_record_wife_alibi',
       type: 'record_clue',
-      label: 'Báo vợ 20:46: "sếp Hùng đang chốt nốt"',
+      label: 'Báo vợ 20:46: "sếp Tuấn Anh đang chốt nốt"',
       subtitle: 'Lời khai ngoại phạm qua tin nhắn',
       sourceAppId: 'internet-messaging',
       recordRefId: 'msg_005_0082',
