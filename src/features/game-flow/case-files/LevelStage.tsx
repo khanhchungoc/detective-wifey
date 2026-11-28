@@ -1,5 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { IoChevronBackOutline } from 'react-icons/io5';
 import type { HusbandProfile, LevelCardItem } from '../../../shared/contracts/game-flow';
 import { INK_TEXT_STRONG, PaperSurface } from './FolderParts';
@@ -13,6 +12,10 @@ import {
   resolveSheetRestPose,
 } from './pagerLogic';
 import { useBinder } from './useBinder';
+
+const COVER_OPEN_MS = 520;
+const COVER_REDUCED_MS = 200;
+const COVER_OPEN_EASE = 'cubic-bezier(0.45, 0, 0.25, 1)';
 
 interface LevelStageProps {
   husband: HusbandProfile;
@@ -36,7 +39,46 @@ export const LevelStage: React.FC<LevelStageProps> = ({
   const [lockedFeedback, setLockedFeedback] = useState<string | null>(null);
   const [shakingId, setShakingId] = useState<string | null>(null);
   const [coverGone, setCoverGone] = useState(false);
+  const coverRef = useRef<HTMLDivElement | null>(null);
   const lastSelectAtRef = useRef(-SELECT_DEBOUNCE_MS);
+
+  // Wait one painted frame so the closed manila cover is visible before swinging open on the compositor.
+  useEffect(() => {
+    if (coverGone) return undefined;
+    const el = coverRef.current;
+    if (!el || typeof el.animate !== 'function') {
+      setCoverGone(true);
+      return undefined;
+    }
+
+    let anim: Animation | null = null;
+    const rafId = requestAnimationFrame(() => {
+      anim = reduced
+        ? el.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: COVER_REDUCED_MS,
+            easing: 'ease-in-out',
+            fill: 'forwards',
+          })
+        : el.animate(
+            [
+              { transform: 'rotateY(0deg)', opacity: 1, offset: 0 },
+              { transform: 'rotateY(-84deg)', opacity: 1, offset: 0.78 },
+              { transform: 'rotateY(-108deg)', opacity: 0, offset: 1 },
+            ],
+            {
+              duration: COVER_OPEN_MS,
+              easing: COVER_OPEN_EASE,
+              fill: 'forwards',
+            },
+          );
+      anim.onfinish = () => setCoverGone(true);
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      anim?.cancel();
+    };
+  }, [coverGone, reduced]);
 
   const handleIndexChange = useCallback((next: number) => {
     setIndex(next);
@@ -146,18 +188,20 @@ export const LevelStage: React.FC<LevelStageProps> = ({
           </div>
 
           {!coverGone && (
-            <motion.div
+            <div
+              ref={coverRef}
               aria-hidden="true"
-              initial={{ rotateY: 0 }}
-              animate={reduced ? { opacity: [1, 1, 0] } : { rotateY: -112 }}
-              transition={{ duration: reduced ? 0.18 : 0.34, ease: 'easeInOut' }}
-              onAnimationComplete={() => setCoverGone(true)}
-              style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden', zIndex: 200 }}
+              style={{
+                transformOrigin: 'left center',
+                backfaceVisibility: 'hidden',
+                zIndex: 200,
+                willChange: 'transform, opacity',
+              }}
               className="pointer-events-none absolute inset-x-0 bottom-0 top-12 flex items-center justify-center rounded-xl border border-game-ink/30 bg-game-manila shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
             >
               <PaperSurface />
               <span className={`relative text-ios-title-2 uppercase ${INK_TEXT_STRONG}`}>{caseCode}</span>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
