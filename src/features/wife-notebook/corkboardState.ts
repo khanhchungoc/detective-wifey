@@ -34,8 +34,9 @@ export function isBoardChromeControl(target: EventTarget): boolean {
 }
 
 export function computeWallViewport(board: HTMLElement | null): CorkboardViewport {
-  const width = board?.clientWidth || 390;
-  const height = board?.clientHeight || 844;
+  // Before the board mounts, the full-screen notebook matches the window size.
+  const width = board?.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 0) || 390;
+  const height = board?.clientHeight || (typeof window !== 'undefined' ? window.innerHeight : 0) || 844;
   const isLandscape = width >= height;
   const marginX = isLandscape ? Math.max(WALL_VIEW_MARGIN_PX, Math.round(width * 0.18)) : WALL_VIEW_MARGIN_PX;
   const marginY = isLandscape ? Math.max(WALL_VIEW_MARGIN_PX, Math.round(height * 0.26)) : WALL_VIEW_MARGIN_PX;

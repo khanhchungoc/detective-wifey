@@ -45,6 +45,8 @@ export function useCorkboardViewport({
     if (hasRestoredCards && savedState?.viewport) {
       return savedState.viewport;
     }
+    // Start framed on the wall so a slow first frame never shows a zoomed-in board in wall mode.
+    if (boardMode === 'wall') return computeWallViewport(boardRef.current);
     return {
       ...calculateClueCardsCenter(placedNodes),
       zoom: 1.0,
