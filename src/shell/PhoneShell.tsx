@@ -36,6 +36,7 @@ export interface PhoneShellProps {
   renderLevelSelector: (onClose: () => void) => ReactNode;
   onLaunchApp: (appId: AppId) => void;
   onReturnHome: () => void;
+  onGoToStartScreen?: () => void;
   onRestartLevel: () => void;
   onOpenNotebook: () => void;
   onCloseNotebook?: () => void;
@@ -49,6 +50,7 @@ export interface PhoneShellProps {
   currentStrikes?: number;
   maxStrikes?: number;
   onUnlockPhone?: (targetAppId?: string) => void;
+  onLockscreenBack?: () => void;
   onLockscreenPasscodeFail?: () => void;
   onOpenBriefing?: () => void;
   onRequestLevelSelector?: () => void;
@@ -59,7 +61,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   deviceMetadata, activeAppId, activeAppDefinition, activeUpperApps, activeDockApps,
   grayedOutAppIds,
   systemAlertToast, incomingNotification, children, overlays, renderLevelSelector,
-  onLaunchApp: handleLaunchApp, onReturnHome, onRestartLevel,
+  onLaunchApp: handleLaunchApp, onReturnHome, onGoToStartScreen, onRestartLevel,
   onOpenNotebook, onCloseNotebook, notebookOpen = false, notebookEvidenceCount = 0, notebookCaseNumber = 1, onNotify,
   enableNavigationGuard = true,
   isLocked = false,
@@ -67,6 +69,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
   currentStrikes = 5,
   maxStrikes = 5,
   onUnlockPhone,
+  onLockscreenBack,
   onLockscreenPasscodeFail,
   onOpenBriefing,
   onRequestLevelSelector,
@@ -469,7 +472,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
         isFullscreen={isFullscreen}
         showStatusBar={showStatusBar}
         onToggleFullscreen={handleToggleFullscreen}
-        onGoHome={onReturnHome}
+        onGoHome={onGoToStartScreen ?? onReturnHome}
         onOpenLevels={() => {
           if (onRequestLevelSelector) {
             onRequestLevelSelector();
@@ -488,6 +491,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
           currentStrikes={currentStrikes}
           maxStrikes={maxStrikes}
           onUnlock={onUnlockPhone}
+          onBack={onLockscreenBack}
           onPasscodeFailStrike={onLockscreenPasscodeFail ?? (() => {})}
         />
       )}

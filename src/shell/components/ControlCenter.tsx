@@ -199,9 +199,9 @@ export function ControlCenter({
       style={{ pointerEvents: open ? 'auto' : 'none' }}
       onKeyDown={onKeyDown}
     >
-      {/* 1. Hardware-accelerated smooth CSS blurred backdrop: stationary layer so backdrop-blur never snaps */}
+      {/* 1. Solid dark scrim backdrop (no backdrop-blur conflict with stacked briefing/modal overlays) */}
       <div
-        className={`absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-300 ease-out ${
+        className={`absolute inset-0 bg-slate-950/80 transition-opacity duration-300 ease-out ${
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{ touchAction: 'none' }}

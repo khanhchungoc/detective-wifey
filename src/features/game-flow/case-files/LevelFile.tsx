@@ -28,6 +28,7 @@ interface LevelFileProps {
   index: number;
   total: number;
   isActive: boolean;
+  isOngoing?: boolean;
   restPose: SheetRestPose;
   sheetRef: (el: HTMLDivElement | null) => void;
   lockedFeedback: string | null;
@@ -52,6 +53,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   index,
   total,
   isActive,
+  isOngoing = false,
   restPose,
   sheetRef,
   lockedFeedback,
@@ -237,7 +239,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 }}
                 className={`${CTA_PRIMARY} w-full active:scale-[0.98]`}
               >
-                Điều tra màn này
+                {isOngoing ? "Tiếp tục điều tra" : "Điều tra màn này"}
               </button>
             )}
           </div>
