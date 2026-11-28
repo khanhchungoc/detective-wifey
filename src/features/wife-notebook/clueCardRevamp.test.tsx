@@ -674,7 +674,7 @@ describe('Clue Card Revamp & Pinning Invariants Suite', () => {
       expect(html).toContain('notebook-board-frame');
       expect(html).toContain('notebook-board-rail-top');
       expect(html).toContain('decoding="async"');
-      expect(html).toContain('notebook-lamp-cone');
+      expect(html).toContain('notebook-lamp-beam');
       // 3D depth: overhead lamp tube (z-[4]) sits on the office wall BEHIND the board surface (z-[10]).
       expect(html.indexOf('notebook-lamp-tube')).toBeLessThan(html.indexOf('notebook-board-surface'));
     });
