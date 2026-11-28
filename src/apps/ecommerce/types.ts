@@ -32,6 +32,8 @@ export type EcommerceProfileQueue = (typeof ecommerceProfileQueueIds)[number];
 
 export interface EcommerceOrder extends EvidenceReference {
   orderId: string;
+  /** Player-facing order code. `orderId` stays the internal key. */
+  displayCode?: string;
   shopName?: string;
   isFavorite?: boolean;
   status?: string;

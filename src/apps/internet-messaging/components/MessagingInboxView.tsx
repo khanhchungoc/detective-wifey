@@ -187,7 +187,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
                 className="flex items-center gap-3 px-3.5 py-3 hover:bg-slate-50 active:bg-slate-100 transition-all cursor-pointer min-h-[72px]"
               >
                 {/* Avatar (52px) */}
-                <ContactAvatar name={thread.contactName} size={52} className="shadow-sm" />
+                <ContactAvatar name={thread.contactName} avatarIndex={thread.avatarIndex} size={52} className="shadow-sm" />
 
                 {/* Chat Content */}
                 <div className="flex-1 min-w-0">

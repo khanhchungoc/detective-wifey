@@ -15,6 +15,7 @@ import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { GameStateRepository, ActiveSessionState, PlayerProgress } from '../features/session';
 import { MessagingEvidenceSheet } from '../apps/internet-messaging/components/MessagingEvidenceSheet';
 import { ContactAvatar } from '../shared/ui/ContactAvatar';
+import '../data/cases/husband_01/level_01'; // registers contact photo names
 
 describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
   const mockEvidenceItem: UniversalEvidenceItem = {
@@ -244,7 +245,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
   it('Khoa BE gets an ordinary landscape photo like other contacts, never the real person\'s portrait', () => {
     const alias = renderToStaticMarkup(<ContactAvatar name="Khoa BE" size={44} />);
     const portrait = renderToStaticMarkup(<ContactAvatar name="Nguyễn Thị Thu Hương" size={44} />);
-    const landscape = renderToStaticMarkup(<ContactAvatar name="Đức Nghĩa" size={44} />);
+    const landscape = renderToStaticMarkup(<ContactAvatar name="Đức Nghĩa" avatarIndex={12} size={44} />);
     expect(alias).toContain('background-image');
     expect(alias).toBe(landscape);
     expect(alias).not.toBe(portrait);

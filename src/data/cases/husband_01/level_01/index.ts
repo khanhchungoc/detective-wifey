@@ -1,6 +1,8 @@
-import type { CaseConfig } from '../../../../shared/contracts/case-schema';
+import type { LevelContact } from '../../../../shared/contracts/case-schema';
+import { resolveLevel } from '../../shared/resolveLevel';
 import { husband01Master } from '../master';
 import meta from './meta.json';
+import contacts from './contacts.json';
 import confrontationScript from './confrontation.json';
 import internetMessaging from './apps/internet-messaging.json';
 import banking from './apps/banking.json';
@@ -15,11 +17,11 @@ import email from './apps/email.json';
 import professionalNetwork from './apps/professional-network.json';
 import teamCollaboration from './apps/team-collaboration.json';
 
-const level01 = {
-  ...meta,
-  husband: husband01Master.husband,
+const level01 = resolveLevel(husband01Master, {
+  meta,
+  contacts: contacts as LevelContact[],
   confrontationScript,
-  appsData: {
+  apps: {
     'internet-messaging': internetMessaging,
     banking,
     ecommerce,
@@ -33,6 +35,6 @@ const level01 = {
     'professional-network': professionalNetwork,
     'team-collaboration': teamCollaboration,
   },
-} as unknown as CaseConfig;
+});
 
 export default level01;

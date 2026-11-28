@@ -1,1 +1,131 @@
-[]
+[
+  {
+    "orgId": "org_001",
+    "name": "Technosoft",
+    "legalName": "Công ty CP Công nghệ Technosoft",
+    "kind": "company",
+    "address": "Tòa Minh An, 28 Duy Tân, Cầu Giấy, Hà Nội"
+  },
+  {
+    "orgId": "org_002",
+    "name": "Cơm Niêu Phố Cổ",
+    "kind": "venue"
+  },
+  {
+    "orgId": "org_003",
+    "name": "California Fitness",
+    "kind": "venue",
+    "address": "Tầng 5, tòa Minh An, 28 Duy Tân, Cầu Giấy, Hà Nội"
+  },
+  {
+    "orgId": "org_004",
+    "name": "EVN Hà Nội",
+    "kind": "service"
+  },
+  {
+    "orgId": "org_005",
+    "name": "VNPT",
+    "kind": "service"
+  },
+  {
+    "orgId": "org_006",
+    "name": "Ban Quản Lý",
+    "kind": "service",
+    "address": "Chung cư An Bình, 18 ngõ 68 Trung Kính, Cầu Giấy, Hà Nội"
+  },
+  {
+    "orgId": "org_007",
+    "name": "Giao Nước",
+    "kind": "service"
+  },
+  {
+    "orgId": "org_008",
+    "name": "Giao Hàng",
+    "kind": "service"
+  },
+  {
+    "orgId": "org_009",
+    "name": "Nhà mạng",
+    "kind": "service"
+  },
+  {
+    "orgId": "org_010",
+    "name": "Đồ Gia Dụng",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_011",
+    "name": "Áo Polo",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_012",
+    "name": "Hoa Sáp Xinh",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_013",
+    "name": "Điện Máy Nhà Mình",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_014",
+    "name": "Lụa Satin",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_015",
+    "name": "Đèn học",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_016",
+    "name": "Cà Phê",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_017",
+    "name": "Bàn Phím",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_018",
+    "name": "Đồ Dùng",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_019",
+    "name": "Gia Dụng",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_020",
+    "name": "Vườn Nhà",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_021",
+    "name": "Thể Thao",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_022",
+    "name": "Phụ Kiện",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_023",
+    "name": "Văn Phòng",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_024",
+    "name": "Đồ Bếp",
+    "kind": "shop"
+  },
+  {
+    "orgId": "org_025",
+    "name": "Nhà Sách",
+    "kind": "shop"
+  }
+]

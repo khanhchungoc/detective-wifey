@@ -31,7 +31,7 @@ husband: husband_01
 
 *Dữ liệu mỏ neo giúp người chơi đối chiếu và phát hiện điểm bất thường (sai cỡ quần áo/giày, dị ứng món ăn, sai địa chỉ nhà, sai ngày kỷ niệm) mà không cần đoán mò:*
 
-- **Tên Hiển thị trong Máy Chồng**: "Vợ" (Contact ID: `contact_010`, SĐT: `0900112233`)
+- **Tên Hiển thị trong Máy Chồng**: "Vợ" (Person ID: `person_001`, Contact ID: `contact_010`, SĐT: `0900112233`)
 - **Họ tên & Tuổi**: Trần Minh Thư, 28 tuổi (nhỏ hơn chồng 3 tuổi - xưng hô chuẩn: `anh` - `em`)
 - **Nghề nghiệp**: Nhân viên văn phòng / Kế toán
 - **Địa chỉ Nhà Chung**: Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Cầu Giấy, Hà Nội
@@ -47,10 +47,10 @@ husband: husband_01
 
 | Character ID | Họ tên & Tên lưu trong máy | Tuổi & Giới tính | Quan hệ với Chồng | Khẩu khí & Văn phong | Ánh xạ Avatar (`ContactAvatar` Sprite Sheet) |
 |---|---|---|---|---|---|
-| `char_wife` | Vợ (Trần Minh Thư) | 28 tuổi, Nữ | Vợ hợp pháp | Quan tâm gia đình, nhắc nhở việc nhà, xưng hô `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 6) |
-| `char_mom` | Mẹ Ở Quê (Nguyễn Thị Hòa, SĐT `0915220011`, sinh nhật 18/10) | 56 tuổi, Nữ | Mẹ ruột Thịnh | Mẫu mực, chu đáo, chính tả chuẩn mực, không viết tắt; chồng xưng `con` gọi `mẹ` | `contact-avatar-persona-sheet.jpg` (Index 5) |
-| `char_best_friend` | Tuấn Chó (Nguyễn Tuấn, xem [friend-aliases](../friend-aliases.md)) | 29 tuổi (1997), Nam | Bạn thân chí cốt, kém 2 tuổi | Suồng sã, trẻ con, xưng hô `tôi - ông`, hẹn đá bóng sân cỏ nhân tạo | `contact-avatar-persona-sheet.jpg` (Index 7) |
-| `char_boss` | Nam Dev | 30 tuổi, Nam | Đồng nghiệp / Tech Lead bạn cùng nhóm Technosoft | Lịch sự công việc, từ lóng dev, xưng hô `ông - tôi` / `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 8) |
+| `char_wife` (`person_001`) | Vợ (Trần Minh Thư) | 28 tuổi, Nữ | Vợ hợp pháp | Quan tâm gia đình, nhắc nhở việc nhà, xưng hô `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 6) |
+| `char_mom` (`person_002`) | Mẹ Ở Quê (Nguyễn Thị Hòa, SĐT `0915220011`, sinh nhật 18/10) | 56 tuổi, Nữ | Mẹ ruột Thịnh | Mẫu mực, chu đáo, chính tả chuẩn mực, không viết tắt; chồng xưng `con` gọi `mẹ` | `contact-avatar-persona-sheet.jpg` (Index 5) |
+| `char_best_friend` (`person_009`) | Tuấn Chó (Nguyễn Tuấn, xem [friend-aliases](../friend-aliases.md)) | 29 tuổi (1997), Nam | Bạn thân chí cốt, kém 2 tuổi | Suồng sã, trẻ con, xưng hô `tôi - ông`, hẹn đá bóng sân cỏ nhân tạo | `contact-avatar-persona-sheet.jpg` (Index 7) |
+| `char_boss` (`person_010`) | Nam Dev | 30 tuổi, Nam | Đồng nghiệp / Tech Lead bạn cùng nhóm Technosoft | Lịch sự công việc, từ lóng dev, xưng hô `ông - tôi` / `anh - em` | `contact-avatar-persona-sheet.jpg` (Index 8) |
 
 ---
 

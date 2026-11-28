@@ -1,4 +1,5 @@
 import React from 'react';
+import '../data/cases/husband_01/level_01'; // registers contact photo names
 import { describe, it, expect, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {

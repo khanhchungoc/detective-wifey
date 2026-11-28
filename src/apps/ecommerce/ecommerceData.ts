@@ -97,6 +97,7 @@ export function normalizeEcommerceData(value: unknown): EcommerceData | null {
         {
           ...refs(o),
           orderId: o.orderId,
+          displayCode: text(o.displayCode) ?? o.orderId,
           shopName: text(o.shopName),
           isFavorite: bool(o.isFavorite),
           profileQueues: profileQueues(o.profileQueues),

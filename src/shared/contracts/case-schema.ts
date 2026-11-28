@@ -159,6 +159,8 @@ export interface Person {
 export interface Org {
   orgId: string;
   name: string;
+  /** Registered name when it differs from the display name (shown in bank statements as upper-case ASCII). */
+  legalName?: string;
   kind: 'company' | 'shop' | 'venue' | 'bank' | 'service' | 'other';
   address?: string;
 }

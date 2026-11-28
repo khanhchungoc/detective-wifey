@@ -3,7 +3,7 @@
     {
       "id": "email_001",
       "subject": "Lịch bảo trì thang máy",
-      "sender": "Ban Quản Lý",
+      "senderContactId": "contact_012",
       "time": "15/10/2026 08:00",
       "snippet": "thang B, sáng thứ bảy 9h-11h.",
       "timestamp": "15/10/2026 08:00"
@@ -19,7 +19,7 @@
     {
       "id": "email_003",
       "subject": "Xác nhận gói PT tháng 10",
-      "sender": "California Fitness",
+      "senderContactId": "contact_016",
       "time": "13/10/2026 17:46",
       "snippet": "xác nhận gói PT 1.500.000đ.",
       "timestamp": "13/10/2026 17:46"
@@ -67,7 +67,7 @@
     {
       "id": "email_009",
       "subject": "Ưu đãi vận chuyển",
-      "sender": "Ban Quản Lý",
+      "senderContactId": "contact_012",
       "time": "07/10/2026 09:00",
       "snippet": "Ưu đãi áp dụng cho các đơn đồ gia dụng.",
       "timestamp": "07/10/2026 09:00"
@@ -99,7 +99,7 @@
     {
       "id": "email_013",
       "subject": "Thông tin hội thảo nội bộ",
-      "sender": "Ban Quản Lý",
+      "senderContactId": "contact_012",
       "time": "03/10/2026 09:00",
       "snippet": "Buổi chia sẻ diễn ra tại phòng họp chung.",
       "timestamp": "03/10/2026 09:00"
@@ -131,7 +131,7 @@
     {
       "id": "email_017",
       "subject": "Lịch vệ sinh khu làm việc",
-      "sender": "Ban Quản Lý",
+      "senderContactId": "contact_012",
       "time": "28/09/2026 09:00",
       "snippet": "Cất đồ cá nhân trước khi nhân viên vệ sinh tới.",
       "timestamp": "28/09/2026 09:00"
@@ -163,7 +163,7 @@
     {
       "id": "email_021",
       "subject": "Thông tin gói dữ liệu",
-      "sender": "Ban Quản Lý",
+      "senderContactId": "contact_012",
       "time": "24/09/2026 09:00",
       "snippet": "Gói dữ liệu đã được gia hạn theo chu kỳ.",
       "timestamp": "24/09/2026 09:00"
@@ -195,7 +195,7 @@
     {
       "id": "email_025",
       "subject": "Thông báo đăng ký thẻ xe",
-      "sender": "Ban Quản Lý",
+      "senderContactId": "contact_012",
       "time": "20/09/2026 09:00",
       "snippet": "Đăng ký lại phương tiện tại quầy quản lý.",
       "timestamp": "20/09/2026 09:00"

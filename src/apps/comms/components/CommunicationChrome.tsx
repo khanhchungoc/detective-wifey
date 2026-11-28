@@ -6,8 +6,8 @@ import type { VirtualAppProps, AppId } from '../../../shared/contracts/app-contr
 import type { NarrativeRecord } from '../data';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
 
-export function CommunicationHeader({ title, backLabel = 'Quay lại', onBack, avatarName }: { title: string; backLabel?: string; onBack?: () => void; avatarName?: string }) {
-  return <header className="communication-header">{onBack ? <button type="button" onClick={onBack}><IoChevronBack aria-hidden="true" />{backLabel}</button> : <span className="communication-header-spacer" />}<div className="communication-header-title flex min-w-0 flex-1 items-center justify-center gap-2">{avatarName && <ContactAvatar name={avatarName} size={32} />}<h1 className="min-w-0">{title}</h1></div><span className="communication-header-spacer" /></header>;
+export function CommunicationHeader({ title, backLabel = 'Quay lại', onBack, avatarName, avatarIndex }: { title: string; backLabel?: string; onBack?: () => void; avatarName?: string; avatarIndex?: number }) {
+  return <header className="communication-header">{onBack ? <button type="button" onClick={onBack}><IoChevronBack aria-hidden="true" />{backLabel}</button> : <span className="communication-header-spacer" />}<div className="communication-header-title flex min-w-0 flex-1 items-center justify-center gap-2">{avatarName && <ContactAvatar name={avatarName} avatarIndex={avatarIndex} size={32} />}<h1 className="min-w-0">{title}</h1></div><span className="communication-header-spacer" /></header>;
 }
 export function useCommunicationEvidence(caseId: string, onTagSuspect: VirtualAppProps['onTagSuspect'], appId: AppId) {
   const [item, setItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');

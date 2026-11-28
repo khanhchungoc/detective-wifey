@@ -1,4 +1,4 @@
-import { record, records, text, textFields, number } from '../../shared/data/read';
+import { record, records, text, textFields, number, optionalNumber } from '../../shared/data/read';
 import type {
   MessagingDataContract,
   MessagingThread,
@@ -80,6 +80,7 @@ function thread(data: Record<string, unknown>): MessagingThread {
     threadId: text(data.threadId),
     contactName: text(data.contactName),
     avatarGradient: text(data.avatarGradient),
+    avatarIndex: optionalNumber(data.avatarIndex),
     lastMessage: derivedLastMessage,
     timestamp: derivedTimestamp,
     suspectId: text(data.suspectId),
@@ -162,6 +163,7 @@ export function readMessagingData(value: unknown): MessagingDataContract {
         'suspectName',
       ] as const),
       isBlocked: contact.isBlocked === true,
+      avatarIndex: optionalNumber(contact.avatarIndex),
     })),
     cloudDocuments: records(data.cloudDocuments).map(document),
     timelinePosts: Array.isArray(data.timelinePosts)

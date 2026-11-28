@@ -1,10 +1,4 @@
 {
-  "currentUser": {
-    "name": "Nguyễn Huy Thịnh",
-    "handle": "thinh_doom95",
-    "avatarInitials": "T",
-    "statusText": ""
-  },
   "threads": [
     {
       "threadId": "thread_001",
@@ -258,7 +252,7 @@
     },
     {
       "threadId": "thread_003",
-      "contactName": "Khoa BE",
+      "contactId": "contact_011",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 23:41",
       "unreadCount": 0,
@@ -395,7 +389,7 @@
     },
     {
       "threadId": "thread_004",
-      "contactName": "Anh Tuấn Thợ Điện",
+      "contactId": "contact_013",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 22:58",
       "unreadCount": 0,
@@ -441,7 +435,7 @@
     },
     {
       "threadId": "thread_005",
-      "contactName": "Vợ",
+      "contactId": "contact_010",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 22:10",
       "unreadCount": 0,
@@ -1034,7 +1028,7 @@
     },
     {
       "threadId": "thread_006",
-      "contactName": "Tuấn Chó",
+      "contactId": "contact_006",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 21:34",
       "unreadCount": 0,
@@ -1229,7 +1223,7 @@
     },
     {
       "threadId": "thread_007",
-      "contactName": "Lan Anh Kế Toán",
+      "contactId": "contact_007",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 20:35",
       "unreadCount": 0,
@@ -1337,7 +1331,7 @@
     },
     {
       "threadId": "thread_008",
-      "contactName": "Bé Ngọc KTX",
+      "contactId": "contact_003",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 20:13",
       "unreadCount": 0,
@@ -1572,7 +1566,7 @@
     },
     {
       "threadId": "thread_009",
-      "contactName": "Thảo PT California",
+      "contactId": "contact_005",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 18:45",
       "unreadCount": 0,
@@ -1680,7 +1674,7 @@
     },
     {
       "threadId": "thread_010",
-      "contactName": "Mẹ Ở Quê",
+      "contactId": "contact_001",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 18:15",
       "unreadCount": 0,
@@ -2141,7 +2135,7 @@
     },
     {
       "threadId": "thread_011",
-      "contactName": "Mai Lễ Tân",
+      "contactId": "contact_009",
       "avatarGradient": "from-slate-400 to-slate-600",
       "timestamp": "15/10/2026 15:05",
       "unreadCount": 0,
@@ -2303,7 +2297,7 @@
   "otherThreads": [
     {
       "threadId": "thread_013",
-      "contactName": "Chăm sóc thuê bao",
+      "contactId": "contact_018",
       "timestamp": "14/10/2026 09:00",
       "unreadCount": 0,
       "messages": [
@@ -2355,8 +2349,7 @@
   "timelinePosts": [
     {
       "id": "tl_001",
-      "author": "Tuấn Chó",
-      "avatarInitials": "T",
+      "authorContactId": "contact_006",
       "timestamp": "14/10/2026 12:00",
       "content": "Chủ nhật đá hiệp đầu rồi về quê. Nhớ mang đúng màu áo đội.",
       "likesCount": 3,
@@ -2375,114 +2368,72 @@
   },
   "contacts": [
     {
-      "id": "contact_001",
-      "name": "Mẹ Ở Quê",
-      "phone": "0915220011",
-      "section": "M",
+      "contactId": "contact_001",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "high"
     },
     {
-      "id": "contact_002",
-      "name": "Giao Nước",
-      "phone": "0904556677",
-      "section": "G",
+      "contactId": "contact_002",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "low"
     },
     {
-      "id": "contact_003",
-      "name": "Bé Ngọc KTX",
-      "phone": "0922334455",
-      "section": "B",
+      "contactId": "contact_003",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "medium"
     },
     {
-      "id": "contact_004",
-      "name": "Nam Dev",
-      "phone": "0933445566",
-      "section": "N",
+      "contactId": "contact_004",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     },
     {
-      "id": "contact_005",
-      "name": "Thảo PT California",
-      "phone": "0944556677",
-      "section": "T",
+      "contactId": "contact_005",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     },
     {
-      "id": "contact_006",
-      "name": "Tuấn Chó",
-      "phone": "0977112233",
-      "section": "T",
+      "contactId": "contact_006",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "medium"
     },
     {
-      "id": "contact_007",
-      "name": "Lan Anh Kế Toán",
-      "phone": "0966778899",
-      "section": "L",
+      "contactId": "contact_007",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     },
     {
-      "id": "contact_008",
-      "name": "Giao Hàng",
-      "phone": "0905667788",
-      "section": "G",
+      "contactId": "contact_008",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "low"
     },
     {
-      "id": "contact_009",
-      "name": "Mai Lễ Tân",
-      "phone": "0988990011",
-      "section": "M",
+      "contactId": "contact_009",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     },
     {
-      "id": "contact_010",
-      "name": "Vợ",
-      "phone": "0900112233",
-      "section": "V",
+      "contactId": "contact_010",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "high"
     },
     {
-      "id": "contact_011",
-      "name": "Khoa BE",
-      "phone": "0988886677",
-      "section": "K",
+      "contactId": "contact_011",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     },
     {
-      "id": "contact_012",
-      "name": "Ban Quản Lý",
-      "phone": "0243556677",
-      "section": "B",
+      "contactId": "contact_012",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "low"
     },
     {
-      "id": "contact_013",
-      "name": "Anh Tuấn Thợ Điện",
-      "phone": "0912345801",
-      "section": "A",
+      "contactId": "contact_013",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     },
     {
-      "id": "contact_014",
-      "name": "Bách Dev",
-      "phone": "0933778899",
-      "section": "B",
+      "contactId": "contact_014",
       "avatarGradient": "from-slate-400 to-slate-600",
       "historyPriority": "regular"
     }

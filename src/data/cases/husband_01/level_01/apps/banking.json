@@ -19,7 +19,7 @@
       "date": "15/10/2026",
       "time": "21:15",
       "amount": "-100.000 đ",
-      "beneficiary": "NHA MANG",
+      "counterpartyOrgId": "org_009",
       "memo": "Nap tien dien thoai",
       "status": "Thành công",
       "timestamp": "15/10/2026 21:15"
@@ -29,7 +29,7 @@
       "date": "15/10/2026",
       "time": "20:48",
       "amount": "-640.000 đ",
-      "beneficiary": "COM NIEU PHO CO",
+      "counterpartyOrgId": "org_002",
       "memo": "Thanh toan the",
       "status": "Thành công",
       "clueRefId": "CLUE-BANK-07",
@@ -40,7 +40,7 @@
       "date": "15/10/2026",
       "time": "20:30",
       "amount": "-500.000 đ",
-      "beneficiary": "NGUYEN LAN ANH",
+      "counterpartyPersonId": "person_006",
       "memo": "CK",
       "status": "Thành công",
       "timestamp": "15/10/2026 20:30"
@@ -50,7 +50,7 @@
       "date": "15/10/2026",
       "time": "20:10",
       "amount": "-1.200.000 đ",
-      "beneficiary": "NGUYEN BAO NGOC",
+      "counterpartyPersonId": "person_005",
       "memo": "CK",
       "status": "Thành công",
       "timestamp": "15/10/2026 20:10"
@@ -60,7 +60,7 @@
       "date": "15/10/2026",
       "time": "15:30",
       "amount": "-1.500.000 đ",
-      "beneficiary": "TRAN VAN TUAN",
+      "counterpartyPersonId": "person_004",
       "memo": "Coc",
       "status": "Thành công",
       "timestamp": "15/10/2026 15:30"
@@ -70,7 +70,7 @@
       "date": "15/10/2026",
       "time": "13:05",
       "amount": "+55.000 đ",
-      "beneficiary": "TRAN VAN NAM",
+      "counterpartyPersonId": "person_010",
       "memo": "Com hom qua",
       "status": "Thành công",
       "timestamp": "15/10/2026 13:05"
@@ -120,7 +120,7 @@
       "date": "13/10/2026",
       "time": "17:45",
       "amount": "-1.500.000 đ",
-      "beneficiary": "CALIFORNIA FITNESS",
+      "counterpartyOrgId": "org_003",
       "memo": "Goi PT thang 10",
       "status": "Thành công",
       "timestamp": "13/10/2026 17:45"
@@ -150,7 +150,7 @@
       "date": "12/10/2026",
       "time": "08:50",
       "amount": "-2.500.000 đ",
-      "beneficiary": "NGUYEN BAO NGOC",
+      "counterpartyPersonId": "person_005",
       "memo": "Tien phong thang 10",
       "status": "Thành công",
       "timestamp": "12/10/2026 08:50"
@@ -170,7 +170,7 @@
       "date": "10/10/2026",
       "time": "09:12",
       "amount": "-1.450.000 đ",
-      "beneficiary": "EVN HA NOI",
+      "counterpartyOrgId": "org_004",
       "memo": "Thanh toan tien dien",
       "status": "Thành công",
       "timestamp": "10/10/2026 09:12"
@@ -180,7 +180,7 @@
       "date": "10/10/2026",
       "time": "09:10",
       "amount": "-280.000 đ",
-      "beneficiary": "VNPT",
+      "counterpartyOrgId": "org_005",
       "memo": "Cuoc internet thang 10",
       "status": "Thành công",
       "timestamp": "10/10/2026 09:10"
@@ -190,7 +190,7 @@
       "date": "10/10/2026",
       "time": "08:45",
       "amount": "-31.500.000 đ",
-      "beneficiary": "TRAN MINH THU",
+      "counterpartyPersonId": "person_001",
       "memo": "Sinh hoat thang 10",
       "status": "Thành công",
       "timestamp": "10/10/2026 08:45"
@@ -200,8 +200,8 @@
       "date": "10/10/2026",
       "time": "08:30",
       "amount": "+35.000.000 đ",
-      "beneficiary": "CONG TY CP CONG NGHE TECHNOSOFT",
-      "memo": "Luong thang 10 Nguyen Huy Thinh",
+      "counterpartyOrgId": "org_001",
+      "memo": "Luong thang 10 {{husband.fullNameAscii}}",
       "status": "Thành công",
       "timestamp": "10/10/2026 08:30"
     },

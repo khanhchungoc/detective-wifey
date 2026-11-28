@@ -3,10 +3,8 @@
   "threads": [
     {
       "threadId": "thread_014",
-      "senderTitle": "Nhà mạng",
       "lastMessageTimestamp": "15/10 21:15",
       "contactId": "contact_015",
-      "phoneNumber": "18008098",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -56,10 +54,8 @@
     },
     {
       "threadId": "thread_015",
-      "senderTitle": "California Fitness",
       "lastMessageTimestamp": "15/10 19:05",
       "contactId": "contact_016",
-      "phoneNumber": "19006868",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -104,10 +100,8 @@
     },
     {
       "threadId": "thread_016",
-      "senderTitle": "Vợ",
       "lastMessageTimestamp": "15/10 17:45",
       "contactId": "contact_010",
-      "phoneNumber": "0900112233",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -157,10 +151,8 @@
     },
     {
       "threadId": "thread_017",
-      "senderTitle": "Tuấn Chó",
       "lastMessageTimestamp": "15/10 09:15",
       "contactId": "contact_006",
-      "phoneNumber": "0977112233",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -210,10 +202,8 @@
     },
     {
       "threadId": "thread_018",
-      "senderTitle": "Ban Quản Lý",
       "lastMessageTimestamp": "15/10 08:05",
       "contactId": "contact_012",
-      "phoneNumber": "0243556677",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -263,10 +253,8 @@
     },
     {
       "threadId": "thread_019",
-      "senderTitle": "Giao Nước",
       "lastMessageTimestamp": "14/10 14:15",
       "contactId": "contact_002",
-      "phoneNumber": "0904556677",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -316,10 +304,8 @@
     },
     {
       "threadId": "thread_020",
-      "senderTitle": "Thông tin gói cước",
       "lastMessageTimestamp": "14/10 09:00",
       "contactId": "contact_017",
-      "phoneNumber": "191",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -375,10 +361,8 @@
     },
     {
       "threadId": "thread_021",
-      "senderTitle": "Nam Dev",
       "lastMessageTimestamp": "13/10 18:30",
       "contactId": "contact_004",
-      "phoneNumber": "0933445566",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -428,10 +412,8 @@
     },
     {
       "threadId": "thread_022",
-      "senderTitle": "Giao Hàng",
       "lastMessageTimestamp": "13/10 10:40",
       "contactId": "contact_008",
-      "phoneNumber": "0905667788",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -487,10 +469,8 @@
     },
     {
       "threadId": "thread_023",
-      "senderTitle": "Anh Tuấn Thợ Điện",
       "lastMessageTimestamp": "13/10 09:00",
       "contactId": "contact_013",
-      "phoneNumber": "0912345801",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -534,10 +514,8 @@
     },
     {
       "threadId": "thread_024",
-      "senderTitle": "Mẹ Ở Quê",
       "lastMessageTimestamp": "12/10 18:04",
       "contactId": "contact_001",
-      "phoneNumber": "0915220011",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -593,10 +571,8 @@
     },
     {
       "threadId": "thread_025",
-      "senderTitle": "Khoa BE",
       "lastMessageTimestamp": "10/10 15:25",
       "contactId": "contact_011",
-      "phoneNumber": "0988886677",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -646,10 +622,8 @@
     },
     {
       "threadId": "thread_026",
-      "senderTitle": "Mai Lễ Tân",
       "lastMessageTimestamp": "08/10 11:30",
       "contactId": "contact_009",
-      "phoneNumber": "0988990011",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -699,10 +673,8 @@
     },
     {
       "threadId": "thread_027",
-      "senderTitle": "Thảo PT California",
       "lastMessageTimestamp": "05/10 14:10",
       "contactId": "contact_005",
-      "phoneNumber": "0944556677",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -752,10 +724,8 @@
     },
     {
       "threadId": "thread_028",
-      "senderTitle": "Lan Anh Kế Toán",
       "lastMessageTimestamp": "02/10 16:00",
       "contactId": "contact_007",
-      "phoneNumber": "0966778899",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -805,10 +775,8 @@
     },
     {
       "threadId": "thread_029",
-      "senderTitle": "Bách Dev",
       "lastMessageTimestamp": "29/09 10:20",
       "contactId": "contact_014",
-      "phoneNumber": "0933778899",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
@@ -858,10 +826,8 @@
     },
     {
       "threadId": "thread_030",
-      "senderTitle": "Bé Ngọc KTX",
       "lastMessageTimestamp": "28/09 12:15",
       "contactId": "contact_003",
-      "phoneNumber": "0922334455",
       "isPinned": false,
       "unreadCount": 0,
       "messages": [
