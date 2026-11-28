@@ -1,14 +1,14 @@
-import { record, records, text, number } from '../../shared/data/read';
+import { record, records, text, number, optionalNumber } from '../../shared/data/read';
 import type { AppCaseContext } from '../../shared/contracts/app-contracts';
 
 export interface NarrativeRecord { id: string; suspectName: string; clueRefId: string }
-export interface Contact extends NarrativeRecord { name: string; phone: string; secondaryPhone: string; notes: string }
-export interface Call extends NarrativeRecord { name: string; phone: string; contactId: string; time: string; duration: string; direction: string }
+export interface Contact extends NarrativeRecord { name: string; phone: string; secondaryPhone: string; notes: string; avatarIndex?: number }
+export interface Call extends NarrativeRecord { name: string; phone: string; contactId: string; time: string; duration: string; direction: string; avatarIndex?: number }
 export interface Message extends NarrativeRecord {
   body: string; time: string; outgoing: boolean; canceled: boolean; scheduledTime: string; canceledTime: string;
   reaction?: { type: string; time: string };
 }
-export interface Thread { id: string; name: string; contactId: string; phone: string; pinned: boolean; unread: boolean; time: string; messages: Message[] }
+export interface Thread { id: string; name: string; contactId: string; phone: string; pinned: boolean; unread: boolean; time: string; messages: Message[]; avatarIndex?: number }
 const value = (row: Record<string, unknown>, ...keys: string[]) => keys.map(key => text(row[key])).find(Boolean) ?? '';
 const identity = (row: Record<string, unknown>, id: string): NarrativeRecord => ({ id, suspectName: text(row.suspectName), clueRefId: text(row.clueRefId) });
 
@@ -40,13 +40,13 @@ export function readAppData(input: unknown) {
   const calls: Call[] = records(data.calls).map((row, i) => ({
     ...identity(row, value(row, 'callId', 'id') || `call-${i}`), name: value(row, 'contactName', 'name', 'phoneNumber'),
     phone: text(row.phoneNumber), contactId: text(row.contactId), time: value(row, 'timestamp', 'time'),
-    direction: value(row, 'direction', 'type'),
+    direction: value(row, 'direction', 'type'), avatarIndex: optionalNumber(row.avatarIndex),
     duration: typeof row.durationSeconds === 'number' && row.durationSeconds >= 0
       ? `${Math.floor(row.durationSeconds / 60)} phút ${row.durationSeconds % 60} giây` : text(row.duration),
   }));
   const contacts: Contact[] = records(data.contacts).map((row, i) => ({
     ...identity(row, value(row, 'contactId', 'id') || `contact-${i}`), name: value(row, 'displayName', 'name', 'primaryPhone'),
-    phone: value(row, 'primaryPhone', 'phoneNumber'), secondaryPhone: text(row.secondaryPhone), notes: value(row, 'notesField', 'notes'),
+    phone: value(row, 'primaryPhone', 'phoneNumber'), secondaryPhone: text(row.secondaryPhone), notes: value(row, 'notesField', 'notes'), avatarIndex: optionalNumber(row.avatarIndex),
   }));
   // Legacy call-only cases retain their known identities without invented numbers or notes.
   for (const call of calls) if (!contacts.some(c => c.id === call.contactId || (call.phone && c.phone === call.phone) || c.name === call.name)) {
@@ -63,7 +63,7 @@ export function readAppData(input: unknown) {
     const time = text(row.lastMessageTimestamp) || (lastMsg ? lastMsg.time : '');
     return {
       id: value(row, 'threadId', 'id') || `thread-${i}`, name: value(row, 'senderTitle', 'name'), contactId: text(row.contactId), phone: text(row.phoneNumber),
-      pinned: row.isPinned === true, unread: number(row.unreadCount) > 0, time,
+      pinned: row.isPinned === true, unread: number(row.unreadCount) > 0, time, avatarIndex: optionalNumber(row.avatarIndex),
       messages,
     };
   });
@@ -91,7 +91,7 @@ export function readCommunicationData(context: AppCaseContext) {
   return { ...data, threads: data.threads.map(thread => {
     const contact = data.contacts.find(contact => thread.contactId && contact.id === thread.contactId)
       ?? data.contacts.find(contact => thread.phone && phoneKey(contact.phone) === phoneKey(thread.phone));
-    return contact ? { ...thread, name: contact.name, phone: contact.phone, contactId: contact.id } : thread;
+    return contact ? { ...thread, name: contact.name, phone: contact.phone, contactId: contact.id, avatarIndex: contact.avatarIndex ?? thread.avatarIndex } : thread;
   }) };
 }
 

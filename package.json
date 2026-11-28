@@ -1,7 +1,7 @@
 {
   "name": "detective-wifey",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,8 @@
     "test:e2e:smoke": "playwright test --grep @smoke",
     "test:e2e:ui": "playwright test --ui",
     "lint": "eslint src && node scripts/architecture.mjs",
-    "check:architecture": "node scripts/architecture.mjs"
+    "check:architecture": "node scripts/architecture.mjs",
+    "case:preview": "tsx scripts/case-preview.mjs"
   },
   "dependencies": {
     "motion": "^14.14.0",
@@ -23,6 +24,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@fontsource/bitter": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@fontsource/shantell-sans": "^5.3.0",
     "@playwright/test": "^1.65.1",

@@ -1,0 +1,100 @@
+{
+  "caseId": "case_01",
+  "husbandId": "husband_01",
+  "levelNumber": 1,
+  "allowedStrikes": 5,
+  "groundTruth": {
+    "verdict": "cheating",
+    "culpritSuspectId": "suspect_01",
+    "narrativeRoast": "Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?",
+    "overJealousRoast": "Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?"
+  },
+  "suspectPool": [
+    {
+      "suspectId": "suspect_01",
+      "personId": "person_003",
+      "contactId": "contact_011",
+      "displayTitle": "Marketing",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
+      "suspectId": "suspect_02",
+      "personId": "person_004",
+      "contactId": "contact_013",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
+      "suspectId": "suspect_03",
+      "personId": "person_005",
+      "contactId": "contact_003",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
+      "suspectId": "suspect_04",
+      "personId": "person_006",
+      "contactId": "contact_007",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
+      "suspectId": "suspect_05",
+      "personId": "person_007",
+      "contactId": "contact_005",
+      "initialDiscoveredApp": "internet-messaging"
+    },
+    {
+      "suspectId": "suspect_06",
+      "personId": "person_008",
+      "contactId": "contact_009",
+      "initialDiscoveredApp": "internet-messaging"
+    }
+  ],
+  "lockChallenges": [],
+  "deviceMetadata": {
+    "narrativeTime": "23:45",
+    "batteryPercent": "8%",
+    "carrierTag": "5G",
+    "pwaThemeColor": "#0f172a"
+  },
+  "activeAppIds": [
+    "internet-messaging",
+    "banking",
+    "ecommerce",
+    "phone",
+    "messages",
+    "ride-hailing",
+    "web-browser",
+    "photos",
+    "personal-notes",
+    "email",
+    "professional-network",
+    "team-collaboration"
+  ],
+  "grayedOutAppIds": [
+    "ride-hailing",
+    "personal-notes",
+    "email",
+    "professional-network",
+    "team-collaboration"
+  ],
+  "notifications": [
+    {
+      "toastId": "toast_001",
+      "sourceAppId": "internet-messaging",
+      "senderTitle": "Tin nhắn • 22:58",
+      "snippetBody": "Anh Tuấn Thợ Điện: Sáng mai anh vào lắp sớm. Em yên tâm, không để bà ấy biết đâu.",
+      "triggerDelaySeconds": 3
+    },
+    {
+      "toastId": "toast_002",
+      "sourceAppId": "internet-messaging",
+      "senderTitle": "Tin nhắn • 23:42",
+      "snippetBody": "Hội Poker Tối Thứ 6: A9: {{husband.shortName}} còn nợ anh 2 phỉnh tuần trước đấy nhé, đừng có lặn 😏",
+      "triggerDelaySeconds": 5
+    }
+  ],
+  "epilogueNotification": {
+    "sourceAppId": "banking",
+    "senderTitle": "Ngân hàng • Vừa xong",
+    "snippetBody": "+1.000 đ từ NGUYEN THI THU HUONG: Anh chan so em that a?"
+  }
+}

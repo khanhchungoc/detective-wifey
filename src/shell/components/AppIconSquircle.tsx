@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect, type CSSProperties } from 'react';
 import { AppDefinition } from '../../shared/contracts/app-contracts';
 
 interface AppIconSquircleProps {
-  app: Pick<AppDefinition, 'icon' | 'displayName' | 'iconAsset' | 'themeGradient' | 'notificationBadgeCount'> & Partial<Pick<AppDefinition, 'appId'>>;
+  app: Pick<AppDefinition, 'icon' | 'displayName' | 'iconAsset' | 'themeGradient'> & Partial<Pick<AppDefinition, 'appId'>>;
   onClick: () => void;
   overrideBadgeCount?: number;
   hideLabel?: boolean;
   isGrayedOut?: boolean;
+  isOpen?: boolean;
 }
 
 export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
@@ -15,6 +16,7 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
   overrideBadgeCount,
   hideLabel = false,
   isGrayedOut = false,
+  isOpen = false,
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const downTimeRef = useRef(0);
@@ -22,8 +24,7 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
   const touchActivatedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const IconComponent = app.icon;
-  const badgeCount =
-    overrideBadgeCount !== undefined ? overrideBadgeCount : app.notificationBadgeCount || 0;
+  const badgeCount = overrideBadgeCount ?? 0;
 
   useEffect(() => {
     return () => {
@@ -97,7 +98,10 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
       data-grayed-out={isGrayedOut ? 'true' : undefined}
       data-pressed={isPressed ? 'true' : undefined}
       aria-disabled={isGrayedOut ? 'true' : undefined}
-      style={{ '--launcher-motion-name': `launcher-${app.appId ?? 'camera'}` } as CSSProperties}
+      style={{
+        '--launcher-motion-name': `launcher-${app.appId ?? 'camera'}`,
+        opacity: isOpen ? 0 : undefined,
+      } as CSSProperties}
       onClick={handleButtonClick}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}

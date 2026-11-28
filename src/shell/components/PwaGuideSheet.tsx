@@ -20,12 +20,12 @@ export const PwaGuideSheet: React.FC<PwaGuideSheetProps> = ({
 
   return (
     <div
-      className="absolute inset-0 bg-black/70 backdrop-blur-md z-50 flex items-end animate-fadeIn select-none font-sans"
+      className="glass-scrim absolute inset-0 z-50 flex items-end animate-fadeIn select-none font-sans"
       onClick={onClose}
     >
       <div
         {...swipeHandlers}
-        className="ios-sheet w-full max-h-[85%] overflow-y-auto bg-slate-900 border-t border-white/20 rounded-t-3xl p-4 shadow-2xl space-y-3.5 animate-slideUp text-white"
+        className="ios-sheet glass-elevated border-x-0 border-b-0 w-full max-h-[85%] overflow-y-auto rounded-t-3xl p-4 space-y-3.5 animate-slideUp text-white"
         style={isIOS ? { paddingBottom: 'max(16px, env(safe-area-inset-bottom, 0px))' } : undefined}
         onClick={(e) => e.stopPropagation()}
       >

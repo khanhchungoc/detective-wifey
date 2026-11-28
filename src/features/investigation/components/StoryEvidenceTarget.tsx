@@ -36,17 +36,29 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
   const startCoordsRef = useRef<{ x: number; y: number } | null>(null);
   const activePointerIdRef = useRef<number | null>(null);
   const isLongPressTriggeredRef = useRef(false);
+  const windowCleanupRef = useRef<(() => void) | null>(null);
   const [isPressing, setIsPressing] = useState(false);
+
+  const detachWindowListeners = () => {
+    if (windowCleanupRef.current) {
+      windowCleanupRef.current();
+      windowCleanupRef.current = null;
+    }
+  };
 
   useEffect(() => {
     if (disabled) {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = null;
+      detachWindowListeners();
       activePointerIdRef.current = null;
       startCoordsRef.current = null;
       setIsPressing(false);
     }
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      detachWindowListeners();
+    };
   }, [disabled]);
 
   const clearTimer = () => {
@@ -54,12 +66,14 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    detachWindowListeners();
     setIsPressing(false);
     activePointerIdRef.current = null;
     startCoordsRef.current = null;
   };
 
   const triggerEvidence = () => {
+    detachWindowListeners();
     isLongPressTriggeredRef.current = true;
     setIsPressing(false);
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -82,6 +96,29 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
     activePointerIdRef.current = e.pointerId;
     startCoordsRef.current = { x: e.clientX, y: e.clientY };
     setIsPressing(true);
+
+    // Track pointerup/cancel/move on window while pressing so an ancestor calling
+    // setPointerCapture() (e.g., lightbox stage) cannot swallow release and trigger a tap.
+    if (typeof window !== 'undefined') {
+      const pointerId = e.pointerId;
+      const onWinMove = (ev: PointerEvent) => {
+        if (!startCoordsRef.current || ev.pointerId !== pointerId) return;
+        const dx = Math.abs(ev.clientX - startCoordsRef.current.x);
+        const dy = Math.abs(ev.clientY - startCoordsRef.current.y);
+        if (dx > 18 || dy > 18) clearTimer();
+      };
+      const onWinEnd = (ev: PointerEvent) => {
+        if (ev.pointerId === pointerId) clearTimer();
+      };
+      window.addEventListener('pointermove', onWinMove, { passive: true });
+      window.addEventListener('pointerup', onWinEnd, { passive: true });
+      window.addEventListener('pointercancel', onWinEnd, { passive: true });
+      windowCleanupRef.current = () => {
+        window.removeEventListener('pointermove', onWinMove);
+        window.removeEventListener('pointerup', onWinEnd);
+        window.removeEventListener('pointercancel', onWinEnd);
+      };
+    }
 
     timerRef.current = setTimeout(() => {
       triggerEvidence();
@@ -130,7 +167,7 @@ export const StoryEvidenceTarget: React.FC<StoryEvidenceTargetProps> = ({
     // Prevent browser context menu and allow desktop right-click to trigger evidence modal
     e.preventDefault();
     e.stopPropagation();
-    if (!disabled) {
+    if (!disabled && !isLongPressTriggeredRef.current) {
       clearTimer();
       triggerEvidence();
     }

@@ -75,7 +75,7 @@ tags: [wireframe, phone-os, shell, boot-screen, splash-screen, us-025]
 │                                                                        │
 │                                                                        │
 ├────────────────────────────────────────────────────────────────────────┤
-│   Phiên bản: Vụ Án Chồng Hoàng (Màn 1) • 13+ Hài hước & Kịch tính      │
+│   Phiên bản: Vụ Án Chồng Thịnh (Màn 1) • 13+ Hài hước & Kịch tính      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 

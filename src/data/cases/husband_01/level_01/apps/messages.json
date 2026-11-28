@@ -1,0 +1,1548 @@
+{
+  "unreadBadge": 0,
+  "threads": [
+    {
+      "threadId": "thread_014",
+      "lastMessageTimestamp": "15/10 21:15",
+      "contactId": "contact_015",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_014_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Tài khoản đã được nạp 100.000d."
+        },
+        {
+          "messageId": "msg_014_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "incoming",
+          "bodyText": "Gói dữ liệu của quý khách được gia hạn thành công."
+        },
+        {
+          "messageId": "msg_014_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Quý khách còn 2GB trong chu kỳ hiện tại."
+        },
+        {
+          "messageId": "msg_014_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "incoming",
+          "bodyText": "Thông tin gói cước có thể xem trong ứng dụng nhà mạng."
+        },
+        {
+          "messageId": "msg_014_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Tài khoản đã được nạp 50.000d."
+        },
+        {
+          "messageId": "msg_014_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "incoming",
+          "bodyText": "Gia hạn gói dữ liệu thành công."
+        },
+        {
+          "messageId": "msg_014_0007",
+          "timestamp": "15/10/2026 21:15",
+          "sender": "incoming",
+          "bodyText": "Nap thanh cong 100.000d. Cam on quy khach."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_015",
+      "lastMessageTimestamp": "15/10 19:05",
+      "contactId": "contact_016",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_015_0001",
+          "timestamp": "29/09/2026 17:00",
+          "sender": "incoming",
+          "bodyText": "California Fitness: Xac nhan buoi PT 18:00 ngay 01/10 voi HLV Thao."
+        },
+        {
+          "messageId": "msg_015_0002",
+          "timestamp": "01/10/2026 19:05",
+          "sender": "incoming",
+          "bodyText": "California Fitness: Cam on quy khach da tham gia buoi PT 18:00 ngay 01/10."
+        },
+        {
+          "messageId": "msg_015_0003",
+          "timestamp": "06/10/2026 17:00",
+          "sender": "incoming",
+          "bodyText": "California Fitness: Xac nhan buoi PT 18:00 ngay 08/10 voi HLV Thao."
+        },
+        {
+          "messageId": "msg_015_0004",
+          "timestamp": "08/10/2026 19:05",
+          "sender": "incoming",
+          "bodyText": "California Fitness: Cam on quy khach da tham gia buoi PT 18:00 ngay 08/10."
+        },
+        {
+          "messageId": "msg_015_0005",
+          "timestamp": "13/10/2026 17:30",
+          "sender": "incoming",
+          "bodyText": "California Fitness: Xac nhan buoi PT 18:00 ngay 15/10 voi HLV Thao."
+        },
+        {
+          "messageId": "msg_015_0006",
+          "timestamp": "15/10/2026 19:05",
+          "sender": "incoming",
+          "bodyText": "California Fitness: Quy khach vang mat buoi PT 18:00 ngay 15/10. Buoi tap da duoc tru khoi goi.",
+          "clueRefId": "CLUE-MSG-02"
+        }
+      ]
+    },
+    {
+      "threadId": "thread_016",
+      "lastMessageTimestamp": "15/10 17:45",
+      "contactId": "contact_010",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_016_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Em đang trong siêu thị, anh cần mua gì không?"
+        },
+        {
+          "messageId": "msg_016_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Mua thêm hộ anh túi cà phê nếu còn loại cũ nhé."
+        },
+        {
+          "messageId": "msg_016_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Em lấy một túi rồi, tối về anh cất giúp em."
+        },
+        {
+          "messageId": "msg_016_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Ừ, anh rửa cốc sẵn rồi."
+        },
+        {
+          "messageId": "msg_016_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Anh để chìa khóa xe ở đâu nhỉ?"
+        },
+        {
+          "messageId": "msg_016_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Trong khay cạnh cửa, bên dưới tờ hóa đơn điện."
+        },
+        {
+          "messageId": "msg_016_0007",
+          "timestamp": "15/10/2026 17:45",
+          "sender": "incoming",
+          "bodyText": "Tiện đường anh ghé mua giúp em túi hoa quả nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_017",
+      "lastMessageTimestamp": "15/10 09:15",
+      "contactId": "contact_006",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_017_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Ông mang áo xanh hay áo trắng?"
+        },
+        {
+          "messageId": "msg_017_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Áo xanh, đừng lại nhầm đội nhé."
+        },
+        {
+          "messageId": "msg_017_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Tôi giữ chỗ để xe cho ông rồi."
+        },
+        {
+          "messageId": "msg_017_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Cảm ơn, tôi đang ra khỏi nhà."
+        },
+        {
+          "messageId": "msg_017_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Sau trận uống nước đầu ngõ nhé?"
+        },
+        {
+          "messageId": "msg_017_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Tôi uống nhanh rồi về ăn cơm."
+        },
+        {
+          "messageId": "msg_017_0007",
+          "timestamp": "15/10/2026 09:15",
+          "sender": "incoming",
+          "bodyText": "Chủ nhật ông nhớ mang đôi tất dài nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_018",
+      "lastMessageTimestamp": "15/10 08:05",
+      "contactId": "contact_012",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_018_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Nhắc đăng ký thẻ xe tháng mới tại quầy quản lý."
+        },
+        {
+          "messageId": "msg_018_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Nhà em vẫn đăng ký một xe máy như tháng trước."
+        },
+        {
+          "messageId": "msg_018_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Đã ghi nhận, anh giữ biên nhận cũ để đối chiếu."
+        },
+        {
+          "messageId": "msg_018_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Em đã gửi bản chụp cho quản lý."
+        },
+        {
+          "messageId": "msg_018_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Bảo trì thang máy sẽ thông báo trước một ngày."
+        },
+        {
+          "messageId": "msg_018_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Nhà em đã nhận thông tin, cảm ơn."
+        },
+        {
+          "messageId": "msg_018_0007",
+          "timestamp": "15/10/2026 08:05",
+          "sender": "incoming",
+          "bodyText": "Nhac lich bao tri thang B sang thu bay, 09h-11h."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_019",
+      "lastMessageTimestamp": "14/10 14:15",
+      "contactId": "contact_002",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_019_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Nhà anh còn bình nước dự phòng không?"
+        },
+        {
+          "messageId": "msg_019_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Còn một bình, chiều anh giao thêm giúp em một bình nhé."
+        },
+        {
+          "messageId": "msg_019_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Khoảng 17h tôi tới."
+        },
+        {
+          "messageId": "msg_019_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Em gửi bình rỗng ở quầy bảo vệ rồi."
+        },
+        {
+          "messageId": "msg_019_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Tôi đã đổi bình, anh kiểm tra giúp."
+        },
+        {
+          "messageId": "msg_019_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Em nhận được rồi, cảm ơn anh."
+        },
+        {
+          "messageId": "msg_019_0007",
+          "timestamp": "14/10/2026 14:15",
+          "sender": "incoming",
+          "bodyText": "Chiều em giao bình nước qua, gửi lễ tân anh nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_020",
+      "lastMessageTimestamp": "14/10 09:00",
+      "contactId": "contact_017",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_020_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Thông tin ưu đãi data cuối tuần dành cho thuê bao."
+        },
+        {
+          "messageId": "msg_020_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "incoming",
+          "bodyText": "Bỏ qua tin này nếu không có nhu cầu thay đổi gói cước."
+        },
+        {
+          "messageId": "msg_020_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Thông báo gói dữ liệu mới trong tháng."
+        },
+        {
+          "messageId": "msg_020_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "incoming",
+          "bodyText": "Chi tiết xem trong ứng dụng, không yêu cầu cung cấp mã xác thực."
+        },
+        {
+          "messageId": "msg_020_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Quý khách có thể kiểm tra gói đang sử dụng."
+        },
+        {
+          "messageId": "msg_020_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "incoming",
+          "bodyText": "Thông tin ưu đãi tháng 10 đã cập nhật."
+        },
+        {
+          "messageId": "msg_020_0007",
+          "timestamp": "11/10/2026 09:00",
+          "sender": "incoming",
+          "bodyText": "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau."
+        },
+        {
+          "messageId": "msg_020_0008",
+          "timestamp": "14/10/2026 09:00",
+          "sender": "incoming",
+          "bodyText": "Uu dai goi data cuoi tuan. Bo qua neu khong co nhu cau."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_021",
+      "lastMessageTimestamp": "13/10 18:30",
+      "contactId": "contact_004",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_021_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Ông đến nơi chưa, tôi đang giữ cửa phòng họp."
+        },
+        {
+          "messageId": "msg_021_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Tôi lên thang máy rồi."
+        },
+        {
+          "messageId": "msg_021_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Mang giúp tôi dây HDMI trong ngăn kéo nhé."
+        },
+        {
+          "messageId": "msg_021_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Tôi cầm theo rồi."
+        },
+        {
+          "messageId": "msg_021_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Chiều trả lại dây vào khay chung giúp tôi."
+        },
+        {
+          "messageId": "msg_021_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Đã để lại, ông kiểm tra nhé."
+        },
+        {
+          "messageId": "msg_021_0007",
+          "timestamp": "13/10/2026 18:30",
+          "sender": "incoming",
+          "bodyText": "Tôi vừa gửi lại file tài liệu qua mail rồi nhé ông."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_022",
+      "lastMessageTimestamp": "13/10 10:40",
+      "contactId": "contact_008",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_022_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Tôi tới sảnh rồi, anh xuống nhận giúp nhé."
+        },
+        {
+          "messageId": "msg_022_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Anh gửi quầy bảo vệ giúp em, em ra ngay."
+        },
+        {
+          "messageId": "msg_022_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Bảo vệ đã nhận, tôi gửi mã đơn trong tin sau."
+        },
+        {
+          "messageId": "msg_022_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Em đã lấy đủ hàng, cảm ơn anh."
+        },
+        {
+          "messageId": "msg_022_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Đơn mới chiều nay giao trước 17h nhé anh."
+        },
+        {
+          "messageId": "msg_022_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Vâng, em báo lễ tân nhận hộ."
+        },
+        {
+          "messageId": "msg_022_0007",
+          "timestamp": "13/10/2026 10:05",
+          "sender": "incoming",
+          "bodyText": "Don den hoc dang duoc giao."
+        },
+        {
+          "messageId": "msg_022_0008",
+          "timestamp": "13/10/2026 10:40",
+          "sender": "incoming",
+          "bodyText": "Don hang da giao thanh cong."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_023",
+      "lastMessageTimestamp": "13/10 09:00",
+      "contactId": "contact_013",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_023_0001",
+          "timestamp": "25/09/2026 10:00",
+          "sender": "incoming",
+          "bodyText": "Anh Tuấn đây. Chiều nay anh qua xem lại đường điện nhà bà ấy nhé."
+        },
+        {
+          "messageId": "msg_023_0002",
+          "timestamp": "25/09/2026 10:05",
+          "sender": "outgoing",
+          "bodyText": "Em cảm ơn anh, mẹ em kêu điện bếp chập chờn mấy hôm nay."
+        },
+        {
+          "messageId": "msg_023_0003",
+          "timestamp": "25/09/2026 17:30",
+          "sender": "incoming",
+          "bodyText": "Anh thay cái ổ cắm bếp rồi, giờ ổn rồi em."
+        },
+        {
+          "messageId": "msg_023_0004",
+          "timestamp": "25/09/2026 17:32",
+          "sender": "outgoing",
+          "bodyText": "Hết bao nhiêu anh cứ bảo mẹ em nhé."
+        },
+        {
+          "messageId": "msg_023_0005",
+          "timestamp": "25/09/2026 17:35",
+          "sender": "incoming",
+          "bodyText": "Bà ấy trả rồi, em yên tâm."
+        },
+        {
+          "messageId": "msg_023_0006",
+          "timestamp": "13/10/2026 09:00",
+          "sender": "incoming",
+          "bodyText": "Anh xem lịch rồi, sáng thứ 6 anh rảnh."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_024",
+      "lastMessageTimestamp": "12/10 18:04",
+      "contactId": "contact_001",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_024_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Mẹ gửi đồ bằng xe quen, con nhận được báo mẹ nhé."
+        },
+        {
+          "messageId": "msg_024_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Con nhận rồi mẹ, túi vẫn nguyên."
+        },
+        {
+          "messageId": "msg_024_0003",
+          "timestamp": "20/09/2026 09:20",
+          "sender": "incoming",
+          "bodyText": "Ừ, hai đứa ăn dần nhé."
+        },
+        {
+          "messageId": "msg_024_0004",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Mẹ đang ngoài vườn, lát mẹ gọi lại."
+        },
+        {
+          "messageId": "msg_024_0005",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Vâng mẹ, con gọi sau."
+        },
+        {
+          "messageId": "msg_024_0006",
+          "timestamp": "28/09/2026 12:20",
+          "sender": "incoming",
+          "bodyText": "Bố bảo cuối tuần nhớ mang theo áo mưa."
+        },
+        {
+          "messageId": "msg_024_0007",
+          "timestamp": "12/10/2026 18:00",
+          "sender": "incoming",
+          "bodyText": "Mẹ gọi không được, lát gọi lại nhé."
+        },
+        {
+          "messageId": "msg_024_0008",
+          "timestamp": "12/10/2026 18:04",
+          "sender": "outgoing",
+          "bodyText": "Con gọi lại ngay."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_025",
+      "lastMessageTimestamp": "10/10 15:25",
+      "contactId": "contact_011",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_025_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Anh ơi màn hình phòng họp không nhận cáp."
+        },
+        {
+          "messageId": "msg_025_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "E đổi sang cổng bên trái thử nhé."
+        },
+        {
+          "messageId": "msg_025_0003",
+          "timestamp": "20/09/2026 09:20",
+          "sender": "incoming",
+          "bodyText": "Được rồi, cảm ơn anh."
+        },
+        {
+          "messageId": "msg_025_0004",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Buổi hướng dẫn tuần sau vẫn dùng phòng cũ ạ?"
+        },
+        {
+          "messageId": "msg_025_0005",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Đúng rồi, tài liệu em để trong thư mục chung nhé."
+        },
+        {
+          "messageId": "msg_025_0006",
+          "timestamp": "28/09/2026 12:20",
+          "sender": "incoming",
+          "bodyText": "Vâng, em đã tải lên rồi."
+        },
+        {
+          "messageId": "msg_025_0007",
+          "timestamp": "10/10/2026 15:25",
+          "sender": "incoming",
+          "bodyText": "Mai e gửi lại a bản brief mới nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_026",
+      "lastMessageTimestamp": "08/10 11:30",
+      "contactId": "contact_009",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_026_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Anh để quên thẻ khách ở quầy nhé."
+        },
+        {
+          "messageId": "msg_026_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Anh xuống lấy lúc nghỉ trưa."
+        },
+        {
+          "messageId": "msg_026_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Em cất trong ngăn bên phải quầy."
+        },
+        {
+          "messageId": "msg_026_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Anh nhận lại rồi, cảm ơn em."
+        },
+        {
+          "messageId": "msg_026_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Bưu phẩm giấy cần ký nhận trực tiếp anh nhé."
+        },
+        {
+          "messageId": "msg_026_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Chiều anh xuống ký."
+        },
+        {
+          "messageId": "msg_026_0007",
+          "timestamp": "08/10/2026 11:30",
+          "sender": "incoming",
+          "bodyText": "Anh để quên thẻ thang máy ở quầy lễ tân nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_027",
+      "lastMessageTimestamp": "05/10 14:10",
+      "contactId": "contact_005",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_027_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Anh nhớ mang khăn và nước cho buổi tập nhé."
+        },
+        {
+          "messageId": "msg_027_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Vâng, hôm nay mình vẫn tập nhẹ đúng không?"
+        },
+        {
+          "messageId": "msg_027_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Đúng rồi, ưu tiên giãn cơ và tư thế ngồi."
+        },
+        {
+          "messageId": "msg_027_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "A đến sớm mười phút để khởi động."
+        },
+        {
+          "messageId": "msg_027_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Vâng, anh báo quầy lấy phiếu theo dõi."
+        },
+        {
+          "messageId": "msg_027_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "A lấy được rồi, cảm ơn em."
+        },
+        {
+          "messageId": "msg_027_0007",
+          "timestamp": "05/10/2026 14:10",
+          "sender": "incoming",
+          "bodyText": "Lịch tập tuần này của anh vào thứ Ba và thứ Năm nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_028",
+      "lastMessageTimestamp": "02/10 16:00",
+      "contactId": "contact_007",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_028_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Anh kiểm tra lại số hóa đơn trong mail giúp em nhé."
+        },
+        {
+          "messageId": "msg_028_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Anh kiểm tra xong rồi, số tiền đúng với biên nhận."
+        },
+        {
+          "messageId": "msg_028_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Em nhận được rồi, chiều gửi bản giấy cho anh."
+        },
+        {
+          "messageId": "msg_028_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Anh để bản ký ở khay hồ sơ nhé."
+        },
+        {
+          "messageId": "msg_028_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Vâng, em lấy được rồi."
+        },
+        {
+          "messageId": "msg_028_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Cảm ơn em."
+        },
+        {
+          "messageId": "msg_028_0007",
+          "timestamp": "02/10/2026 16:00",
+          "sender": "incoming",
+          "bodyText": "Anh ký bảng kê công tác phí tháng trước giúp em nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_029",
+      "lastMessageTimestamp": "29/09 10:20",
+      "contactId": "contact_014",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_029_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "A giữ giúp e chỗ trong buổi chia sẻ kỹ thuật nhé."
+        },
+        {
+          "messageId": "msg_029_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "A ngồi hàng thứ hai, e lên nhé."
+        },
+        {
+          "messageId": "msg_029_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Tài liệu có gửi lại sau buổi ko a?"
+        },
+        {
+          "messageId": "msg_029_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Có, trong thư mục của nhóm."
+        },
+        {
+          "messageId": "msg_029_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "E thấy file rồi, cảm ơn a."
+        },
+        {
+          "messageId": "msg_029_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Nhớ để lại ý kiến phần hoàn tiền nhé."
+        },
+        {
+          "messageId": "msg_029_0007",
+          "timestamp": "29/09/2026 10:20",
+          "sender": "incoming",
+          "bodyText": "Bản build mới e đẩy lên git rồi nhé a."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_030",
+      "lastMessageTimestamp": "28/09 12:15",
+      "contactId": "contact_003",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_030_0001",
+          "timestamp": "20/09/2026 09:10",
+          "sender": "incoming",
+          "bodyText": "Anh ơi em đổi phòng học sang dãy B rồi."
+        },
+        {
+          "messageId": "msg_030_0002",
+          "timestamp": "20/09/2026 09:15",
+          "sender": "outgoing",
+          "bodyText": "Em lưu lại lịch để khỏi đi nhầm nhé."
+        },
+        {
+          "messageId": "msg_030_0003",
+          "timestamp": "24/09/2026 17:10",
+          "sender": "incoming",
+          "bodyText": "Vâng, em chụp lịch lại rồi."
+        },
+        {
+          "messageId": "msg_030_0004",
+          "timestamp": "24/09/2026 17:15",
+          "sender": "outgoing",
+          "bodyText": "Anh gửi mẹ số phòng ký túc của em nhé."
+        },
+        {
+          "messageId": "msg_030_0005",
+          "timestamp": "28/09/2026 12:10",
+          "sender": "incoming",
+          "bodyText": "Phòng em vẫn như cũ anh ạ."
+        },
+        {
+          "messageId": "msg_030_0006",
+          "timestamp": "28/09/2026 12:15",
+          "sender": "outgoing",
+          "bodyText": "Ừ, anh nhắn lại mẹ rồi."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_031",
+      "lastMessageTimestamp": "02/09 15:25",
+      "contactId": "contact_019",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_031_0001",
+          "timestamp": "02/09/2026 15:10",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}} ơi, chiều nay em rảnh không, anh nhờ xem cái landing page bên anh tí."
+        },
+        {
+          "messageId": "msg_031_0002",
+          "timestamp": "02/09/2026 15:13",
+          "sender": "outgoing",
+          "bodyText": "Em đang họp, 5h em gọi lại anh nhé."
+        },
+        {
+          "messageId": "msg_031_0003",
+          "timestamp": "02/09/2026 15:16",
+          "sender": "incoming",
+          "bodyText": "Ok em."
+        },
+        {
+          "messageId": "msg_031_0004",
+          "timestamp": "02/09/2026 15:19",
+          "sender": "outgoing",
+          "bodyText": "Anh ơi em gửi góp ý qua mail rồi ạ."
+        },
+        {
+          "messageId": "msg_031_0005",
+          "timestamp": "02/09/2026 15:22",
+          "sender": "incoming",
+          "bodyText": "Cảm ơn em. Hôm nào anh em mình cafe."
+        },
+        {
+          "messageId": "msg_031_0006",
+          "timestamp": "02/09/2026 15:25",
+          "sender": "outgoing",
+          "bodyText": "Vâng anh, cuối tháng nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_032",
+      "lastMessageTimestamp": "05/09 18:35",
+      "contactId": "contact_020",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_032_0001",
+          "timestamp": "05/09/2026 18:20",
+          "sender": "incoming",
+          "bodyText": "Tối nay đánh cầu ko ông?"
+        },
+        {
+          "messageId": "msg_032_0002",
+          "timestamp": "05/09/2026 18:23",
+          "sender": "outgoing",
+          "bodyText": "Tối nay tôi bận, thứ 3 nhé."
+        },
+        {
+          "messageId": "msg_032_0003",
+          "timestamp": "05/09/2026 18:26",
+          "sender": "incoming",
+          "bodyText": "Ok, để tôi book sân."
+        },
+        {
+          "messageId": "msg_032_0004",
+          "timestamp": "05/09/2026 18:29",
+          "sender": "incoming",
+          "bodyText": "Sân 3 nhé, 7h."
+        },
+        {
+          "messageId": "msg_032_0005",
+          "timestamp": "05/09/2026 18:32",
+          "sender": "outgoing",
+          "bodyText": "Ok ông."
+        },
+        {
+          "messageId": "msg_032_0006",
+          "timestamp": "05/09/2026 18:35",
+          "sender": "incoming",
+          "bodyText": "Nhớ mang thêm ống cầu, hết rồi."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_033",
+      "lastMessageTimestamp": "08/09 10:20",
+      "contactId": "contact_021",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_033_0001",
+          "timestamp": "08/09/2026 10:05",
+          "sender": "incoming",
+          "bodyText": "Em ơi bên anh đang tuyển FE senior, em có ai giới thiệu không?"
+        },
+        {
+          "messageId": "msg_033_0002",
+          "timestamp": "08/09/2026 10:08",
+          "sender": "outgoing",
+          "bodyText": "Để em hỏi xem anh nhé."
+        },
+        {
+          "messageId": "msg_033_0003",
+          "timestamp": "08/09/2026 10:11",
+          "sender": "incoming",
+          "bodyText": "Ok em, lương ổn đấy."
+        },
+        {
+          "messageId": "msg_033_0004",
+          "timestamp": "08/09/2026 10:14",
+          "sender": "outgoing",
+          "bodyText": "Em gửi anh CV 1 bạn rồi ạ."
+        },
+        {
+          "messageId": "msg_033_0005",
+          "timestamp": "08/09/2026 10:17",
+          "sender": "incoming",
+          "bodyText": "Nhận rồi, cảm ơn em."
+        },
+        {
+          "messageId": "msg_033_0006",
+          "timestamp": "08/09/2026 10:20",
+          "sender": "outgoing",
+          "bodyText": "Dạ không có gì anh."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_034",
+      "lastMessageTimestamp": "09/09 18:55",
+      "contactId": "contact_022",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_034_0001",
+          "timestamp": "09/09/2026 18:40",
+          "sender": "incoming",
+          "bodyText": "A ơi tối nay có đánh cầu ko?"
+        },
+        {
+          "messageId": "msg_034_0002",
+          "timestamp": "09/09/2026 18:43",
+          "sender": "outgoing",
+          "bodyText": "Có, 7h sân cũ."
+        },
+        {
+          "messageId": "msg_034_0003",
+          "timestamp": "09/09/2026 18:46",
+          "sender": "incoming",
+          "bodyText": "E đến muộn tí, mèo nhà e ốm."
+        },
+        {
+          "messageId": "msg_034_0004",
+          "timestamp": "09/09/2026 18:49",
+          "sender": "outgoing",
+          "bodyText": "Ok e."
+        },
+        {
+          "messageId": "msg_034_0005",
+          "timestamp": "09/09/2026 18:52",
+          "sender": "incoming",
+          "bodyText": "Mèo ổn rồi a ơi 😂"
+        },
+        {
+          "messageId": "msg_034_0006",
+          "timestamp": "09/09/2026 18:55",
+          "sender": "outgoing",
+          "bodyText": "Thế là ngon."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_035",
+      "lastMessageTimestamp": "11/09 09:30",
+      "contactId": "contact_023",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_035_0001",
+          "timestamp": "11/09/2026 09:15",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}} ơi cuối tuần sang Long Biên làm tí lẩu không em?"
+        },
+        {
+          "messageId": "msg_035_0002",
+          "timestamp": "11/09/2026 09:18",
+          "sender": "outgoing",
+          "bodyText": "Dạ để em xin phép vợ em đã anh 😅"
+        },
+        {
+          "messageId": "msg_035_0003",
+          "timestamp": "11/09/2026 09:21",
+          "sender": "incoming",
+          "bodyText": "Xin nhanh nhé, anh đặt đồ rồi."
+        },
+        {
+          "messageId": "msg_035_0004",
+          "timestamp": "11/09/2026 09:24",
+          "sender": "outgoing",
+          "bodyText": "Vợ em duyệt rồi anh ạ."
+        },
+        {
+          "messageId": "msg_035_0005",
+          "timestamp": "11/09/2026 09:27",
+          "sender": "incoming",
+          "bodyText": "Chuẩn. 6h nhé."
+        },
+        {
+          "messageId": "msg_035_0006",
+          "timestamp": "11/09/2026 09:30",
+          "sender": "outgoing",
+          "bodyText": "Vâng anh."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_036",
+      "lastMessageTimestamp": "13/09 20:45",
+      "contactId": "contact_024",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_036_0001",
+          "timestamp": "13/09/2026 20:30",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}} ơi, nhà em có ổ cắm nào lỏng thì để anh qua sửa cho, anh đang rảnh."
+        },
+        {
+          "messageId": "msg_036_0002",
+          "timestamp": "13/09/2026 20:33",
+          "sender": "outgoing",
+          "bodyText": "Nhà em ổn anh ạ 😂"
+        },
+        {
+          "messageId": "msg_036_0003",
+          "timestamp": "13/09/2026 20:36",
+          "sender": "incoming",
+          "bodyText": "Thế để anh đi sửa cho mấy em gái vậy."
+        },
+        {
+          "messageId": "msg_036_0004",
+          "timestamp": "13/09/2026 20:39",
+          "sender": "outgoing",
+          "bodyText": "Anh cẩn thận chị biết đấy."
+        },
+        {
+          "messageId": "msg_036_0005",
+          "timestamp": "13/09/2026 20:42",
+          "sender": "incoming",
+          "bodyText": "Chị đưa cháu về quê tuần này rồi 😎"
+        },
+        {
+          "messageId": "msg_036_0006",
+          "timestamp": "13/09/2026 20:45",
+          "sender": "outgoing",
+          "bodyText": "Em xin thua anh."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_037",
+      "lastMessageTimestamp": "16/09 12:00",
+      "contactId": "contact_025",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_037_0001",
+          "timestamp": "16/09/2026 11:45",
+          "sender": "incoming",
+          "bodyText": "A {{husband.shortName}} ơi, cuối tuần nhà e làm cơm, a với chị qua ăn nhé."
+        },
+        {
+          "messageId": "msg_037_0002",
+          "timestamp": "16/09/2026 11:48",
+          "sender": "outgoing",
+          "bodyText": "Ok e, để a hỏi chị đã."
+        },
+        {
+          "messageId": "msg_037_0003",
+          "timestamp": "16/09/2026 11:51",
+          "sender": "incoming",
+          "bodyText": "Có cả a Bình với a Chính nữa ạ."
+        },
+        {
+          "messageId": "msg_037_0004",
+          "timestamp": "16/09/2026 11:54",
+          "sender": "outgoing",
+          "bodyText": "Thế thì phải đi rồi."
+        },
+        {
+          "messageId": "msg_037_0005",
+          "timestamp": "16/09/2026 11:57",
+          "sender": "incoming",
+          "bodyText": "E nấu canh chua với gà rang gừng nha."
+        },
+        {
+          "messageId": "msg_037_0006",
+          "timestamp": "16/09/2026 12:00",
+          "sender": "outgoing",
+          "bodyText": "Nghe đã đói rồi."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_038",
+      "lastMessageTimestamp": "18/09 21:25",
+      "contactId": "contact_026",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_038_0001",
+          "timestamp": "18/09/2026 21:10",
+          "sender": "incoming",
+          "bodyText": "A ơi a có quen ai có 500 tỷ ko, giới thiệu e với 😌"
+        },
+        {
+          "messageId": "msg_038_0002",
+          "timestamp": "18/09/2026 21:13",
+          "sender": "outgoing",
+          "bodyText": "A mà quen thì a giữ cho a rồi."
+        },
+        {
+          "messageId": "msg_038_0003",
+          "timestamp": "18/09/2026 21:16",
+          "sender": "incoming",
+          "bodyText": "Keo thế 😤"
+        },
+        {
+          "messageId": "msg_038_0004",
+          "timestamp": "18/09/2026 21:19",
+          "sender": "outgoing",
+          "bodyText": "Em đang ở Vinh à?"
+        },
+        {
+          "messageId": "msg_038_0005",
+          "timestamp": "18/09/2026 21:22",
+          "sender": "incoming",
+          "bodyText": "Vâng, tuần sau e ra HN."
+        },
+        {
+          "messageId": "msg_038_0006",
+          "timestamp": "18/09/2026 21:25",
+          "sender": "outgoing",
+          "bodyText": "Ra thì nhắn cả hội nhé."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_039",
+      "lastMessageTimestamp": "20/09 18:10",
+      "contactId": "contact_027",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_039_0001",
+          "timestamp": "20/09/2026 17:55",
+          "sender": "incoming",
+          "bodyText": "A ơi tối nay đi gym ko?"
+        },
+        {
+          "messageId": "msg_039_0002",
+          "timestamp": "20/09/2026 17:58",
+          "sender": "outgoing",
+          "bodyText": "Hôm nay a có buổi PT rồi."
+        },
+        {
+          "messageId": "msg_039_0003",
+          "timestamp": "20/09/2026 18:01",
+          "sender": "incoming",
+          "bodyText": "Trời mưa thế này mà a vẫn tập à."
+        },
+        {
+          "messageId": "msg_039_0004",
+          "timestamp": "20/09/2026 18:04",
+          "sender": "outgoing",
+          "bodyText": "Thế em định làm gì?"
+        },
+        {
+          "messageId": "msg_039_0005",
+          "timestamp": "20/09/2026 18:07",
+          "sender": "incoming",
+          "bodyText": "Nhất buổi trưa nhì trời mưa a ạ 😏"
+        },
+        {
+          "messageId": "msg_039_0006",
+          "timestamp": "20/09/2026 18:10",
+          "sender": "outgoing",
+          "bodyText": "Thôi em đi đi."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_040",
+      "lastMessageTimestamp": "22/09 20:15",
+      "contactId": "contact_028",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_040_0001",
+          "timestamp": "22/09/2026 20:00",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}} ơi, máy game có trò mới, cuối tuần qua nhà anh chơi không?"
+        },
+        {
+          "messageId": "msg_040_0002",
+          "timestamp": "22/09/2026 20:03",
+          "sender": "outgoing",
+          "bodyText": "Game gì đấy anh?"
+        },
+        {
+          "messageId": "msg_040_0003",
+          "timestamp": "22/09/2026 20:06",
+          "sender": "incoming",
+          "bodyText": "Game đua xe, anh có 4 tay cầm rồi."
+        },
+        {
+          "messageId": "msg_040_0004",
+          "timestamp": "22/09/2026 20:09",
+          "sender": "outgoing",
+          "bodyText": "Ok anh, chủ nhật em qua."
+        },
+        {
+          "messageId": "msg_040_0005",
+          "timestamp": "22/09/2026 20:12",
+          "sender": "incoming",
+          "bodyText": "Nhà anh ngõ 68 thôi, gần nhà em."
+        },
+        {
+          "messageId": "msg_040_0006",
+          "timestamp": "22/09/2026 20:15",
+          "sender": "outgoing",
+          "bodyText": "Vâng, em đi bộ sang."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_041",
+      "lastMessageTimestamp": "24/09 09:35",
+      "contactId": "contact_029",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_041_0001",
+          "timestamp": "24/09/2026 09:20",
+          "sender": "incoming",
+          "bodyText": "Mã này đang đẹp, em có muốn vào một ít không?"
+        },
+        {
+          "messageId": "msg_041_0002",
+          "timestamp": "24/09/2026 09:23",
+          "sender": "outgoing",
+          "bodyText": "Em đang hết tiền anh ạ."
+        },
+        {
+          "messageId": "msg_041_0003",
+          "timestamp": "24/09/2026 09:26",
+          "sender": "incoming",
+          "bodyText": "Ít thôi, 5 triệu cũng được."
+        },
+        {
+          "messageId": "msg_041_0004",
+          "timestamp": "24/09/2026 09:29",
+          "sender": "outgoing",
+          "bodyText": "Để tháng sau em tính anh nhé."
+        },
+        {
+          "messageId": "msg_041_0005",
+          "timestamp": "24/09/2026 09:32",
+          "sender": "incoming",
+          "bodyText": "Ok em, có gì anh nhắn."
+        },
+        {
+          "messageId": "msg_041_0006",
+          "timestamp": "24/09/2026 09:35",
+          "sender": "outgoing",
+          "bodyText": "Vâng anh."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_042",
+      "lastMessageTimestamp": "26/09 15:45",
+      "contactId": "contact_030",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_042_0001",
+          "timestamp": "26/09/2026 15:30",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}} ơi, quán chị mới mở thêm chi nhánh Trung Kính, rủ vợ qua uống nhé."
+        },
+        {
+          "messageId": "msg_042_0002",
+          "timestamp": "26/09/2026 15:33",
+          "sender": "outgoing",
+          "bodyText": "Vâng chị, cuối tuần em đưa vợ em qua."
+        },
+        {
+          "messageId": "msg_042_0003",
+          "timestamp": "26/09/2026 15:36",
+          "sender": "incoming",
+          "bodyText": "Chị tặng voucher spa cho vợ em nữa."
+        },
+        {
+          "messageId": "msg_042_0004",
+          "timestamp": "26/09/2026 15:39",
+          "sender": "outgoing",
+          "bodyText": "Em cảm ơn chị nhiều ạ."
+        },
+        {
+          "messageId": "msg_042_0005",
+          "timestamp": "26/09/2026 15:42",
+          "sender": "incoming",
+          "bodyText": "Đến thì báo chị một tiếng."
+        },
+        {
+          "messageId": "msg_042_0006",
+          "timestamp": "26/09/2026 15:45",
+          "sender": "outgoing",
+          "bodyText": "Vâng chị."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_043",
+      "lastMessageTimestamp": "28/09 22:20",
+      "contactId": "contact_031",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_043_0001",
+          "timestamp": "28/09/2026 22:05",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}} ơi coin đang đỏ lòm, em còn giữ không?"
+        },
+        {
+          "messageId": "msg_043_0002",
+          "timestamp": "28/09/2026 22:08",
+          "sender": "outgoing",
+          "bodyText": "Em bán hết từ hè rồi anh ạ."
+        },
+        {
+          "messageId": "msg_043_0003",
+          "timestamp": "28/09/2026 22:11",
+          "sender": "incoming",
+          "bodyText": "Khôn thế. Anh đang gồng đây."
+        },
+        {
+          "messageId": "msg_043_0004",
+          "timestamp": "28/09/2026 22:14",
+          "sender": "outgoing",
+          "bodyText": "Anh gồng giỏi mà 😂"
+        },
+        {
+          "messageId": "msg_043_0005",
+          "timestamp": "28/09/2026 22:17",
+          "sender": "incoming",
+          "bodyText": "Cuối tuần anh chở vợ con qua chỗ em chơi."
+        },
+        {
+          "messageId": "msg_043_0006",
+          "timestamp": "28/09/2026 22:20",
+          "sender": "outgoing",
+          "bodyText": "Vâng anh, qua em pha cafe."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_044",
+      "lastMessageTimestamp": "30/09 08:00",
+      "contactId": "contact_032",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_044_0001",
+          "timestamp": "30/09/2026 07:45",
+          "sender": "incoming",
+          "bodyText": "{{husband.shortName}}, sáng nay 9h họp review sprint nhé."
+        },
+        {
+          "messageId": "msg_044_0002",
+          "timestamp": "30/09/2026 07:48",
+          "sender": "outgoing",
+          "bodyText": "Vâng anh."
+        },
+        {
+          "messageId": "msg_044_0003",
+          "timestamp": "30/09/2026 07:51",
+          "sender": "incoming",
+          "bodyText": "Em chuẩn bị số liệu bug tuần này giúp anh."
+        },
+        {
+          "messageId": "msg_044_0004",
+          "timestamp": "30/09/2026 07:54",
+          "sender": "outgoing",
+          "bodyText": "Em gửi anh trước 8h30 ạ."
+        },
+        {
+          "messageId": "msg_044_0005",
+          "timestamp": "30/09/2026 07:57",
+          "sender": "incoming",
+          "bodyText": "Ok, cảm ơn em."
+        },
+        {
+          "messageId": "msg_044_0006",
+          "timestamp": "30/09/2026 08:00",
+          "sender": "outgoing",
+          "bodyText": "Dạ."
+        }
+      ]
+    },
+    {
+      "threadId": "thread_045",
+      "lastMessageTimestamp": "03/10 23:15",
+      "contactId": "contact_033",
+      "isPinned": false,
+      "unreadCount": 0,
+      "messages": [
+        {
+          "messageId": "msg_045_0001",
+          "timestamp": "03/10/2026 23:00",
+          "sender": "incoming",
+          "bodyText": "Ông ơi, tối qua tôi bao, đừng chuyển lại nhé."
+        },
+        {
+          "messageId": "msg_045_0002",
+          "timestamp": "03/10/2026 23:03",
+          "sender": "outgoing",
+          "bodyText": "Bà hào phóng quá."
+        },
+        {
+          "messageId": "msg_045_0003",
+          "timestamp": "03/10/2026 23:06",
+          "sender": "incoming",
+          "bodyText": "Lần sau ông bao lại là được."
+        },
+        {
+          "messageId": "msg_045_0004",
+          "timestamp": "03/10/2026 23:09",
+          "sender": "outgoing",
+          "bodyText": "Ok bà."
+        },
+        {
+          "messageId": "msg_045_0005",
+          "timestamp": "03/10/2026 23:12",
+          "sender": "incoming",
+          "bodyText": "Nhớ đấy, đừng quên 😆"
+        },
+        {
+          "messageId": "msg_045_0006",
+          "timestamp": "03/10/2026 23:15",
+          "sender": "outgoing",
+          "bodyText": "Tôi nhớ mà."
+        }
+      ]
+    }
+  ]
+}

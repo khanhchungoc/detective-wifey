@@ -1,0 +1,22 @@
+{
+  "husbandId": "husband_01",
+  "caseCode": "HỒ SƠ #01",
+  "storyYear": 2026,
+  "shortName": "Thịnh",
+  "nickname": "Thịnh Doom",
+  "fullName": "Nguyễn Huy Thịnh",
+  "fullNameAscii": "NGUYEN HUY THINH",
+  "handle": "thinh_doom95",
+  "initials": "T",
+  "birthYear": 1995,
+  "occupation": "Tech Lead · Technosoft (Hà Nội)",
+  "phone": "0901236789",
+  "homeAddress": "Căn hộ 1206, tòa CT2, chung cư An Bình, 18 ngõ 68 Trung Kính, Cầu Giấy, Hà Nội",
+  "wifePersonId": "person_001",
+  "teaserQuote": "\"Sợ vợ số 1, lương nộp 90%, nhưng hay úp màn hình và kêu OT fix bug.\"",
+  "personaTraits": [
+    "Tự nhận sợ vợ số 1, nộp 90% lương",
+    "Hay úp màn hình, mang máy vào nhà tắm",
+    "Cửa miệng: \"OT fix bug cho kịp sprint\""
+  ]
+}

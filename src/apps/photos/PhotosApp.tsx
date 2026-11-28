@@ -113,7 +113,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
     }
   }, [isInfoOpen, activePhotoId, isViewingHidden, onReturnHome]);
 
-  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack, enabled: !activePhotoId, exitsApp: !isInfoOpen && !isViewingHidden });
+  const rootSwipeHandlers = useSwipeBack({ onBack: handleRootBack, enabled: !activePhotoId && (isInfoOpen || isViewingHidden) });
 
   const handleTriggerEvidence = useCallback((item: UniversalEvidenceItem) => {
     try {
@@ -146,7 +146,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
           hasHiddenPhotos={photosData.hasHiddenPhotos}
           isHiddenUnlocked={isHiddenUnlocked}
           caseId={caseData.caseId}
-          husbandName={caseData.husbandName}
+          husbandName={caseData.husband.shortName}
           onSelectPhoto={handleSelectPhoto}
           onRequestUnlock={handleRequestUnlock}
           onTriggerEvidence={handleTriggerEvidence}
@@ -164,7 +164,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
               prevPhoto={activePhotoIndex > 0 ? activeAlbumPhotos[activePhotoIndex - 1] : null}
               nextPhoto={activePhotoIndex >= 0 && activePhotoIndex < activeAlbumPhotos.length - 1 ? activeAlbumPhotos[activePhotoIndex + 1] : null}
               caseId={caseData.caseId}
-              husbandName={caseData.husbandName}
+              husbandName={caseData.husband.shortName}
               onBack={handleCloseLightbox}
               onToggleInfo={() => setIsInfoOpen((prev) => !prev)}
               isInfoOpen={isInfoOpen}
@@ -186,7 +186,7 @@ export const PhotosApp: React.FC<VirtualAppProps> = ({
               key={`info-${selectedPhoto.id}`}
               photo={selectedPhoto}
               caseId={caseData.caseId}
-              husbandName={caseData.husbandName}
+              husbandName={caseData.husband.shortName}
               isOpen={true}
               onClose={() => setIsInfoOpen(false)}
               onNavigateToGrid={() => {
@@ -242,7 +242,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-amber-400 via-rose-500 to-indigo-600',
   themeColor: '#000000',
   bottomBarColor: '#000000',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: PhotosApp,
 };

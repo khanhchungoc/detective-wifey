@@ -1,8 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { StoryEvidenceTarget } from '../../../features/investigation';
 import type { UniversalEvidenceItem } from '../../../features/investigation';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
+import {
+  SHEET_BACKDROP_OPEN_MS,
+  SHEET_CLOSE_EASE,
+  SHEET_CLOSE_MS,
+  SHEET_OPEN_EASE,
+  SHEET_OPEN_MS,
+} from '../../../shared/motion/sheetMotion';
 import { availableOrderFilters, filterOrders, money, orderStatus } from '../ecommerceData';
 import { orderSnippet, ecommerceEvidence } from '../ecommerceEvidence';
 import type { OrderFilter, EcommerceOrder } from '../types';
@@ -82,12 +89,12 @@ export function EcommerceOrderHistory({
             type="button"
             className="ecommerce-card ecommerce-order"
             onClick={() => onOpen(order)}
-            aria-label={`Xem đơn ${order.orderId}`}
+            aria-label={`Xem đơn ${order.displayCode ?? order.orderId}`}
           >
             <div className="ecommerce-row">
               <strong>
                 {order.isFavorite && <span className="ecommerce-favorite">Yêu thích</span>}
-                {order.shopName ?? order.orderId}
+                {order.shopName ?? order.displayCode ?? order.orderId}
               </strong>
               <span className="ecommerce-order-status">{orderStatus(order.status)}</span>
             </div>
@@ -115,19 +122,81 @@ export function EcommerceOrderDetailDrawer({
   onEvidence,
   onClose,
 }: EvidenceProps & { order: EcommerceOrder; onClose: () => void }) {
-  const swipe = useSwipeBack({ onBack: onClose });
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const drag = useRef<{ x: number; y: number } | null>(null);
-  useEffect(() => {
+  const closingRef = useRef(false);
+  const animsRef = useRef<Animation[]>([]);
+
+  const cancelAnims = () => {
+    for (const anim of animsRef.current) anim.cancel();
+    animsRef.current = [];
+  };
+
+  const requestClose = () => {
+    if (closingRef.current) return;
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (reduced || !panel || typeof panel.animate !== 'function') {
+      onClose();
+      return;
+    }
+    closingRef.current = true;
+    cancelAnims();
+    panel.style.pointerEvents = 'none';
+    panel.style.transform = 'translate3d(0, 100%, 0)';
+    const panelAnim = panel.animate(
+      [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(0, 100%, 0)' }],
+      { duration: SHEET_CLOSE_MS, easing: SHEET_CLOSE_EASE },
+    );
+    const anims: Animation[] = [panelAnim];
+    if (backdrop && typeof backdrop.animate === 'function') {
+      backdrop.style.opacity = '0';
+      anims.push(backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: SHEET_CLOSE_MS, easing: SHEET_CLOSE_EASE }));
+    }
+    animsRef.current = anims;
+    const finish = () => {
+      closingRef.current = false;
+      onClose();
+    };
+    void panelAnim.finished.then(finish, finish);
+  };
+
+  const swipe = useSwipeBack({ onBack: requestClose });
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const backdrop = backdropRef.current;
+    const reduced = typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (!reduced && panel && typeof panel.animate === 'function') {
+      const anims: Animation[] = [
+        panel.animate(
+          [{ transform: 'translate3d(0, 100%, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
+          { duration: SHEET_OPEN_MS, easing: SHEET_OPEN_EASE },
+        ),
+      ];
+      if (backdrop && typeof backdrop.animate === 'function') {
+        anims.push(backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: SHEET_BACKDROP_OPEN_MS, easing: SHEET_OPEN_EASE }));
+      }
+      animsRef.current = anims;
+    }
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    closeRef.current?.focus();
-    return () => previous?.focus();
+    closeRef.current?.focus({ preventScroll: true });
+    return () => {
+      cancelAnims();
+      previous?.focus({ preventScroll: true });
+    };
   }, []);
+
   return (
-    <div className="ecommerce-sheet-backdrop" onClick={onClose}>
+    <div ref={backdropRef} className="ecommerce-sheet-backdrop will-change-[opacity]" onClick={requestClose}>
       <section
         {...swipe}
-        className="ecommerce-sheet"
+        ref={panelRef}
+        style={{ backfaceVisibility: 'hidden', contain: 'layout paint' }}
+        className="ecommerce-sheet transform-gpu will-change-transform"
         role="dialog"
         aria-modal="true"
         aria-labelledby="ecommerce-invoice-title"
@@ -135,7 +204,7 @@ export function EcommerceOrderDetailDrawer({
         onKeyDown={(e) => {
           if (e.key === 'Escape') {
             e.stopPropagation();
-            onClose();
+            requestClose();
           }
           if (e.key === 'Tab') {
             e.preventDefault();
@@ -161,14 +230,14 @@ export function EcommerceOrderDetailDrawer({
               e.clientY - start.y > 64 &&
               Math.abs(e.clientX - start.x) < (e.clientY - start.y) * 0.8
             )
-              onClose();
+              requestClose();
           }}
         >
           <span />
         </div>
         <div className="ecommerce-row ecommerce-sheet-header">
           <h2 id="ecommerce-invoice-title">Chi tiết đơn mua</h2>
-          <button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng chi tiết đơn">
+          <button ref={closeRef} type="button" onClick={requestClose} aria-label="Đóng chi tiết đơn">
             <IoClose />
           </button>
         </div>
@@ -187,7 +256,7 @@ export function EcommerceOrderDetailDrawer({
           >
             <div className="ecommerce-card">
               <strong>{orderStatus(order.status)}</strong>
-              <p>Mã đơn: {order.orderId}</p>
+              <p>Mã đơn: {order.displayCode ?? order.orderId}</p>
               <p>Ngày đặt: {order.orderDate ?? '-'}</p>
             </div>
             <section className="ecommerce-card">

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { LockChallenge, Suspect } from './case-schema';
+import type { HusbandMaster, LockChallenge, Suspect } from './case-schema';
 import type { EvidenceSource } from './evidence';
 export type { EvidenceSource } from './evidence';
 
@@ -27,7 +27,8 @@ export type AppId =
 /** Public narrative context. App payloads are unknown until their local adapter parses them. */
 export interface AppCaseContext {
   caseId: string;
-  husbandName: string;
+  /** Phone owner identity. Apps read names from here, never hard-code them. */
+  husband: HusbandMaster;
   levelNumber: 1 | 2 | 3;
   suspectPool: Suspect[];
   lockChallenges: Array<Omit<LockChallenge, 'expectedAnswer'>>;
@@ -58,7 +59,6 @@ export interface AppDefinition {
   themeColor: string;
   /** Surface adjoining the shell home gesture area (independent of the header). */
   bottomBarColor?: string;
-  notificationBadgeCount?: number;
   isLocked: boolean;
   lockChallengeId?: string;
   component: React.ComponentType<VirtualAppProps>;

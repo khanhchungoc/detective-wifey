@@ -6,10 +6,11 @@ import { readPhotosData } from '../apps/photos/data';
 import { PhotoLightboxView } from '../apps/photos/components/PhotoLightboxView';
 import { PhotoInfoDrawer } from '../apps/photos/components/PhotoInfoDrawer';
 import type { AppCaseContext } from '../shared/contracts/app-contracts';
+import { husbandFixture } from './helpers/husbandFixture';
 
 const mockCaseContext: AppCaseContext = {
   caseId: 'case_test_01',
-  husbandName: 'Nguyễn Huy Hoàng',
+  husband: husbandFixture,
   levelNumber: 1,
   suspectPool: [],
   lockChallenges: [],
@@ -132,7 +133,7 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
       createElement(PhotoLightboxView, {
         photo: winePhoto,
         caseId: mockCaseContext.caseId,
-        husbandName: mockCaseContext.husbandName,
+        husbandName: mockCaseContext.husband.shortName,
         onBack: vi.fn(),
         onToggleInfo: vi.fn(),
         isInfoOpen: false,
@@ -172,7 +173,7 @@ describe('US-008: Photos Gallery & Media Forensics App Module', () => {
       createElement(PhotoInfoDrawer, {
         photo: winePhoto,
         caseId: mockCaseContext.caseId,
-        husbandName: mockCaseContext.husbandName,
+        husbandName: mockCaseContext.husband.shortName,
         isOpen: true,
         onClose: vi.fn(),
         onNavigateToGrid: vi.fn(),

@@ -53,7 +53,7 @@
 .ecommerce-filters button:disabled { color: #757575; background: #EEEEEE; }
 .ecommerce-order { text-align: left; margin-bottom: 12px; }
 .ecommerce-order-item { display: flex; gap: 12px; margin: 12px 0; }
-.ecommerce-order-item > div { min-width: 0; }
+.ecommerce-order-item > div { flex: 1; min-width: 0; }
 .ecommerce-tabs { display: flex; flex-shrink: 0; border-top: 1px solid #EEEEEE; background: white; padding-bottom: 4px; }
 .ecommerce-tabs button { position: relative; display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 48px; padding: 8px 2px; font-size: var(--ios-font-footnote); color: #616161; }
 .ecommerce-tabs button[aria-current=page] { color: #B53118; }

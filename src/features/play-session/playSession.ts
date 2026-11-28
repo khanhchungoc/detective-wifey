@@ -32,6 +32,7 @@ export interface PlaySessionState {
   playerProgress: PlayerProgress;
   pendingChallenge: PendingChallenge | null;
   resumableSession: ActiveSessionState | null;
+  ongoingSession: ActiveSessionState | null;
   systemAlertToast: string | null;
 }
 
@@ -53,9 +54,9 @@ export class PlaySession {
     this.state = {
       appSessionId: 0, caseConfig, activeAppId: 'home', unlockedChallenges: new Set(),
       strikes: caseConfig.allowedStrikes, taggedSuspects: [], pendingChallenge: null,
-      resumableSession: null, systemAlertToast: null,
+      resumableSession: null, ongoingSession: null, systemAlertToast: null,
       playerProgress: {
-        schemaVersion: 1, unlockedHusbandId: 'husband_hoang', unlockedLevel: 1,
+        schemaVersion: 2, unlockedHusbandId: 'husband_01', unlockedLevel: 1,
         bestStarRatings: { case_01: 3, case_02: 2 }, earnedWifeTitles: [], audioMutePreference: false,
       },
     };
@@ -80,9 +81,13 @@ export class PlaySession {
         ...session,
         taggedSuspects: normalizeTaggedSuspects(session.taggedSuspects || []),
       } : null;
-      this.savedSession = normalizedSession && normalizedSession.taggedSuspects.length > 0 ? normalizedSession : null;
-      this.update({ playerProgress, resumableSession:
-        this.savedSession?.caseId === this.state.caseConfig.caseId ? this.savedSession : null });
+      this.savedSession = normalizedSession;
+      this.update({
+        playerProgress,
+        ongoingSession: this.savedSession,
+        resumableSession:
+          this.savedSession?.caseId === this.state.caseConfig.caseId ? this.savedSession : null,
+      });
     } catch {
       if (initialization === this.initialization && revision === this.revision) this.notify('Không thể tải phiên điều tra. Vui lòng thử lại!');
     }
@@ -113,9 +118,39 @@ export class PlaySession {
     const normalizedTags = normalizeTaggedSuspects(session.taggedSuspects || []);
     this.update({ strikes: session.suspicionStrikes, taggedSuspects: normalizedTags,
       unlockedChallenges: new Set(session.unlockedChallenges), activeAppId: session.activeApp,
-      resumableSession: null });
+      resumableSession: null, ongoingSession: null });
     this.save();
     this.notify('Đã khôi phục phiên điều tra dở dang!');
+  };
+
+  resumeOngoing = (): boolean => {
+    const session = this.savedSession ?? this.state.resumableSession;
+    if (!session) return false;
+    try {
+      const targetCase = session.caseId === this.state.caseConfig.caseId
+        ? this.state.caseConfig
+        : this.dependencies.loadCaseByLevel(session.levelNumber, this.state.caseConfig.husbandId);
+      this.savedSession = null;
+      this.revision++;
+      const normalizedTags = normalizeTaggedSuspects(session.taggedSuspects || []);
+      this.update({
+        appSessionId: this.state.appSessionId + 1,
+        caseConfig: targetCase,
+        strikes: session.suspicionStrikes,
+        taggedSuspects: normalizedTags,
+        unlockedChallenges: new Set(session.unlockedChallenges),
+        activeAppId: session.activeApp,
+        pendingChallenge: null,
+        resumableSession: null,
+        ongoingSession: null,
+      });
+      this.save();
+      this.notify('Đã khôi phục phiên điều tra dở dang!');
+      return true;
+    } catch {
+      this.notify('Không thể khôi phục phiên điều tra dở dang.');
+      return false;
+    }
   };
 
   restart = async () => {
@@ -131,15 +166,11 @@ export class PlaySession {
   selectLevel = (level: number): boolean => {
     try {
       const next = this.dependencies.loadCaseByLevel(level, this.state.caseConfig.husbandId);
-      // Picking the level of an unfinished save keeps it and offers Resume; any other pick starts fresh.
-      const saved = this.savedSession?.caseId === next.caseId ? this.savedSession : null;
+      // Selecting a level from the hub starts fresh; continuing an ongoing save is handled on the start screen.
+      this.savedSession = null;
       this.reset(next);
-      if (saved) {
-        this.update({ resumableSession: saved });
-      } else {
-        void this.clearSavedSession(next.caseId);
-      }
-      this.notify(`Đã nạp ${next.husbandName} - Màn ${level}!`);
+      void this.clearSavedSession(next.caseId);
+      this.notify(`Đã nạp ${next.husband.shortName} - Màn ${level}!`);
       return true;
     } catch (error: unknown) {
       this.notify(error instanceof Error ? error.message : 'Không tìm thấy màn chơi yêu cầu.');
@@ -295,20 +326,32 @@ export class PlaySession {
     this.cancelToast?.();
     this.update({ appSessionId: this.state.appSessionId + 1, caseConfig, activeAppId: 'home', strikes: caseConfig.allowedStrikes,
       taggedSuspects: [], unlockedChallenges: new Set(), pendingChallenge: null,
-      resumableSession: null, systemAlertToast: null });
+      resumableSession: null, ongoingSession: null, systemAlertToast: null });
   }
 
-  private save() {
-    // New progress replaces the startup save, so it must not be offered again.
-    this.savedSession = null;
+  /** Snapshots and persists the active level so returning to the start screen offers "Tiếp tục". */
+  parkOngoingSession = () => {
+    const snapshot = this.buildSessionSnapshot();
+    this.savedSession = snapshot;
+    this.update({ ongoingSession: snapshot, resumableSession: snapshot });
+    void this.writer.save(snapshot).catch(() => this.notify('Không thể lưu phiên điều tra.'));
+  };
+
+  private buildSessionSnapshot(): ActiveSessionState {
     const state = this.state;
-    const snapshot: ActiveSessionState = {
-      schemaVersion: 1, gameId: 'jealous_wife', caseId: state.caseConfig.caseId,
+    return {
+      schemaVersion: 2, gameId: 'jealous_wife', caseId: state.caseConfig.caseId,
       levelNumber: state.caseConfig.levelNumber, activeApp: state.activeAppId,
       suspicionStrikes: state.strikes, taggedSuspects: state.taggedSuspects,
       unlockedChallenges: [...state.unlockedChallenges], elapsedSeconds: 0,
       lastSavedAt: this.dependencies.now(),
     };
+  }
+
+  private save() {
+    // New progress replaces the startup save, so it must not be offered again.
+    this.savedSession = null;
+    const snapshot = this.buildSessionSnapshot();
     void this.writer.save(snapshot).catch(() => this.notify('Không thể lưu phiên điều tra.'));
   }
 

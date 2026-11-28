@@ -1,5 +1,5 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { IoBagHandle, IoSearchOutline, IoCameraOutline } from 'react-icons/io5';
 import type { AppDefinition, VirtualAppProps } from '../../shared/contracts/app-contracts';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
@@ -18,6 +18,8 @@ import { resolveMarketplaceData } from './marketplaceContent';
 import { getAppBrand } from '../../shared/branding';
 
 const BRAND = getAppBrand('ecommerce');
+const DETAIL_EASE = 'cubic-bezier(0.25, 0.1, 0.25, 1)';
+const DETAIL_MS = 280;
 
 const titles = {
   home: BRAND.brandName,
@@ -29,6 +31,12 @@ const titles = {
   thread: 'Trò chuyện',
 };
 
+const isRootScreen = (screen: EcommerceView['screen']) =>
+  screen === 'home' || screen === 'notifications' || screen === 'profile';
+
+const isReducedMotion = () =>
+  typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+
 export function EcommerceApp(props: VirtualAppProps) {
   return <EcommerceSession key={props.caseData.caseId} {...props} />;
 }
@@ -39,20 +47,36 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
     () => resolveMarketplaceData(caseData.appsData?.ecommerce),
     [caseData]
   );
-  const [stack, setStack] = useMotionState<EcommerceView[]>([{ screen: 'home' }], 'navigation');
-  const [orderFilter, setOrderFilter] = useMotionState<OrderFilter>('all', 'fade');
-  const [notificationFilter, setNotificationFilter] = useMotionState<NotificationFilter>('all', 'fade');
-  const [activeChatsOnly, setActiveChatsOnly] = useMotionState(false, 'fade');
+  const [stack, setStack] = useState<EcommerceView[]>([{ screen: 'home' }]);
+  const [orderFilter, setOrderFilter] = useState<OrderFilter>('all');
+  const [notificationFilter, setNotificationFilter] = useState<NotificationFilter>('all');
+  const [activeChatsOnly, setActiveChatsOnly] = useState(false);
   const [selectedOrder, setSelectedOrder] = useMotionState<EcommerceOrder | null>(null, 'sheet');
   const [evidence, setEvidence] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
   const scrollPositions = useRef(new Map<string, number>());
   const scrollArea = useRef<HTMLElement | null>(null);
+  const detailLayerRef = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  const swipeProgressRef = useRef(0);
+  const swipeDisplacementRef = useRef(0);
+  const closingRef = useRef(false);
+  const activeAnimsRef = useRef<Animation[]>([]);
+  const prevDepthRef = useRef(1);
+
   const view = stack[stack.length - 1];
+  const prevView = stack.length > 1 ? stack[stack.length - 2] : null;
   const viewKey = JSON.stringify(view);
   const evidenceShop = data?.chats.find(chat => chat.shopId === evidence?.conversationId);
   const evidenceProduct = (evidence?.kind ?? evidence?.source?.kind) === 'order'
     ? data?.orders.find(order => order.orderId === evidence?.source?.recordId)?.items[0]
     : undefined;
+
+  const cancelActiveAnims = () => {
+    for (const anim of activeAnimsRef.current) {
+      anim.cancel();
+    }
+    activeAnimsRef.current = [];
+  };
 
   useLayoutEffect(() => {
     if (scrollArea.current) {
@@ -70,17 +94,129 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
     }
   }, [viewKey, view.screen]);
 
+  // Animate pushed sub-screens in on the GPU compositor (never black out underlying screen).
+  useLayoutEffect(() => {
+    const prevDepth = prevDepthRef.current;
+    prevDepthRef.current = stack.length;
+    if (stack.length <= 1) return;
+
+    closingRef.current = false;
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
+    cancelActiveAnims();
+
+    const detailEl = detailLayerRef.current;
+    const scrimEl = scrimRef.current;
+    if (detailEl) {
+      detailEl.style.pointerEvents = '';
+      detailEl.style.transform = '';
+    }
+    if (scrimEl) scrimEl.style.opacity = '1';
+
+    // Only play slide-in when pushing deeper, not when popping back to a lower sub-screen.
+    if (stack.length <= prevDepth || isReducedMotion() || !detailEl || typeof detailEl.animate !== 'function') {
+      return;
+    }
+
+    const anims: Animation[] = [
+      detailEl.animate(
+        [{ transform: 'translate3d(100%, 0, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
+        { duration: DETAIL_MS, easing: DETAIL_EASE },
+      ),
+    ];
+    if (scrimEl && typeof scrimEl.animate === 'function') {
+      anims.push(scrimEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DETAIL_MS, easing: DETAIL_EASE }));
+    }
+    activeAnimsRef.current = anims;
+    return () => cancelActiveAnims();
+  }, [stack.length, viewKey]);
+
   const saveScroll = () => {
     if (scrollArea.current) scrollPositions.current.set(JSON.stringify(view), scrollArea.current.scrollTop);
   };
   const push = (next: EcommerceView) => {
     saveScroll();
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
     setStack((s) => [...s, next]);
   };
   const openOrders = (filter: OrderFilter = 'all') => {
     setOrderFilter(filter);
     push({ screen: 'orders' });
   };
+
+  const handleDetailSwipeProgress = (progress: number, displacement: number) => {
+    if (activeAnimsRef.current.length > 0) {
+      cancelActiveAnims();
+    }
+    swipeProgressRef.current = progress;
+    swipeDisplacementRef.current = displacement;
+    if (scrimRef.current) {
+      scrimRef.current.style.opacity = String(Math.max(0, 1 - progress));
+    }
+  };
+
+  const handleDetailSwipeEnd = (committed: boolean) => {
+    if (committed) return;
+    const fromOpacity = Math.max(0, 1 - swipeProgressRef.current);
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
+    const scrimEl = scrimRef.current;
+    if (!scrimEl) return;
+    scrimEl.style.opacity = '1';
+    if (!isReducedMotion() && typeof scrimEl.animate === 'function' && fromOpacity < 1) {
+      scrimEl.animate([{ opacity: fromOpacity }, { opacity: 1 }], { duration: DETAIL_MS, easing: DETAIL_EASE });
+    }
+  };
+
+  const closeDetail = () => {
+    if (closingRef.current) return;
+    const displacementPx = swipeDisplacementRef.current;
+    const progress = swipeProgressRef.current;
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
+
+    const detailEl = detailLayerRef.current;
+    const scrimEl = scrimRef.current;
+    if (isReducedMotion() || !detailEl || typeof detailEl.animate !== 'function') {
+      saveScroll();
+      setStack(popView);
+      return;
+    }
+
+    closingRef.current = true;
+    cancelActiveAnims();
+    detailEl.style.pointerEvents = 'none';
+
+    const innerSurface = detailEl.firstElementChild;
+    if (innerSurface instanceof HTMLElement) {
+      innerSurface.style.transform = '';
+    }
+
+    const duration = displacementPx > 0 ? Math.max(150, Math.round(DETAIL_MS * (1 - progress))) : DETAIL_MS;
+    const fromTransform = displacementPx > 0 ? `translate3d(${displacementPx}px, 0, 0)` : 'translate3d(0, 0, 0)';
+    detailEl.style.transform = 'translate3d(100%, 0, 0)';
+    const detailAnim = detailEl.animate(
+      [{ transform: fromTransform }, { transform: 'translate3d(100%, 0, 0)' }],
+      { duration, easing: DETAIL_EASE },
+    );
+    const anims: Animation[] = [detailAnim];
+
+    if (scrimEl && typeof scrimEl.animate === 'function') {
+      const fromOpacity = Math.max(0, 1 - progress);
+      scrimEl.style.opacity = '0';
+      anims.push(scrimEl.animate([{ opacity: fromOpacity }, { opacity: 0 }], { duration, easing: DETAIL_EASE }));
+    }
+    activeAnimsRef.current = anims;
+
+    const finish = () => {
+      closingRef.current = false;
+      saveScroll();
+      setStack(popView);
+    };
+    void detailAnim.finished.then(finish, finish);
+  };
+
   const back = () => {
     if (evidence) {
       setEvidence(null);
@@ -91,13 +227,21 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
       return;
     }
     if (stack.length > 1) {
-      saveScroll();
-      setStack(popView);
+      closeDetail();
     } else onReturnHome();
   };
-  const swipe = useSwipeBack({ onBack: back, enabled: !evidence && !selectedOrder, exitsApp: stack.length <= 1 });
+
+  const swipe = useSwipeBack({
+    onBack: back,
+    enabled: !evidence && !selectedOrder && stack.length > 1,
+    onSwipeProgress: handleDetailSwipeProgress,
+    onSwipeEnd: handleDetailSwipeEnd,
+  });
+
   const selectTab = (tab: EcommerceTab) => {
     saveScroll();
+    cancelActiveAnims();
+    closingRef.current = false;
     setStack([{ screen: tab }]);
   };
   const evidenceProps = {
@@ -105,24 +249,32 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
     onEvidence: (item: UniversalEvidenceItem) =>
       setEvidence(resolveEvidenceAttribution(item, caseData.suspectPool)),
   };
-  const root = view.screen === 'home' || view.screen === 'notifications' || view.screen === 'profile';
-  const selectedChat = view.screen === 'thread' ? data?.chats.find((c) => c.shopId === view.shopId) : undefined;
 
-  return (
-    <div
-      {...swipe}
-      className={`ecommerce-app ecommerce-view-${view.screen}`}
-      style={{ '--ecommerce-brand': '#EE4D2D' } as CSSProperties}
-    >
-      <div className="ecommerce-screen min-h-[44px]" inert={selectedOrder !== null || evidence !== null}>
+  const renderScreen = (targetView: EcommerceView, isTop: boolean) => {
+    const root = isRootScreen(targetView.screen);
+    const showTabs = root || targetView.screen === 'orders';
+    const activeTab: EcommerceTab = targetView.screen === 'orders' ? 'profile' : (targetView.screen as EcommerceTab);
+    const selectedChat = targetView.screen === 'thread' ? data?.chats.find((c) => c.shopId === targetView.shopId) : undefined;
+    const key = JSON.stringify(targetView);
+
+    return (
+      <div
+        {...(isTop && prevView ? swipe : {})}
+        style={isTop && prevView ? { touchAction: 'pan-y', backfaceVisibility: 'hidden' } : undefined}
+        className={`ecommerce-screen ecommerce-view-${targetView.screen} min-h-[44px] bg-[#F5F5F5] ${
+          isTop && prevView ? 'h-full w-full shadow-2xl transform-gpu will-change-transform' : 'h-full w-full'
+        }`}
+        inert={!isTop || selectedOrder !== null || evidence !== null}
+        aria-hidden={!isTop}
+      >
         <EcommerceHeader
-          title={titles[view.screen]}
+          title={titles[targetView.screen]}
           onBack={!root ? back : undefined}
           onChat={root ? () => push({ screen: 'inbox' }) : undefined}
           cartCount={data?.cartCount}
           chatCount={data?.chatUnreadCount}
         >
-          {view.screen === 'home' ? (
+          {targetView.screen === 'home' ? (
             <div className="ecommerce-search-entry">
               <button type="button" onClick={() => push({ screen: 'search' })}>
                 <IoSearchOutline />
@@ -134,16 +286,16 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
             </div>
           ) : undefined}
         </EcommerceHeader>
-        <main key={viewKey} ref={scrollArea} className="ecommerce-content">
+        <main key={key} ref={isTop ? scrollArea : undefined} className="ecommerce-content">
           {!data ? (
             <EmptyState>{BRAND.emptyStateMessage ?? `Chưa có dữ liệu ${BRAND.brandName} cho màn này.`}</EmptyState>
           ) : (
             <>
-              {view.screen === 'home' && <EcommerceHomeView data={data} />}
-              {view.screen === 'profile' && (
+              {targetView.screen === 'home' && <EcommerceHomeView data={data} />}
+              {targetView.screen === 'profile' && (
                 <EcommerceProfileView data={data} onOrders={openOrders} />
               )}
-              {view.screen === 'orders' && (
+              {targetView.screen === 'orders' && (
                 <EcommerceOrderHistory
                   orders={data.orders}
                   filter={orderFilter}
@@ -152,8 +304,8 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
                   {...evidenceProps}
                 />
               )}
-              {view.screen === 'search' && <EcommerceSearchOverlay data={data} {...evidenceProps} />}
-              {view.screen === 'inbox' && (
+              {targetView.screen === 'search' && <EcommerceSearchOverlay data={data} {...evidenceProps} />}
+              {targetView.screen === 'inbox' && (
                 <EcommerceChatListView
                   chats={data.chats}
                   activeOnly={activeChatsOnly}
@@ -163,7 +315,7 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
                 />
               )}
               {selectedChat && <EcommerceChatDetailView chat={selectedChat} {...evidenceProps} />}
-              {view.screen === 'notifications' && (
+              {targetView.screen === 'notifications' && (
                 <EcommerceNotificationView
                   notifications={data.notifications}
                   orders={data.orders}
@@ -176,14 +328,49 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
             </>
           )}
         </main>
-        {root && (
+        {showTabs && (
           <EcommerceTabs
-            active={view.screen as EcommerceTab}
+            active={activeTab}
             onSelect={selectTab}
             unread={data?.unreadBadge}
           />
         )}
       </div>
+    );
+  };
+
+  return (
+    <div
+      className="ecommerce-app"
+      style={{ '--ecommerce-brand': '#EE4D2D' } as CSSProperties}
+    >
+      {/* Base Layer: always mounted so pushed screens slide over real app content (never black or white void). */}
+      <div
+        style={{ backfaceVisibility: 'hidden' }}
+        className="absolute inset-0 z-10 flex flex-col min-h-0 overflow-hidden transform-gpu"
+      >
+        {renderScreen(prevView ?? view, !prevView)}
+        {prevView && (
+          <div
+            ref={scrimRef}
+            aria-hidden="true"
+            className="absolute inset-0 bg-black/35 z-10 pointer-events-none will-change-[opacity]"
+          />
+        )}
+      </div>
+
+      {/* Top Pushed Layer: compositor-thread WAAPI slide + live swipe-back revealing base layer underneath. */}
+      {prevView && (
+        <div
+          ref={detailLayerRef}
+          key={viewKey}
+          style={{ backfaceVisibility: 'hidden' }}
+          className="absolute inset-0 z-20 will-change-transform"
+        >
+          {renderScreen(view, true)}
+        </div>
+      )}
+
       {selectedOrder && (
         <div style={{ display: 'contents' }} inert={evidence !== null}>
           <EcommerceOrderDetailDrawer
@@ -219,7 +406,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-orange-500 to-amber-600',
   themeColor: '#EE4D2D',
   bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: EcommerceApp,
 };

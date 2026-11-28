@@ -44,7 +44,7 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 ## Dependencies
 
 - **Upstream**: Signed-off elicitation session ([`2026-10-13-jealous-wife-detective-game.md`](../elicitation/2026-10-13-jealous-wife-detective-game.md)), Vision & Scope ([`vision-scope.md`](../vision-scope.md)), Functional Decomposition ([`functional-decomposition.md`](../functional-decomposition.md)).
-- **Downstream**: Clue inspection & suspicion engine (Epic 02), Wife's notebook & verdict hub (Epic 03), Husband Hoàng Level 1 MVP Case (Epic 04).
+- **Downstream**: Clue inspection & suspicion engine (Epic 02), Wife's notebook & verdict hub (Epic 03), Husband Thịnh Level 1 MVP Case (Epic 04).
 
 ## User Stories
 

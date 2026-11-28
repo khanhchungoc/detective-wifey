@@ -42,7 +42,8 @@ description: "Design story-first game levels: establish reusable husband persona
 > **Nguyên tắc "Infer First, Ask with Options"**: Nếu hồ sơ người chồng, đề tài kịch bản hoặc độ khó màn chơi chưa rõ ràng, DỪNG LẠI và hỏi người dùng bằng `ask_question` với phương án đề xuất và các lựa chọn cụ thể (2-4 câu/lần). Không bao giờ tự suy diễn kịch bản nếu thiếu dữ kiện định hướng.
 
 Cần chuẩn bị trước khi thiết kế:
-- **Hồ sơ & Persona Người Chồng (`husband-profile.md`)**: Mã định danh (ví dụ: `hoang`), thư mục `husband-<name>` (ví dụ: `husband-hoang`), tên, tuổi, nghề nghiệp, nhóm thế hệ (`generationTag`), khẩu khí chat (`chatTone`), thói quen ứng dụng (`lifestyleHabits`), ảnh đại diện gốc (`husbandAvatar`), thông tin mỏ neo của người vợ và dàn nhân vật phụ cố định.
+- **Hồ sơ & Persona Người Chồng (`husband-profile.md`)**: Mã định danh chung (ví dụ: `husband_01`), thư mục `husband-<NN>` (ví dụ: `husband-01`), tên, tuổi, nghề nghiệp, nhóm thế hệ (`generationTag`), khẩu khí chat (`chatTone`), thói quen ứng dụng (`lifestyleHabits`), ảnh đại diện gốc (`husbandAvatar`), thông tin mỏ neo của người vợ và dàn nhân vật phụ cố định.
+- **Quy tắc dữ liệu (bắt buộc khi hiện thực hóa)**: Theo [NORMALIZED_CASE_DATA_PLAN.md](../../../.agent-artifacts/plans/NORMALIZED_CASE_DATA_PLAN.md). Mọi mã (ID) là số chung, không chứa tên hay vai trò (`person_014`, `contact_010`). Tên thật chỉ nằm ở master data (`src/data/cases/husband_NN/master/`), tên lưu trong máy theo từng màn ở `contacts.json`, bản ghi ứng dụng chỉ tham chiếu ID. Xem dữ liệu dạng tên bằng `npm run case:preview`.
 - **Số thứ tự Màn chơi**: 1, 2, hoặc 3.
 - **Chủ đề Kịch bản Việt Nam**: Ý tưởng bắt ghen (ví dụ: lén nuôi bồ nhí đội lốt thợ điện, lập quỹ đen mua quà sinh viên, ngoại tình văn phòng qua lời nhắn chuyển khoản 1k).
 - **Môi trường**: Python 3 sẵn sàng để chạy `scripts/sync_clues.py`.

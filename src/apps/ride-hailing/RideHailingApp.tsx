@@ -13,22 +13,13 @@ import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/in
 export const RideHailingApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const rideData = readAppData(caseData.appsData?.['ride-hailing'] || {});
   const trips = rideData.trips || [];
   const [selectedTrip, setSelectedTrip] = useMotionState<(typeof trips)[number] | null>(null, 'sheet');
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const handleBack = () => {
-    if (selectedTrip) {
-      setSelectedTrip(null);
-    } else {
-      onReturnHome();
-    }
-  };
-
-  const swipeHandlers = useSwipeBack({ onBack: handleBack, exitsApp: !selectedTrip });
+  const swipeHandlers = useSwipeBack({ onBack: () => setSelectedTrip(null), enabled: Boolean(selectedTrip) });
 
   return (
     <div
@@ -126,7 +117,6 @@ export const appDefinition: AppDefinition = {
   icon: IoCar,
   themeGradient: 'from-emerald-500 to-green-600',
   themeColor: '#00B14F', bottomBarColor: '#F3F4F6',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: RideHailingApp,
 };

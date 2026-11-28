@@ -1,5 +1,5 @@
 ---
-husband: <tên_chồng> # ví dụ: hoang (thư mục: husband-hoang)
+husband: <mã_chồng> # ví dụ: husband_01 (thư mục: husband-01). Mã luôn là số, không chứa tên
 level: <1 | 2 | 3>
 ---
 

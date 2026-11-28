@@ -4,24 +4,19 @@ import React from 'react';
 import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { IoDocumentText } from 'react-icons/io5';
-import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { StoryEvidenceTarget } from '../../features/investigation';
 import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/investigation';
 
 export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const notesData = readAppData(caseData.appsData?.['personal-notes'] || caseData.appsData?.husband_notes || {});
   const notes = notesData.notes || [];
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const swipeHandlers = useSwipeBack({ onBack: onReturnHome, exitsApp: true });
-
   return (
     <div
-      {...swipeHandlers}
       className="flex flex-col h-full w-full bg-[#FFF9E6] text-[#202124] select-none font-sans"
     >
       <header className="flex items-center justify-between px-3 h-14 bg-[#1A73E8] text-white shadow-md shrink-0">
@@ -48,7 +43,7 @@ export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
               key={note.id}
               item={{
                 title: note.title,
-                profileName: caseData.husbandName,
+                profileName: caseData.husband.shortName,
                 subtitle: 'Ghi chú bảo mật',
                 snippet: note.content,
                 suspectToTag: note.suspectName || note.title || 'Ghi chú bí mật',
@@ -93,7 +88,6 @@ export const appDefinition: AppDefinition = {
   icon: IoDocumentText,
   themeGradient: 'from-amber-500 to-yellow-600',
   themeColor: '#1A73E8', bottomBarColor: '#FFF9E6',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: PersonalNotesApp,
 };

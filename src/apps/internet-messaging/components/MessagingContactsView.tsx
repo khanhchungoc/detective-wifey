@@ -21,7 +21,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
   onTagSuspect,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useMotionState<'all' | 'friends' | 'oa'>('all', 'fade');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'friends' | 'oa'>('all');
   const [evidenceSheetContact, setEvidenceSheetContact] = useMotionState<MessagingContact | null>(null, 'sheet');
 
   // Filter contacts by query
@@ -75,9 +75,6 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
                 Lời mời kết bạn
               </span>
             </div>
-            <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-rose-500 text-white text-ios-caption-2 font-bold flex items-center justify-center">
-              1
-            </span>
           </div>
 
           <div className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-all cursor-pointer min-h-[44px]">
@@ -159,7 +156,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
                     >
                       <div className="flex items-center justify-between px-3 py-2.5 hover:bg-slate-50 transition-all cursor-pointer min-h-[60px]">
                         <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <ContactAvatar name={contact.name} size={40} />
+                          <ContactAvatar name={contact.name} avatarIndex={contact.avatarIndex} size={40} />
                           <div className="min-w-0 flex-1">
                             <h4 className="text-ios-headline font-bold text-[#0F172A] truncate">
                               {contact.name}

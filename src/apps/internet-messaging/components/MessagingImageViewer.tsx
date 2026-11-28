@@ -60,7 +60,8 @@ export function MessagingImageViewer({ message, contactName, onClose, onEvidence
   };
 
   const viewer = <div {...swipe} ref={dialog} role="dialog" aria-label="Xem ảnh" aria-modal={!suspended} aria-hidden={suspended} inert={suspended}
-    className="absolute inset-0 z-50 overflow-hidden bg-black text-white animate-fadeIn"
+    style={{ backfaceVisibility: 'hidden' }}
+    className="absolute inset-0 z-50 overflow-hidden bg-black text-white animate-fadeIn transform-gpu will-change-transform"
     onKeyDown={event => {
       if (suspended) return;
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
@@ -160,20 +161,22 @@ export function MessagingImageViewer({ message, contactName, onClose, onEvidence
           snippet: message.imageAlt || message.text,
           subtitle: `${contactName} · ${message.time}`,
           suspectToTag: contactName,
-          kind: 'message',
+          kind: chatImage(message.imageAsset) ? 'photo' : 'message',
           conversationId,
           visibleAlias: contactName,
           eventTime: message.time,
+          imageSrc: chatImage(message.imageAsset),
           source: caseId ? {
             caseId,
             recordId: message.id,
             clueRefId: message.clueRefId,
-            kind: 'message',
+            kind: chatImage(message.imageAsset) ? 'photo' : 'message',
             conversationId,
             visibleAlias: contactName,
             eventTime: message.time,
             title: contactName,
             snippet: message.imageAlt || message.text,
+            imageSrc: chatImage(message.imageAsset),
           } : undefined,
         }}
         onTriggerEvidence={onEvidence}>

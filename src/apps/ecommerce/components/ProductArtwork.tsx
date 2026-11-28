@@ -1,5 +1,5 @@
-import catalogProducts from '../assets/shopoo-product-sheet-catalog.jpg';
-import orderProducts from '../assets/shopoo-product-sheet-orders.jpg';
+import catalogProducts from '../assets/shopoo-product-sheet-catalog.webp';
+import orderProducts from '../assets/shopoo-product-sheet-orders.webp';
 import { PRODUCT_ARTWORK_TILES } from '../productArtworks';
 
 /** Bundled product photos; no remote requests or missing-image tiles. */

@@ -78,7 +78,7 @@ None for confirmed behavior. ASCII signoff and team sizing remain pending; statu
 
 - [Signed-off target discovery](../elicitation/2026-10-20-us-011-us-016-pinning-confrontation.md)
 - [US-015 Detective Corkboard Canvas](../epic-03-wife-notebook-verdict-social-sharing/us-015-wife-split-section-investigation-notebook-suspect-evidence-linkage-hub.md)
-- [Level 1 Case Implementation](../epic-04-detective-case-stories-level-content/us-027-husband-hoang-level-1-case-implementation.md)
+- [Level 1 Case Implementation](../epic-04-detective-case-stories-level-content/us-027-husband-01-level-1-case-implementation.md)
 - [Wife's Notebook Features](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/features.md)
 - [Wife's Notebook Design](../../../project-knowledge-base/solution-context/apps/phone-os/evidence-board/app-design.md)
 - Implemented runtime contracts: `src/features/wife-notebook/WifeNotebookModal.tsx`, `src/features/wife-notebook/confrontationEngine.ts`, `src/features/wife-notebook/components/ConfrontationModal.tsx`, `src/features/wife-notebook/components/HusbandCharacterImage.tsx`, `src/features/wife-notebook/confrontationMotion.ts`, `src/features/wife-notebook/graphEngine.ts`, `src/features/wife-notebook/level01Fixture.ts`

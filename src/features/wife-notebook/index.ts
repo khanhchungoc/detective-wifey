@@ -6,7 +6,7 @@ export { ConfrontationModal } from './components/ConfrontationModal';
 export type { ConfrontationModalProps } from './components/ConfrontationModal';
 export { ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
 export type { ConfrontationConfirmModalProps } from './components/ConfrontationConfirmModal';
-export { HusbandCharacterImage, HOANG_COMIC_ASSETS } from './components/HusbandCharacterImage';
+export { HusbandCharacterImage, HUSBAND_COMIC_ASSETS } from './components/HusbandCharacterImage';
 export type { HusbandMood, HusbandCharacterImageProps } from './components/HusbandCharacterImage';
 export { useCorkboardGestures } from './useCorkboardGestures';
 export {
@@ -20,7 +20,8 @@ export {
   CORKBOARD_VERTICAL_GAP,
   clampZoom,
   calculateClueCardsCenter,
-  CANVAS_SIZE,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
   MIN_ZOOM,
   MAX_ZOOM,
 } from './graphEngine';

@@ -6,24 +6,19 @@ import { getAppBrand } from '../../shared/branding';
 const BRAND = getAppBrand('team-collaboration');
 import { IoPeopleOutline } from 'react-icons/io5';
 import { IoPeople } from 'react-icons/io5';
-import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { StoryEvidenceTarget } from '../../features/investigation';
 import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/investigation';
 
 export const TeamCollaborationApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const teamData = readAppData(caseData.appsData?.['team-collaboration'] || {});
   const channels = teamData.channels || [];
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const swipeHandlers = useSwipeBack({ onBack: onReturnHome, exitsApp: true });
-
   return (
     <div
-      {...swipeHandlers}
       className="flex flex-col h-full w-full bg-[#F5F5F5] text-[#252424] select-none font-sans"
     >
       <header className="flex items-center justify-between px-3 h-14 bg-[#464EB8] text-white shadow-md shrink-0">
@@ -90,7 +85,6 @@ export const appDefinition: AppDefinition = {
   icon: IoPeople,
   themeGradient: 'from-indigo-600 to-purple-700',
   themeColor: '#464EB8', bottomBarColor: '#F5F5F5',
-  notificationBadgeCount: 2,
   isLocked: false,
   component: TeamCollaborationApp,
 };

@@ -4,12 +4,13 @@ import type { CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
 import type { PlacedNode } from './types';
 import { calculateConfrontationPreflight } from './confrontationEngine';
 import { CONFRONTATION_LABELS, ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
+import { husbandFixture } from '../../tests/helpers/husbandFixture';
 
 const nodes: PlacedNode[] = [
-  { nodeId: 'suspect', type: 'alias', label: 'Contact', suspectId: 'suspect_huong', x: 0, y: 0 },
+  { nodeId: 'suspect', type: 'alias', label: 'Contact', suspectId: 'suspect_01', x: 0, y: 0 },
   { nodeId: 'chat', type: 'record_clue', label: 'Chat', sourceAppId: 'internet-messaging', messages: [{ recordId: 'm1', text: 'Pinned message content' }], x: 0, y: 0 },
   { nodeId: 'receipt', type: 'record_clue', label: 'Receipt', subtitle: 'Pinned receipt content', x: 0, y: 0 },
-  { nodeId: 'unverified', type: 'record_clue', label: 'Unverified', suspectId: 'suspect_huong', x: 0, y: 0 },
+  { nodeId: 'unverified', type: 'record_clue', label: 'Unverified', suspectId: 'suspect_01', x: 0, y: 0 },
   { nodeId: 'unrelated', type: 'record_clue', label: 'Unrelated', clueRefId: 'real-clue', x: 0, y: 0 },
   { nodeId: 'other', type: 'suspect', label: 'Other', suspectId: 'other', x: 0, y: 0 },
 ];
@@ -39,9 +40,9 @@ describe('confrontation evidence review', () => {
       .verifiedCluesList).toEqual([]);
   });
 
-  it.each([null, 'suspect_huong', 'removed-suspect'])('never reveals a preflight identity without a pinned suspect (selection: %s)', selectedSuspectId => {
+  it.each([null, 'suspect_01', 'removed-suspect'])('never reveals a preflight identity without a pinned suspect (selection: %s)', selectedSuspectId => {
     const preflight = calculateConfrontationPreflight({ placedNodes: nodes, activeEdges });
-    const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
+    const html = renderToStaticMarkup(<ConfrontationConfirmModal husbandName={husbandFixture.shortName} isOpen
       preflight={{ ...preflight, accusedSuspectName: 'HIDDEN_CULPRIT' }}
       suspectsOnBoard={[]} selectedSuspectId={selectedSuspectId}
       onCancel={() => {}} onConfirmConfront={vi.fn()} />);
@@ -53,8 +54,8 @@ describe('confrontation evidence review', () => {
   });
 
   it.each([[0, 1], [20, 1], [21, 2], [45, 3], [80, 4], [100, 5]])('shows a rough five-segment estimate for rate %s', (successRate, filledSegments) => {
-    const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
-      suspectsOnBoard={[{ id: 'suspect_huong', displayName: 'Contact' }]} selectedSuspectId="suspect_huong"
+    const html = renderToStaticMarkup(<ConfrontationConfirmModal husbandName={husbandFixture.shortName} isOpen
+      suspectsOnBoard={[{ id: 'suspect_01', displayName: 'Contact' }]} selectedSuspectId="suspect_01"
       preflight={{ ...calculateConfrontationPreflight({ placedNodes: nodes, activeEdges }), successRate }}
       onCancel={() => {}} onConfirmConfront={() => {}} />);
     expect(html).toContain('Tỉ lệ thành công');
@@ -69,8 +70,8 @@ describe('confrontation evidence review', () => {
   it('renders a Manila dossier popup with Polaroid face-off, linkage bridges, no clue count, and one approved CTA', () => {
     const random = vi.spyOn(Math, 'random').mockReturnValue(0);
     try {
-      const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
-        suspectsOnBoard={[{ id: 'suspect_huong', displayName: 'Contact' }]} selectedSuspectId="suspect_huong"
+      const html = renderToStaticMarkup(<ConfrontationConfirmModal husbandName={husbandFixture.shortName} isOpen
+        suspectsOnBoard={[{ id: 'suspect_01', displayName: 'Contact' }]} selectedSuspectId="suspect_01"
         preflight={calculateConfrontationPreflight({ placedNodes: nodes, activeEdges })}
         getSourceApp={() => ({ displayName: 'Zola', iconAsset: '/zola.svg', icon: () => null, themeGradient: '' })}
         onCancel={() => {}} onConfirmConfront={() => {}} />);
@@ -94,24 +95,24 @@ describe('confrontation evidence review', () => {
 
   it('ignores dangling canonical edges to unplaced nodes and does not leak culprit aliases to wrong suspects', () => {
     const partialNodes: PlacedNode[] = [
-      { nodeId: 'node_alias_tuan', type: 'alias', label: 'Anh Tuấn Thợ Điện', sourceAppId: 'internet-messaging',
+      { nodeId: 'node_901', type: 'alias', label: 'Anh Tuấn Thợ Điện', sourceAppId: 'internet-messaging',
         messages: [{ recordId: 'm1', text: 'Tin nhắn bình thường' }], x: 0, y: 0 },
       { nodeId: 'chat_reply', type: 'record_clue', label: 'Chat', sourceAppId: 'internet-messaging',
         messages: [{ recordId: 'm2', text: 'Nội dung khác' }], x: 100, y: 0 },
-      { nodeId: 'other', type: 'suspect', label: 'Lan Anh Kế Toán', suspectId: 'suspect_lan_anh', x: 200, y: 0 },
+      { nodeId: 'other', type: 'suspect', label: 'Lan Anh Kế Toán', suspectId: 'suspect_04', x: 200, y: 0 },
     ];
-    const danglingEdge = edge('node_alias_tuan', 'missing_phone_node', true);
+    const danglingEdge = edge('node_901', 'missing_phone_node', true);
     const culpritPf = calculateConfrontationPreflight({
       placedNodes: partialNodes,
       activeEdges: [danglingEdge],
-      accusedSuspectId: 'suspect_huong',
+      accusedSuspectId: 'suspect_01',
     });
     expect(culpritPf.verifiedCluesList).toEqual([]);
 
     const wrongSuspectPf = calculateConfrontationPreflight({
       placedNodes: partialNodes,
-      activeEdges: [edge('node_alias_tuan', 'chat_reply', true)],
-      accusedSuspectId: 'suspect_lan_anh',
+      activeEdges: [edge('node_901', 'chat_reply', true)],
+      accusedSuspectId: 'suspect_04',
     });
     expect(wrongSuspectPf.isWrongSuspect).toBe(true);
     expect(wrongSuspectPf.verifiedCluesList).toEqual([]);

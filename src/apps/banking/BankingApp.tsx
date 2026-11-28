@@ -1,5 +1,5 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useMemo, type ComponentType } from 'react';
+import { useMemo, useState, type ComponentType } from 'react';
 import {
   IoCard,
   IoCardOutline,
@@ -12,6 +12,7 @@ import {
 import type { AppDefinition, VirtualAppProps } from '../../shared/contracts/app-contracts';
 import { UniversalEvidenceModal, type UniversalEvidenceItem } from '../../features/investigation';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
+import { SlideStackView } from '../../shared/ui/SlideStackView';
 import { bankingAppChallenge, bankingVaultChallenge, readBankingData } from './bankingData';
 import { BankingDashboard, BankingProfile } from './components/BankingDashboard';
 import { BankingHistory } from './components/BankingHistory';
@@ -49,10 +50,10 @@ const tabs: { id: BankingTab; label: string; icon: ComponentType<{ className?: s
 export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlock, unlockedChallenges }: VirtualAppProps) {
   const rawData: unknown = caseData.appsData?.banking;
   const data = useMemo(() => readBankingData(rawData), [rawData]);
-  const [activeTab, setActiveTab] = useMotionState<BankingTab>('home', 'fade');
-  const [filter, setFilter] = useMotionState<TransactionFilter>('all', 'fade');
+  const [activeTab, setActiveTab] = useState<BankingTab>('home');
+  const [filter, setFilter] = useState<TransactionFilter>('all');
   const [selectedTx, setSelectedTx] = useMotionState<BankingTransaction | null>(null, 'sheet');
-  const [selectedVaultId, setSelectedVaultId] = useMotionState<string | null>(null, 'navigation');
+  const [selectedVaultId, setSelectedVaultId] = useState<string | null>(null);
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
   const rootChallenge = data ? bankingAppChallenge(caseData, data) : undefined;
@@ -77,8 +78,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     else onReturnHome();
   };
 
-  const swipe = useSwipeBack({ onBack: handleBack, enabled: !selectedTx && !evidenceItem && !selectedVault, exitsApp: !selectedVaultId && activeTab === 'home' });
-  const vaultSwipe = useSwipeBack({ onBack: () => setSelectedVaultId(null), enabled: Boolean(selectedVault) });
+  const profileSwipe = useSwipeBack({ onBack: () => navigate('home'), enabled: activeTab === 'profile' && !selectedTx && !evidenceItem && !selectedVault });
 
   const selectVault = (vault: BankingVault) => {
     setSelectedVaultId(vault.id);
@@ -91,24 +91,23 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     : activeTab === 'profile' ? 'Thông tin tài khoản'
     : tabs.find(tab => tab.id === activeTab)?.label || BRAND.brandName;
 
-  const initials = caseData.husbandName
-    ? caseData.husbandName.split(' ').filter(Boolean).slice(-2).map(p => p[0]).join('').toUpperCase()
-    : 'PB';
+  const initials = caseData.husband.shortName.split(' ').filter(Boolean).slice(-2).map(p => p[0]).join('').toUpperCase();
 
   const tier = data?.tier ? data.tier.charAt(0).toUpperCase() + data.tier.slice(1) : 'Inspire';
 
   return (
     <div
-      {...swipe}
+      {...(activeTab === 'profile' ? profileSwipe : {})}
       className="app-banking relative flex h-full min-h-0 w-full flex-col overflow-hidden select-none font-sans bg-[#F5F6F8]"
       onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); handleBack(); } }}
       onKeyDownCapture={event => { if (event.key === 'Escape' && evidenceItem) { event.stopPropagation(); setEvidenceItem(null); } }}
     >
-      <div
-        className="relative flex h-full min-h-0 w-full flex-col overflow-hidden"
-        inert={Boolean(selectedVault)}
-        aria-hidden={Boolean(selectedVault)}
-      >
+      <SlideStackView
+        detailKey={selectedVault?.id ?? null}
+        onDismissDetail={() => setSelectedVaultId(null)}
+        swipeEnabled={!selectedTx && !evidenceItem}
+        base={
+          <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden">
         {/* Top Header */}
         <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-2.5 py-1.5 shadow-xs">
           <div className="flex items-center gap-1">
@@ -128,7 +127,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
               <button
                 type="button"
                 onClick={() => navigate('profile')}
-                aria-label={`Hồ sơ ${caseData.husbandName || 'Pham Quoc Bao'}, Hạng ${tier}`}
+                aria-label={`Hồ sơ ${caseData.husband.shortName}, Hạng ${tier}`}
                 className="bank-control flex items-center gap-1.5 rounded-full p-1 hover:bg-neutral-100"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#C81018] text-xs font-bold text-white shadow-xs">
@@ -243,7 +242,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                 </>
               )}
               {activeTab === 'profile' && (
-                <BankingProfile data={data} husbandName={caseData.husbandName} />
+                <BankingProfile data={data} husbandName={caseData.husband.shortName} />
               )}
             </>
           )}
@@ -283,44 +282,35 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
           </nav>
         )}
 
-        {/* Dimmed Scrim Overlay */}
-        {selectedVault && (
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-black/40 z-10 pointer-events-none transition-opacity duration-200"
-          />
-        )}
-      </div>
-
-      {/* Top Layer: Vault Detail View */}
-      {selectedVault && (
-        <div
-          {...vaultSwipe}
-          data-detail-layer
-          className="absolute inset-0 z-20 flex flex-col h-full w-full bg-white shadow-2xl overflow-hidden"
-        >
-          <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-3 py-1.5 shadow-xs">
-            <button
-              type="button"
-              aria-label="Quay lại danh sách hũ"
-              onClick={() => setSelectedVaultId(null)}
-              className="bank-control flex shrink-0 items-center justify-center text-[#111827] hover:bg-neutral-100"
-            >
-              <IoChevronBack aria-hidden="true" className="h-6 w-6" />
-            </button>
-            <div className="flex min-w-0 items-center justify-center gap-1.5">
-              <TechcornHeaderLogo />
-              <h1 className="min-w-0 truncate text-center text-base font-bold tracking-tight text-[#111827]">
-                Chi tiết hũ quỹ
-              </h1>
+          </div>
+        }
+        renderDetail={(requestClose) =>
+          selectedVault ? (
+            <div className="flex flex-col h-full w-full bg-white overflow-hidden">
+              <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-[#E5E7EB] bg-white px-3 py-1.5 shadow-xs">
+                <button
+                  type="button"
+                  aria-label="Quay lại danh sách hũ"
+                  onClick={requestClose}
+                  className="bank-control flex shrink-0 items-center justify-center text-[#111827] hover:bg-neutral-100"
+                >
+                  <IoChevronBack aria-hidden="true" className="h-6 w-6" />
+                </button>
+                <div className="flex min-w-0 items-center justify-center gap-1.5">
+                  <TechcornHeaderLogo />
+                  <h1 className="min-w-0 truncate text-center text-base font-bold tracking-tight text-[#111827]">
+                    Chi tiết hũ quỹ
+                  </h1>
+                </div>
+                <div className="w-10" />
+              </header>
+              <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#F5F6F8]">
+                <BankingVaultDetail caseData={caseData} vault={selectedVault} onEvidence={setEvidenceItem} />
+              </main>
             </div>
-            <div className="w-10" />
-          </header>
-          <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#F5F6F8]">
-            <BankingVaultDetail caseData={caseData} vault={selectedVault} onEvidence={setEvidenceItem} />
-          </main>
-        </div>
-      )}
+          ) : null
+        }
+      />
 
       {!appLocked && selectedTx && (
         <BankingReceipt
@@ -352,7 +342,6 @@ export const appDefinition: AppDefinition = {
   themeGradient: 'from-[#ED1C24] to-[#B71C1C]',
   themeColor: '#ED1C24',
   bottomBarColor: '#FFFFFF',
-  notificationBadgeCount: 1,
   isLocked: false,
   component: BankingApp,
 };

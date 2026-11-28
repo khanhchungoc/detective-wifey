@@ -1,0 +1,426 @@
+{
+  "unreadBadge": 0,
+  "calls": [
+    {
+      "callId": "call_001",
+      "contactId": "contact_011",
+      "timestamp": "15/10/2026 23:20",
+      "direction": "outgoing",
+      "durationSeconds": 96,
+      "clueRefId": "CLUE-PHONE-01"
+    },
+    {
+      "callId": "call_002",
+      "contactId": "contact_012",
+      "timestamp": "15/10/2026 21:05",
+      "direction": "incoming",
+      "durationSeconds": 51
+    },
+    {
+      "callId": "call_003",
+      "contactId": "contact_011",
+      "timestamp": "15/10/2026 19:18",
+      "direction": "outgoing",
+      "durationSeconds": 26
+    },
+    {
+      "callId": "call_004",
+      "contactId": "contact_005",
+      "timestamp": "15/10/2026 18:30",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_005",
+      "contactId": "contact_001",
+      "timestamp": "15/10/2026 18:00",
+      "direction": "incoming",
+      "durationSeconds": 144
+    },
+    {
+      "callId": "call_006",
+      "contactId": "contact_010",
+      "timestamp": "15/10/2026 12:30",
+      "direction": "incoming",
+      "durationSeconds": 88
+    },
+    {
+      "callId": "call_007",
+      "contactId": "contact_009",
+      "timestamp": "15/10/2026 11:40",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_008",
+      "contactId": "contact_007",
+      "timestamp": "14/10/2026 15:00",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_009",
+      "contactId": "contact_006",
+      "timestamp": "14/10/2026 12:20",
+      "direction": "outgoing",
+      "durationSeconds": 240
+    },
+    {
+      "callId": "call_010",
+      "contactId": "contact_005",
+      "timestamp": "13/10/2026 17:25",
+      "direction": "incoming",
+      "durationSeconds": 63
+    },
+    {
+      "callId": "call_011",
+      "contactId": "contact_004",
+      "timestamp": "13/10/2026 11:40",
+      "direction": "outgoing",
+      "durationSeconds": 95
+    },
+    {
+      "callId": "call_012",
+      "contactId": "contact_003",
+      "timestamp": "13/10/2026 09:15",
+      "direction": "incoming",
+      "durationSeconds": 186
+    },
+    {
+      "callId": "call_013",
+      "contactId": "contact_013",
+      "timestamp": "13/10/2026 08:40",
+      "direction": "outgoing",
+      "durationSeconds": 132
+    },
+    {
+      "callId": "call_014",
+      "contactId": "contact_001",
+      "timestamp": "12/10/2026 18:05",
+      "direction": "incoming",
+      "durationSeconds": 320
+    },
+    {
+      "callId": "call_015",
+      "contactId": "contact_002",
+      "timestamp": "11/10/2026 09:00",
+      "direction": "outgoing",
+      "durationSeconds": 43
+    },
+    {
+      "callId": "call_016",
+      "contactId": "contact_010",
+      "timestamp": "10/10/2026 18:25",
+      "direction": "outgoing",
+      "durationSeconds": 71
+    },
+    {
+      "callId": "call_017",
+      "contactId": "contact_003",
+      "timestamp": "09/10/2026 18:10",
+      "direction": "incoming",
+      "durationSeconds": 194
+    },
+    {
+      "callId": "call_018",
+      "contactId": "contact_007",
+      "timestamp": "08/10/2026 11:00",
+      "direction": "outgoing",
+      "durationSeconds": 67
+    },
+    {
+      "callId": "call_019",
+      "contactId": "contact_009",
+      "timestamp": "07/10/2026 16:20",
+      "direction": "outgoing",
+      "durationSeconds": 28
+    },
+    {
+      "callId": "call_020",
+      "contactId": "contact_008",
+      "timestamp": "06/10/2026 17:35",
+      "direction": "incoming",
+      "durationSeconds": 35
+    },
+    {
+      "callId": "call_021",
+      "contactId": "contact_006",
+      "timestamp": "05/10/2026 09:20",
+      "direction": "outgoing",
+      "durationSeconds": 96
+    },
+    {
+      "callId": "call_022",
+      "contactId": "contact_001",
+      "timestamp": "04/10/2026 16:05",
+      "direction": "incoming",
+      "durationSeconds": 301
+    },
+    {
+      "callId": "call_023",
+      "contactId": "contact_014",
+      "timestamp": "03/10/2026 12:10",
+      "direction": "outgoing",
+      "durationSeconds": 83
+    },
+    {
+      "callId": "call_024",
+      "contactId": "contact_009",
+      "timestamp": "02/10/2026 11:35",
+      "direction": "incoming",
+      "durationSeconds": 42
+    },
+    {
+      "callId": "call_025",
+      "contactId": "contact_010",
+      "timestamp": "01/10/2026 17:15",
+      "direction": "outgoing",
+      "durationSeconds": 110
+    },
+    {
+      "callId": "call_026",
+      "contactId": "contact_012",
+      "timestamp": "30/09/2026 08:00",
+      "direction": "outgoing",
+      "durationSeconds": 58
+    },
+    {
+      "callId": "call_027",
+      "contactId": "contact_005",
+      "timestamp": "29/09/2026 16:20",
+      "direction": "incoming",
+      "durationSeconds": 36
+    },
+    {
+      "callId": "call_028",
+      "contactId": "contact_004",
+      "timestamp": "29/09/2026 10:35",
+      "direction": "outgoing",
+      "durationSeconds": 64
+    },
+    {
+      "callId": "call_029",
+      "contactId": "contact_006",
+      "timestamp": "28/09/2026 18:05",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_030",
+      "contactId": "contact_003",
+      "timestamp": "28/09/2026 12:15",
+      "direction": "outgoing",
+      "durationSeconds": 182
+    },
+    {
+      "callId": "call_031",
+      "contactId": "contact_001",
+      "timestamp": "27/09/2026 18:10",
+      "direction": "incoming",
+      "durationSeconds": 325
+    },
+    {
+      "callId": "call_032",
+      "contactId": "contact_014",
+      "timestamp": "27/09/2026 10:05",
+      "direction": "outgoing",
+      "durationSeconds": 142
+    },
+    {
+      "callId": "call_033",
+      "contactId": "contact_010",
+      "timestamp": "26/09/2026 17:25",
+      "direction": "incoming",
+      "durationSeconds": 103
+    },
+    {
+      "callId": "call_034",
+      "contactId": "contact_008",
+      "timestamp": "26/09/2026 11:10",
+      "direction": "incoming",
+      "durationSeconds": 31
+    },
+    {
+      "callId": "call_035",
+      "contactId": "contact_007",
+      "timestamp": "25/09/2026 15:30",
+      "direction": "outgoing",
+      "durationSeconds": 89
+    },
+    {
+      "callId": "call_036",
+      "contactId": "contact_007",
+      "timestamp": "25/09/2026 15:20",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_037",
+      "contactId": "contact_001",
+      "timestamp": "24/09/2026 18:20",
+      "direction": "outgoing",
+      "durationSeconds": 286
+    },
+    {
+      "callId": "call_038",
+      "contactId": "contact_005",
+      "timestamp": "24/09/2026 08:30",
+      "direction": "incoming",
+      "durationSeconds": 65
+    },
+    {
+      "callId": "call_039",
+      "contactId": "contact_002",
+      "timestamp": "23/09/2026 17:00",
+      "direction": "incoming",
+      "durationSeconds": 39
+    },
+    {
+      "callId": "call_040",
+      "contactId": "contact_009",
+      "timestamp": "23/09/2026 11:45",
+      "direction": "outgoing",
+      "durationSeconds": 26
+    },
+    {
+      "callId": "call_041",
+      "contactId": "contact_004",
+      "timestamp": "22/09/2026 14:05",
+      "direction": "outgoing",
+      "durationSeconds": 92
+    },
+    {
+      "callId": "call_042",
+      "contactId": "contact_003",
+      "timestamp": "22/09/2026 10:00",
+      "direction": "incoming",
+      "durationSeconds": 156
+    },
+    {
+      "callId": "call_043",
+      "contactId": "contact_006",
+      "timestamp": "21/09/2026 18:15",
+      "direction": "outgoing",
+      "durationSeconds": 130
+    },
+    {
+      "callId": "call_044",
+      "contactId": "contact_012",
+      "timestamp": "21/09/2026 09:30",
+      "direction": "incoming",
+      "durationSeconds": 48
+    },
+    {
+      "callId": "call_045",
+      "contactId": "contact_010",
+      "timestamp": "20/09/2026 17:05",
+      "direction": "outgoing",
+      "durationSeconds": 74
+    },
+    {
+      "callId": "call_046",
+      "contactId": "contact_001",
+      "timestamp": "20/09/2026 08:35",
+      "direction": "incoming",
+      "durationSeconds": 220
+    }
+  ],
+  "contacts": [
+    {
+      "contactId": "contact_001"
+    },
+    {
+      "contactId": "contact_002"
+    },
+    {
+      "contactId": "contact_003"
+    },
+    {
+      "contactId": "contact_004"
+    },
+    {
+      "contactId": "contact_005"
+    },
+    {
+      "contactId": "contact_006"
+    },
+    {
+      "contactId": "contact_007"
+    },
+    {
+      "contactId": "contact_008"
+    },
+    {
+      "contactId": "contact_009"
+    },
+    {
+      "contactId": "contact_010"
+    },
+    {
+      "contactId": "contact_011"
+    },
+    {
+      "contactId": "contact_012"
+    },
+    {
+      "contactId": "contact_013"
+    },
+    {
+      "contactId": "contact_014"
+    },
+    {
+      "contactId": "contact_015"
+    },
+    {
+      "contactId": "contact_016"
+    },
+    {
+      "contactId": "contact_017"
+    },
+    {
+      "contactId": "contact_019"
+    },
+    {
+      "contactId": "contact_020"
+    },
+    {
+      "contactId": "contact_021"
+    },
+    {
+      "contactId": "contact_022"
+    },
+    {
+      "contactId": "contact_023"
+    },
+    {
+      "contactId": "contact_024"
+    },
+    {
+      "contactId": "contact_025"
+    },
+    {
+      "contactId": "contact_026"
+    },
+    {
+      "contactId": "contact_027"
+    },
+    {
+      "contactId": "contact_028"
+    },
+    {
+      "contactId": "contact_029"
+    },
+    {
+      "contactId": "contact_030"
+    },
+    {
+      "contactId": "contact_031"
+    },
+    {
+      "contactId": "contact_032"
+    },
+    {
+      "contactId": "contact_033"
+    }
+  ]
+}

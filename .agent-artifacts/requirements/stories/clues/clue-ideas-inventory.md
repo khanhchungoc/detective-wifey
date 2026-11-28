@@ -11,13 +11,19 @@
 ### 1.1. Zola (Zalo Parody - Private Messaging)
 | Clue ID | Clue Description | Sub-Type | Intended Truth / Twist | Difficulty |
 |---|---|---|---|---|
-| `CLUE-ZOLA-01` | **Disguised Contact Name:** Chat with "Anh Tuấn Thợ Điện" or "Sếp Hùng Cty", but conversation tone is overly affectionate with hearts and cute stickers. | Text / Tone mismatch | Cheating (Colleague / Affair) | Easy |
+| `CLUE-ZOLA-01` | **Disguised Contact Name:** Chat with "Anh Tuấn Thợ Điện" or "Sếp Tuấn Anh Cty", but conversation tone is overly affectionate with hearts and cute stickers. | Text / Tone mismatch | Cheating (Colleague / Affair) | Easy |
 | `CLUE-ZOLA-02` | **Hidden / Locked Chat:** A chat requiring a 4-digit PIN to open. PIN clue found in Notes app (e.g. "Pass vali: 1204"). | Locked Feature | Cheating or Sugar | Medium |
 | `CLUE-ZOLA-03` | **Disappearing Message Notice:** System notice in chat: *"Tin nhắn tự xoá sau 24h đã được bật"*. Remaining messages contain vague fragmented arrangements ("Tối mai chỗ cũ nhé"). | Fragmented Chat | Cheating | Easy |
 | `CLUE-ZOLA-04` | **Shared Location Pin:** Husband sent a real-time location pin to a contact at a luxury hotel / boutique cafe while telling his wife he was "kẹt xe trên đường về". | Metadata / Location | Cheating | Medium |
 | `CLUE-ZOLA-05` | **Innocent Red Herring:** Passionate voice messages discussing "bé cưng", "em này đầm tay lắm", "tối nay anh qua đón em"... which turns out to be discussing a second-hand vintage Vespa motorbike or fishing rod with a fellow enthusiast. | Audio / Red Herring | Innocent | Hard |
 | `CLUE-ZOLA-06` | **AI Companion Chat:** Chat history with an official account "Em Yêu Ảo - AI Girlfriend" with paid premium tier messages. | Bot Chat | Cheating (Non-Human / AI) | Medium |
 | `CLUE-ZOLA-07` | **Lịch hẹn trái lời khai:** Lịch hẹn bàn 19h30 "chỗ cũ tầng 2 Phố Cổ" với cớ mừng 1 tháng ngày sang sửa điện lần đầu trong luồng liên hệ ngụy trang; cùng tối người chồng báo vợ đang họp với cả nhóm. Chi tiết lấy đồ ở sảnh, dùng bữa tại Phố Cổ và nhắn trả áo khép thành cùng một buổi gặp; không tự đủ xác định người nếu thiếu đối chiếu số đầy đủ và tên pháp lý. | Timeline / Cross-App | Cheating | Easy |
+| `CLUE-ZOLA-08` | **Tên danh bạ lộ trong nhóm chat:** Trong nhóm toàn công ty, tin của người tình hiện theo tên chồng đã lưu (ví dụ 'Khoa BE') nhưng nội dung là việc phòng khác và người khác gọi bằng tên thật; tin ghim chào mừng ghi họ tên và chức danh. | Group Sender Mismatch | Cheating | Easy |
+| `CLUE-ZOLA-09` | **Họp bị hủy nhưng vẫn khai đang họp:** Nhóm công việc báo hủy họp và chồng đã trả lời xác nhận; sau đó chồng vẫn nhắn vợ là đang họp, rồi bị biên lai thẻ cùng tối bóc trần. | Alibi Contradiction | Cheating | Easy |
+| `CLUE-ZOLA-10` | **Bản xem trước bị cắt:** Bản xem trước luồng chat chỉ hiện câu cuối trông như che giấu ('a đừng kể gì nha'); đọc trọn luồng thấy lý do vô tội (em gái trượt môn, sợ mẹ biết). | Preview Truncation Red Herring | Innocent | Easy |
+| `CLUE-ZOLA-11` | **Thợ điện thật (bẫy meme):** Danh bạ 'Anh Tuấn Thợ Điện' gửi tin mập mờ 'không để bà ấy biết'; thực ra là thợ điện thật lắp bình nóng lạnh làm quà sinh nhật mẹ chồng, kiểm chứng qua luồng mẹ và đơn hàng. | Meme Bait Red Herring | Innocent | Easy |
+| `CLUE-MSG-02` | **SMS vắng mặt buổi tập:** SMS dịch vụ phòng gym báo khách vắng mặt buổi PT, giải oan cho huấn luyện viên nhắn 'e đợi a nãy giờ' và cho thấy chồng không ở gym. | Service SMS Exoneration | Innocent | Easy |
+
 
 ---
 
@@ -32,6 +38,8 @@
 | `CLUE-BANK-04` | **Quỹ Đen Secret Piggybank (Innocent):** Recurring monthly transfers into a hidden sub-vault named "Tiet Kiem Mua Nhan Kim Cuong Cho Vo" (Saving for wife's diamond ring). | Hidden Vault | Innocent (Anniversary) | Hard |
 | `CLUE-BANK-05` | **Bill Split on Dating App Dinner:** Transfer description: *"Campuchia tien an toi 50/50"* with a girl's personal bank account. | Expense Split | Cheating | Medium |
 | `CLUE-BANK-06` | **Thanh toán tối và danh tính chia tiền:** Khoản thanh toán nhà hàng cùng tối kiểm chứng lịch hẹn; một khoản hoàn tiền trưa riêng cung cấp tên tài khoản pháp lý. Không suy số người từ số tiền, không dùng memo tình cảm. | Timeline / Legal Identity | Cheating | Easy |
+| `CLUE-BANK-07` | **Quẹt thẻ nhà hàng trái lời khai:** Thanh toán thẻ tại quán ăn 2 phút sau tin nhắn khai đang họp ở công ty; chuyển khoản online cùng tối không chứng minh vị trí, chỉ thanh toán thẻ tại quán mới làm được. | Alibi Contradiction | Cheating | Easy |
+
 
 ---
 
@@ -52,6 +60,8 @@
 | `CLUE-GRAP-01` | **Late-Night Ride Destinations:** Ride history showing trips booked from 22:30 to 01:00 to love hotels (*"Khách sạn Sao Mai"*, *"Love Hotel Phố Cổ"*). | Ride History | Cheating | Easy |
 | `CLUE-GRAP-02` | **Food Delivery to Alternate Location:** GrapFood order for 2 portions of *"Trà sữa trân châu đường đen 70% đường"* + *"Bánh ngọt"* delivered to an unfamiliar office building with driver note: *"Giao tận tay bạn Mai lễ tân giúp mình"*. | Food Delivery | Cheating | Medium |
 | `CLUE-GRAP-03` | **Ride to Wife's Parents' House (Innocent):** Husband booked a delivery of premium bird's nest (*yến sào*) to his mother-in-law without telling the wife. | Delivery History | Innocent | Medium |
+| `CLUE-GRAP-04` | **Đặt xe hộ:** Chuyến đặt hộ người khác lúc chồng khai đang họp, chi tiết chuyến hiện SĐT người đi trùng một liên hệ ngụy trang. | Metadata / Cross-App | Cheating | Easy |
+
 
 ---
 
@@ -62,6 +72,8 @@
 | `CLUE-BROW-02` | **Incognito Tab Left Open:** An open private tab showing a boutique gift shop or a hotel booking confirmation page. | Open Tabs | Cheating or Innocent | Medium |
 | `CLUE-BROW-03` | **Sugar Dating Forum / AI Chat:** Browsing history on sugar baby / sugar daddy matching platforms, or forum threads: *"kinh nghiệm chu cấp cho sinh viên"*. | Bookmarks / History | Sugar Relationship | Medium |
 | `CLUE-BROW-04` | **Waifu / Anime Romance Search:** Queries like *"cách tỏ tình với nhân vật anime"*, *"top game bạn gái ảo hay nhất 2026"*. | Search Query | Cheating (Non-Human) | Easy |
+| `CLUE-BROW-05` | **Xem bảng size lệch vợ:** Lịch sử xem bảng size một món đồ ngay trước khi đặt đơn; size xem khác size của vợ. | Search History | Cheating | Easy |
+
 
 ---
 
@@ -125,3 +137,9 @@
 
 - **Universal App Grid Rule:** All 8 app icons are visible on the virtual smartphone home screen across **all levels** (L1, L2, L3) for every husband.
 - **Cognitive Purpose:** Prevents "process of elimination" spoilers. In Level 1, unneeded apps contain realistic, benign daily clutter (e.g. junk mail SMS, official bank salary deposit, news browsing history, ordinary photos of food or pets), requiring the player to genuinely inspect and deduce where real clues are hidden.
+
+### Ecommerce
+
+| Clue ID | Clue Description | Sub-Type | Intended Truth / Twist | Difficulty |
+|---|---|---|---|---|
+| `CLUE-POSH-06` | **Người nhận nữ vô tội:** Đơn quà có người nhận là phụ nữ lạ (lễ tân nhận hộ hoa sinh nhật sếp, mẹ chồng nhận bình nóng lạnh); SĐT người nhận khớp danh bạ vô tội và chat người bán ghi rõ thiệp. | Recipient Red Herring | Innocent | Easy |

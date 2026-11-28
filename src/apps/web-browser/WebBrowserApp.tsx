@@ -6,24 +6,19 @@ import { getAppBrand } from '../../shared/branding';
 const BRAND = getAppBrand('web-browser');
 import { IoCompassOutline, IoGlobeOutline, IoSearchOutline } from 'react-icons/io5';
 import { IoCompass } from 'react-icons/io5';
-import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
 import { StoryEvidenceTarget } from '../../features/investigation';
 import { UniversalEvidenceModal, UniversalEvidenceItem } from '../../features/investigation';
 
 export const WebBrowserApp: React.FC<VirtualAppProps> = ({
   caseData,
   onTagSuspect,
-  onReturnHome,
 }) => {
   const browserData = readAppData(caseData.appsData?.['web-browser'] || {});
   const history = browserData.history || [];
   const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
 
-  const swipeHandlers = useSwipeBack({ onBack: onReturnHome, exitsApp: true });
-
   return (
     <div
-      {...swipeHandlers}
       className="flex flex-col h-full w-full bg-[#F2F2F7] text-[#111827] select-none font-sans"
     >
       <header className="flex items-center justify-between px-3 h-14 bg-[#3F51B5] text-white shadow-md shrink-0">
@@ -58,7 +53,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
               key={item.id}
               item={{
                 title: item.title,
-                profileName: caseData.husbandName,
+                profileName: caseData.husband.shortName,
                 subtitle: `${item.time} • ${item.url}`,
                 snippet: `Tìm kiếm: "${item.title}"\nURL: ${item.url}`,
                 suspectToTag: item.suspectName || item.title || 'Lịch sử duyệt web',
@@ -103,7 +98,6 @@ export const appDefinition: AppDefinition = {
   icon: IoCompass,
   themeGradient: 'from-blue-600 to-indigo-700',
   themeColor: '#3F51B5', bottomBarColor: '#F2F2F7',
-  notificationBadgeCount: 0,
   isLocked: false,
   component: WebBrowserApp,
 };

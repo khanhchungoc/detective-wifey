@@ -1,12 +1,33 @@
-import { createElement } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { createElement, Suspense } from 'react';
+import { renderToPipeableStream } from 'react-dom/server';
+import { Writable } from 'node:stream';
 import { describe, expect, it, vi } from 'vitest';
 import { APP_REGISTRY } from './appRegistry';
 import { createAppContext } from './appContext';
 import { loadCase } from '../features/case-runtime';
 import type { AppId } from '../shared/contracts/app-contracts';
+import { useCaseFixtures } from '../tests/helpers/caseFixtures';
+
+function renderAsync(element: React.ReactElement): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let html = '';
+    const writable = new Writable({
+      write(chunk, _encoding, callback) {
+        html += Buffer.isBuffer(chunk) ? chunk.toString('utf8') : String(chunk);
+        callback();
+      },
+    });
+    writable.on('finish', () => resolve(html));
+    writable.on('error', reject);
+    const { pipe } = renderToPipeableStream(element, {
+      onAllReady() { pipe(writable); },
+      onError(error) { reject(error); },
+    });
+  });
+}
 
 describe('app host projection', () => {
+  useCaseFixtures();
   it('registers Phone and Messages as distinct applications with legacy communication payload support', () => {
     expect(APP_REGISTRY.messages.component).not.toBe(APP_REGISTRY.phone.component);
     expect(APP_REGISTRY.messages.displayName).toBe('Tin nhắn');
@@ -24,14 +45,18 @@ describe('app host projection', () => {
     expect(source.lockChallenges.some(challenge => 'expectedAnswer' in challenge)).toBe(true);
   });
 
-  it('renders every registered app for every bundled level using only its public context', () => {
+  it('renders every registered app for every bundled level and fixture level using only its public context', async () => {
     for (const caseId of ['case_01', 'case_02', 'case_03']) {
       const config = loadCase(caseId);
       for (const [appId, definition] of Object.entries(APP_REGISTRY)) {
-        const html = renderToStaticMarkup(createElement(definition.component, {
-          caseData: createAppContext(config, appId as AppId),
-          unlockedChallenges: new Set<string>(), onTagSuspect: vi.fn(), onReturnHome: vi.fn(), onRequestUnlock: vi.fn(),
-        }));
+        const html = await renderAsync(createElement(
+          Suspense,
+          { fallback: null },
+          createElement(definition.component, {
+            caseData: createAppContext(config, appId as AppId),
+            unlockedChallenges: new Set<string>(), onTagSuspect: vi.fn(), onReturnHome: vi.fn(), onRequestUnlock: vi.fn(),
+          }),
+        ));
         expect(html.length, `${caseId}/${appId}`).toBeGreaterThan(0);
       }
     }

@@ -1,43 +1,48 @@
 import type { CaseKnowledgeGraph, CaseGraphEdge, CaseGraphNode } from '../../shared/contracts/knowledge-graph';
 import type { PlacedNode } from './types';
 
-export const CANVAS_SIZE = 1800;
-export const MIN_ZOOM = 0.5;
+/** Wide 3:2 evidence board (world units). Sized for the 20-30 clue ceiling of a level. */
+export const CANVAS_WIDTH = 1800;
+export const CANVAS_HEIGHT = 1200;
+export const MIN_ZOOM = 0.35;
 export const MAX_ZOOM = 2.0;
 
 /**
  * 3 columns centered horizontally on the 1800px canvas.
- * Card width = 210px. Gap = 40px. Total span = 710px.
- * Left & right margins = (1800 - 710) / 2 = 545px.
- * Column 0: 545 (center 650)
- * Column 1: 795 (center 900 - exact canvas center)
- * Column 2: 1045 (center 1150)
+ * Card width = 176px. Gap = 28px. Total span = 584px.
+ * Left & right margins = (1800 - 584) / 2 = 608px.
+ * Column 0: 608 (center 696)
+ * Column 1: 812 (center 900 - exact canvas center)
+ * Column 2: 1016 (center 1104)
  */
-export const CARD_WIDTH = 210;
-export const COLUMN_GAP = 40;
-export const CORKBOARD_ROW_HEIGHT = 220;
-export const CORKBOARD_VERTICAL_GAP = 40;
-export const INITIAL_BASE_Y = 160;
+export const CARD_WIDTH = 176;
+export const COLUMN_GAP = 28;
+export const CORKBOARD_ROW_HEIGHT = 188;
+export const CORKBOARD_VERTICAL_GAP = 32;
+/** Vertically centers the first row of cards (~110px tall) at CANVAS_HEIGHT / 2. */
+export const INITIAL_BASE_Y = Math.round(CANVAS_HEIGHT / 2 - 55);
+/** Auto-placed rows hold up to 6 cards so the wide board fills sideways before downwards. */
+export const MAX_ROW_COLUMNS = 6;
 
 /**
- * Default fallback columns (centered at 900 with 40px gap).
- * Col 0: 545 (center 650)
- * Col 1: 795 (center 900 - canvas center)
- * Col 2: 1045 (center 1150)
+ * Default fallback columns (centered at 900 with 28px gap).
+ * Col 0: 608 (center 696)
+ * Col 1: 812 (center 900 - canvas center)
+ * Col 2: 1016 (center 1104)
  */
-export const CORKBOARD_COLUMNS_X = [545, 795, 1045] as const;
+export const CORKBOARD_COLUMNS_X = [608, 812, 1016] as const;
 
 /**
  * Calculates symmetric, centered X coordinates for `count` cards (1..3) in a row,
  * centered horizontally around `clusterCenterX`.
  */
 export function getRowColumnPositions(count: number, clusterCenterX: number): number[] {
-  const clampedCount = Math.max(1, Math.min(3, count));
+  const clampedCount = Math.max(1, Math.min(MAX_ROW_COLUMNS, count));
   const totalWidth = clampedCount * CARD_WIDTH + (clampedCount - 1) * COLUMN_GAP;
   let startX = clusterCenterX - totalWidth / 2;
 
-  // Clamp within canvas boundaries [30, CANVAS_SIZE - totalWidth - 30]
-  startX = Math.max(30, Math.min(CANVAS_SIZE - totalWidth - 30, startX));
+  // Clamp within canvas boundaries [30, CANVAS_WIDTH - totalWidth - 30]
+  startX = Math.max(30, Math.min(CANVAS_WIDTH - totalWidth - 30, startX));
 
   const positions: number[] = [];
   for (let i = 0; i < clampedCount; i++) {
@@ -70,7 +75,7 @@ export function placeNewNodesBelow(
   if (newNodes.length === 0) return [];
 
   // 1. Calculate the horizontal center of existing card areas
-  let clusterCenterX = CANVAS_SIZE / 2; // 600 default
+  let clusterCenterX = CANVAS_WIDTH / 2;
   if (existingNodes.length > 0) {
     const lefts = existingNodes.map(n => n.x);
     const rights = existingNodes.map(n => n.x + CARD_WIDTH);
@@ -100,8 +105,8 @@ export function placeNewNodesBelow(
 
     const isBottomShelf = isMatchingShelf && (otherCards.length === 0 || maxY >= otherMaxBottom - 20);
 
-    if (isBottomShelf && bottomRowCards.length >= 1 && bottomRowCards.length < 3) {
-      const slotsToFill = Math.min(3 - bottomRowCards.length, remainingNewNodes.length);
+    if (isBottomShelf && bottomRowCards.length >= 1 && bottomRowCards.length < MAX_ROW_COLUMNS) {
+      const slotsToFill = Math.min(MAX_ROW_COLUMNS - bottomRowCards.length, remainingNewNodes.length);
       const newTotalInRow = bottomRowCards.length + slotsToFill;
       const newXs = getRowColumnPositions(newTotalInRow, clusterCenterX);
 
@@ -130,9 +135,9 @@ export function placeNewNodesBelow(
 
     let idx = 0;
     while (idx < remainingNewNodes.length) {
-      const nodesInThisRow = Math.min(3, remainingNewNodes.length - idx);
+      const nodesInThisRow = Math.min(MAX_ROW_COLUMNS, remainingNewNodes.length - idx);
       const xs = getRowColumnPositions(nodesInThisRow, clusterCenterX);
-      const currentY = Math.max(40, Math.min(CANVAS_SIZE - 200, baseY));
+      const currentY = Math.max(40, Math.min(CANVAS_HEIGHT - 200, baseY));
 
       for (let c = 0; c < nodesInThisRow; c++) {
         const node = remainingNewNodes[idx + c];
@@ -178,16 +183,20 @@ export function createEdgeBetweenNodes(
     return { newEdge: null, isDuplicate: true };
   }
 
-  // Helper to find equivalent canonical node IDs (e.g. node_alias_tuan and node_record_zola_chat share recordRefId)
+  // A pinned card stands for every canonical node it can prove: its own id, its conversation,
+  // and each pinned message (one thread card may carry several graph records, e.g. wife 18:55 + 20:46).
   const getEquivalentNodeIds = (targetId: string): string[] => {
     const ids = [targetId];
-    const node = canonicalGraph.nodes.find(n => n.nodeId === targetId);
-    if (node?.recordRefId) {
-      for (const other of canonicalGraph.nodes) {
-        if (other.nodeId !== targetId && other.recordRefId === node.recordRefId && (!other.sourceAppId || !node.sourceAppId || other.sourceAppId === node.sourceAppId)) {
-          ids.push(other.nodeId);
-        }
-      }
+    const pinned = pinnedNodes?.find(n => n.nodeId === targetId);
+    const canonicalNode = canonicalGraph.nodes.find(n => n.nodeId === targetId);
+    const app = pinned?.sourceAppId ?? canonicalNode?.sourceAppId;
+    const refs = new Set<string>(
+      [pinned?.recordRefId, pinned?.conversationId, canonicalNode?.recordRefId,
+        ...(pinned?.messages?.map(message => message.recordId) ?? [])].filter((ref): ref is string => Boolean(ref)),
+    );
+    for (const other of canonicalGraph.nodes) {
+      if (other.nodeId === targetId || !other.recordRefId || !refs.has(other.recordRefId)) continue;
+      if (!other.sourceAppId || !app || other.sourceAppId === app) ids.push(other.nodeId);
     }
     return ids;
   };
@@ -206,24 +215,20 @@ export function createEdgeBetweenNodes(
     const target = pinnedNodes.find(node => node.nodeId === nodeBId);
     const content = (node?: CaseGraphNode) =>
       [node?.subtitle, ...(node?.messages?.map(message => message.text) ?? [])].filter(Boolean).join('\n');
-    // A conversation's other messages are not evidence until the player pins them.
-    if (canonical?.edgeId === 'edge_zola_dinner_receipt') {
-      const chat = source?.sourceAppId === 'internet-messaging' ? source : target;
-      const text = chat?.messages?.map(message => message.text).join('\n') ?? '';
-      if (!/com\s+nieu/i.test(text.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))) canonical = undefined;
-    }
-    const isPhoneOrder = (source?.sourceAppId === 'phone' && target?.sourceAppId === 'ecommerce') ||
-      (target?.sourceAppId === 'phone' && source?.sourceAppId === 'ecommerce');
-    if (isPhoneOrder) {
+    // An order is tied to a phone only when the pinned phone record shows the order's own number.
+    const orderCard = source?.sourceAppId === 'ecommerce' && target?.sourceAppId === 'phone' ? source
+      : target?.sourceAppId === 'ecommerce' && source?.sourceAppId === 'phone' ? target : undefined;
+    if (orderCard) {
       const phones = (node?: CaseGraphNode) => (content(node).match(/(?<!\d)(?:\+84|0)(?:[ .-]?\d){9}(?!\d)/g) ?? [])
         .map(phone => phone.replace(/[ .-]/g, '').replace(/^\+84/, '0'));
       const targetPhones = phones(target);
       if (phones(source).some(phone => targetPhones.includes(phone))) {
-        canonical = canonicalGraph.edges.find(edge => edge.edgeId === 'edge_order_phone') ?? {
-          edgeId: `shared_phone_${[nodeAId, nodeBId].sort().join('_')}`,
-          sourceNodeId: nodeAId, targetNodeId: nodeBId,
-          relationship: 'bridges_identity', isSmokingGun: false,
-        };
+        // Any phone record (contact or call) with the order's number backs the order's canonical phone bridge.
+        const orderIds = getEquivalentNodeIds(orderCard.nodeId);
+        canonical = canonicalGraph.edges.find(edge => edge.relationship === 'bridges_identity' && (
+          (orderIds.includes(edge.sourceNodeId) && canonicalGraph.nodes.find(n => n.nodeId === edge.targetNodeId)?.sourceAppId === 'phone') ||
+          (orderIds.includes(edge.targetNodeId) && canonicalGraph.nodes.find(n => n.nodeId === edge.sourceNodeId)?.sourceAppId === 'phone')
+        ));
       } else {
         canonical = undefined;
       }
@@ -463,7 +468,15 @@ export function autoArrangeNodes(
     ...node, x: positions[i].x - sizes[i].width / 2, y: positions[i].y - sizes[i].height / 2,
   }));
   const center = calculateClueCardsCenter(placed, id => sizes[indices.get(id)!]);
-  return placed.map(node => ({ ...node, x: node.x + CANVAS_SIZE / 2 - center.x, y: node.y + CANVAS_SIZE / 2 - center.y }));
+  return placed.map(node => ({ ...node, x: node.x + CANVAS_WIDTH / 2 - center.x, y: node.y + CANVAS_HEIGHT / 2 - center.y }));
+}
+
+/** Keeps a card's top-left corner inside the board (drag and restored saves share this rule). */
+export function clampCardPosition(x: number, y: number): { x: number; y: number } {
+  return {
+    x: Math.round(Math.max(20, Math.min(CANVAS_WIDTH - 230, x))),
+    y: Math.round(Math.max(20, Math.min(CANVAS_HEIGHT - 180, y))),
+  };
 }
 
 /**
@@ -475,14 +488,14 @@ export function clampZoom(scale: number): number {
 
 /**
  * Calculates the bounding box center of all placed clue cards.
- * If no cards are placed, defaults to the canvas center (CANVAS_SIZE / 2).
+ * If no cards are placed, defaults to the canvas center.
  */
 export function calculateClueCardsCenter(
   nodes: PlacedNode[],
   getCardDimension?: (nodeId: string) => { width?: number; height?: number } | undefined,
 ): { x: number; y: number } {
   if (nodes.length === 0) {
-    return { x: CANVAS_SIZE / 2, y: CANVAS_SIZE / 2 };
+    return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 };
   }
   const minX = Math.min(...nodes.map(n => n.x));
   const maxX = Math.max(

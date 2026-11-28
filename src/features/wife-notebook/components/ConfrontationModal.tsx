@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   IoScaleOutline,
@@ -15,7 +15,8 @@ import {
   IoChevronBackOutline,
   IoChevronForwardOutline,
 } from 'react-icons/io5';
-import type { ConfrontationSlot, VerdictType } from '../../../shared/contracts/case-schema';
+import type { ConfrontationSlot, EpilogueNotification, VerdictType } from '../../../shared/contracts/case-schema';
+import { NotificationBanner } from '../../../shared/ui/NotificationBanner';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
 import {
   CHOICE_STAGGER_S,
@@ -36,6 +37,8 @@ export interface ConfrontationModalProps {
   isOpen: boolean;
   session?: ScriptedConfrontationState | null;
   evaluation?: ConfrontationEvaluationResult | null;
+  /** Hook into the next level, shown once as a banner after the ending resolves. */
+  epilogueNotification?: EpilogueNotification;
   maxStrikes: number;
   onSelectChoice?: (choiceId: string) => void;
   onContinueInvestigation: () => void;
@@ -58,9 +61,9 @@ const VERDICT_STAMP_LABELS: Record<VerdictType, string> = {
   innocent: 'MINH OAN CHỒNG VÔ TỘI',
 };
 
-function getAdvanceLabel(verdict: VerdictType, endingChoiceId: string | null): string {
+function getAdvanceLabel(verdict: VerdictType, endingOutcome: 'divorce' | 'forgive' | null): string {
   if (verdict === 'innocent') return 'Làm lành & Qua màn';
-  if (endingChoiceId?.includes('divorce')) return 'Chốt hồ sơ & Qua màn';
+  if (endingOutcome === 'divorce') return 'Chốt hồ sơ & Qua màn';
   return 'Tha thứ & Qua màn';
 }
 
@@ -145,6 +148,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
   isOpen,
   session,
   evaluation,
+  epilogueNotification,
   maxStrikes,
   onSelectChoice,
   onContinueInvestigation,
@@ -154,6 +158,13 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = Boolean(useReducedMotion());
+  const [isEpilogueDismissed, setIsEpilogueDismissed] = useState(false);
+  useEffect(() => {
+    if (!isOpen || session?.phase !== 'resolved') setIsEpilogueDismissed(false);
+  }, [isOpen, session?.phase]);
+  const epilogueToast = epilogueNotification && isOpen && session?.phase === 'resolved' && !isEpilogueDismissed
+    ? { toastId: 'epilogue', ...epilogueNotification }
+    : null;
 
   const isLockedCaught = session
     ? false
@@ -344,7 +355,12 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
             paddingBottom: 'max(12px, var(--phone-system-bottom, 14px))',
           }}
         >
-          {/* TIER 1 (TOP): Dark Interrogation Stage + Top-Down Spotlight + Comic Hoang */}
+          <NotificationBanner
+            toast={epilogueToast}
+            onClose={() => setIsEpilogueDismissed(true)}
+            onClick={() => setIsEpilogueDismissed(true)}
+          />
+          {/* TIER 1 (TOP): Dark Interrogation Stage + Top-Down Spotlight + Comic husband */}
           <section className="relative flex flex-col items-center shrink-0 bg-gradient-to-b from-[#080b0f] via-[#0b1017] to-[#080b0f] px-3 pt-1 pb-2 overflow-hidden">
             {/* Stage Overhead Spotlight Cone */}
             <motion.div
@@ -395,6 +411,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
             <div className="relative z-10 mt-1 flex flex-col items-center">
               <HusbandCharacterImage
                 mood={session.husbandMood}
+                husbandName={session.husbandName}
                 hitTrigger={session.hitSeq}
                 size={172}
                 className="short:scale-90 origin-center"
@@ -656,7 +673,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
                     className="w-full min-h-[48px] rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.97] active:opacity-75 transition-[transform,opacity] duration-[85ms] text-white font-sans text-ios-subheadline font-semibold flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                   >
                     <IoLockOpenOutline className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span>{getAdvanceLabel(session.verdict, session.selectedEndingChoiceId)}</span>
+                    <span>{getAdvanceLabel(session.verdict, session.selectedEndingOutcome)}</span>
                   </button>
                 </motion.div>
               )}
@@ -729,7 +746,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
 
         <div className="flex-1 flex flex-col items-center justify-center py-5 space-y-4">
           <div className="flex flex-col items-center gap-2">
-            <HusbandCharacterImage mood={husbandMood} size={140} />
+            <HusbandCharacterImage mood={husbandMood} husbandName={husbandName} size={140} />
             <span className="inline-block px-3 py-1 rounded-full bg-white/10 font-sans text-ios-caption-1 text-slate-300 border border-white/10 shadow-sm">
               ({currentMoodText})
             </span>

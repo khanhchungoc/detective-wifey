@@ -5,47 +5,17 @@ import {
   IoPeopleOutline,
   IoStorefrontOutline,
 } from 'react-icons/io5';
-import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.jpg';
-import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.jpg';
-
-const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
-  { index: 0, names: ['Anh Tuấn Thợ Điện'] }, // Anonymous electrician tools preserve the alias mystery.
-  { index: 1, names: ['Lan Anh Kế Toán'] }, // Ordinary workplace group photo.
-  { index: 2, names: ['Thảo PT California', 'Thảo PT Gym'] }, // Full-body gym mirror photo.
-  { index: 3, names: ['Bé Ngọc KTX'] }, // Anime student avatar.
-  { index: 4, names: ['Mai Lễ Tân'] }, // Casual side-angle lobby selfie.
-  { index: 5, names: ['Mẹ Ở Quê', 'Mẹ'] }, // Her garden and vegetables.
-  { index: 6, names: ['Vợ'] }, // Candid adult couple photo.
-  { index: 7, names: ['Tuấn Đụt'] }, // Amateur football team photo from a distance.
-  { index: 8, names: ['Nam Dev'] }, // Cat photo beside a laptop.
-  { index: 9, names: ['Bách Dev'] }, // Anime developer avatar.
-  { index: 10, names: ['Anh Bách QLDA - Ban Quản Lý Toà Nhà'] }, // Distant team gathering photo.
-  { index: 11, names: ['Bác Bảo Vệ Chung Cư'] }, // Everyday security-booth photo.
-  { index: 12, names: ['Đức Nghĩa'] }, // Landscape photo.
-  { index: 13, names: ['Bé Mèo Dễ Thương'] }, // Cat profile photo.
-  { index: 14, names: ['Bé Trang SV (0904***888)', 'Bé Trang SV'] }, // Off-center cafe selfie.
-  { index: 15, names: ['Nguyễn Thị Thu Hương', 'Thu Hương', 'Nguyễn Thị Thu Hương · Marketing', 'Thu Huong'] }, // Marketing specialist persona.
-];
-
-const normalize = (name: string) =>
-  name
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/gi, 'd')
-    .toLocaleLowerCase('vi')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-
-const avatarIndexByName = new Map<string, number>();
-for (const profile of AVATAR_PROFILES) {
-  for (const name of profile.names) avatarIndexByName.set(normalize(name), profile.index);
-}
+import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.webp';
+import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.webp';
+import { avatarIndexForName, normalizeAvatarName as normalize } from './avatarDirectory';
 
 const groupNames = new Set([
   'Alpha Team BA & Dev',
   'Team Dev Technosoft',
   'Gia Đình Ngoại',
   'Cư dân tầng 8',
+  'Cư dân tầng 12 CT2',
+  'Technosoft - Toàn công ty',
 ]);
 
 const flowerShopNames = new Set(['Tiệm Hoa Tươi Mimosa']);
@@ -73,21 +43,19 @@ for (const names of [groupNames, flowerShopNames, propertyOfficeNames, serviceNa
   normalized.forEach((name) => names.add(name));
 }
 
-function hashName(name: string) {
-  let hash = 0;
-  for (const character of name) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
-  return hash;
-}
-
 type ContactAvatarProps = {
   name: string;
+  /** Photo slot in the avatar sheet. Falls back to the name directory for name-only callers. */
+  avatarIndex?: number;
+  /** From data (thread.isGroup); shows the group icon whatever the group is named. */
+  isGroup?: boolean;
   size?: number;
   shape?: 'circle' | 'square';
   fluid?: boolean;
   className?: string;
 };
 
-export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
+export function ContactAvatar({ name, avatarIndex, isGroup = false, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
   const normalizedName = normalize(name);
   const dimensions: CSSProperties = fluid ? { width: '100%', height: '100%' } : { width: size, height: size, flexShrink: 0 };
   const displayClass = fluid ? 'flex' : 'inline-flex';
@@ -104,7 +72,7 @@ export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false
     );
   }
 
-  if (groupNames.has(normalizedName)) {
+  if (isGroup || groupNames.has(normalizedName)) {
     return (
       <span aria-hidden="true" className={`${classes} bg-[#EAF2FF] text-[#2563EB]`} style={dimensions}>
         <IoPeopleOutline className="h-[48%] w-[48%]" />
@@ -136,7 +104,16 @@ export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false
     );
   }
 
-  const index = avatarIndexByName.get(normalizedName) ?? hashName(normalizedName || 'unknown') % 16;
+  const index = avatarIndex ?? avatarIndexForName(name);
+  // Names without an assigned photo get an initial: borrowing another persona's photo would
+  // show the wrong person (e.g. a colleague wearing the receptionist's face).
+  if (index === undefined) {
+    return (
+      <span aria-hidden="true" className={`${classes} bg-[#D1D5DB] font-semibold text-[#4B5563]`} style={{ ...dimensions, fontSize: fluid ? undefined : size * 0.42 }}>
+        {name.trim().charAt(0).toLocaleUpperCase('vi')}
+      </span>
+    );
+  }
   const column = index % 4;
   const row = Math.floor(index / 4);
   const style: CSSProperties = {

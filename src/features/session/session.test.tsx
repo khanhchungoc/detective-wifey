@@ -27,7 +27,7 @@ function createMemoryStorage() {
 }
 
 const sampleSession: ActiveSessionState = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   gameId: 'jealous_wife',
   caseId: 'case_01',
   levelNumber: 1,
@@ -36,7 +36,7 @@ const sampleSession: ActiveSessionState = {
   taggedSuspects: [
     {
       suspectId: 'tag_1',
-      displayName: 'Anh Tuấn Thợ Điện',
+      displayName: 'Khoa BE',
       sourceApp: 'internet-messaging',
       timestamp: 1000,
     },
@@ -62,31 +62,31 @@ describe('LocalStorageAdapter', () => {
 
   it('saves, reads, and clears active session including associated corkboard state', async () => {
     await adapter.saveActiveSession(sampleSession);
-    storage.setItem('detective:v1:case_01:corkboard_state', '{"nodes":[]}');
+    storage.setItem('detective:v2:case_01:corkboard_state', '{"nodes":[]}');
 
     const loaded = await adapter.getActiveSession();
     expect(loaded?.caseId).toBe('case_01');
     expect(loaded?.taggedSuspects).toHaveLength(1);
-    expect(loaded?.schemaVersion).toBe(1);
+    expect(loaded?.schemaVersion).toBe(2);
 
     await adapter.clearActiveSession();
     expect(await adapter.getActiveSession()).toBeNull();
-    expect(storage.getItem('detective:v1:case_01:corkboard_state')).toBeNull();
+    expect(storage.getItem('detective:v2:case_01:corkboard_state')).toBeNull();
   });
 
   it('returns null when stored session JSON is corrupt or schemaVersion mismatches', async () => {
-    storage.setItem('detective:v1:jealous_wife:session', '{not-valid-json');
+    storage.setItem('detective:v2:jealous_wife:session', '{not-valid-json');
     expect(await adapter.getActiveSession()).toBeNull();
 
     storage.setItem(
-      'detective:v1:jealous_wife:session',
+      'detective:v2:jealous_wife:session',
       JSON.stringify({ ...sampleSession, schemaVersion: 99 }),
     );
     expect(await adapter.getActiveSession()).toBeNull();
 
     storage.setItem(
-      'detective:v1:jealous_wife:session',
-      JSON.stringify({ schemaVersion: 1, caseId: '' }),
+      'detective:v2:jealous_wife:session',
+      JSON.stringify({ schemaVersion: 2, caseId: '' }),
     );
     expect(await adapter.getActiveSession()).toBeNull();
   });
@@ -94,14 +94,14 @@ describe('LocalStorageAdapter', () => {
   it('returns default player progress when empty or corrupt and merges partial updates', async () => {
     const initial = await adapter.getPlayerProgress();
     expect(initial.unlockedLevel).toBe(1);
-    expect(initial.unlockedHusbandId).toBe('husband_hoang');
+    expect(initial.unlockedHusbandId).toBe('husband_01');
 
     await adapter.savePlayerProgress({ unlockedLevel: 2, bestStarRatings: { case_01: 3 } });
     const updated = await adapter.getPlayerProgress();
     expect(updated.unlockedLevel).toBe(2);
     expect(updated.bestStarRatings.case_01).toBe(3);
 
-    storage.setItem('detective:v1:jealous_wife:progress', '{broken');
+    storage.setItem('detective:v2:jealous_wife:progress', '{broken');
     const recovered = await adapter.getPlayerProgress();
     expect(recovered.unlockedLevel).toBe(1);
   });
@@ -139,8 +139,8 @@ describe('SessionWriter', () => {
         calls.push(`clear:${caseId ?? ''}`);
       },
       getPlayerProgress: async () => ({
-        schemaVersion: 1,
-        unlockedHusbandId: 'husband_hoang',
+        schemaVersion: 2,
+        unlockedHusbandId: 'husband_01',
         unlockedLevel: 1,
         bestStarRatings: {},
         earnedWifeTitles: [],

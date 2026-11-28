@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
+import { animate, AnimatePresence, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import {
   IoBackspaceOutline,
   IoBagHandleOutline,
   IoCameraOutline,
   IoCardOutline,
   IoChatbubbleEllipsesOutline,
-  IoFlashlightOutline,
+  IoChevronBack,
   IoLockClosedOutline,
   IoLockOpenOutline,
   IoMoon,
@@ -25,6 +25,7 @@ export interface PhoneLockscreenProps {
   currentStrikes: number;
   maxStrikes: number;
   onUnlock: (targetAppId?: string) => void;
+  onBack?: () => void;
   onPasscodeFailStrike: () => void;
 }
 
@@ -49,6 +50,7 @@ export const PIN_ERROR_MESSAGE = 'Mã PIN không chính xác. Nghi ngờ tăng l
 export const FACEID_SCAN_DELAY_MS = 350;
 export const SHAKE_RESET_DELAY_MS = 420;
 export const SWIPE_UP_THRESHOLD_PX = -44;
+export const SWIPE_UP_COMMIT_PX = -96;
 
 const SNAP_SPRING = { type: 'spring' as const, stiffness: 400, damping: 40 };
 const EASE_OUT_IOS = [0.22, 1, 0.36, 1] as const;
@@ -84,6 +86,22 @@ export function createInitialLockscreenState(): LockscreenState {
 
 export function isLockscreenSwipeUp(dx: number, dy: number): boolean {
   return dy <= SWIPE_UP_THRESHOLD_PX && Math.abs(dy) >= Math.abs(dx);
+}
+
+export type LockscreenSwipePhase = 'move' | 'end' | 'cancel';
+
+/**
+ * Decides whether a drag unlocks. Never unlocks while the finger is still down (`move`);
+ * only evaluates on finger lift (`end`) or browser cancel (`cancel`).
+ */
+export function shouldUnlockOnSwipe(phase: LockscreenSwipePhase, dx: number, dy: number): boolean {
+  if (phase === 'move') return false;
+  return isLockscreenSwipeUp(dx, dy);
+}
+
+/** Vertical offset (px, negative = up) the lockscreen overlay panel follows 1:1 while dragging upward. */
+export function lockscreenDragOffset(dy: number): number {
+  return Math.min(0, dy);
 }
 
 export function prefersReducedMotion(): boolean {
@@ -243,7 +261,7 @@ export const PasscodePadView: React.FC<PasscodePadViewProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
       transition={shouldReduceMotion ? { duration: 0.14 } : SNAP_SPRING}
-      className="relative z-10 flex flex-1 flex-col items-center justify-between px-6 pt-16 pb-6 bg-black/55 backdrop-blur-2xl"
+      className="glass-scrim relative z-10 flex flex-1 flex-col items-center justify-between px-6 pt-16 pb-6"
     >
       <div className="flex flex-col items-center text-center w-full max-w-xs">
         <IoLockClosedOutline aria-hidden="true" className="w-5 h-5 text-white/85 mb-2" />
@@ -326,7 +344,7 @@ export const PasscodePadView: React.FC<PasscodePadViewProps> = ({
                 onClick={() => onDigitPress(digit)}
                 whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
                 transition={SNAP_SPRING}
-                className="touch-target-min w-16 h-16 rounded-full bg-white/15 hover:bg-white/25 border border-white/10 flex flex-col items-center justify-center text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                className="glass-subtle touch-target-min w-16 h-16 rounded-full flex flex-col items-center justify-center text-white transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
               >
                 <span className="text-ios-lockpad-digit leading-none tabular-nums">
                   {digit}
@@ -359,7 +377,7 @@ export const PasscodePadView: React.FC<PasscodePadViewProps> = ({
             onClick={() => onDigitPress('0')}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
             transition={SNAP_SPRING}
-            className="touch-target-min w-16 h-16 rounded-full bg-white/15 hover:bg-white/25 border border-white/10 flex flex-col items-center justify-center text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            className="glass-subtle touch-target-min w-16 h-16 rounded-full flex flex-col items-center justify-center text-white transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
           >
             <span className="text-ios-lockpad-digit leading-none tabular-nums">0</span>
           </motion.button>
@@ -396,6 +414,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
   currentStrikes,
   maxStrikes,
   onUnlock,
+  onBack,
   onPasscodeFailStrike,
 }) => {
   const shouldReduceMotion = Boolean(useReducedMotion());
@@ -405,7 +424,8 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
     createInitialLockscreenState,
   );
   const swipeStartRef = useRef<{ x: number; y: number; id: number } | null>(null);
-  const [flashlightOn, setFlashlightOn] = useState(false);
+  const swipeLastRef = useRef<{ dx: number; dy: number } | null>(null);
+  const dragY = useMotionValue(0);
   const hasPasscode = Boolean(config.passcode);
   const isScanning = state.mode === 'scanning';
   const batteryRatio = parseBatteryRatio(config.batteryPercent);
@@ -478,41 +498,67 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
     dispatch({ type: 'CANCEL_PASSCODE' });
   }, []);
 
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (state.mode !== 'lockscreen' || event.button !== 0 || !event.isPrimary) return;
-    swipeStartRef.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
+  const finishSwipe = (phase: 'end' | 'cancel') => {
+    const start = swipeStartRef.current;
+    const last = swipeLastRef.current;
+    swipeStartRef.current = null;
+    swipeLastRef.current = null;
+    if (!start || state.mode !== 'lockscreen') return;
+    if (last && shouldUnlockOnSwipe(phase, last.dx, last.dy)) {
+      if (hasPasscode) {
+        if (dragY.get() !== 0) animate(dragY, 0, SNAP_SPRING);
+        handleRequestUnlock();
+        return;
+      }
+      if (shouldReduceMotion) {
+        onUnlock();
+        return;
+      }
+      const exitY = -(typeof window !== 'undefined' ? window.innerHeight : 900);
+      const ctrl = animate(dragY, exitY, { duration: 0.22, ease: EASE_OUT_IOS });
+      void ctrl.then(() => onUnlock());
+      return;
+    }
+    if (dragY.get() !== 0) animate(dragY, 0, SNAP_SPRING);
   };
 
-  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
+    if (state.mode !== 'lockscreen' || event.button !== 0 || !event.isPrimary) return;
+    swipeStartRef.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
+    swipeLastRef.current = null;
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
     const start = swipeStartRef.current;
-    swipeStartRef.current = null;
     if (!start || start.id !== event.pointerId || state.mode !== 'lockscreen') return;
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
-    if (isLockscreenSwipeUp(dx, dy)) {
-      handleRequestUnlock();
-    }
+    swipeLastRef.current = { dx, dy };
+    if (!shouldReduceMotion) dragY.set(lockscreenDragOffset(dy));
   };
 
-  const handlePointerCancel = () => {
-    swipeStartRef.current = null;
+  const handlePointerUp = (event: React.PointerEvent<HTMLElement>) => {
+    const start = swipeStartRef.current;
+    if (!start || start.id !== event.pointerId) return;
+    swipeLastRef.current = { dx: event.clientX - start.x, dy: event.clientY - start.y };
+    finishSwipe('end');
   };
+
+  const handlePointerCancel = () => finishSwipe('cancel');
 
   const visibleNotifications: LockscreenNotificationItem[] = config.notifications.slice(0, 2);
 
   return (
-    <motion.section
+    <section
       aria-label="Màn hình khóa điện thoại"
       data-phone-lockscreen="true"
       data-lockscreen-mode={state.mode}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
-      // Without this, mobile browsers claim the vertical drag as a scroll and cancel the pointer.
+      // Stationary hit target and stationary wallpaper; only the inner UI layer slides with the finger.
       style={{ touchAction: 'none' }}
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: shouldReduceMotion ? 0.14 : 0.26, ease: EASE_OUT_IOS }}
       className="absolute inset-0 z-30 flex flex-col justify-between overflow-hidden select-none font-sans text-white bg-gradient-to-b from-zinc-900 via-zinc-950 to-black"
     >
       {config.wallpaperUrl ? (
@@ -520,6 +566,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
           src={config.wallpaperUrl}
           alt=""
           aria-hidden="true"
+          data-lockscreen-wallpaper="true"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         />
       ) : null}
@@ -551,6 +598,11 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
         ) : (
           <motion.div
             key="lockscreen"
+            data-lockscreen-ui="true"
+            style={{ y: dragY, willChange: 'transform', backfaceVisibility: 'hidden' }}
+            className="relative z-10 flex flex-1 flex-col"
+          >
+          <motion.div
             initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
             animate={
               isScanning
@@ -629,7 +681,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                 className="mt-4 flex items-center justify-center gap-4"
               >
                 {/* Weather summary widget */}
-                <div className="min-h-14 px-3.5 py-2 rounded-2xl bg-slate-950/35 backdrop-blur-xl border border-white/10 flex flex-col items-start justify-center text-left">
+                <div className="glass-subtle min-h-14 px-3.5 py-2 rounded-2xl flex flex-col items-start justify-center text-left">
                   <span className="inline-flex items-center gap-1.5 text-ios-title-3 font-semibold text-white/95 tabular-nums leading-tight">
                     <IoMoonOutline aria-hidden="true" className="w-4 h-4 text-white/85 shrink-0" />
                     <span>24°</span>
@@ -645,7 +697,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                 {/* Circular battery gauge ring */}
                 <div
                   aria-label={`Pin ${config.batteryPercent}`}
-                  className="relative w-14 h-14 rounded-full bg-slate-950/35 backdrop-blur-xl flex items-center justify-center shrink-0"
+                  className="glass-subtle relative w-14 h-14 rounded-full flex items-center justify-center shrink-0"
                 >
                   <svg
                     aria-hidden="true"
@@ -680,7 +732,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                 {/* Circular quiet night gauge ring (icon-only) */}
                 <div
                   aria-label="Không làm phiền"
-                  className="relative w-14 h-14 rounded-full bg-slate-950/35 backdrop-blur-xl flex items-center justify-center shrink-0"
+                  className="glass-subtle relative w-14 h-14 rounded-full flex items-center justify-center shrink-0"
                 >
                   <svg
                     aria-hidden="true"
@@ -740,7 +792,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                           ease: EASE_OUT_IOS,
                         }}
                         whileTap={shouldReduceMotion || isScanning ? undefined : { scale: 0.98 }}
-                        className="touch-target-min w-full bg-slate-950/55 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3.5 text-left flex items-center gap-3.5 hover:bg-slate-900/65 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:opacity-70"
+                        className="glass-elevated touch-target-min w-full rounded-2xl px-4 py-3.5 text-left flex items-center gap-3.5 transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:opacity-70"
                       >
                         {notif.iconAsset ? (
                           <span className="w-11 h-11 rounded-xl overflow-hidden shrink-0">
@@ -781,29 +833,26 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                   <div
                     aria-hidden="true"
                     data-lockscreen-notif-peek="true"
-                    className="h-2 mx-4 rounded-b-2xl bg-slate-950/35 border-x border-b border-white/10"
+                    className="glass-subtle border-t-0 h-2 mx-4 rounded-b-2xl"
                   />
                 </div>
               ) : null}
 
-              {/* Bottom: iOS Flashlight & Camera quick actions + quiet unlock trigger + Home bar */}
+              {/* Bottom: Back & Camera quick actions + quiet unlock trigger */}
               <div className="flex flex-col items-center gap-3">
                 <div className="w-full flex items-center justify-between px-3">
                   <motion.button
                     type="button"
-                    aria-label="Đèn pin"
-                    aria-pressed={flashlightOn}
-                    data-lockscreen-flashlight="true"
-                    onClick={() => setFlashlightOn(prev => !prev)}
-                    whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
+                    aria-label="Quay lại"
+                    data-lockscreen-back="true"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={onBack}
+                    disabled={!onBack}
+                    whileTap={shouldReduceMotion || !onBack ? undefined : { scale: 0.92 }}
                     transition={SNAP_SPRING}
-                    className={`touch-target-min w-12 h-12 rounded-full backdrop-blur-xl border flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${
-                      flashlightOn
-                        ? 'bg-white/90 text-slate-950 border-white'
-                        : 'bg-slate-950/45 text-white border-white/10 hover:bg-slate-900/60'
-                    }`}
+                    className="glass-subtle touch-target-min w-12 h-12 rounded-full text-white flex items-center justify-center transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 disabled:opacity-40"
                   >
-                    <IoFlashlightOutline aria-hidden="true" className="w-5 h-5" />
+                    <IoChevronBack aria-hidden="true" className="w-5 h-5" />
                   </motion.button>
 
                   <AnimatePresence mode="wait" initial={false}>
@@ -849,7 +898,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
                     data-lockscreen-camera="true"
                     whileTap={shouldReduceMotion ? undefined : { scale: 0.92 }}
                     transition={SNAP_SPRING}
-                    className="touch-target-min w-12 h-12 rounded-full bg-slate-950/45 backdrop-blur-xl border border-white/10 text-white hover:bg-slate-900/60 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                    className="glass-subtle touch-target-min w-12 h-12 rounded-full text-white flex items-center justify-center transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                   >
                     <IoCameraOutline aria-hidden="true" className="w-5 h-5" />
                   </motion.button>
@@ -858,9 +907,10 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
               </div>
             </div>
           </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </motion.section>
+    </section>
   );
 };
 

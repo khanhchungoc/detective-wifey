@@ -1,4 +1,4 @@
-import { record, records, text, textFields, number } from '../../shared/data/read';
+import { record, records, text, textFields, number, optionalNumber } from '../../shared/data/read';
 import type {
   MessagingDataContract,
   MessagingThread,
@@ -25,6 +25,9 @@ function message(data: Record<string, unknown>): MessagingMessage {
     type:
       data.type === 'location' ? 'location' : data.type === 'image' ? 'image' : 'text',
     isRead: data.isRead === true,
+    senderContactId: text(data.senderContactId) || undefined,
+    senderName: text(data.senderName) || undefined,
+    replyToId: text(data.replyToId) || undefined,
     locationData: data.locationData
       ? textFields(location, ['venueName', 'address', 'mapThumbnail'] as const)
       : undefined,
@@ -77,6 +80,7 @@ function thread(data: Record<string, unknown>): MessagingThread {
     threadId: text(data.threadId),
     contactName: text(data.contactName),
     avatarGradient: text(data.avatarGradient),
+    avatarIndex: optionalNumber(data.avatarIndex),
     lastMessage: derivedLastMessage,
     timestamp: derivedTimestamp,
     suspectId: text(data.suspectId),
@@ -86,6 +90,9 @@ function thread(data: Record<string, unknown>): MessagingThread {
     isPinned: data.isPinned === true,
     isDisguised: data.isDisguised === true,
     isMuted: data.isMuted === true,
+    isGroup: data.isGroup === true || undefined,
+    memberCount: number(data.memberCount) || undefined,
+    pinnedMessageId: text(data.pinnedMessageId) || undefined,
     messages: sortedMessages,
   };
 }
@@ -156,6 +163,7 @@ export function readMessagingData(value: unknown): MessagingDataContract {
         'suspectName',
       ] as const),
       isBlocked: contact.isBlocked === true,
+      avatarIndex: optionalNumber(contact.avatarIndex),
     })),
     cloudDocuments: records(data.cloudDocuments).map(document),
     timelinePosts: Array.isArray(data.timelinePosts)

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../data/cases/husband_01/level_01'; // registers contact photo names
 import { describe, it, expect, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
@@ -18,30 +19,31 @@ import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { CaseGraphEdge } from '../shared/contracts/knowledge-graph';
 import type { AppId } from '../shared/contracts/app-contracts';
 import type { GameStateRepository, ActiveSessionState, PlayerProgress } from '../features/session';
+import { husbandFixture } from './helpers/husbandFixture';
 
 describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () => {
   const mockCaseConfig: CaseConfig = {
     caseId: 'case_01',
-    husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandId: 'husband_01',
+    husband: husbandFixture,
     levelNumber: 1,
     allowedStrikes: 5,
     groundTruth: {
       verdict: 'cheating',
-      culpritSuspectId: 'suspect_huong',
+      culpritSuspectId: 'suspect_01',
       narrativeRoast:
-        'Thợ điện gì mà hẹn lại đúng ngày, nhận váy kèm thiệp riêng, còn khiến anh họp ở công ty mà quẹt thẻ tận quán cơm! Anh sửa điện hay sửa luôn lời khai?',
+        'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
       overJealousRoast:
         'Năm người góp mỗi người một trăm mua quà cho sếp. Em đọc đến dòng thứ ba là giải được, sao lại đối chất từ dòng thứ nhất?',
     },
     suspectPool: [
       {
-        suspectId: 'suspect_huong',
+        suspectId: 'suspect_01',
         displayName: 'Nguyễn Thị Thu Hương',
         initialDiscoveredApp: 'internet-messaging',
       },
       {
-        suspectId: 'suspect_lan_anh',
+        suspectId: 'suspect_04',
         displayName: 'Lan Anh Kế Toán',
         initialDiscoveredApp: 'internet-messaging',
       },
@@ -74,10 +76,10 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
   };
 
   const smokingGunEdge3: CaseGraphEdge = {
-    edgeId: 'test_third_smoking_gun',
+    edgeId: 'edge_order_name',
     isCanonical: true,
-    sourceNodeId: 'node_record_zola_chat',
-    targetNodeId: 'node_record_ecommerce_order',
+    sourceNodeId: 'node_record_ecommerce_order',
+    targetNodeId: 'node_bridge_name',
     relationship: 'bridges_identity',
     isSmokingGun: true,
   };
@@ -127,9 +129,9 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
     it('AC 7: Accusing an innocent red-herring suspect with bridge edges triggers specific over-jealous roast', () => {
       const redHerringEdge: CaseGraphEdge = {
-        edgeId: 'custom_edge_lan_anh',
+        edgeId: 'custom_edge_902',
         sourceNodeId: 'node_bridge_phone',
-        targetNodeId: 'node_suspect_lan_anh',
+        targetNodeId: 'node_suspect_04',
         relationship: 'bridges_identity',
       };
 
@@ -137,13 +139,13 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
         activeEdges: [redHerringEdge],
-        unmaskedSuspectIds: ['node_suspect_lan_anh'],
+        unmaskedSuspectIds: ['node_suspect_04'],
         currentStrikes: 5,
       });
 
       expect(result.stars).toBe(0);
       expect(result.isRedHerringAccusation).toBe(true);
-      expect(result.husbandDialogue).toContain('Năm người góp mỗi người một trăm mua quà cho sếp');
+      expect(result.husbandDialogue).toContain('Lan Anh thu quỹ sinh nhật sếp');
     });
 
     it('Accusing wrong suspect directly via accusedSuspectId triggers 0 stars, red herring roast, and 1 strike penalty', () => {
@@ -151,15 +153,15 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
         activeEdges: [smokingGunEdge1, smokingGunEdge2, smokingGunEdge3], // Even with all smoking gun edges connected
-        unmaskedSuspectIds: ['node_suspect_huong'],
-        accusedSuspectId: 'suspect_lan_anh', // Accused the wrong person!
+        unmaskedSuspectIds: ['node_suspect_01'],
+        accusedSuspectId: 'suspect_04', // Accused the wrong person!
         currentStrikes: 5,
       });
 
       expect(result.stars).toBe(0);
       expect(result.isRedHerringAccusation).toBe(true);
       expect(result.husbandMood).toBe('confident');
-      expect(result.husbandDialogue).toContain('Năm người góp mỗi người một trăm mua quà cho sếp');
+      expect(result.husbandDialogue).toContain('Lan Anh thu quỹ sinh nhật sếp');
       expect(result.newStrikesRemaining).toBe(4);
     });
 
@@ -167,27 +169,27 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const suspects = getSuspectsOnBoard({
         placedNodes: [
           {
-            nodeId: 'node_suspect_huong',
+            nodeId: 'node_suspect_01',
             sourceAppId: 'phone',
             type: 'suspect',
             label: 'Nguyễn Thị Thu Hương',
-            suspectId: 'suspect_huong',
+            suspectId: 'suspect_01',
             x: 0,
             y: 0,
           },
           {
-            nodeId: 'node_alias_tuan',
+            nodeId: 'node_alias_01',
             type: 'alias',
-            label: 'Anh Tuấn Thợ Điện',
+            label: 'Khoa BE',
             visibleAlias: 'Thợ điện',
-            suspectId: 'suspect_huong',
+            suspectId: 'suspect_01',
             x: 0,
             y: 100,
           },
         ],
         taggedSuspects: [
           {
-            suspectId: 'suspect_lan_anh',
+            suspectId: 'suspect_04',
             displayName: 'Lan Anh Kế Toán',
             sourceApp: 'internet-messaging' as AppId,
             timestamp: 1000,
@@ -198,22 +200,22 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       });
 
       expect(suspects).toHaveLength(2);
-      expect(suspects.find(s => s.id === 'suspect_huong')).toMatchObject({
+      expect(suspects.find(s => s.id === 'suspect_01')).toMatchObject({
         sourceApp: 'phone', avatarName: 'Nguyễn Thị Thu Hương',
       });
-      expect(suspects.find(s => s.id === 'suspect_lan_anh')).toMatchObject({
+      expect(suspects.find(s => s.id === 'suspect_04')).toMatchObject({
         sourceApp: 'internet-messaging', avatarName: 'Lan Anh Kế Toán',
       });
-      expect(suspects.some(s => s.id === 'suspect_huong' && s.isCulprit === true)).toBe(true);
-      expect(suspects.some(s => s.id === 'suspect_lan_anh' && s.isCulprit === false)).toBe(true);
+      expect(suspects.some(s => s.id === 'suspect_01' && s.isCulprit === true)).toBe(true);
+      expect(suspects.some(s => s.id === 'suspect_04' && s.isCulprit === false)).toBe(true);
     });
 
     it('uses only pinned contact names and does not duplicate a contact from the suspect pool', () => {
       const suspects = getSuspectsOnBoard({
         placedNodes: [
-          { nodeId: 'node_alias_tuan', type: 'alias', label: 'Anh Tuấn Thợ Điện',
-            sourceAppId: 'internet-messaging', suspectId: 'suspect_huong', x: 0, y: 0 },
-          { nodeId: 'node_zola_tuan', type: 'suspect', label: 'Anh Tuấn Thợ Điện',
+          { nodeId: 'node_alias_01', type: 'alias', label: 'Khoa BE',
+            sourceAppId: 'internet-messaging', suspectId: 'suspect_01', x: 0, y: 0 },
+          { nodeId: 'node_902', type: 'suspect', label: 'Khoa BE',
             sourceAppId: 'internet-messaging', x: 0, y: 100 },
         ],
         caseConfig: mockCaseConfig,
@@ -221,29 +223,29 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       });
       expect(suspects).toHaveLength(1);
       expect(suspects[0]).toMatchObject({
-        id: 'suspect_huong', displayName: 'Anh Tuấn Thợ Điện',
-        avatarName: 'Anh Tuấn Thợ Điện', sourceApp: 'internet-messaging',
+        id: 'suspect_01', displayName: 'Khoa BE',
+        avatarName: 'Khoa BE', sourceApp: 'internet-messaging',
       });
       const preflight = calculateConfrontationPreflight({
         placedNodes: [
-          { nodeId: 'node_alias_tuan', type: 'alias', label: 'Anh Tuấn Thợ Điện',
+          { nodeId: 'node_alias_01', type: 'alias', label: 'Khoa BE',
             sourceAppId: 'internet-messaging', messages: [{ recordId: 'm', text: 'Visible message' }], x: 0, y: 0 },
           { nodeId: 'receipt', type: 'record_clue', label: 'Receipt', subtitle: 'Visible receipt', x: 0, y: 0 },
         ],
-        activeEdges: [{ edgeId: 'verified', sourceNodeId: 'node_alias_tuan', targetNodeId: 'receipt',
+        activeEdges: [{ edgeId: 'verified', sourceNodeId: 'node_alias_01', targetNodeId: 'receipt',
           isCanonical: true, relationship: 'bridges_identity', isSmokingGun: false }],
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       });
-      expect(preflight.accusedSuspectName).toBe('Anh Tuấn Thợ Điện');
+      expect(preflight.accusedSuspectName).toBe('Khoa BE');
       expect(preflight.verifiedCluesList.map(clue => clue.snippet)).toEqual(['Visible message', 'Visible receipt']);
       const html = renderToStaticMarkup(
         <ConfrontationConfirmModal isOpen preflight={calculateConfrontationPreflight({
           caseConfig: mockCaseConfig, activeEdges: [], totalClues: 10,
-        })} suspectsOnBoard={suspects} selectedSuspectId="suspect_huong"
+        })} suspectsOnBoard={suspects} selectedSuspectId="suspect_01"
           onConfirmConfront={vi.fn()} onCancel={vi.fn()} />,
       );
-      expect(html).toContain('Anh Tuấn Thợ Điện');
+      expect(html).toContain('Khoa BE');
       expect(html).not.toContain('Nguyễn Thị Thu Hương');
     });
 
@@ -252,7 +254,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
         activeEdges: [smokingGunEdge1],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
         rngRoll: 10,
       });
@@ -260,7 +262,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(result.stars).toBe(1);
       expect(result.verifiedSmokingGunCount).toBe(1);
       expect(result.husbandMood).toBe('surprised');
-      expect(result.husbandDialogue).toContain('Số thợ điện hôm trước anh gọi nhờ sửa dây mạng văn phòng mà');
+      expect(result.husbandDialogue).toContain('Khoa... Khoa là dev mới bên anh');
     });
 
     it('AC 5: 2 verified smoking-gun links yield 2 stars and stammering partial explanation', () => {
@@ -269,14 +271,14 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         requiredSmokingGunEdgeIds: [
           'edge_order_phone',
           'edge_alibi_contradiction',
-          'test_third_smoking_gun',
+          'edge_order_name',
         ],
       };
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         knowledgeGraph: caseWith3RequiredGraph,
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
       });
 
@@ -284,7 +286,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(result.verifiedSmokingGunCount).toBe(2);
       expect(result.requiredSmokingGunCount).toBe(3);
       expect(result.husbandMood).toBe('nervous');
-      expect(result.husbandDialogue).toContain('Con bé Marketing nhờ anh đặt hộ để áp mã Freeship Extra thôi mà em');
+      expect(result.husbandDialogue).toContain('Hương bên Marketing nhờ anh áp mã Freeship Extra');
     });
 
     it('AC 6: 3 verified smoking-gun links yield 3 stars, full breakdown confession, Wife Title, and roast', () => {
@@ -292,14 +294,14 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
         activeEdges: [smokingGunEdge1, smokingGunEdge2, smokingGunEdge3],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
       });
 
       expect(result.stars).toBe(3);
       expect(result.verifiedSmokingGunCount).toBe(3);
       expect(result.husbandMood).toBe('broken');
-      expect(result.husbandDialogue).toContain('Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu');
+      expect(result.husbandDialogue).toContain('Anh xin lỗi... không có họp nào cả');
       expect(result.wifeTitle).toBe('Nữ thám tử ghen tuông');
       expect(result.narrativeRoast).toBe(mockCaseConfig.groundTruth.narrativeRoast);
     });
@@ -338,11 +340,11 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           requiredSmokingGunEdgeIds: [
             'edge_order_phone',
             'edge_alibi_contradiction',
-            'test_third_smoking_gun',
+            'edge_order_name',
           ],
         },
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
       });
 
@@ -368,7 +370,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
         activeEdges: [smokingGunEdge1, smokingGunEdge2, smokingGunEdge3],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
       });
 
@@ -385,7 +387,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       );
 
       expect(html).toContain('Nữ thám tử ghen tuông');
-      expect(html).toContain('Thợ điện gì mà hẹn lại đúng ngày');
+      expect(html).toContain('Khoa BE gì mà mặc váy size S');
       expect(html).toContain('Tạo thẻ Roast khoe MXH');
       expect(html).toContain('Tha thứ &amp; Qua màn');
       expect(html).toContain('Cúi đầu, nhận tội');
@@ -396,7 +398,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
         activeEdges: [smokingGunEdge1, smokingGunEdge2, smokingGunEdge3],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
       });
 
@@ -419,7 +421,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     const createMockRepo = (): GameStateRepository => {
       let progress: PlayerProgress = {
         schemaVersion: 1,
-        unlockedHusbandId: 'husband_hoang',
+        unlockedHusbandId: 'husband_01',
         unlockedLevel: 1,
         bestStarRatings: {},
         earnedWifeTitles: [],
@@ -603,7 +605,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const winResult = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         activeEdges: [smokingGunEdge1],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
         cluesFound: 5,
         rngRoll: 20,
@@ -616,7 +618,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const lossResult = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         activeEdges: [smokingGunEdge1],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
         cluesFound: 5,
         rngRoll: 40,
@@ -641,7 +643,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         activeEdges: [smokingGunEdge1, smokingGunEdge2],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
         cluesFound: 9,
       });
@@ -664,7 +666,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         activeEdges: [smokingGunEdge1, smokingGunEdge2, smokingGunEdge3],
-        unmaskedSuspectIds: ['node_suspect_huong'],
+        unmaskedSuspectIds: ['node_suspect_01'],
         currentStrikes: 5,
         cluesFound: 10,
       });
@@ -687,10 +689,10 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const html = renderToStaticMarkup(
         <ConfrontationConfirmModal
           isOpen={true}
-          suspectsOnBoard={[{ id: 'suspect_huong', displayName: 'Pinned contact' }]}
-          selectedSuspectId="suspect_huong"
+          suspectsOnBoard={[{ id: 'suspect_01', displayName: 'Pinned contact' }]}
+          selectedSuspectId="suspect_01"
           preflight={lowPf}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -719,10 +721,10 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const html = renderToStaticMarkup(
         <ConfrontationConfirmModal
           isOpen={true}
-          suspectsOnBoard={[{ id: 'suspect_huong', displayName: 'Pinned contact' }]}
-          selectedSuspectId="suspect_huong"
+          suspectsOnBoard={[{ id: 'suspect_01', displayName: 'Pinned contact' }]}
+          selectedSuspectId="suspect_01"
           preflight={{ ...highPf, accusedSuspectAlias: 'SECRET_ALIAS' }}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -743,8 +745,8 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
     it('Step 1: Renders suspect picker list when multiple suspects exist on board', () => {
       const suspects = [
-        { id: 'suspect_huong', displayName: 'Nguyễn Thị Thu Hương', alias: 'Anh Tuấn Thợ Điện', avatarName: 'Anh Tuấn Thợ Điện', sourceApp: 'internet-messaging', isCulprit: true },
-        { id: 'suspect_lan_anh', displayName: 'Lan Anh Kế Toán', isCulprit: false },
+        { id: 'suspect_01', displayName: 'Nguyễn Thị Thu Hương', alias: 'Khoa BE', avatarName: 'Khoa BE', sourceApp: 'internet-messaging', isCulprit: true },
+        { id: 'suspect_04', displayName: 'Lan Anh Kế Toán', isCulprit: false },
       ];
 
       const pf = calculateConfrontationPreflight({
@@ -761,7 +763,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           suspectsOnBoard={suspects}
           getSourceApp={() => ({ displayName: 'Zola', iconAsset: '/zola.svg', icon: () => null, themeGradient: 'from-blue-500 to-blue-600' })}
           selectedSuspectId={null} // Step 1
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -770,12 +772,12 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
       expect(html).toContain('Chọn nghi phạm');
       expect(html).toContain('Nguyễn Thị Thu Hương');
-      expect(html).not.toContain('Anh Tuấn Thợ Điện');
+      expect(html).not.toContain('Khoa BE');
       expect(html).toContain('Lan Anh Kế Toán');
       expect(html).toContain('bg-white');
       expect(html).toContain('suspect-cork-tray');
-      expect(html).toContain('data-suspect-polaroid="suspect_huong"');
-      expect(html).toContain('data-suspect-polaroid="suspect_lan_anh"');
+      expect(html).toContain('data-suspect-polaroid="suspect_01"');
+      expect(html).toContain('data-suspect-polaroid="suspect_04"');
       expect(html).toContain('Nghi phạm');
       expect(html).toContain('contact-avatar-persona-sheet');
       expect(html).toContain('rounded-[1px]');
@@ -788,7 +790,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
     it('Step 1: Renders a single Polaroid suspect card centered with red pushpin and "Nghi phạm" stamp', () => {
       const suspects = [
-        { id: 'suspect_huong', displayName: 'Anh Tuấn Thợ Điện', avatarName: 'Anh Tuấn Thợ Điện', sourceApp: 'internet-messaging', isCulprit: true },
+        { id: 'suspect_01', displayName: 'Khoa BE', avatarName: 'Khoa BE', sourceApp: 'internet-messaging', isCulprit: true },
       ];
       const pf = calculateConfrontationPreflight({
         caseConfig: mockCaseConfig,
@@ -803,7 +805,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           preflight={pf}
           suspectsOnBoard={suspects}
           selectedSuspectId={null}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -811,8 +813,8 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       );
 
       expect(html).toContain('Chọn nghi phạm');
-      expect(html).toContain('data-suspect-polaroid="suspect_huong"');
-      expect(html).toContain('Anh Tuấn Thợ Điện');
+      expect(html).toContain('data-suspect-polaroid="suspect_01"');
+      expect(html).toContain('Khoa BE');
       expect(html).toContain('Nghi phạm');
       expect(html).toContain('w-[196px]');
       expect(html).toContain('aspect-square');
@@ -822,9 +824,9 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Step 1 & Step 2: Renders unmasked suspect card with real name, disguise alias link, phone evidence hint, and "Đã lột mặt nạ" stamp', () => {
       const suspects = [
         {
-          id: 'suspect_huong',
+          id: 'suspect_01',
           displayName: 'Nguyễn Thị Thu Hương',
-          alias: 'Anh Tuấn Thợ Điện',
+          alias: 'Khoa BE',
           avatarName: 'Nguyễn Thị Thu Hương',
           sourceApp: 'ecommerce',
           isCulprit: true,
@@ -837,7 +839,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         activeEdges: [],
         explicitCluesFound: 5,
         totalClues: 10,
-        unmaskedSuspectIds: ['suspect_huong'],
+        unmaskedSuspectIds: ['suspect_01'],
       });
 
       // Step 1: Suspect Selection
@@ -847,7 +849,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           preflight={pf}
           suspectsOnBoard={suspects}
           selectedSuspectId={null}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -857,7 +859,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(htmlStep1).toContain('Chọn nghi phạm');
       expect(htmlStep1).toContain('Nguyễn Thị Thu Hương');
       expect(htmlStep1).toContain('Đã lột mặt nạ');
-      expect(htmlStep1).toContain('Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
+      expect(htmlStep1).toContain('Vỏ bọc: &quot;Khoa BE&quot;');
       expect(htmlStep1).toContain('Trùng SĐT: 0988886677');
 
       // Step 2: Confirmation Stage
@@ -866,8 +868,8 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
           isOpen={true}
           preflight={pf}
           suspectsOnBoard={suspects}
-          selectedSuspectId="suspect_huong"
-          husbandName="Hoàng"
+          selectedSuspectId="suspect_01"
+          husbandName="Thịnh"
           onSelectSuspect={vi.fn()}
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
@@ -875,7 +877,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       );
 
       expect(htmlStep2).toContain('Nguyễn Thị Thu Hương');
-      expect(htmlStep2).not.toContain('Vỏ bọc: &quot;Anh Tuấn Thợ Điện&quot;');
+      expect(htmlStep2).not.toContain('Vỏ bọc: &quot;Khoa BE&quot;');
       expect(htmlStep2).not.toContain('Trùng SĐT: 0988886677');
       expect(htmlStep2).not.toContain('ĐÃ LỘT MẶT NẠ');
     });
@@ -884,7 +886,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const wrongSuspectPf = calculateConfrontationPreflight({
         caseConfig: mockCaseConfig,
         activeEdges: [],
-        accusedSuspectId: 'suspect_lan_anh',
+        accusedSuspectId: 'suspect_04',
         totalClues: 10,
       });
 
@@ -896,10 +898,10 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const html = renderToStaticMarkup(
         <ConfrontationConfirmModal
           isOpen={true}
-          suspectsOnBoard={[{ id: 'suspect_lan_anh', displayName: 'Pinned contact' }]}
+          suspectsOnBoard={[{ id: 'suspect_04', displayName: 'Pinned contact' }]}
           preflight={wrongSuspectPf}
-          selectedSuspectId="suspect_lan_anh"
-          husbandName="Hoàng"
+          selectedSuspectId="suspect_04"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -926,7 +928,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         <ConfrontationConfirmModal
           isOpen={true}
           preflight={pf}
-          husbandName="Hoàng"
+          husbandName="Thịnh"
           onConfirmConfront={vi.fn()}
           onCancel={vi.fn()}
         />,
@@ -941,7 +943,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Renders vector SVG for all 4 moods with distinct aura and facial expressions', () => {
       for (const mood of ['confident', 'surprised', 'nervous', 'broken'] as const) {
         const html = renderToStaticMarkup(
-          <HusbandCharacterImage mood={mood} size={140} />,
+          <HusbandCharacterImage husbandName={husbandFixture.shortName} mood={mood} size={140} />,
         );
 
         expect(html).toContain('<svg');
@@ -953,7 +955,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Strict Zero-Emoji Invariant: HusbandCharacterImage contains zero raw emojis', () => {
       for (const mood of ['confident', 'surprised', 'nervous', 'broken'] as const) {
         const html = renderToStaticMarkup(
-          <HusbandCharacterImage mood={mood} size={140} />,
+          <HusbandCharacterImage husbandName={husbandFixture.shortName} mood={mood} size={140} />,
         );
         const rawEmojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
         expect(rawEmojiRegex.test(html)).toBe(false);
@@ -962,11 +964,11 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
   });
 
   describe('Level 1 Identity Smoking Gun & Suspect Deduplication Fixes', () => {
-    it('deduplicates multiple contact pins of Anh Tuấn Thợ Điện across apps and excludes Vợ', () => {
+    it('deduplicates multiple contact pins of Khoa BE across apps and excludes Vợ', () => {
       const placedNodes = [
-        { nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', type: 'alias' as const, sourceAppId: 'internet-messaging' as AppId, x: 0, y: 0 },
-        { nodeId: 'node_alias_tuan_sms', label: 'Anh Tuấn Thợ Điện', type: 'alias' as const, sourceAppId: 'messages' as AppId, x: 0, y: 100 },
-        { nodeId: 'node_bridge_phone', label: 'Anh Tuấn Thợ Điện', type: 'alias' as const, sourceAppId: 'phone' as AppId, x: 0, y: 200 },
+        { nodeId: 'node_alias_01', label: 'Khoa BE', type: 'alias' as const, sourceAppId: 'internet-messaging' as AppId, x: 0, y: 0 },
+        { nodeId: 'node_alias_01_group', label: 'Khoa BE', type: 'alias' as const, sourceAppId: 'messages' as AppId, x: 0, y: 100 },
+        { nodeId: 'node_bridge_phone', label: 'Khoa BE', type: 'alias' as const, sourceAppId: 'phone' as AppId, x: 0, y: 200 },
         { nodeId: 'node_record_wife_alibi', label: 'Vợ', type: 'record_clue' as const, sourceAppId: 'internet-messaging' as AppId, x: 0, y: 300 },
       ];
 
@@ -976,14 +978,14 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
       });
 
-      // Must have exactly 1 entry for Anh Tuấn Thợ Điện (mapped to suspect_huong) and 0 for Vợ
+      // Must have exactly 1 entry for Khoa BE (mapped to suspect_01) and 0 for Vợ
       expect(suspects).toHaveLength(1);
-      expect(suspects[0].displayName).toBe('Anh Tuấn Thợ Điện');
-      expect(suspects[0].id).toBe('suspect_huong');
+      expect(suspects[0].displayName).toBe('Khoa BE');
+      expect(suspects[0].id).toBe('suspect_01');
       expect(suspects.some(s => s.displayName === 'Vợ')).toBe(false);
     });
 
-    it('verifies 2/2 smoking guns with edge_order_phone and edge_alibi_contradiction achieves 3-star victory (US-016 AC 6)', () => {
+    it('verifies 3/3 smoking guns (phone, legal name, alibi) to achieve a 3-star victory (US-016 AC 6)', () => {
       const edgeOrderPhone: CaseGraphEdge = {
         edgeId: 'edge_order_phone',
         sourceNodeId: 'node_record_ecommerce_order',
@@ -1002,51 +1004,44 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       const result = evaluateConfrontation({
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
-        activeEdges: [edgeOrderPhone, edgeAlibi],
+        activeEdges: [edgeOrderPhone, smokingGunEdge3, edgeAlibi],
         unmaskedSuspectIds: [],
         currentStrikes: 5,
-        accusedSuspectId: 'suspect_huong',
+        accusedSuspectId: 'suspect_01',
         placedNodes: [
-          { nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', type: 'alias', sourceAppId: 'internet-messaging', x: 0, y: 0 },
+          { nodeId: 'node_alias_01', label: 'Khoa BE', type: 'alias', sourceAppId: 'internet-messaging', x: 0, y: 0 },
         ],
       });
 
-      expect(result.verifiedSmokingGunCount).toBe(2);
-      expect(result.requiredSmokingGunCount).toBe(2);
+      expect(result.verifiedSmokingGunCount).toBe(3);
+      expect(result.requiredSmokingGunCount).toBe(3);
       expect(result.stars).toBe(3);
       expect(result.successRate).toBe(100);
       expect(result.isRedHerringAccusation).toBe(false);
       expect(result.husbandMood).toBe('broken');
-      expect(result.husbandDialogue).toContain('Anh xin lỗi vợ... Thôi anh khai thật! Bọn anh có hẹn riêng tối nay ở quán cơm niêu');
+      expect(result.husbandDialogue).toContain('Anh xin lỗi... không có họp nào cả');
       expect(result.wifeTitle).toBe('Nữ thám tử ghen tuông');
       expect(result.narrativeRoast).toBe(mockCaseConfig.groundTruth.narrativeRoast);
     });
 
-    it('does not count demoted legal-name edges (edge_order_name + edge_name_suspect) as smoking guns', () => {
-      const edgeOrderName: CaseGraphEdge = {
-        edgeId: 'edge_order_name',
-        sourceNodeId: 'node_record_ecommerce_order',
-        targetNodeId: 'node_bridge_name',
-        relationship: 'bridges_identity',
-        isSmokingGun: false,
-        isCanonical: true,
-      };
+    it('counts edge_order_name as a smoking gun but never the auto edge_name_suspect', () => {
       const edgeNameSuspect: CaseGraphEdge = {
         edgeId: 'edge_name_suspect',
         sourceNodeId: 'node_bridge_name',
-        targetNodeId: 'node_suspect_huong',
+        targetNodeId: 'node_suspect_01',
         relationship: 'bridges_identity',
         isSmokingGun: false,
         isCanonical: true,
       };
 
-      expect(getKeyConnectionProgress([edgeOrderName, edgeNameSuspect], LEVEL_01_KNOWLEDGE_GRAPH).verifiedCount).toBe(0);
+      expect(getKeyConnectionProgress([edgeNameSuspect], LEVEL_01_KNOWLEDGE_GRAPH).verifiedCount).toBe(0);
+      expect(getKeyConnectionProgress([smokingGunEdge3, edgeNameSuspect], LEVEL_01_KNOWLEDGE_GRAPH).verifiedCount).toBe(1);
 
       const preflight = calculateConfrontationPreflight({
         caseConfig: mockCaseConfig,
         knowledgeGraph: LEVEL_01_KNOWLEDGE_GRAPH,
-        activeEdges: [edgeOrderName, edgeNameSuspect],
-        accusedSuspectId: 'suspect_huong',
+        activeEdges: [edgeNameSuspect],
+        accusedSuspectId: 'suspect_01',
       });
 
       expect(preflight.successRate).toBe(0);
@@ -1056,7 +1051,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
 
     it('does not auto-report 100% from non-smoking-gun clues alone', () => {
       const ordinaryNodes = [
-        { nodeId: 'node_alias_tuan', type: 'alias' as const, label: 'Anh Tuấn Thợ Điện', sourceAppId: 'internet-messaging' as AppId, suspectId: 'suspect_huong', messages: [{ recordId: 'm0', text: 'Msg' }], x: 0, y: 0 },
+        { nodeId: 'node_alias_01', type: 'alias' as const, label: 'Khoa BE', sourceAppId: 'internet-messaging' as AppId, suspectId: 'suspect_01', messages: [{ recordId: 'm0', text: 'Msg' }], x: 0, y: 0 },
         ...Array.from({ length: 10 }, (_, idx) => ({
           nodeId: `ordinary_${idx}`,
           type: 'record_clue' as const,
@@ -1068,7 +1063,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       ];
       const ordinaryEdges: CaseGraphEdge[] = Array.from({ length: 10 }, (_, idx) => ({
         edgeId: `ordinary_edge_${idx}`,
-        sourceNodeId: idx === 0 ? 'node_alias_tuan' : `ordinary_${idx - 1}`,
+        sourceNodeId: idx === 0 ? 'node_alias_01' : `ordinary_${idx - 1}`,
         targetNodeId: `ordinary_${idx}`,
         relationship: 'bridges_identity' as const,
         isCanonical: true,
@@ -1084,37 +1079,37 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         },
         placedNodes: ordinaryNodes,
         activeEdges: ordinaryEdges,
-        accusedSuspectId: 'suspect_huong',
+        accusedSuspectId: 'suspect_01',
       });
 
       expect(preflight.successRate).toBe(90);
       expect(preflight.potentialStars).toBe(1);
     });
 
-    it('prunes orphan edges from stale saved corkboard state when only Vợ and Anh Tuấn Thợ Điện are pinned', () => {
+    it('prunes orphan edges from stale saved corkboard state when only Vợ and Khoa BE are pinned', () => {
       const tagged = [
         {
           suspectId: 'tag_wife',
           displayName: 'Vợ',
           sourceApp: 'internet-messaging' as AppId,
           timestamp: 100,
-          conversationId: 'thread_wife',
-          messages: [{ recordId: 'thread_wife_m8', text: 'Chưa em, cả nhóm vẫn ở phòng họp.', eventTime: '15/10 20:46' }],
+          conversationId: 'thread_005',
+          messages: [{ recordId: 'thread_005_m8', text: 'Chưa em, cả nhóm vẫn ở phòng họp.', eventTime: '15/10 20:46' }],
         },
         {
-          suspectId: 'tag_tuan',
-          displayName: 'Anh Tuấn Thợ Điện',
+          suspectId: 'tag_901',
+          displayName: 'Khoa BE',
           sourceApp: 'internet-messaging' as AppId,
           timestamp: 101,
-          conversationId: 'thread_tuan',
-          messages: [{ recordId: 'thread_tuan_m8', text: 'Vâng anh, em đặt bàn bên Phố Cổ rồi nhé, 19h30.', eventTime: '15/10 16:42' }],
+          conversationId: 'thread_003',
+          messages: [{ recordId: 'msg_003_0014', text: 'Vâng anh, em đặt bàn bên Phố Cổ rồi nhé, 19h30.', eventTime: '15/10 16:42' }],
         },
       ];
       const allNodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, tagged);
       const staleSavedBoard = {
         placedNodes: [
           { nodeId: 'node_record_wife_alibi', type: 'record_clue' as const, label: 'Vợ', x: 100, y: 100 },
-          { nodeId: 'node_alias_tuan', type: 'alias' as const, label: 'Anh Tuấn Thợ Điện', x: 400, y: 100 },
+          { nodeId: 'node_alias_01', type: 'alias' as const, label: 'Khoa BE', x: 400, y: 100 },
           { nodeId: 'node_record_ecommerce_order', type: 'record_clue' as const, label: 'Váy Satin', x: 100, y: 300 },
           { nodeId: 'node_bridge_name', type: 'bridge_id' as const, label: 'Nguyen Thi Thu Huong', x: 400, y: 300 },
           { nodeId: 'node_record_bank_receipt', type: 'record_clue' as const, label: 'Cơm Niêu', x: 700, y: 300 },
@@ -1123,7 +1118,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         edges: [
           { edgeId: 'edge_order_name', sourceNodeId: 'node_record_ecommerce_order', targetNodeId: 'node_bridge_name', relationship: 'bridges_identity' as const, isCanonical: true, isSmokingGun: true },
           { edgeId: 'edge_alibi_contradiction', sourceNodeId: 'node_record_wife_alibi', targetNodeId: 'node_record_bank_receipt', relationship: 'contradicts_alibi' as const, isCanonical: true, isSmokingGun: true },
-          { edgeId: 'edge_alias_phone', sourceNodeId: 'node_alias_tuan', targetNodeId: 'node_bridge_phone', relationship: 'bridges_identity' as const, isCanonical: true, isSmokingGun: false },
+          { edgeId: 'edge_alias_phone', sourceNodeId: 'node_alias_01', targetNodeId: 'node_bridge_phone', relationship: 'bridges_identity' as const, isCanonical: true, isSmokingGun: false },
         ],
       };
 
@@ -1132,9 +1127,9 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
       expect(restored.edges).toEqual([]);
 
       const speculativeEdge: CaseGraphEdge = {
-        edgeId: 'custom_edge_wife_tuan',
+        edgeId: 'custom_edge_903',
         sourceNodeId: 'node_record_wife_alibi',
-        targetNodeId: 'node_alias_tuan',
+        targetNodeId: 'node_alias_01',
         relationship: 'bridges_identity',
         isCanonical: false,
         isSmokingGun: false,
@@ -1145,7 +1140,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
         placedNodes: restored.placedNodes,
         taggedSuspects: tagged,
         activeEdges: [...restored.edges, speculativeEdge],
-        accusedSuspectId: 'suspect_huong',
+        accusedSuspectId: 'suspect_01',
       });
 
       expect(preflight.successRate).toBe(0);

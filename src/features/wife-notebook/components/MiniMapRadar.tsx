@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { CANVAS_SIZE } from '../graphEngine';
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../graphEngine';
 import type { CorkboardViewport, PlacedNode } from '../types';
 
 interface MiniMapRadarProps {
@@ -16,13 +16,14 @@ export const MiniMapRadar: React.FC<MiniMapRadarProps> = memo(function MiniMapRa
   size = 56,
 }) {
   const RADAR_SIZE = size; // px
-  const scale = RADAR_SIZE / CANVAS_SIZE;
+  const scale = RADAR_SIZE / CANVAS_WIDTH;
+  const radarHeight = CANVAS_HEIGHT * scale;
 
   // Approximate mobile viewport dimensions in canvas coordinates
-  const viewW = Math.min(CANVAS_SIZE, (393 / viewport.zoom) * scale);
-  const viewH = Math.min(CANVAS_SIZE, (680 / viewport.zoom) * scale);
+  const viewW = Math.min(RADAR_SIZE, (393 / viewport.zoom) * scale);
+  const viewH = Math.min(radarHeight, (680 / viewport.zoom) * scale);
   const viewX = Math.max(0, Math.min(RADAR_SIZE - viewW, (viewport.x * scale) - (viewW / 2)));
-  const viewY = Math.max(0, Math.min(RADAR_SIZE - viewH, (viewport.y * scale) - (viewH / 2)));
+  const viewY = Math.max(0, Math.min(radarHeight - viewH, (viewport.y * scale) - (viewH / 2)));
   const dots = useMemo(() => placedNodes.map(node => (
     <span
       key={node.nodeId}

@@ -1,6 +1,6 @@
 ---
 type: Requirement Story
-epic: "Epic 04: Level 0 Tutorial & Husband Hoàng Level 1 Case Content (Release 1)"
+epic: "Epic 04: Level 0 Tutorial & Husband Thịnh Level 1 Case Content (Release 1)"
 status: draft
 description: "A dedicated introductory case dataset, dependent on separately approved narrative and clue design."
 tags: [requirement, user-story, tutorial, level-0, case-content]

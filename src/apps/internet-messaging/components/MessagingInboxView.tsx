@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { IoAdd, IoCloudOutline, IoNotificationsOffOutline, IoQrCodeOutline, IoSearchOutline } from 'react-icons/io5';
 import { MessagingThread, MessagingCloudDocument, MessagingContact } from '../types';
 import { contactEvidence } from '../contactEvidence';
+import { threadPreview } from '../groupChat';
 import { MessagingEvidenceSheet } from './MessagingEvidenceSheet';
 import { StoryEvidenceTarget } from '../../../features/investigation';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
@@ -32,7 +33,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
   onReturnHome: _onReturnHome,
   onOpenMyDocuments,
 }) => {
-  const [activeTab, setActiveTab] = useMotionState<'priority' | 'other'>('priority', 'fade');
+  const [activeTab, setActiveTab] = useState<'priority' | 'other'>('priority');
   const [searchQuery, setSearchQuery] = useState('');
   const [evidenceSheetThread, setEvidenceSheetThread] = useMotionState<MessagingThread | null>(null, 'sheet');
 
@@ -186,7 +187,7 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
                 className="flex items-center gap-3 px-3.5 py-3 hover:bg-slate-50 active:bg-slate-100 transition-all cursor-pointer min-h-[72px]"
               >
                 {/* Avatar (52px) */}
-                <ContactAvatar name={thread.contactName} size={52} className="shadow-sm" />
+                <ContactAvatar name={thread.contactName} avatarIndex={thread.avatarIndex} isGroup={thread.isGroup} size={52} className="shadow-sm" />
 
                 {/* Chat Content */}
                 <div className="flex-1 min-w-0">
@@ -202,13 +203,22 @@ export const MessagingInboxView: React.FC<MessagingInboxViewProps> = ({
                   </div>
 
                   <div className="flex justify-between items-center">
-                    <p className="text-ios-subheadline text-[#6B7280] truncate pr-2">
-                      {thread.lastMessage}
+                    <p className={`text-ios-subheadline truncate pr-2 ${thread.unreadCount ? 'font-semibold text-[#0F172A]' : 'text-[#6B7280]'}`}>
+                      {threadPreview(thread, contacts)}
                     </p>
 
                     <div className="shrink-0 flex items-center gap-1">
                       {thread.isMuted && (
                         <IoNotificationsOffOutline className="w-3.5 h-3.5 text-[#64748B]" />
+                      )}
+                      {!!thread.unreadCount && (
+                        <span
+                          data-thread-unread={thread.unreadCount}
+                          aria-label={`${thread.unreadCount} tin chưa đọc`}
+                          className={`min-w-[20px] h-5 px-1.5 rounded-full text-white text-ios-caption-2 font-bold flex items-center justify-center ${thread.isMuted ? 'bg-[#94A3B8]' : 'bg-[#D70015]'}`}
+                        >
+                          {thread.unreadCount}
+                        </span>
                       )}
                     </div>
                   </div>

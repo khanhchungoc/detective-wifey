@@ -10,7 +10,7 @@ import {
   IoGlassesOutline,
   IoCallOutline,
 } from 'react-icons/io5';
-import characterSheet from '../../../shared/assets/contact-avatar-persona-sheet.jpg';
+import characterSheet from '../../../shared/assets/contact-avatar-persona-sheet.webp';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
 import type { AppDefinition } from '../../../shared/contracts/app-contracts';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';
@@ -122,7 +122,7 @@ export interface ConfrontationConfirmModalProps {
   preflight: ConfrontationPreflightInfo;
   suspectsOnBoard?: SuspectOnBoard[];
   selectedSuspectId?: string | null;
-  husbandName?: string;
+  husbandName: string;
   getSourceApp?: (id: string) => Pick<AppDefinition, 'displayName' | 'icon' | 'iconAsset' | 'themeGradient'> | undefined;
   onSelectSuspect?: (suspectId: string | null) => void;
   onConfirmConfront: (suspectId?: string) => void;
@@ -135,7 +135,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
   suspectsOnBoard = [],
   selectedSuspectId,
   getSourceApp,
-  husbandName = 'Hoàng',
+  husbandName,
   onSelectSuspect,
   onConfirmConfront,
   onCancel,

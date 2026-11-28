@@ -200,7 +200,7 @@
 ├────────────────────────────────────────────────────────────────────────┤
 │ [< Back]                   Trang cá nhân                       [Gear]  │
 ├────────────────────────────────────────────────────────────────────────┤
-│ [Avt: Hoang]   Nguyễn Huy Hoàng                                        │
+│ [Avt: Hoang]   Nguyễn Huy Thịnh                                        │
 │                Tài khoản Zola: hoang_tech88 • Xem trang cá nhân >      │
 ├────────────────────────────────────────────────────────────────────────┤
 │ TIỆN ÍCH LƯU TRỮ                                                       │
@@ -230,7 +230,7 @@
 │ [Đóng ✕]           CLOUD CỦA TÔI - TÀI LIỆU SAO LƯU                    │
 ├────────────────────────────────────────────────────────────────────────┤
 │ [DocIcon]  Hop_dong_thue_nha_Chua_Lang.pdf                   14/10/2026│
-│            Dung lượng: 1.4 MB • Người thuê: Nguyen Huy Hoang           │
+│            Dung lượng: 1.4 MB • Người thuê: Nguyen Huy Thinh           │
 ├────────────────────────────────────────────────────────────────────────┤
 │ [ImgIcon]  Bien_nhan_coc_can_ho_mini.jpg                     12/10/2026│
 │            Dung lượng: 840 KB • Đặt cọc phòng 402 Chùa Láng            │

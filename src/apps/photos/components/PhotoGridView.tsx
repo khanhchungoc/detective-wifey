@@ -114,7 +114,7 @@ export const PhotoGridView: React.FC<PhotoGridViewProps> = ({
   return (
     <div className="flex-1 flex flex-col bg-[#000000] text-white overflow-hidden relative">
       {/* Top Header */}
-      <header className="px-4 pt-3 pb-2 flex flex-col shrink-0 border-b border-white/10 bg-[#000000]/90 backdrop-blur-md z-10">
+      <header className="px-4 pt-3 pb-2 flex flex-col shrink-0 border-b border-white/10 bg-[#000000] z-10">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-white">

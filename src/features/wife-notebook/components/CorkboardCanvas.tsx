@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useLayoutEffect, useMemo, useState, useRef } from 'react';
-import { useReducedMotion } from 'motion/react';
 import {
   IoNavigateOutline,
   IoGlassesOutline,
@@ -16,8 +15,11 @@ import {
 } from 'react-icons/io5';
 import type { AppDefinition } from '../../../shared/contracts/app-contracts';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
-import { CANVAS_SIZE, calculateYarnStringCurve } from '../graphEngine';
-import { formatCorkboardTransform } from '../useCorkboardGestures';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, calculateYarnStringCurve, clampCardPosition } from '../graphEngine';
+import { formatCorkboardTransform, formatSurfaceTransform } from '../useCorkboardGestures';
+import chalkboardBoardUrl from '../assets/chalkboard-board.webp';
+import detectiveOfficeWallUrl from '../assets/detective-office-wall.webp';
+import detectiveOfficeWallDesktopUrl from '../assets/detective-office-wall-desktop.webp';
 import type { CorkboardViewport, PlacedNode, PairingState } from '../types';
 import type { CaseGraphEdge } from '../../../shared/contracts/knowledge-graph';
 import {
@@ -25,8 +27,8 @@ import {
   parseNodeToTimelineEntries,
 } from './ClueTimelineRail';
 
-export const CARD_WIDTH = 210;
-export const PIN_OFFSET_X = 105;
+export const CARD_WIDTH = 176;
+export const PIN_OFFSET_X = 88;
 export const PIN_OFFSET_Y = 3;
 
 function getCardTiltDeg(nodeId: string): number {
@@ -37,68 +39,25 @@ function getCardTiltDeg(nodeId: string): number {
   return ((Math.abs(hash) % 29) - 14) / 10;
 }
 
-const LAMP_IGNITION = { duration: 850, offsets: [0, 0.18, 0.34, 0.55, 0.72, 1] };
-const LAMP_LIGHT_IGNITION = [0.12, 0.95, 0.22, 1, 0.55, 1];
-const LAMP_VEIL_IGNITION = [0.65, 0.04, 0.58, 0, 0.34, 0];
-/** Ambient flicker: a 420ms stutter every ~8.9s, compressed into the front of one looping animation. */
-const LAMP_AMBIENT_PERIOD = 8920;
-const LAMP_AMBIENT_OFFSETS = [0, 0.22, 0.48, 0.72, 1].map(offset => offset * 420 / LAMP_AMBIENT_PERIOD);
-const LAMP_LIGHT_AMBIENT = [1, 0.45, 0.94, 0.62, 1];
-const LAMP_VEIL_AMBIENT = [0, 0.42, 0.05, 0.28, 0];
+function getProfileName(node: PlacedNode): string | undefined {
+  if (
+    node.type === 'suspect' ||
+    node.type === 'alias' ||
+    node.conversationId ||
+    (node.visibleAlias && ['phone', 'messages', 'internet-messaging'].includes(node.sourceAppId || ''))
+  ) {
+    return node.visibleAlias || node.label;
+  }
+  return undefined;
+}
 
-/**
- * One fixed set of lamp layers; the flicker is pure opacity WAAPI (compositor) with no React state.
- * Swapping layer trees mid-open used to re-rasterize full-board gradients right as the player
- * started dragging, which stuttered the board open/close and card drags.
- */
-const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active = true }: { active?: boolean }) {
-  const prefersReducedMotion = useReducedMotion();
-  const washRef = useRef<HTMLDivElement>(null);
-  const veilRef = useRef<HTMLDivElement>(null);
-  const tubeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wash = washRef.current, veil = veilRef.current, tube = tubeRef.current;
-    if (!active || prefersReducedMotion || !wash?.animate || !veil || !tube) return;
-    const running: Animation[] = [];
-    const play = (element: HTMLElement, values: number[], offsets: number[], options: KeyframeAnimationOptions) => {
-      const animation = element.animate(values.map((opacity, i) => ({ opacity, offset: offsets[i] })), { easing: 'linear', ...options });
-      running.push(animation);
-      return animation;
-    };
-    // Start after the board slide-in so its first frames stay smooth.
-    const timer = window.setTimeout(() => {
-      const ignition = { duration: LAMP_IGNITION.duration, fill: 'backwards' as const };
-      const ignite = play(wash, LAMP_LIGHT_IGNITION, LAMP_IGNITION.offsets, ignition);
-      play(tube, LAMP_LIGHT_IGNITION, LAMP_IGNITION.offsets, ignition);
-      play(veil, LAMP_VEIL_IGNITION, LAMP_IGNITION.offsets, ignition);
-      ignite.onfinish = () => {
-        const ambient = { duration: LAMP_AMBIENT_PERIOD, iterations: Infinity, delay: LAMP_AMBIENT_PERIOD - 420 };
-        play(wash, [...LAMP_LIGHT_AMBIENT, 1], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
-        play(tube, [...LAMP_LIGHT_AMBIENT, 1], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
-        play(veil, [...LAMP_VEIL_AMBIENT, 0], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
-      };
-    }, 400);
-    return () => {
-      window.clearTimeout(timer);
-      for (const animation of running) animation.cancel();
-    };
-  }, [active, prefersReducedMotion]);
-
+const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
   return (
     <>
-      {/* Single overhead light wash across the entire board, synced 1:1 with lamp flicker */}
-      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-0" style={{ willChange: 'opacity' }}>
-        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_0%,rgba(226,236,248,0.22)_0%,rgba(148,163,184,0.1)_38%,rgba(148,163,184,0.03)_70%,transparent_96%)]" />
-      </div>
-      {/* Global board & card dimming veil inversely synced to the single overhead lamp (hidden at rest) */}
-      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[25]" style={{ opacity: 0, willChange: 'opacity' }}>
-        <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_0%,rgba(4,7,12,0.72)_0%,rgba(4,7,12,0.88)_55%,rgba(3,5,9,0.96)_100%)]" />
-      </div>
-      {/* Overhead fluorescent tube */}
-      <div ref={tubeRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center" style={{ willChange: 'opacity' }}>
-        <div className="h-[2px] w-3/4 max-w-[320px] rounded-full bg-[#E2ECF8]/80 shadow-[0_0_16px_4px_rgba(226,236,248,0.45),0_8px_32px_10px_rgba(148,163,184,0.2)]" />
-      </div>
+      {/* Subtle bar-shaped fluorescent light wash on the room wall (hidden when zoomed into focus mode) */}
+      <div aria-hidden="true" className="notebook-lamp-beam pointer-events-none absolute z-[4]" />
+      {/* Overhead fluorescent bar matched to the exact shape of the wall neon fixture */}
+      <div aria-hidden="true" className="notebook-lamp-tube pointer-events-none absolute z-[4]" />
     </>
   );
 });
@@ -108,6 +67,9 @@ interface CorkboardCanvasProps {
   viewport: CorkboardViewport;
   viewportRef?: React.RefObject<CorkboardViewport>;
   planeRef?: React.RefObject<HTMLDivElement | null>;
+  surfaceRef?: React.RefObject<HTMLDivElement | null>;
+  /** 'wall' shows the whole board on a lit wall; 'focus' zooms in and pushes the wall back. */
+  mode?: 'wall' | 'focus';
   isOpen?: boolean;
   isPinching?: boolean;
   placedNodes: PlacedNode[];
@@ -132,7 +94,7 @@ interface CorkboardCanvasProps {
 
 export { calculateYarnStringCurve } from '../graphEngine';
 
-type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'isOpen'> & {
+type CorkboardContentsProps = Omit<CorkboardCanvasProps, 'viewport' | 'viewportRef' | 'planeRef' | 'surfaceRef' | 'mode' | 'isOpen'> & {
   zoomRef: React.RefObject<number>;
 };
 
@@ -279,9 +241,7 @@ const CorkboardContents = memo(function CorkboardContents({
           const isUnmasked = unmaskedSuspectIds.includes(node.nodeId);
           const hasContradiction = activeContradictions.some(id => id.includes(node.nodeId));
           const sourceApp = node.sourceAppId ? getSourceApp?.(node.sourceAppId) : undefined;
-          const avatarName = node.type === 'suspect' || node.type === 'alias' || node.conversationId ||
-            (node.visibleAlias && ['phone', 'messages', 'internet-messaging'].includes(node.sourceAppId || ''))
-            ? node.visibleAlias || node.label : undefined;
+          const avatarName = getProfileName(node);
           const isDraggingThis = activeDragId === node.nodeId;
           const tiltDeg = getCardTiltDeg(node.nodeId);
           const photoMeta = (() => {
@@ -366,8 +326,9 @@ const CorkboardContents = memo(function CorkboardContents({
                 if (Math.hypot(dx, dy) > 4) {
                   drag.hasMoved = true;
                 }
-                drag.pendingX = Math.round(Math.max(20, Math.min(CANVAS_SIZE - 230, drag.origX + dx)));
-                drag.pendingY = Math.round(Math.max(20, Math.min(CANVAS_SIZE - 180, drag.origY + dy)));
+                const clamped = clampCardPosition(drag.origX + dx, drag.origY + dy);
+                drag.pendingX = clamped.x;
+                drag.pendingY = clamped.y;
                 if (dragFrameRef.current === null) {
                   dragFrameRef.current = requestAnimationFrame(() => {
                     dragFrameRef.current = null;
@@ -406,20 +367,20 @@ const CorkboardContents = memo(function CorkboardContents({
               }}
               className={`corkboard-node-card absolute cursor-grab active:cursor-grabbing transition-shadow duration-150 ${
                 node.imageSrc
-                  ? 'rounded-[2px] border bg-[#FBF9F4] p-2 pt-3 pb-2.5'
-                  : 'corkboard-paper-card rounded-[3px] border p-2.5 pt-[16px]'
+                  ? 'rounded-[2px] border bg-[#f0ebe1] p-1.5 pt-2.5 pb-2'
+                  : 'corkboard-paper-card rounded-[3px] border p-2 pt-[14px]'
               } ${
                 isDraggingThis
                   ? 'z-30 border-[#DC2626] shadow-[0_24px_42px_rgba(0,0,0,0.72),0_10px_18px_rgba(0,0,0,0.45)] ring-2 ring-[#EF4444]/75'
                   : isSelected
                   ? 'z-30 border-[#DC2626] ring-2 ring-[#EF4444]/85 shadow-[0_14px_30px_rgba(0,0,0,0.65)]'
                   : isUnmasked && isAlias
-                  ? 'z-20 border-[#E11D48] ring-1 ring-[#FB7185] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
+                  ? 'z-20 border-[#b91c3c] ring-1 ring-[#c94b5b] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
                   : hasContradiction
-                  ? 'z-20 border-[#EAB308] ring-1 ring-[#FACC15] shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
+                  ? 'z-20 border-[#ca8a04] ring-1 ring-[#eab308]/80 shadow-[0_8px_18px_rgba(0,0,0,0.55)]'
                   : node.imageSrc
-                  ? 'z-20 border-[#DDD5C7] shadow-[0_10px_24px_rgba(0,0,0,0.6),0_2px_6px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.7)]'
-                  : 'z-20 border-[#C9BFAE] shadow-[0_8px_18px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.65)]'
+                  ? 'z-20 border-[#a79f91] shadow-[0_10px_24px_rgba(0,0,0,0.6),0_2px_6px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_28px_rgba(0,0,0,0.7)]'
+                  : 'z-20 border-[#9a9080] shadow-[0_8px_18px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.65)]'
               }`}
               style={{
                 width: `${CARD_WIDTH}px`,
@@ -429,16 +390,16 @@ const CorkboardContents = memo(function CorkboardContents({
                 touchAction: 'none',
               }}
             >
-              {/* Cold War Masking Tape + Steel/Crimson Marker Pin at Top Center */}
+              {/* Cold War Masking Tape + Muted Crimson Marker Pin at Top Center */}
               <div className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center" style={{ top: PIN_OFFSET_Y - 10 }}>
                 <div
                   aria-hidden="true"
-                  className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#D4B44C]/80 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
+                  className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#b39c52]/75 shadow-[0_1px_2px_rgba(0,0,0,0.35)]"
                 />
-                <div className={`relative h-5 w-5 rounded-full border flex items-center justify-center transition-transform duration-150 bg-gradient-to-br from-[#FB7185] via-[#E11D48] to-[#881337] border-[#FDA4AF]/75 ${
+                <div className={`relative h-5 w-5 rounded-full border flex items-center justify-center transition-transform duration-150 bg-gradient-to-br from-[#c94b5b] via-[#9f1d32] to-[#590d1c] border-[#d48b95]/55 ${
                   isDraggingThis ? 'scale-110 shadow-[0_6px_12px_rgba(0,0,0,0.7)]' : 'shadow-[0_3px_6px_rgba(0,0,0,0.6)]'
                 }`}>
-                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
+                  <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/50" />
                   <div className="h-1 w-1 rounded-full bg-[#090C10]/80 shadow-inner" />
                 </div>
                 <div className={`w-1.5 h-0.5 bg-black/55 rounded-full -mt-0.5 transition-opacity duration-150 ${
@@ -447,11 +408,41 @@ const CorkboardContents = memo(function CorkboardContents({
               </div>
 
               {node.imageSrc ? (
-                /* Direct Polaroid Photo Pin (no aged-paper note background, full original aspect ratio) */
+                /* Polaroid Photo Pin; conversation-pinned images also include person name, avatar, and source app badge */
                 <div data-pinned-photo={node.nodeId} className="relative">
+                  {node.conversationId && (
+                    <div className="relative mb-1.5 -ml-2.5 flex min-w-0 items-center justify-between gap-1.5 w-[calc(100%+10px)]">
+                      <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1 py-0.5 pl-2 pr-2 -rotate-[1.5deg]">
+                        <h4 className="font-handwriting text-note-title text-slate-900 line-clamp-1">
+                          {isAlias && isUnmasked ? `[BÓC TRẦN] ${node.label}` : node.label}
+                        </h4>
+                      </div>
+                      {(avatarName || sourceApp) && (() => {
+                        const appIcon = sourceApp && (
+                          <span
+                            className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-5 w-5 rounded-[4px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                            title={sourceApp.displayName}
+                            role="img"
+                            aria-label={sourceApp.displayName}
+                          >
+                            {sourceApp.iconAsset ? (
+                              <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
+                            ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3 w-3'} />}
+                          </span>
+                        );
+                        return avatarName ? (
+                          <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[2px] pb-[4px] rotate-2">
+                            <ContactAvatar name={avatarName} size={26} shape="square" />
+                            {appIcon}
+                          </span>
+                        ) : appIcon;
+                      })()}
+                    </div>
+                  )}
+
                   {/* Floating Action Buttons when Polaroid is selected */}
                   <div
-                    className={`absolute right-1.5 top-1.5 h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
+                    className={`absolute right-1.5 ${node.conversationId ? 'top-9' : 'top-1.5'} h-6 z-20 flex items-center gap-1 ${isSelected ? '' : 'invisible pointer-events-none'}`}
                     inert={!isSelected}
                   >
                     {node.sourceAppId && (
@@ -525,7 +516,7 @@ const CorkboardContents = memo(function CorkboardContents({
                   {photoMeta && (
                     <div
                       data-pinned-photo-meta={node.nodeId}
-                      className="mt-2 space-y-0.5 px-0.5 font-handwriting text-note-meta text-slate-700 leading-snug"
+                      className="mt-1.5 space-y-0.5 px-0.5 font-handwriting text-note-meta text-slate-700 leading-snug"
                     >
                       {photoMeta.dateTimeText && (
                         <div className="flex items-start gap-1">
@@ -544,15 +535,15 @@ const CorkboardContents = memo(function CorkboardContents({
                 </div>
               ) : (
                 /* Top Bar: Yellow Sticky Note Title on Left, Film-Framed Avatar with App Icon Badge on Right, and Action Buttons */
-                <div className={`relative min-h-[36px] ${hasBody ? 'pb-1.5' : 'pb-0.5'}`}>
+                <div className={`relative min-h-[32px] ${hasBody ? 'pb-1' : 'pb-0.5'}`}>
                   <div
-                    className="relative -ml-3.5 -mt-1 flex min-w-0 items-center justify-between gap-2 w-[calc(100%+14px)]"
+                    className="relative -ml-3 -mt-1 flex min-w-0 items-center justify-between gap-1.5 w-[calc(100%+12px)]"
                     style={isSelected ? {
-                      WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
-                      maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 88 : 56}px), transparent calc(100% - ${node.sourceAppId ? 58 : 28}px))`,
+                      WebkitMaskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 84 : 52}px), transparent calc(100% - ${node.sourceAppId ? 54 : 24}px))`,
+                      maskImage: `linear-gradient(to right, black calc(100% - ${node.sourceAppId ? 84 : 52}px), transparent calc(100% - ${node.sourceAppId ? 54 : 24}px))`,
                     } : undefined}
                   >
-                    <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1.5 py-1 pl-2.5 pr-2.5 -rotate-[1.5deg]">
+                    <div className="corkboard-sticky-note relative flex min-w-0 items-center gap-1 py-0.5 pl-2 pr-2 -rotate-[1.5deg]">
                       {!avatarName && !sourceApp && (
                         <span className="shrink-0 text-xs">{getNodeTypeIcon(node.type, isAlias, isUnmasked)}</span>
                       )}
@@ -567,19 +558,19 @@ const CorkboardContents = memo(function CorkboardContents({
                       // Source app shows as a small badge on the profile picture's top-right corner (alone when there is no picture).
                       const appIcon = sourceApp && (
                         <span
-                          className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-6 w-6 rounded-[5px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
+                          className={`flex shrink-0 items-center justify-center overflow-hidden text-white ring-1 ring-black/10 ${avatarName ? 'absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-[4px] shadow-[0_1px_3px_rgba(0,0,0,0.45)]' : 'h-5 w-5 rounded-[4px] shadow-xs'} ${sourceApp.iconAsset ? '' : `bg-gradient-to-br ${sourceApp.themeGradient}`}`}
                           title={sourceApp.displayName}
                           role="img"
                           aria-label={sourceApp.displayName}
                         >
                           {sourceApp.iconAsset ? (
                             <img src={sourceApp.iconAsset} alt="" aria-hidden="true" draggable={false} className="h-full w-full" />
-                          ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'} />}
+                          ) : <sourceApp.icon className={avatarName ? 'h-2.5 w-2.5' : 'h-3 w-3'} />}
                         </span>
                       );
                       return avatarName ? (
-                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[3px] pb-[5px] rotate-2">
-                          <ContactAvatar name={avatarName} size={32} shape="square" />
+                        <span className="corkboard-film-frame relative z-10 inline-flex shrink-0 flex-col items-center p-[2px] pb-[4px] rotate-2">
+                          <ContactAvatar name={avatarName} size={26} shape="square" />
                           {appIcon}
                         </span>
                       ) : appIcon;
@@ -739,7 +730,9 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
   viewport,
   viewportRef: externalViewportRef,
   planeRef,
-  isOpen = true,
+  surfaceRef,
+  mode = 'focus',
+  isOpen: _isOpen = true,
   ...contentsProps
 }) => {
   const { placedNodes, activePairing, selectedEdgeId, onSelectCard, onSelectEdge, onSeverEdge, onCancelPairing } = contentsProps;
@@ -752,42 +745,94 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
     top: '50%',
     transformOrigin: '0 0',
     transform: formatCorkboardTransform(viewport),
+    // Permanently promoted: dropping the layer after each pan/zoom/flight made cards flash for a frame.
+    willChange: 'transform',
+  };
+  const planeSizeStyle: React.CSSProperties = {
+    width: `${CANVAS_WIDTH}px`,
+    height: `${CANVAS_HEIGHT}px`,
+    zoom: viewport.zoom,
+  };
+  // Surface plane never uses CSS zoom: it scales purely on the GPU from a fixed 1800x1200 img
+  // so zooming never invalidates GPU tiles or causes black-tile checkerboarding on mobile.
+  const surfaceStyle: React.CSSProperties = {
+    left: '50%',
+    top: '50%',
+    transformOrigin: '0 0',
+    transform: formatSurfaceTransform(viewport),
+    willChange: 'transform',
+  };
+  const surfaceSizeStyle: React.CSSProperties = {
+    width: `${CANVAS_WIDTH}px`,
+    height: `${CANVAS_HEIGHT}px`,
   };
   return (
     <div
-      className="notebook-cardboard isolate relative w-full h-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
+      data-board-mode={mode}
+      className={`notebook-cardboard isolate relative w-full h-full overflow-hidden select-none ${mode === 'wall' ? 'cursor-zoom-in' : 'cursor-grab active:cursor-grabbing'}`}
       onClick={() => {
         onSelectCard?.(null);
         onSelectEdge?.(null);
       }}
     >
-      {/* Overhead Cold War Fluorescent Lamp Highlight */}
-      <FluorescentLampHighlight active={isOpen} />
+      {/* Clean, neat dark detective office wall behind the evidence board (portrait mobile-first, 16:9 desktop) */}
+      <picture className="pointer-events-none absolute inset-0 z-0 block h-full w-full select-none">
+        <source media="(min-aspect-ratio: 1/1)" srcSet={detectiveOfficeWallDesktopUrl} />
+        <img
+          src={detectiveOfficeWallUrl}
+          width={768}
+          height={1376}
+          alt=""
+          draggable={false}
+          decoding="async"
+          className="h-full w-full object-cover object-center"
+        />
+      </picture>
 
-      {/* Empty State Overlay */}
+      {/* Overhead Cold War Fluorescent Lamp Highlight: neon bar & subtle wall wash behind board (z-[4], hidden in focus mode) */}
+      <FluorescentLampHighlight />
+
+      {/* Focus view: dims the office wall and overhead lamp behind the board (opacity fade only) */}
+      <div aria-hidden="true" className="notebook-wall-veil pointer-events-none absolute inset-0 z-[5]" />
+
+      {/* Chalkboard surface + physical 4-rail mitered dark brown wooden frame: moves forward in front of the wall & lamp */}
+      <div ref={surfaceRef} aria-hidden="true" className="pointer-events-none absolute z-[10]" style={surfaceStyle}>
+        <div className="notebook-board-surface" style={surfaceSizeStyle}>
+          <div className="notebook-board-frame">
+            <div className="notebook-board-rail-top" />
+            <div className="notebook-board-rail-bottom" />
+            <div className="notebook-board-rail-left" />
+            <div className="notebook-board-rail-right" />
+          </div>
+          <div className="notebook-board-recess">
+            <img
+              src={chalkboardBoardUrl}
+              width={CANVAS_WIDTH}
+              height={CANVAS_HEIGHT}
+              alt=""
+              draggable={false}
+              decoding="async"
+              className="block h-full w-full select-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Empty State Overlay: quiet, compact dark hint above the dock so the wooden-framed board stays unobstructed */}
       {placedNodes.length === 0 && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-20">
-          <div className="corkboard-paper-card relative max-w-[260px] rounded-[3px] border border-[#B8C4D0] px-5 pt-6 pb-5 shadow-[0_14px_32px_rgba(0,0,0,0.68)] -rotate-1">
-            <div className="absolute left-1/2 -translate-x-1/2 -top-2.5 flex flex-col items-center">
-              <div
-                aria-hidden="true"
-                className="absolute top-1.5 h-2.5 w-10 -rotate-2 rounded-[1px] bg-[#D4B44C]/80 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
-              />
-              <div className="relative h-5 w-5 rounded-full bg-gradient-to-br from-[#FB7185] via-[#E11D48] to-[#881337] border border-[#FDA4AF]/75 shadow-[0_3px_6px_rgba(0,0,0,0.65)]">
-                <div className="absolute top-0.5 left-1 h-1.5 w-1.5 rounded-full bg-white/80" />
-              </div>
-            </div>
-            <div className="mx-auto mb-2.5 flex h-11 w-11 items-center justify-center rounded-[4px] border border-[#B8C4D0] bg-[#D5DDE5] text-[#DC2626] text-xl">
+        <div className="pointer-events-none absolute inset-x-4 bottom-24 z-20 flex justify-center">
+          <div className="flex max-w-[300px] items-center gap-2.5 rounded-[8px] border border-slate-700/60 bg-[#0D1219]/95 px-3.5 py-2.5 text-left shadow-xl">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[5px] border border-slate-700/70 bg-slate-800/80 text-[#FB7185] text-base">
               <IoBookOutline />
             </div>
-            <h3 className="font-sans text-ios-caption-1 font-extrabold text-slate-900 uppercase tracking-wider">
-              CHƯA CÓ MANH MỐI NÀO
-            </h3>
-            <p className="mt-1.5 text-ios-caption-1 text-slate-700 leading-relaxed">
-              Khám phá các ứng dụng trên điện thoại.
-              <br />
-              <strong className="text-slate-900">Nhấn giữ</strong> nội dung đáng ngờ để ghim vào bảng manh mối.
-            </p>
+            <div className="min-w-0">
+              <h3 className="font-sans text-ios-caption-2 font-bold text-[#F1F5F9] uppercase tracking-wider">
+                Chưa có manh mối nào
+              </h3>
+              <p className="mt-0.5 font-sans text-ios-caption-2 text-slate-300/90 leading-snug">
+                <strong className="text-white">Nhấn giữ</strong> nội dung đáng ngờ để ghim lên bảng.
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -810,18 +855,14 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
       )}
 
       {/* Zoomable & Pannable Virtual Plane (GPU transform during gestures, crisp CSS zoom when settled) */}
-      <div ref={planeRef} className="absolute" style={planeStyle}>
-        <div
-          className="relative"
-          style={{
-            width: `${CANVAS_SIZE}px`,
-            height: `${CANVAS_SIZE}px`,
-            zoom: viewport.zoom,
-          }}
-        >
+      <div ref={planeRef} className="absolute z-[12]" style={planeStyle}>
+        <div className="relative" style={planeSizeStyle}>
           <CorkboardContents {...contentsProps} zoomRef={zoomRef} />
         </div>
       </div>
+
+      {/* Subtle screen-fixed edge vignette */}
+      <div aria-hidden="true" className="notebook-board-shade pointer-events-none absolute inset-0 z-[15]" />
 
       {/* Selected Edge Action Popover */}
       {selectedEdgeId && (

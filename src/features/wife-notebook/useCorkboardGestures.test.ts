@@ -20,10 +20,10 @@ const updates: unknown[] = [];
 const cleanups: (() => void)[] = [];
 const frames = new Map<number, FrameRequestCallback>();
 let nextFrameId = 0;
-function flushFrame() {
+function flushFrame(time = 0) {
   const pending = [...frames.values()];
   frames.clear();
-  pending.forEach(callback => callback(0));
+  pending.forEach(callback => callback(time));
 }
 beforeEach(() => {
   frames.clear();
@@ -185,15 +185,181 @@ describe('corkboard mobile gesture ownership', () => {
     handlers.onPointerMove(move1);
     handlers.onPointerMove(move2);
     expect(move1.currentTarget.setPointerCapture).toHaveBeenCalledTimes(1);
-    expect(plane.style.willChange).toBe('transform');
 
     flushFrame();
     expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
     expect(updates).toHaveLength(0);
 
     handlers.onPointerUp(pointer(1, 250, 330));
-    expect(plane.style.willChange).toBe('');
     expect(updates).toEqual([{ x: 950, y: 970, zoom: 1 }]);
+  });
+
+  it('drives the board surface with absolute GPU scale so the chalkboard pans and zooms without CSS zoom re-raster', () => {
+    updates.length = 0;
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const surface = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 1000, y: 1000, zoom: 1 },
+      planeRef: { current: plane },
+      surfaceRef: { current: surface },
+    });
+    const start = pointer(1, 200, 300);
+    start.target = { closest: (selector: string) => selector === '.corkboard-string' ? {} : null } as unknown as EventTarget;
+    handlers.onPointerDown(start);
+    handlers.onPointerMove(pointer(1, 250, 330));
+
+    flushFrame();
+    expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
+    expect(surface.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
+
+    handlers.onPointerUp(pointer(1, 250, 330));
+    expect(plane.style.transform).toBe('translate3d(-950px, -970px, 0)');
+    expect(surface.style.transform).toBe('translate3d(-950px, -970px, 0) scale(1)');
+  });
+
+  it('reports single background taps in board coordinates so the notebook can tell board from wall', () => {
+    const taps: { x: number; y: number }[] = [];
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 2 },
+      onTapBackground: point => taps.push(point),
+    });
+    handlers.onPointerDown(pointer(1, 300, 400));
+    handlers.onPointerUp(pointer(1, 300, 400));
+    // Screen center is (200, 300); 100px right and 100px down at zoom 2 = +50 board units.
+    expect(taps).toEqual([{ x: 950, y: 950 }]);
+  });
+
+  it('double tap zooms to 2x around the tapped spot, and a second double tap zooms back to 1x', () => {
+    const { containerProps: handlers, viewportRef } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 1 },
+      reducedMotion: true,
+    });
+    const tap = () => {
+      handlers.onPointerDown(pointer(1, 300, 400));
+      handlers.onPointerUp(pointer(1, 300, 400));
+    };
+    tap();
+    tap();
+    flushFrame();
+    // Tapped board point (1000, 1000) stays under the finger at 2x.
+    expect(updates).toEqual([{ x: 950, y: 950, zoom: 2 }]);
+    expect(viewportRef.current).toEqual({ x: 950, y: 950, zoom: 2 });
+
+    tap();
+    tap();
+    flushFrame();
+    expect(updates[updates.length - 1]).toEqual({ x: 900, y: 900, zoom: 1 });
+  });
+
+  it('invokes onDoubleTapBackground when provided instead of toggling 2x zoom', () => {
+    const doubleTaps: { x: number; y: number }[] = [];
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 600, zoom: 1 },
+      onDoubleTapBackground: point => doubleTaps.push(point),
+    });
+    const tap = () => {
+      handlers.onPointerDown(pointer(1, 300, 400));
+      handlers.onPointerUp(pointer(1, 300, 400));
+    };
+    tap();
+    tap();
+    expect(doubleTaps).toEqual([{ x: 1000, y: 700 }]);
+    expect(updates).toHaveLength(0);
+  });
+
+  it('triggers onPinchOutAtMinZoom only when a new pinch-in gesture starts already at MIN_ZOOM', () => {
+    const onPinchOutAtMinZoom = vi.fn();
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 600, zoom: 1 },
+      onPinchOutAtMinZoom,
+    });
+    // First pinch from 1.0 down to min zoom clamps cleanly without closing the board.
+    handlers.onPointerDownCapture(pointer(1, 100, 300));
+    handlers.onPointerDownCapture(pointer(2, 300, 300));
+    handlers.onPointerMoveCapture(pointer(2, 140, 300));
+    flushFrame();
+    handlers.onPointerUpCapture(pointer(2, 140, 300));
+    handlers.onPointerUpCapture(pointer(1, 100, 300));
+    expect(onPinchOutAtMinZoom).not.toHaveBeenCalled();
+
+    // Second pinch starting already at MIN_ZOOM and pinching inward triggers close to wall view.
+    handlers.onPointerDownCapture(pointer(3, 100, 300));
+    handlers.onPointerDownCapture(pointer(4, 300, 300));
+    handlers.onPointerMoveCapture(pointer(4, 240, 300));
+    expect(onPinchOutAtMinZoom).toHaveBeenCalledTimes(1);
+    handlers.onPointerUpCapture(pointer(4, 240, 300));
+    handlers.onPointerUpCapture(pointer(3, 100, 300));
+
+    // After lifting fingers, pan and pinch remain unlocked (no stuck multiTouch state).
+    updates.length = 0;
+    handlers.onPointerDown(pointer(5, 200, 300));
+    handlers.onPointerMove(pointer(5, 240, 320));
+    flushFrame();
+    expect(updates).toHaveLength(1);
+    handlers.onPointerUp(pointer(5, 240, 320));
+  });
+
+  it('supports 1-gesture pinch-to-zoom directly from locked wall view', () => {
+    const onPinchInFromLocked = vi.fn();
+    const { containerProps: handlers, viewportRef } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 600, zoom: 0.2 },
+      locked: true,
+      onPinchInFromLocked,
+    });
+    handlers.onPointerDownCapture(pointer(1, 150, 300));
+    handlers.onPointerDownCapture(pointer(2, 250, 300));
+    // Spreading fingers apart (>8%) unlocks into focus view and zooms live in the same gesture.
+    handlers.onPointerMoveCapture(pointer(2, 450, 300));
+    flushFrame();
+    expect(onPinchInFromLocked).toHaveBeenCalledTimes(1);
+    expect(viewportRef.current.zoom).toBeCloseTo(0.6, 2);
+    handlers.onPointerUpCapture(pointer(2, 450, 300));
+    handlers.onPointerUpCapture(pointer(1, 150, 300));
+  });
+
+  it('ignores pan, pinch and wheel input while locked (wall view)', () => {
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 0.2 },
+      planeRef: { current: plane },
+      locked: true,
+    });
+    handlers.onPointerDownCapture(pointer(1, 100, 100));
+    handlers.onPointerDownCapture(pointer(2, 200, 200));
+    handlers.onPointerDown(pointer(1, 100, 100));
+    handlers.onPointerMove(pointer(1, 200, 250));
+    handlers.onPointerUp(pointer(1, 200, 250));
+    flushFrame();
+    expect(plane.style.transform).toBe('');
+    expect(updates).toHaveLength(0);
+  });
+
+  it('flies the camera on the GPU plane, scales surface absolutely, and keeps plane relative scale until React commits the new zoom', () => {
+    vi.spyOn(performance, 'now').mockReturnValue(0);
+    const plane = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const surface = { style: { transform: '', willChange: '' } } as unknown as HTMLDivElement;
+    const { animateTo, containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 0.2 },
+      planeRef: { current: plane },
+      surfaceRef: { current: surface },
+    });
+    animateTo({ x: 400, y: 500, zoom: 1 }, 400);
+    flushFrame(200);
+    expect(plane.style.transform).toContain('scale(');
+    expect(surface.style.transform).toContain('scale(');
+    expect(surface.style.transform).not.toBe(plane.style.transform);
+    expect(updates).toHaveLength(0);
+
+    // Input is ignored mid-flight so a stray drag cannot fight the animation.
+    handlers.onPointerDown(pointer(1, 100, 100));
+    handlers.onPointerMove(pointer(1, 200, 200));
+
+    flushFrame(400);
+    expect(updates).toEqual([{ x: 400, y: 500, zoom: 1 }]);
+    // Surface uses absolute zoom (1), while plane retains scale(5) until React commits zoom: 1 atomically.
+    expect(surface.style.transform).toBe('translate3d(-400px, -500px, 0) scale(1)');
+    expect(plane.style.transform).toBe('translate3d(-400px, -500px, 0) scale(5)');
+    vi.restoreAllMocks();
   });
 
   it('attaches a non-passive native wheel listener on boardRef so trackpad pinch zooms the board without zooming the page', () => {
@@ -252,5 +418,48 @@ describe('corkboard mobile gesture ownership', () => {
     expect(panned.x).toBeGreaterThan(900);
     expect(panned.y).toBeLessThan(900);
   });
+
+  it('zooms back out to 1.0 when double-tapping background at max zoom even with slight touch jitter', () => {
+    updates.length = 0;
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 2.0 },
+    });
+
+    // First tap with 8px touch jitter (within 12px touch slop)
+    handlers.onPointerDown(pointer(1, 200, 300));
+    handlers.onPointerMove(pointer(1, 206, 305));
+    handlers.onPointerUp(pointer(1, 206, 305));
+
+    // Second tap shortly after
+    handlers.onPointerDown(pointer(2, 204, 302));
+    handlers.onPointerUp(pointer(2, 204, 302));
+    flushFrame();
+
+    expect(updates[updates.length - 1]).toMatchObject({ zoom: 1.0 });
+  });
+
+  it('zooms back out to 1.0 when double-tapping a card while zoomed in all the way', () => {
+    updates.length = 0;
+    const onTapBackground = vi.fn();
+    const { containerProps: handlers } = useCorkboardGestures({
+      initialViewport: { x: 900, y: 900, zoom: 2.0 },
+      onTapBackground,
+    });
+    const cardPointer = (id: number, x: number, y: number) => {
+      const ev = pointer(id, x, y);
+      ev.target = { closest: (selector: string) => selector.includes('.corkboard-node-card') ? {} : null } as unknown as EventTarget;
+      return ev;
+    };
+
+    handlers.onPointerDownCapture(cardPointer(1, 200, 300));
+    handlers.onPointerUpCapture(cardPointer(1, 200, 300));
+    handlers.onPointerDownCapture(cardPointer(2, 205, 304));
+    handlers.onPointerUpCapture(cardPointer(2, 205, 304));
+    flushFrame();
+
+    expect(onTapBackground).toHaveBeenCalledTimes(1);
+    expect(updates[updates.length - 1]).toMatchObject({ zoom: 1.0 });
+  });
 });
+
 

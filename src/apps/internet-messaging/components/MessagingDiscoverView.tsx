@@ -23,22 +23,22 @@ const DEFAULT_PROMO = {
 };
 
 const DEFAULT_MINI_APPS = [
-  { id: 'app_ewallet', name: 'Ví điện tử', icon: 'CreditCard', color: 'blue' },
-  { id: 'app_bill', name: 'Hoá đơn', icon: 'Receipt', color: 'purple' },
-  { id: 'app_weather', name: 'Thời tiết', icon: 'CloudSun', color: 'amber' },
-  { id: 'app_games', name: 'Game Vui', icon: 'Gamepad2', color: 'rose' },
+  { id: 'miniapp_001', name: 'Ví điện tử', icon: 'CreditCard', color: 'blue' },
+  { id: 'miniapp_002', name: 'Hoá đơn', icon: 'Receipt', color: 'purple' },
+  { id: 'miniapp_003', name: 'Thời tiết', icon: 'CloudSun', color: 'amber' },
+  { id: 'miniapp_004', name: 'Game Vui', icon: 'Gamepad2', color: 'rose' },
 ];
 
 const DEFAULT_OA = [
   {
-    id: 'oa_evn',
+    id: 'oa_001',
     name: 'Điện lực Hà Nội',
     category: 'Tra cứu tiền điện sinh hoạt',
     badge: 'EVN',
     color: 'bg-emerald-100 text-emerald-700',
   },
   {
-    id: 'oa_viettel',
+    id: 'oa_002',
     name: 'Viettel CSKH',
     category: 'Ưu đãi gói cước di động 5G',
     badge: 'VTL',

@@ -116,7 +116,7 @@ Tapping `Chọn màn chơi` slides up an authentic iOS modal sheet displaying ca
 │ ┌────────────────────────────────────────────────────┐ │
 │ │ ══════════════════ [ ── ] ════════════════════     │ │
 │ │ HỒ SƠ VỤ ÁN & CHỌN MÀN CHƠI                 [Close]│ │
-│ │ Nghi phạm: Hoàng • 32 tuổi (CEO Triệu Phú)         │ │
+│ │ Nghi phạm: Thịnh • 32 tuổi (CEO Triệu Phú)         │ │
 │ ├────────────────────────────────────────────────────┤ │
 │ │ [ MÀN 1 ] Đi Làm Về Muộn                 ★★★       │ │
 │ │ Độ khó: Dễ (5 Strikes • 0 Khóa PIN)                │ │

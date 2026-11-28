@@ -8,25 +8,31 @@ import { StoryEvidenceTarget } from '../../../features/investigation';
 
 interface MessagingMyDocumentsViewProps {
   documents: MessagingCloudDocument[];
+  husbandFullName?: string;
   onBack: () => void;
   onTagSuspect: (suspectName: string) => void;
+  onSwipeProgress?: (progress: number, displacement: number) => void;
+  onSwipeEnd?: (committed: boolean) => void;
 }
 
 type CategoryTab = 'all' | 'photos' | 'files' | 'links' | 'notes' | 'collections';
 
 export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> = ({
   documents,
+  husbandFullName,
   onBack,
   onTagSuspect,
+  onSwipeProgress,
+  onSwipeEnd,
 }) => {
-  const [activeCategory, setActiveCategory] = useMotionState<CategoryTab>('all', 'fade');
+  const [activeCategory, setActiveCategory] = useState<CategoryTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showSearch, setShowSearch] = useMotionState(false, 'fade');
+  const [showSearch, setShowSearch] = useState(false);
   const [likedDocIds, setLikedDocIds] = useState<Record<string, boolean>>({});
   const [evidenceSheetDoc, setEvidenceSheetDoc] = useMotionState<MessagingCloudDocument | null>(null, 'sheet');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const swipeHandlers = useSwipeBack({ onBack });
+  const swipeHandlers = useSwipeBack({ onBack, onSwipeProgress, onSwipeEnd });
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -95,7 +101,8 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
     <div
       {...swipeHandlers}
       data-detail-layer
-      className="absolute inset-0 z-20 flex flex-col h-full w-full bg-[#E5ECEF] text-[#0F172A] select-none font-sans overflow-hidden shadow-2xl"
+      style={{ touchAction: 'pan-y', backfaceVisibility: 'hidden' }}
+      className="absolute inset-0 z-20 flex flex-col h-full w-full bg-[#E5ECEF] text-[#0F172A] select-none font-sans overflow-hidden shadow-2xl transform-gpu will-change-transform"
     >
       {/* 1. Header (Electric Blue #0088FF) */}
       <header className="h-14 bg-[#0088FF] text-white flex items-center justify-between px-2 shrink-0 shadow-xs z-10">
@@ -193,7 +200,6 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
           }`}
         >
           <span>Ảnh</span>
-          <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
         </button>
 
         <button
@@ -377,9 +383,11 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                                 <div className="text-ios-subheadline font-extrabold text-rose-600 font-sans">
                                   5.000.000 VNĐ
                                 </div>
-                                <div className="text-ios-caption-2 text-slate-500">
-                                  Người nộp: Nguyễn Huy Hoàng
-                                </div>
+                                {husbandFullName && (
+                                  <div className="text-ios-caption-2 text-slate-500">
+                                    Người nộp: {husbandFullName}
+                                  </div>
+                                )}
                               </div>
                               <div className="text-ios-caption-2 text-[#52525B] flex justify-between">
                                 <span>Ban Quản Lý Toà Nhà</span>

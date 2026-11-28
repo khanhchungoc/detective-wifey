@@ -79,7 +79,7 @@ timestamp: "2026-10-13T19:10:00+07:00"
 │ │ [Avatar: Online] Lan Anh (Marketing)         23:10 │ │
 │ │      "Anh xong việc chưa? Qua quán pub cũ nhé..."  │ │
 │ ├────────────────────────────────────────────────────┤ │
-│ │ [Avatar: Offline] Sếp Hoàng (Director)       18:05 │ │
+│ │ [Avatar: Offline] Sếp Thịnh (Director)       18:05 │ │
 │ │      "Báo cáo tuần gửi trước sáng mai nhé Tuấn"    │ │
 │ └────────────────────────────────────────────────────┘ │
 ├────────────────────────────────────────────────────────┤

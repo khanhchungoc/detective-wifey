@@ -3,7 +3,10 @@ import { PlaySession, type PlaySessionDependencies } from './playSession';
 import { loadCaseByLevel, getAvailableLevels } from '../case-runtime';
 import { SessionWriter, LocalStorageAdapter, type ActiveSessionState, type GameStateRepository } from '../session';
 import type { AppDefinition } from '../../shared/contracts/app-contracts';
+import { useCaseFixtures } from '../../tests/helpers/caseFixtures';
 import type { CaseConfig } from '../../shared/contracts/case-schema';
+
+useCaseFixtures();
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
@@ -13,7 +16,7 @@ function setup(config?: CaseConfig, overrides: Partial<PlaySessionDependencies> 
     getActiveSession: vi.fn(async () => saved),
     saveActiveSession: vi.fn(async value => { saved = structuredClone(value); }),
     clearActiveSession: vi.fn(async () => { saved = null; }),
-    getPlayerProgress: vi.fn(async () => ({ schemaVersion: 1, unlockedHusbandId: 'husband_hoang',
+    getPlayerProgress: vi.fn(async () => ({ schemaVersion: 2, unlockedHusbandId: 'husband_01',
       unlockedLevel: 1 as const, bestStarRatings: {}, earnedWifeTitles: [], audioMutePreference: false })),
     savePlayerProgress: vi.fn(async () => {}),
   };
@@ -47,12 +50,12 @@ describe('play lifecycle', () => {
   it('keeps different records for one person and deduplicates repeated source records', async () => {
     vi.useFakeTimers();
     const { game, saved } = setup();
-    const source = { caseId: 'case_01', recordId: 'order_01', title: 'Đơn mua', snippet: 'Nội dung' };
+    const source = { caseId: 'case_01', recordId: 'order_005', title: 'Đơn mua', snippet: 'Nội dung' };
     game.tag('Nguyễn Thị Thu Hương', 'banking', { ...source, recordId: 'transfer_01' });
     game.tag('Nguyễn Thị Thu Hương', 'ecommerce', source);
     game.tag('Nguyễn Thị Thu Hương', 'ecommerce', source);
     await vi.runAllTimersAsync();
-    expect(saved()?.taggedSuspects.map(tag => tag.evidence?.recordId)).toEqual(['transfer_01', 'order_01']);
+    expect(saved()?.taggedSuspects.map(tag => tag.evidence?.recordId)).toEqual(['transfer_01', 'order_005']);
     game.stop();
   });
 
@@ -118,24 +121,24 @@ describe('play lifecycle', () => {
     game.stop();
   });
 
-  it('keeps an unfinished save and offers Resume when its level is picked again', async () => {
+  it('starts fresh and clears an unfinished save when a level is picked from the hub', async () => {
     vi.useFakeTimers();
     const { repository } = setup();
     const session: ActiveSessionState = {
-      schemaVersion: 1, gameId: 'jealous_wife', caseId: 'case_01', levelNumber: 1, activeApp: 'home',
-      suspicionStrikes: 3, taggedSuspects: [{ suspectId: 'tag_1', displayName: 'Anh Tuấn Thợ Điện',
+      schemaVersion: 2, gameId: 'jealous_wife', caseId: 'case_01', levelNumber: 1, activeApp: 'home',
+      suspicionStrikes: 3, taggedSuspects: [{ suspectId: 'tag_1', displayName: 'Khoa BE',
         sourceApp: 'internet-messaging', timestamp: 1 }], unlockedChallenges: [], elapsedSeconds: 0, lastSavedAt: 1,
     };
     repository.getActiveSession = vi.fn(async () => session);
     const { game } = setup(undefined, { repository });
     await game.initialize();
+    expect(game.getSnapshot().ongoingSession?.caseId).toBe('case_01');
     game.selectLevel(1);
-    expect(game.getSnapshot().resumableSession?.caseId).toBe('case_01');
-    expect(repository.clearActiveSession).not.toHaveBeenCalled();
-    game.resume();
-    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
-    game.selectLevel(1);
+    await vi.runAllTimersAsync();
+    expect(game.getSnapshot().ongoingSession).toBeNull();
     expect(game.getSnapshot().resumableSession).toBeNull();
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(0);
+    expect(repository.clearActiveSession).toHaveBeenCalled();
     game.stop();
   });
 
@@ -160,7 +163,7 @@ describe('save compatibility and ordering', () => {
       await originalSave(value);
     });
     const writer = new SessionWriter(repository, 'jealous_wife');
-    const snapshot = (caseId: string): ActiveSessionState => ({ schemaVersion: 1, gameId: 'jealous_wife',
+    const snapshot = (caseId: string): ActiveSessionState => ({ schemaVersion: 2, gameId: 'jealous_wife',
       caseId, levelNumber: 1, activeApp: 'home', suspicionStrikes: 5, taggedSuspects: [],
       unlockedChallenges: [], elapsedSeconds: 0, lastSavedAt: 0 });
     const first = writer.save(snapshot('old-case'));
@@ -178,15 +181,15 @@ describe('save compatibility and ordering', () => {
     const storage = new Map<string, string>();
     vi.stubGlobal('localStorage', { getItem: (key: string) => storage.get(key) ?? null,
       setItem: (key: string, value: string) => storage.set(key, value), removeItem: (key: string) => storage.delete(key) });
-    const legacy: ActiveSessionState = { schemaVersion: 1, gameId: 'jealous_wife', caseId: 'case_01',
+    const legacy: ActiveSessionState = { schemaVersion: 2, gameId: 'jealous_wife', caseId: 'case_01',
       levelNumber: 1, activeApp: 'internet-messaging', suspicionStrikes: 4,
       taggedSuspects: [{ suspectId: 'tag_10', displayName: 'Tên cũ', sourceApp: 'internet-messaging', timestamp: 10 }],
       unlockedChallenges: ['legacy-lock'], elapsedSeconds: 45, lastSavedAt: 10 };
-    storage.set('detective:v1:jealous_wife:session', JSON.stringify(legacy));
+    storage.set('detective:v2:jealous_wife:session', JSON.stringify(legacy));
     const repository = new LocalStorageAdapter();
     expect(await repository.getActiveSession('jealous_wife')).toEqual(legacy);
     await repository.saveActiveSession(legacy);
-    expect(JSON.parse(storage.get('detective:v1:jealous_wife:session')!)).toMatchObject({ ...legacy, lastSavedAt: expect.any(Number) });
+    expect(JSON.parse(storage.get('detective:v2:jealous_wife:session')!)).toMatchObject({ ...legacy, lastSavedAt: expect.any(Number) });
     expect((await repository.getActiveSession('jealous_wife'))?.taggedSuspects[0]).not.toHaveProperty('evidence');
   });
 
@@ -199,20 +202,69 @@ describe('save compatibility and ordering', () => {
     });
     const repository = new LocalStorageAdapter();
     const { game } = setup(undefined, { repository });
-    game.tag('Anh Tuấn Thợ Điện', 'internet-messaging');
+    game.tag('Khoa BE', 'internet-messaging');
     await new Promise(resolve => setTimeout(resolve, 0));
-    storage.set('detective:v1:case_01:corkboard_state', JSON.stringify({
-      placedNodes: [{ nodeId: 'node_alias_tuan', label: 'Anh Tuấn Thợ Điện', x: 0, y: 0 }],
+    storage.set('detective:v2:case_01:corkboard_state', JSON.stringify({
+      placedNodes: [{ nodeId: 'node_alias_01', label: 'Khoa BE', x: 0, y: 0 }],
       edges: [{ edgeId: 'edge_order_name', sourceNodeId: 'a', targetNodeId: 'b', isCanonical: true, isSmokingGun: true }],
     }));
 
     await game.restart();
-    expect(storage.has('detective:v1:case_01:corkboard_state')).toBe(false);
+    expect(storage.has('detective:v2:case_01:corkboard_state')).toBe(false);
 
-    storage.set('detective:v1:case_02:corkboard_state', JSON.stringify({ placedNodes: [], edges: [{ edgeId: 'stale' }] }));
+    storage.set('detective:v2:case_02:corkboard_state', JSON.stringify({ placedNodes: [], edges: [{ edgeId: 'stale' }] }));
     game.selectLevel(2);
     await new Promise(resolve => setTimeout(resolve, 0));
-    expect(storage.has('detective:v1:case_02:corkboard_state')).toBe(false);
+    expect(storage.has('detective:v2:case_02:corkboard_state')).toBe(false);
+    game.stop();
+  });
+
+  it('exposes ongoingSession for a saved level-2 game and restores it directly via resumeOngoing', async () => {
+    const savedLevel2: ActiveSessionState = {
+      schemaVersion: 2,
+      gameId: 'jealous_wife',
+      caseId: 'case_02',
+      levelNumber: 2,
+      activeApp: 'messages',
+      suspicionStrikes: 2,
+      taggedSuspects: [
+        { suspectId: 'tag_2', displayName: 'Bí Ẩn', sourceApp: 'messages', timestamp: 200 },
+      ],
+      unlockedChallenges: ['lock_2'],
+      elapsedSeconds: 120,
+      lastSavedAt: 200,
+    };
+    const { game, repository } = setup();
+    await repository.saveActiveSession(savedLevel2);
+    await game.initialize();
+
+    expect(game.getSnapshot().ongoingSession?.caseId).toBe('case_02');
+    expect(game.getSnapshot().ongoingSession?.levelNumber).toBe(2);
+    expect(game.resumeOngoing()).toBe(true);
+    expect(game.getSnapshot().caseConfig.caseId).toBe('case_02');
+    expect(game.getSnapshot().activeAppId).toBe('messages');
+    expect(game.getSnapshot().strikes).toBe(2);
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
+    expect(game.getSnapshot().ongoingSession).toBeNull();
+    expect(game.getSnapshot().resumableSession).toBeNull();
+    game.stop();
+  });
+
+  it('parks the active session for the start screen and restores it via resumeOngoing', async () => {
+    const { game, saved } = setup();
+    game.launch('messages');
+    game.tag('Khoa BE', 'internet-messaging');
+    game.parkOngoingSession();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(game.getSnapshot().ongoingSession?.caseId).toBe('case_01');
+    expect(game.getSnapshot().ongoingSession?.activeApp).toBe('messages');
+    expect(game.getSnapshot().ongoingSession?.taggedSuspects).toHaveLength(1);
+    expect(saved()?.caseId).toBe('case_01');
+
+    expect(game.resumeOngoing()).toBe(true);
+    expect(game.getSnapshot().activeAppId).toBe('messages');
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
     game.stop();
   });
 });

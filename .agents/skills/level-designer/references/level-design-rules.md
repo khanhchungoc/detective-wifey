@@ -113,14 +113,14 @@ Tất cả các câu chuyện, tình huống và văn phong phải bám sát đ�
 
 2. **Quy tắc Bậc thang Viết tắt Tiếng Việt (Vietnamese Abbreviation Hierarchy)**:
    - **Gen Z / Sinh viên (20-25 tuổi)**: Sử dụng mật độ viết tắt và từ lóng cao (`ko`, `vs`, `ms`, `đc`, `j`, `zạ`, `e`, `a`, `c`, `trc`, `rùi`, `mik`, `lun`, `1 mik`, `vibe`, `chằm zn`, `đỉnh chóp`, `lag`, `update`, `shopee`).
-   - **Millennial Trẻ / Dân Văn Phòng (26-35 tuổi, như Hoàng 29t)**: Dùng viết tắt đời thường, tự nhiên và chừng mực trong giao tiếp chat (`a/e`, `ko`, `vs`, `ms`, `đc`, `rùi`, `ng`, `hôm trc`, `cf`, `100k`, `shipper`, `highlight`, `sprint`, `deploy`, `fix bug`, `confirm`). Không dùng teencode trẻ con nhưng không cứng nhắc viết chữ đầy đủ như đơn từ hành chính.
+   - **Millennial Trẻ / Dân Văn Phòng (26-35 tuổi, như Thịnh 31t)**: Dùng viết tắt đời thường, tự nhiên và chừng mực trong giao tiếp chat (`a/e`, `ko`, `vs`, `ms`, `đc`, `rùi`, `ng`, `hôm trc`, `cf`, `100k`, `shipper`, `highlight`, `sprint`, `deploy`, `fix bug`, `confirm`). Không dùng teencode trẻ con nhưng không cứng nhắc viết chữ đầy đủ như đơn từ hành chính.
    - **Giao tiếp Hành chính / Lễ tân / BQL**: Lịch sự công sở, chỉ viết tắt nhẹ (`a/e`, `rùi`, `ạ`, `team`).
    - **Thế hệ Cha Mẹ / Bậc Tiền Bối**: Tuyệt đối giữ chính tả chuẩn mực (`không`, `với`, `mới`, `được`), xưng hô kính cẩn, không bao giờ dùng từ viết tắt, teencode hay tiếng lóng mạng.
 
 3. **Chồng Gen Z / Trẻ tuổi (20 - 25 tuổi)**:
    - **Văn phong & Khẩu khí Chat**: Thoải mái, phóng khoáng, dùng teencode và từ lóng mạng xã hội tự nhiên (*"vibe"*, *"chằm zn"*, *"keo lì"*, *"ét o ét"*, *"flex"*, *"overthinking"*, *"simp"*, viết tắt *"dc", "ko", "j", "rep"*).
    - **Thói quen Ứng dụng**: Săn sale 0đ, đặt trà sữa/cà phê muối, chuyển khoản kèm lời nhắn trêu đùa 1k-2k, ghi chú danh sách đi pub/chill.
-4. **Chồng Millennial / Dân Văn Phòng - IT (26 - 35 tuổi, như Hoàng)**:
+4. **Chồng Millennial / Dân Văn Phòng - IT (26 - 35 tuổi, như Thịnh)**:
    - **Văn phong & Khẩu khí Chat**: Nửa đùa nửa thật, luôn miệng nịnh vợ để che giấu bí mật, dùng tiếng lóng công sở và thuật ngữ ngành (*"sprint"*, *"OT"*, *"fix bug"*, *"deploy"*, *"chốt task"*, *"feedback"*).
    - **Thói quen Ứng dụng**: Kiểm tra lương thưởng và quỹ đen, mua sắm áp mã giảm giá giao giờ hành chính, đặt xe đi làm, đọc tin công nghệ/thể thao.
 5. **Chồng Trung Niên / Doanh Nhân / Gen X (36+ tuổi)**:

@@ -18,7 +18,7 @@ it('loads two online savings and exposes their full terms through the existing e
     expect(target.type).toBe(StoryEvidenceTarget);
     expect(target.props.item.source.recordId).toBe(vault.id);
     expect(target.props.item.snippet).toContain(vault.details);
-    expect(target.props.item.suspectToTag).toBe(caseData.husbandName);
+    expect(target.props.item.suspectToTag).toBe(caseData.husband.shortName);
     const html = renderToStaticMarkup(detail);
     expect(html).toContain(vault.currentAmount);
     expect(html).toContain('Ngày đáo hạn:');
