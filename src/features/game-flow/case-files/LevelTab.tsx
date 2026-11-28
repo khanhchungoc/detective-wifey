@@ -1,6 +1,4 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import type { MotionValue } from 'motion/react';
 import { IoLockClosedOutline } from 'react-icons/io5';
 import type { LevelCardItem } from '../../../shared/contracts/game-flow';
 import { INK_TEXT_STRONG } from './FolderParts';
@@ -23,7 +21,7 @@ interface LevelTabProps {
   index: number;
   total: number;
   selected: boolean;
-  zIndex: MotionValue<number>;
+  zIndex: number;
   onSelect: () => void;
 }
 
@@ -43,7 +41,7 @@ export const LevelTab: React.FC<LevelTabProps> = ({
   const box = tabButtonBox(index, total);
 
   return (
-    <motion.button
+    <button
       type="button"
       role="tab"
       data-level-tab={level.caseId}
