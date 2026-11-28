@@ -75,12 +75,17 @@ describe('Phone and Messages contracts', () => {
     expect(html).not.toContain('Ghim');
     expect(html).not.toContain('Yêu thích');
   });
-  it('opens the requested thread with reaction and draft inspection but no composer', () => {
+  it('opens the requested thread with reaction and draft inspection over a mounted inbox and no composer', () => {
     const html = renderToStaticMarkup(createElement(MessagesApp, { ...props({ messages: payload }), initialThreadId: 'thread' }));
-    expect(html).toContain('Xác nhận đặt phòng');
-    expect(html).toContain('Xem thời gian phản ứng');
-    expect(html).toContain('Xem bản nháp hẹn giờ đã hủy');
-    expect(html).not.toContain('<input');
+    const detailIdx = html.indexOf('data-detail-layer');
+    expect(detailIdx).toBeGreaterThan(0);
+    const baseHtml = html.slice(0, detailIdx);
+    const detailHtml = html.slice(detailIdx);
+    expect(baseHtml).toContain('inert=""');
+    expect(detailHtml).toContain('Xác nhận đặt phòng');
+    expect(detailHtml).toContain('Xem thời gian phản ứng');
+    expect(detailHtml).toContain('Xem bản nháp hẹn giờ đã hủy');
+    expect(detailHtml).not.toContain('<input');
     expect(html).not.toContain('Ghim');
   });
 });

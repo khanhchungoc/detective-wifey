@@ -53,6 +53,29 @@ export const architecturePlugin = {
               context.report({ node, messageId: 'boundary', data: { message: 'App views must use public app context, not authoritative case/answer types.' } });
             }
           },
+          CallExpression(node) {
+            if (isTest(file) || !owner(file).startsWith('apps/')) return;
+            const name = node.callee?.name;
+            if (name === 'useMotionState') {
+              const modeArg = node.arguments?.[1];
+              if (!modeArg || (modeArg.type === 'Literal' && modeArg.value === 'navigation')) {
+                context.report({
+                  node,
+                  messageId: 'boundary',
+                  data: { message: "App push/pop navigation must use SlideStackView (src/shared/ui/SlideStackView.tsx), not useMotionState(..., 'navigation')." },
+                });
+              }
+            } else if (name === 'transition') {
+              const kindArg = node.arguments?.[0];
+              if (kindArg?.type === 'Literal' && (kindArg.value === 'push' || kindArg.value === 'pop')) {
+                context.report({
+                  node,
+                  messageId: 'boundary',
+                  data: { message: "App push/pop navigation must use SlideStackView (src/shared/ui/SlideStackView.tsx), not transition('push'|'pop')." },
+                });
+              }
+            }
+          },
         };
       },
     },
@@ -73,6 +96,20 @@ export function checkArchitecture() {
     const source = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
     const dependencies = [];
     const inspect = node => {
+      if (owner(file).startsWith('apps/') && ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+        const fn = node.expression.text;
+        if (fn === 'useMotionState') {
+          const modeArg = node.arguments[1];
+          if (!modeArg || (ts.isStringLiteral(modeArg) && modeArg.text === 'navigation')) {
+            errors.push(`${relative(file)}: App push/pop navigation must use SlideStackView (src/shared/ui/SlideStackView.tsx), not useMotionState(..., 'navigation').`);
+          }
+        } else if (fn === 'transition') {
+          const kindArg = node.arguments[0];
+          if (kindArg && ts.isStringLiteral(kindArg) && (kindArg.text === 'push' || kindArg.text === 'pop')) {
+            errors.push(`${relative(file)}: App push/pop navigation must use SlideStackView (src/shared/ui/SlideStackView.tsx), not transition('push'|'pop').`);
+          }
+        }
+      }
       let specifier;
       let runtime = true;
       if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
