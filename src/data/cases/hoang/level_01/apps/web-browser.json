@@ -1,0 +1,218 @@
+{
+  "history": [
+    {
+      "id": "history_7",
+      "title": "Cách bảo quản bưởi",
+      "time": "15/10/2026 17:10",
+      "url": "noidung.local/bai/7",
+      "content": "Để bưởi nơi khô ráo, thoáng khí; không bọc trong túi kín.",
+      "timestamp": "15/10/2026 17:10"
+    },
+    {
+      "id": "history_6",
+      "title": "CSS grid căn cột",
+      "time": "15/10/2026 10:00",
+      "url": "noidung.local/bai/6",
+      "content": "Khai báo grid-template-columns để chia cột; dùng gap đặt khoảng cách.",
+      "timestamp": "15/10/2026 10:00"
+    },
+    {
+      "id": "history_5",
+      "title": "Bảo dưỡng xe máy định kỳ",
+      "time": "14/10/2026 07:30",
+      "url": "noidung.local/bai/5",
+      "content": "Kiểm tra dầu máy, lốp và phanh theo hướng dẫn bảo dưỡng.",
+      "timestamp": "14/10/2026 07:30"
+    },
+    {
+      "id": "history_4",
+      "title": "Cách vệ sinh bàn phím cơ",
+      "time": "13/10/2026 15:10",
+      "url": "noidung.local/bai/4",
+      "content": "Rút nguồn, tháo keycap và dùng chổi mềm làm sạch.",
+      "timestamp": "13/10/2026 15:10"
+    },
+    {
+      "id": "history_3",
+      "title": "Bình nóng lạnh 20 lít loại nào tốt",
+      "time": "13/10/2026 09:10",
+      "url": "noidung.local/bai/3",
+      "content": "So sánh dung tích 20 lít, công suất và chống giật khi chọn bình nóng lạnh.",
+      "timestamp": "13/10/2026 09:10"
+    },
+    {
+      "id": "history_2",
+      "title": "Dự báo mưa cuối tuần",
+      "time": "12/10/2026 08:20",
+      "url": "noidung.local/bai/2",
+      "content": "Kiểm tra dự báo trước khi đi xa; mang theo áo mưa.",
+      "timestamp": "12/10/2026 08:20"
+    },
+    {
+      "id": "history_1",
+      "title": "TypeScript kiểu dữ liệu tổng hợp",
+      "time": "11/10/2026 09:25",
+      "url": "noidung.local/bai/1",
+      "content": "Dùng kiểu union để mô tả một giá trị thuộc nhiều kiểu.",
+      "timestamp": "11/10/2026 09:25"
+    },
+    {
+      "id": "history_0",
+      "title": "React cập nhật trạng thái",
+      "time": "11/10/2026 09:10",
+      "url": "noidung.local/bai/0",
+      "content": "Mỗi lần cập nhật trạng thái, giao diện phản ánh giá trị mới.",
+      "timestamp": "11/10/2026 09:10"
+    },
+    {
+      "id": "browser_history_16",
+      "title": "Món canh rau",
+      "time": "07/10/2026 10:20",
+      "url": "https://example.invalid/reading/16",
+      "content": "Cho rau vào sau khi nước đã sôi.",
+      "timestamp": "07/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_15",
+      "title": "Gấp áo khoác",
+      "time": "06/10/2026 10:20",
+      "url": "https://example.invalid/reading/15",
+      "content": "Gấp theo đường vai để giữ dáng.",
+      "timestamp": "06/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_14",
+      "title": "Tra cứu thời tiết",
+      "time": "05/10/2026 10:20",
+      "url": "https://example.invalid/reading/14",
+      "content": "Kiểm tra dự báo trước khi phơi chăn.",
+      "timestamp": "05/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_13",
+      "title": "Chọn đèn học",
+      "time": "04/10/2026 10:20",
+      "url": "https://example.invalid/reading/13",
+      "content": "Đặt đèn về phía tay không thuận.",
+      "timestamp": "04/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_12",
+      "title": "Tập giãn cơ",
+      "time": "03/10/2026 10:20",
+      "url": "https://example.invalid/reading/12",
+      "content": "Đứng dậy đi lại sau mỗi giờ ngồi.",
+      "timestamp": "03/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_11",
+      "title": "Đọc sách kỹ thuật",
+      "time": "02/10/2026 10:20",
+      "url": "https://example.invalid/reading/11",
+      "content": "Ghi lại câu hỏi và thử từng ví dụ.",
+      "timestamp": "02/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_10",
+      "title": "Bảo quản cà phê",
+      "time": "01/10/2026 10:20",
+      "url": "https://example.invalid/reading/10",
+      "content": "Đóng kín túi sau mỗi lần dùng.",
+      "timestamp": "01/10/2026 10:20"
+    },
+    {
+      "id": "browser_history_9",
+      "title": "Trồng rau trong chậu",
+      "time": "29/09/2026 10:20",
+      "url": "https://example.invalid/reading/9",
+      "content": "Chọn chậu có lỗ thoát nước.",
+      "timestamp": "29/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_8",
+      "title": "Túi rác phân loại",
+      "time": "28/09/2026 10:20",
+      "url": "https://example.invalid/reading/8",
+      "content": "Tách rác tái chế trước khi bỏ.",
+      "timestamp": "28/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_7",
+      "title": "CSS grid",
+      "time": "27/09/2026 10:20",
+      "url": "https://example.invalid/reading/7",
+      "content": "Đặt kích thước cột bằng minmax.",
+      "timestamp": "27/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_6",
+      "title": "TypeScript narrowing",
+      "time": "26/09/2026 10:20",
+      "url": "https://example.invalid/reading/6",
+      "content": "Kiểm tra kiểu trước khi sử dụng thuộc tính.",
+      "timestamp": "26/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_5",
+      "title": "Cách giặt giày thể thao",
+      "time": "25/09/2026 10:20",
+      "url": "https://example.invalid/reading/5",
+      "content": "Dùng bàn chải mềm và phơi nơi thoáng.",
+      "timestamp": "25/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_4",
+      "title": "Lịch bóng đá",
+      "time": "24/09/2026 10:20",
+      "url": "https://example.invalid/reading/4",
+      "content": "Lưu giờ thi đấu để xem tổng hợp sau.",
+      "timestamp": "24/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_3",
+      "title": "Vệ sinh bàn phím",
+      "time": "23/09/2026 10:20",
+      "url": "https://example.invalid/reading/3",
+      "content": "Ngắt kết nối trước khi vệ sinh bằng khăn khô.",
+      "timestamp": "23/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_2",
+      "title": "Mẹo pha cà phê phin",
+      "time": "22/09/2026 10:20",
+      "url": "https://example.invalid/reading/2",
+      "content": "Làm nóng phin và rót nước chậm.",
+      "timestamp": "22/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_1",
+      "title": "Bảo dưỡng xe máy",
+      "time": "21/09/2026 10:20",
+      "url": "https://example.invalid/reading/1",
+      "content": "Kiểm tra dầu, phanh và áp suất lốp.",
+      "timestamp": "21/09/2026 10:20"
+    },
+    {
+      "id": "browser_history_0",
+      "title": "Chăm sóc húng quế ban công",
+      "time": "20/09/2026 10:20",
+      "url": "https://example.invalid/reading/0",
+      "content": "Tưới vào sáng sớm, tránh để úng đất.",
+      "timestamp": "20/09/2026 10:20"
+    }
+  ],
+  "tabs": [
+    {
+      "id": "tab_6",
+      "title": "CSS grid căn cột",
+      "content": "Khai báo grid-template-columns để chia cột; dùng gap đặt khoảng cách.",
+      "url": "noidung.local/bai/6"
+    },
+    {
+      "id": "tab_3",
+      "title": "So sánh bình nóng lạnh",
+      "content": "So sánh dung tích 20 lít, công suất và chống giật khi chọn bình nóng lạnh.",
+      "url": "noidung.local/bai/3"
+    }
+  ]
+}

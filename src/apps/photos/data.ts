@@ -1,13 +1,13 @@
 import { record, records, text, textFields } from '../../shared/data/read';
 import type { UniversalEvidenceItem } from '../../shared/contracts/evidence';
 import type { NormalizedPhotosState, PhotoAlbum, PhotoExif, PhotoItem } from './types';
-import photosAnniversary from './assets/photos-anniversary.jpg';
-import photosDinnerClaypot from './assets/photos-dinner-claypot.jpg';
-import photosEveryday01 from './assets/photos-everyday-01.jpg';
-import photosEveryday02 from './assets/photos-everyday-02.jpg';
-import photosEveryday03 from './assets/photos-everyday-03.jpg';
-import photosEveryday04 from './assets/photos-everyday-04.jpg';
-import photosForensic from './assets/photos-forensic.jpg';
+import photosAnniversary from './assets/photos-anniversary.webp';
+import photosDinnerClaypot from './assets/photos-dinner-claypot.webp';
+import photosEveryday01 from './assets/photos-everyday-01.webp';
+import photosEveryday02 from './assets/photos-everyday-02.webp';
+import photosEveryday03 from './assets/photos-everyday-03.webp';
+import photosEveryday04 from './assets/photos-everyday-04.webp';
+import photosForensic from './assets/photos-forensic.webp';
 
 export type PhotoArtwork = Readonly<{
   src: string;

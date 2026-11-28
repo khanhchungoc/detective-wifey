@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import level01 from '../data/cases/hoang/level_01.json';
+import level01 from '../data/cases/hoang/level_01';
 import { mergeWithDefaultAppsData } from '../features/case-runtime';
 import { readMessagingData } from '../apps/internet-messaging/data';
 import { readBankingData } from '../apps/banking/bankingData';

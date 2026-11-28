@@ -1,7 +1,8 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { BankingApp, appDefinition } from '../apps/banking';
+import { appDefinition } from '../apps/banking';
+import { BankingApp } from '../apps/banking/BankingApp';
 import { bankingAppChallenge, bankingVaultChallenge, filterTransactions, readBankingData } from '../apps/banking/bankingData';
 import { bankingEvidence, transactionEvidence } from '../apps/banking/bankingEvidence';
 import { BankingHistory } from '../apps/banking/components/BankingHistory';

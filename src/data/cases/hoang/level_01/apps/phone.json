@@ -1,0 +1,507 @@
+{
+  "unreadBadge": 0,
+  "calls": [
+    {
+      "callId": "call_khoa_late",
+      "contactName": "Khoa BE",
+      "contactId": "contact_10",
+      "phoneNumber": "0988886677",
+      "timestamp": "15/10/2026 23:20",
+      "direction": "outgoing",
+      "durationSeconds": 96,
+      "clueRefId": "CLUE-PHONE-01"
+    },
+    {
+      "callId": "call_building",
+      "contactName": "Ban Quản Lý",
+      "contactId": "contact_11",
+      "phoneNumber": "0243556677",
+      "timestamp": "15/10/2026 21:05",
+      "direction": "incoming",
+      "durationSeconds": 51
+    },
+    {
+      "callId": "call_khoa_early",
+      "contactName": "Khoa BE",
+      "contactId": "contact_10",
+      "phoneNumber": "0988886677",
+      "timestamp": "15/10/2026 19:18",
+      "direction": "outgoing",
+      "durationSeconds": 26
+    },
+    {
+      "callId": "call_thao_miss",
+      "contactName": "Thảo PT California",
+      "contactId": "contact_4",
+      "phoneNumber": "0944556677",
+      "timestamp": "15/10/2026 18:30",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_mom_2",
+      "contactName": "Mẹ Ở Quê",
+      "contactId": "contact_0",
+      "phoneNumber": "0915220011",
+      "timestamp": "15/10/2026 18:00",
+      "direction": "incoming",
+      "durationSeconds": 144
+    },
+    {
+      "callId": "call_wife",
+      "contactName": "Vợ",
+      "contactId": "contact_9",
+      "phoneNumber": "0900112233",
+      "timestamp": "15/10/2026 12:30",
+      "direction": "incoming",
+      "durationSeconds": 88
+    },
+    {
+      "callId": "call_mai",
+      "contactName": "Mai Lễ Tân",
+      "contactId": "contact_8",
+      "phoneNumber": "0988990011",
+      "timestamp": "15/10/2026 11:40",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_lan_anh",
+      "contactName": "Lan Anh Kế Toán",
+      "contactId": "contact_6",
+      "phoneNumber": "0966778899",
+      "timestamp": "14/10/2026 15:00",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_friend",
+      "contactName": "Tuấn Đụt",
+      "contactId": "contact_5",
+      "phoneNumber": "0977112233",
+      "timestamp": "14/10/2026 12:20",
+      "direction": "outgoing",
+      "durationSeconds": 240
+    },
+    {
+      "callId": "call_thao",
+      "contactName": "Thảo PT California",
+      "contactId": "contact_4",
+      "phoneNumber": "0944556677",
+      "timestamp": "13/10/2026 17:25",
+      "direction": "incoming",
+      "durationSeconds": 63
+    },
+    {
+      "callId": "call_nam",
+      "contactName": "Nam Dev",
+      "contactId": "contact_3",
+      "phoneNumber": "0933445566",
+      "timestamp": "13/10/2026 11:40",
+      "direction": "outgoing",
+      "durationSeconds": 95
+    },
+    {
+      "callId": "call_ngoc",
+      "contactName": "Bé Ngọc KTX",
+      "contactId": "contact_2",
+      "phoneNumber": "0922334455",
+      "timestamp": "13/10/2026 09:15",
+      "direction": "incoming",
+      "durationSeconds": 186
+    },
+    {
+      "callId": "call_tuan_dien",
+      "contactName": "Anh Tuấn Thợ Điện",
+      "contactId": "contact_12",
+      "phoneNumber": "0912345801",
+      "timestamp": "13/10/2026 08:40",
+      "direction": "outgoing",
+      "durationSeconds": 132
+    },
+    {
+      "callId": "call_mom_1",
+      "contactName": "Mẹ Ở Quê",
+      "contactId": "contact_0",
+      "phoneNumber": "0915220011",
+      "timestamp": "12/10/2026 18:05",
+      "direction": "incoming",
+      "durationSeconds": 320
+    },
+    {
+      "callId": "call_history_31",
+      "contactId": "contact_1",
+      "contactName": "Giao Nước",
+      "phoneNumber": "0904556677",
+      "timestamp": "11/10/2026 09:00",
+      "direction": "outgoing",
+      "durationSeconds": 43
+    },
+    {
+      "callId": "call_history_30",
+      "contactId": "contact_9",
+      "contactName": "Vợ",
+      "phoneNumber": "0900112233",
+      "timestamp": "10/10/2026 18:25",
+      "direction": "outgoing",
+      "durationSeconds": 71
+    },
+    {
+      "callId": "call_history_29",
+      "contactId": "contact_2",
+      "contactName": "Bé Ngọc KTX",
+      "phoneNumber": "0922334455",
+      "timestamp": "09/10/2026 18:10",
+      "direction": "incoming",
+      "durationSeconds": 194
+    },
+    {
+      "callId": "call_history_28",
+      "contactId": "contact_6",
+      "contactName": "Lan Anh Kế Toán",
+      "phoneNumber": "0966778899",
+      "timestamp": "08/10/2026 11:00",
+      "direction": "outgoing",
+      "durationSeconds": 67
+    },
+    {
+      "callId": "call_history_27",
+      "contactId": "contact_8",
+      "contactName": "Mai Lễ Tân",
+      "phoneNumber": "0988990011",
+      "timestamp": "07/10/2026 16:20",
+      "direction": "outgoing",
+      "durationSeconds": 28
+    },
+    {
+      "callId": "call_history_26",
+      "contactId": "contact_7",
+      "contactName": "Giao Hàng",
+      "phoneNumber": "0905667788",
+      "timestamp": "06/10/2026 17:35",
+      "direction": "incoming",
+      "durationSeconds": 35
+    },
+    {
+      "callId": "call_history_25",
+      "contactId": "contact_5",
+      "contactName": "Tuấn Đụt",
+      "phoneNumber": "0977112233",
+      "timestamp": "05/10/2026 09:20",
+      "direction": "outgoing",
+      "durationSeconds": 96
+    },
+    {
+      "callId": "call_history_24",
+      "contactId": "contact_0",
+      "contactName": "Mẹ Ở Quê",
+      "phoneNumber": "0915220011",
+      "timestamp": "04/10/2026 16:05",
+      "direction": "incoming",
+      "durationSeconds": 301
+    },
+    {
+      "callId": "call_history_23",
+      "contactId": "contact_13",
+      "contactName": "Bách Dev",
+      "phoneNumber": "0933778899",
+      "timestamp": "03/10/2026 12:10",
+      "direction": "outgoing",
+      "durationSeconds": 83
+    },
+    {
+      "callId": "call_history_22",
+      "contactId": "contact_8",
+      "contactName": "Mai Lễ Tân",
+      "phoneNumber": "0988990011",
+      "timestamp": "02/10/2026 11:35",
+      "direction": "incoming",
+      "durationSeconds": 42
+    },
+    {
+      "callId": "call_history_21",
+      "contactId": "contact_9",
+      "contactName": "Vợ",
+      "phoneNumber": "0900112233",
+      "timestamp": "01/10/2026 17:15",
+      "direction": "outgoing",
+      "durationSeconds": 110
+    },
+    {
+      "callId": "call_history_20",
+      "contactId": "contact_11",
+      "contactName": "Ban Quản Lý",
+      "phoneNumber": "0243556677",
+      "timestamp": "30/09/2026 08:00",
+      "direction": "outgoing",
+      "durationSeconds": 58
+    },
+    {
+      "callId": "call_history_19",
+      "contactId": "contact_4",
+      "contactName": "Thảo PT California",
+      "phoneNumber": "0944556677",
+      "timestamp": "29/09/2026 16:20",
+      "direction": "incoming",
+      "durationSeconds": 36
+    },
+    {
+      "callId": "call_history_18",
+      "contactId": "contact_3",
+      "contactName": "Nam Dev",
+      "phoneNumber": "0933445566",
+      "timestamp": "29/09/2026 10:35",
+      "direction": "outgoing",
+      "durationSeconds": 64
+    },
+    {
+      "callId": "call_history_17",
+      "contactId": "contact_5",
+      "contactName": "Tuấn Đụt",
+      "phoneNumber": "0977112233",
+      "timestamp": "28/09/2026 18:05",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_history_16",
+      "contactId": "contact_2",
+      "contactName": "Bé Ngọc KTX",
+      "phoneNumber": "0922334455",
+      "timestamp": "28/09/2026 12:15",
+      "direction": "outgoing",
+      "durationSeconds": 182
+    },
+    {
+      "callId": "call_history_15",
+      "contactId": "contact_0",
+      "contactName": "Mẹ Ở Quê",
+      "phoneNumber": "0915220011",
+      "timestamp": "27/09/2026 18:10",
+      "direction": "incoming",
+      "durationSeconds": 325
+    },
+    {
+      "callId": "call_history_14",
+      "contactId": "contact_13",
+      "contactName": "Bách Dev",
+      "phoneNumber": "0933778899",
+      "timestamp": "27/09/2026 10:05",
+      "direction": "outgoing",
+      "durationSeconds": 142
+    },
+    {
+      "callId": "call_history_13",
+      "contactId": "contact_9",
+      "contactName": "Vợ",
+      "phoneNumber": "0900112233",
+      "timestamp": "26/09/2026 17:25",
+      "direction": "incoming",
+      "durationSeconds": 103
+    },
+    {
+      "callId": "call_history_12",
+      "contactId": "contact_7",
+      "contactName": "Giao Hàng",
+      "phoneNumber": "0905667788",
+      "timestamp": "26/09/2026 11:10",
+      "direction": "incoming",
+      "durationSeconds": 31
+    },
+    {
+      "callId": "call_history_11",
+      "contactId": "contact_6",
+      "contactName": "Lan Anh Kế Toán",
+      "phoneNumber": "0966778899",
+      "timestamp": "25/09/2026 15:30",
+      "direction": "outgoing",
+      "durationSeconds": 89
+    },
+    {
+      "callId": "call_history_10",
+      "contactId": "contact_6",
+      "contactName": "Lan Anh Kế Toán",
+      "phoneNumber": "0966778899",
+      "timestamp": "25/09/2026 15:20",
+      "direction": "missed",
+      "durationSeconds": 0
+    },
+    {
+      "callId": "call_history_9",
+      "contactId": "contact_0",
+      "contactName": "Mẹ Ở Quê",
+      "phoneNumber": "0915220011",
+      "timestamp": "24/09/2026 18:20",
+      "direction": "outgoing",
+      "durationSeconds": 286
+    },
+    {
+      "callId": "call_history_8",
+      "contactId": "contact_4",
+      "contactName": "Thảo PT California",
+      "phoneNumber": "0944556677",
+      "timestamp": "24/09/2026 08:30",
+      "direction": "incoming",
+      "durationSeconds": 65
+    },
+    {
+      "callId": "call_history_7",
+      "contactId": "contact_1",
+      "contactName": "Giao Nước",
+      "phoneNumber": "0904556677",
+      "timestamp": "23/09/2026 17:00",
+      "direction": "incoming",
+      "durationSeconds": 39
+    },
+    {
+      "callId": "call_history_6",
+      "contactId": "contact_8",
+      "contactName": "Mai Lễ Tân",
+      "phoneNumber": "0988990011",
+      "timestamp": "23/09/2026 11:45",
+      "direction": "outgoing",
+      "durationSeconds": 26
+    },
+    {
+      "callId": "call_history_5",
+      "contactId": "contact_3",
+      "contactName": "Nam Dev",
+      "phoneNumber": "0933445566",
+      "timestamp": "22/09/2026 14:05",
+      "direction": "outgoing",
+      "durationSeconds": 92
+    },
+    {
+      "callId": "call_history_4",
+      "contactId": "contact_2",
+      "contactName": "Bé Ngọc KTX",
+      "phoneNumber": "0922334455",
+      "timestamp": "22/09/2026 10:00",
+      "direction": "incoming",
+      "durationSeconds": 156
+    },
+    {
+      "callId": "call_history_3",
+      "contactId": "contact_5",
+      "contactName": "Tuấn Đụt",
+      "phoneNumber": "0977112233",
+      "timestamp": "21/09/2026 18:15",
+      "direction": "outgoing",
+      "durationSeconds": 130
+    },
+    {
+      "callId": "call_history_2",
+      "contactId": "contact_11",
+      "contactName": "Ban Quản Lý",
+      "phoneNumber": "0243556677",
+      "timestamp": "21/09/2026 09:30",
+      "direction": "incoming",
+      "durationSeconds": 48
+    },
+    {
+      "callId": "call_history_1",
+      "contactId": "contact_9",
+      "contactName": "Vợ",
+      "phoneNumber": "0900112233",
+      "timestamp": "20/09/2026 17:05",
+      "direction": "outgoing",
+      "durationSeconds": 74
+    },
+    {
+      "callId": "call_history_0",
+      "contactId": "contact_0",
+      "contactName": "Mẹ Ở Quê",
+      "phoneNumber": "0915220011",
+      "timestamp": "20/09/2026 08:35",
+      "direction": "incoming",
+      "durationSeconds": 220
+    }
+  ],
+  "contacts": [
+    {
+      "contactId": "contact_0",
+      "displayName": "Mẹ Ở Quê",
+      "primaryPhone": "0915220011"
+    },
+    {
+      "contactId": "contact_1",
+      "displayName": "Giao Nước",
+      "primaryPhone": "0904556677"
+    },
+    {
+      "contactId": "contact_2",
+      "displayName": "Bé Ngọc KTX",
+      "primaryPhone": "0922334455"
+    },
+    {
+      "contactId": "contact_3",
+      "displayName": "Nam Dev",
+      "primaryPhone": "0933445566"
+    },
+    {
+      "contactId": "contact_4",
+      "displayName": "Thảo PT California",
+      "primaryPhone": "0944556677"
+    },
+    {
+      "contactId": "contact_5",
+      "displayName": "Tuấn Đụt",
+      "primaryPhone": "0977112233"
+    },
+    {
+      "contactId": "contact_6",
+      "displayName": "Lan Anh Kế Toán",
+      "primaryPhone": "0966778899"
+    },
+    {
+      "contactId": "contact_7",
+      "displayName": "Giao Hàng",
+      "primaryPhone": "0905667788"
+    },
+    {
+      "contactId": "contact_8",
+      "displayName": "Mai Lễ Tân",
+      "primaryPhone": "0988990011"
+    },
+    {
+      "contactId": "contact_9",
+      "displayName": "Vợ",
+      "primaryPhone": "0900112233"
+    },
+    {
+      "contactId": "contact_10",
+      "displayName": "Khoa BE",
+      "primaryPhone": "0988886677"
+    },
+    {
+      "contactId": "contact_11",
+      "displayName": "Ban Quản Lý",
+      "primaryPhone": "0243556677"
+    },
+    {
+      "contactId": "contact_12",
+      "displayName": "Anh Tuấn Thợ Điện",
+      "primaryPhone": "0912345801"
+    },
+    {
+      "contactId": "contact_13",
+      "displayName": "Bách Dev",
+      "primaryPhone": "0933778899"
+    },
+    {
+      "contactId": "service_carrier",
+      "displayName": "Tổng đài nhà mạng",
+      "primaryPhone": "18008098"
+    },
+    {
+      "contactId": "service_gym",
+      "displayName": "California Fitness",
+      "primaryPhone": "19006868"
+    },
+    {
+      "contactId": "service_plan",
+      "displayName": "Thông tin gói cước",
+      "primaryPhone": "191"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "notes": [
+    {
+      "id": "note_5",
+      "title": "Việc tuần sau",
+      "content": "15/10 10:30\nHọp sprint T2; xem lỗi hoàn tiền; trả sách cho Nam."
+    },
+    {
+      "id": "note_4",
+      "title": "Bảo dưỡng xe",
+      "content": "14/10\nDầu máy, lốp, phanh trước."
+    },
+    {
+      "id": "note_3",
+      "title": "Lưng",
+      "content": "13/10\nĐứng dậy mỗi giờ; tập nhẹ."
+    },
+    {
+      "id": "note_2",
+      "title": "Sinh nhật mẹ 18/10",
+      "content": "13/10\nBình nóng lạnh, nhờ anh Tuấn lắp thứ 6. Đừng để mẹ biết."
+    },
+    {
+      "id": "note_1",
+      "title": "Đồ cần mua",
+      "content": "11/10\nTúi rác cỡ vừa; nước rửa bát."
+    },
+    {
+      "id": "note_0",
+      "title": "Tiền nhà",
+      "content": "10/10\nĐã chuyển sinh hoạt tháng 10."
+    },
+    {
+      "id": "note_history_0",
+      "title": "Giặt chăn",
+      "content": "Giặt riêng, phơi nắng buổi sáng, chiều kiểm tra lại.",
+      "date": "22/09"
+    },
+    {
+      "id": "note_history_1",
+      "title": "Đồ dự phòng",
+      "content": "Pin chuột, dây sạc, bóng đèn bàn.",
+      "date": "23/09"
+    },
+    {
+      "id": "note_history_2",
+      "title": "Đăng ký thẻ xe",
+      "content": "Một xe máy; giữ biên nhận trong ví.",
+      "date": "24/09"
+    },
+    {
+      "id": "note_history_3",
+      "title": "Cà phê pha phin",
+      "content": "Xay đủ mỗi lần uống, cất hạt trong túi kín.",
+      "date": "25/09"
+    },
+    {
+      "id": "note_history_4",
+      "title": "Việc nhóm tuần này",
+      "content": "Đọc log lỗi giỏ hàng, ghi lại trường hợp timeout.",
+      "date": "26/09"
+    },
+    {
+      "id": "note_history_5",
+      "title": "Đồ cần mang đi tập",
+      "content": "Khăn, nước, phiếu theo dõi cột sống.",
+      "date": "27/09"
+    },
+    {
+      "id": "note_history_6",
+      "title": "Dọn ban công",
+      "content": "Tỉa lá khô, kiểm tra thoát nước chậu cây.",
+      "date": "28/09"
+    },
+    {
+      "id": "note_history_7",
+      "title": "Sách đang đọc",
+      "content": "Đọc tiếp chương kiểm thử; thử ví dụ sau giờ nghỉ.",
+      "date": "29/09"
+    }
+  ]
+}

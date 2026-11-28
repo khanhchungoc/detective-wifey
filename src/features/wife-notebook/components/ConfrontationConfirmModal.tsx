@@ -10,7 +10,7 @@ import {
   IoGlassesOutline,
   IoCallOutline,
 } from 'react-icons/io5';
-import characterSheet from '../../../shared/assets/contact-avatar-persona-sheet.jpg';
+import characterSheet from '../../../shared/assets/contact-avatar-persona-sheet.webp';
 import { ContactAvatar } from '../../../shared/ui/ContactAvatar';
 import type { AppDefinition } from '../../../shared/contracts/app-contracts';
 import { useSwipeBack } from '../../../shared/gestures/useSwipeBack';

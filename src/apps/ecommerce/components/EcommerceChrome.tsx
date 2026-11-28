@@ -15,7 +15,7 @@ import type { EcommerceTab } from '../types';
 import { safeImage } from '../ecommerceData';
 import { SHOP_AVATAR_TILES } from '../shopAvatars';
 import { ProductArtwork } from './ProductArtwork';
-import shopAvatarSheet from '../assets/shopoo-shop-avatar-sheet.jpg';
+import shopAvatarSheet from '../assets/shopoo-shop-avatar-sheet.webp';
 
 export function EmptyState({ children }: { children: ReactNode }) {
   return <p className="ecommerce-empty">{children}</p>;

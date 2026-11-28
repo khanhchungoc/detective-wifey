@@ -7,8 +7,8 @@ import {
   IoVolumeHighOutline,
   IoVolumeMuteOutline,
 } from 'react-icons/io5';
-import startupHeroUrl from './assets/startup-hero.jpg';
-import gameLogoUrl from './assets/game-logo.png';
+import startupHeroUrl from './assets/startup-hero.webp';
+import gameLogoUrl from './assets/game-logo.webp';
 import { CTA_PRIMARY, CTA_SECONDARY } from './case-files/ctaStyles';
 
 export interface GameStartupScreenProps {
