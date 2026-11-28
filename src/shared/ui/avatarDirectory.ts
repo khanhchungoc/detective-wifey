@@ -2,6 +2,7 @@
  * Bridge for places that only hold a display name (evidence sheets, corkboard, suspect cards).
  * Records that carry an `avatarIndex` pass it straight to ContactAvatar and never touch this map.
  * The case loader fills it from contacts/people data, so renaming someone in data keeps the photo.
+ * shortcut: name-keyed global map, last loaded level wins; upgrade to passing avatarIndex/personId through evidence items when a second husband ships.
  */
 export const normalizeAvatarName = (name: string) =>
   name

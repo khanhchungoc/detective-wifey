@@ -1,5 +1,5 @@
 ---
-husband: <tên_chồng> # ví dụ: hoang (thư mục: husband-hoang)
+husband: <mã_chồng> # ví dụ: husband_01 (thư mục: husband-01). Mã luôn là số, không chứa tên
 ---
 
 # Hồ sơ Nhân vật & Vũ trụ Cốt truyện - Người Chồng: <Họ và Tên>
@@ -11,8 +11,8 @@ husband: <tên_chồng> # ví dụ: hoang (thư mục: husband-hoang)
 ## 1. Chân dung Người Chồng (Husband Persona & Avatar SSOT)
 
 - **Mã định danh (`husbandId`)**: `husband_<tên_chồng>`
-- **Họ và Tên Pháp lý**: <ví dụ: Nguyễn Huy Hoàng (không dấu trên Bank: `NGUYEN HUY HOANG`)>
-- **Biệt danh Thường gọi**: <ví dụ: Hoàng, Anh Hoàng IT>
+- **Họ và Tên Pháp lý**: <ví dụ: Nguyễn Huy Thịnh (không dấu trên Bank: `NGUYEN HUY THINH`)>
+- **Biệt danh Thường gọi**: <ví dụ: Thịnh Doom, Thịnh, Anh Thịnh IT>
 - **Tuổi & Năm sinh**: <ví dụ: 29 tuổi>
 - **Nghề nghiệp & Chức danh**: <ví dụ: Senior Full-stack Developer / Tech Lead tại Technosoft>
 - **Số điện thoại Cá nhân**: `<ví dụ: 0901236789>`
@@ -21,7 +21,7 @@ husband: <tên_chồng> # ví dụ: hoang (thư mục: husband-hoang)
 - **Thói quen Ứng dụng & Lối sống (`lifestyleHabits`)**: <Ứng dụng hay dùng, thói quen chi tiêu, lập quỹ đen, giờ giấc sinh hoạt>
 - **Tính cách Đặc trưng**: <Vẻ ngoài với vợ và tật xấu che giấu>
 - **Ảnh Đại diện Chuẩn (`husbandAvatar`)**:
-  - **Đường dẫn Asset**: `<ví dụ: public/assets/avatars/hoang/husband_hoang.png>`
+  - **Đường dẫn Asset**: `<ví dụ: src/features/game-flow/assets/husband-01-dossier-portrait.webp>`
   - **Mô tả Chân dung & Bối cảnh Ảnh**: <Kiểu ảnh đời thường tự nhiên, trang phục, biểu cảm, góc chụp cố định để tái sử dụng xuyên suốt các màn>
 
 ---

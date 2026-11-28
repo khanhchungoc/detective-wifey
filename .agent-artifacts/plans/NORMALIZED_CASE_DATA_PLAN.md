@@ -1,6 +1,6 @@
 # Normalized Case Data (Master + Transactional) - Refactor Plan
 
-Status: Draft for review (2026-11-28). Not implemented.
+Status: Implemented (2026-11-28) on `claude/game-character-aliases-dqtlvp`. Level 2/3 data removed (coming soon), so phase 5 data migration waits for their design. Known shortcut: `src/shared/ui/avatarDirectory.ts` name-keyed photo bridge for evidence/corkboard UI.
 
 ## Why
 
