@@ -1,5 +1,4 @@
-import { useMotionState } from '../../../shared/motion/useMotionState';
-import { type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { IoChevronBack } from 'react-icons/io5';
 import { StoryEvidenceTarget, UniversalEvidenceModal, type UniversalEvidenceItem } from '../../../features/investigation';
 import type { VirtualAppProps, AppId } from '../../../shared/contracts/app-contracts';
@@ -10,7 +9,7 @@ export function CommunicationHeader({ title, backLabel = 'Quay lại', onBack, a
   return <header className="communication-header">{onBack ? <button type="button" onClick={onBack}><IoChevronBack aria-hidden="true" />{backLabel}</button> : <span className="communication-header-spacer" />}<div className="communication-header-title flex min-w-0 flex-1 items-center justify-center gap-2">{avatarName && <ContactAvatar name={avatarName} size={32} />}<h1 className="min-w-0">{title}</h1></div><span className="communication-header-spacer" /></header>;
 }
 export function useCommunicationEvidence(caseId: string, onTagSuspect: VirtualAppProps['onTagSuspect'], appId: AppId) {
-  const [item, setItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
+  const [item, setItem] = useState<UniversalEvidenceItem | null>(null);
   const wrap = (
     row: NarrativeRecord,
     title: string,

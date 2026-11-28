@@ -1,5 +1,5 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { IoBagHandle, IoSearchOutline, IoCameraOutline } from 'react-icons/io5';
 import type { AppDefinition, VirtualAppProps } from '../../shared/contracts/app-contracts';
 import { useSwipeBack } from '../../shared/gestures/useSwipeBack';
@@ -44,7 +44,7 @@ function EcommerceSession({ caseData, onReturnHome, onTagSuspect }: VirtualAppPr
   const [notificationFilter, setNotificationFilter] = useMotionState<NotificationFilter>('all', 'fade');
   const [activeChatsOnly, setActiveChatsOnly] = useMotionState(false, 'fade');
   const [selectedOrder, setSelectedOrder] = useMotionState<EcommerceOrder | null>(null, 'sheet');
-  const [evidence, setEvidence] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
+  const [evidence, setEvidence] = useState<UniversalEvidenceItem | null>(null);
   const scrollPositions = useRef(new Map<string, number>());
   const scrollArea = useRef<HTMLElement | null>(null);
   const view = stack[stack.length - 1];
