@@ -54,13 +54,13 @@ function getProfileName(node: PlacedNode): string | undefined {
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
   return (
     <>
-      {/* Steady overhead light wash cast onto both wall and board without opening flash/flicker */}
+      {/* Steady bright overhead light wash cast onto both wall and board without opening flash/flicker */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]">
-        <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_4%,rgba(226,236,248,0.2)_0%,rgba(148,163,184,0.09)_38%,rgba(148,163,184,0.02)_70%,transparent_96%)]" />
+        <div className="h-full w-full bg-[radial-gradient(ellipse_115%_95%_at_50%_4%,rgba(235,244,255,0.34)_0%,rgba(176,198,228,0.16)_38%,rgba(148,163,184,0.05)_70%,transparent_96%)]" />
       </div>
-      {/* Overhead fluorescent tube glow aligned to the wall fixture behind the board */}
+      {/* Bright overhead fluorescent tube glow aligned to the wall fixture behind the board */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[6.2%] md:top-[4.5%] z-[4] flex flex-col items-center">
-        <div className="notebook-lamp-tube h-[4px] w-[52%] md:w-[27%] max-w-[230px] md:max-w-[340px] rounded-full bg-[#E2ECF8]/75 shadow-[0_0_18px_6px_rgba(226,236,248,0.42),0_10px_36px_12px_rgba(148,163,184,0.2)]" />
+        <div className="notebook-lamp-tube h-[5px] w-[54%] md:w-[28%] max-w-[240px] md:max-w-[360px] rounded-full bg-[#F4F8FF]/95 shadow-[0_0_24px_10px_rgba(232,242,255,0.75),0_14px_48px_18px_rgba(186,214,250,0.42)]" />
       </div>
     </>
   );

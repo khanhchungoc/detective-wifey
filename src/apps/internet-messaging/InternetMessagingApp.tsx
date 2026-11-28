@@ -117,16 +117,16 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
   const [activeTab, setActiveTab] = useMotionState<MessagingTab>('messages', 'fade');
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [showCloudDrawer, setShowCloudDrawer] = useState(false);
-  const detailX = useMotionValue<number | string>(0);
+  const detailX = useMotionValue<string>('0%');
   const scrimRef = useRef<HTMLDivElement>(null);
-  const swipeDisplacementRef = useRef(0);
+  const swipeProgressRef = useRef(0);
 
   const detailTransition = prefersReducedMotion
     ? { duration: 0 }
     : { duration: 0.28, ease: [0.32, 0.72, 0, 1] as const };
 
-  const handleDetailSwipeProgress = (progress: number, displacement: number) => {
-    swipeDisplacementRef.current = displacement;
+  const handleDetailSwipeProgress = (progress: number) => {
+    swipeProgressRef.current = progress;
     if (scrimRef.current) {
       scrimRef.current.style.opacity = String(Math.max(0, 1 - progress));
     }
@@ -134,11 +134,11 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
 
   const handleDetailSwipeEnd = (committed: boolean) => {
     if (committed) {
-      // Carry the live finger offset onto the exiting motion layer so there is zero snap when useSwipeBack clears the child transform.
-      detailX.set(swipeDisplacementRef.current);
-      swipeDisplacementRef.current = 0;
+      // Carry the live finger offset in % (same unit as exit: '100%') so exit glides smoothly with zero snap.
+      detailX.set(`${Math.max(0, Math.min(100, swipeProgressRef.current * 100)).toFixed(2)}%`);
+      swipeProgressRef.current = 0;
     } else {
-      swipeDisplacementRef.current = 0;
+      swipeProgressRef.current = 0;
       if (scrimRef.current) {
         scrimRef.current.style.opacity = '1';
       }
@@ -177,13 +177,13 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
                 otherThreads={otherThreads}
                 cloudDocuments={cloudDocuments}
                 onSelectThread={(id) => {
-                  swipeDisplacementRef.current = 0;
+                  swipeProgressRef.current = 0;
                   setSelectedThreadId(id);
                 }}
                 onTagSuspect={handleTag}
                 onReturnHome={onReturnHome}
                 onOpenMyDocuments={() => {
-                  swipeDisplacementRef.current = 0;
+                  swipeProgressRef.current = 0;
                   setShowCloudDrawer(true);
                 }}
               />
@@ -217,7 +217,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
                 currentUser={currentUser}
                 cloudDocuments={cloudDocuments}
                 onOpenCloudDrawer={() => {
-                  swipeDisplacementRef.current = 0;
+                  swipeProgressRef.current = 0;
                   setShowCloudDrawer(true);
                 }}
                 onReturnHome={onReturnHome}
@@ -256,7 +256,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
             <motion.div
               key={`thread-${activeThread.threadId}`}
               initial={{ x: '100%' }}
-              animate={{ x: 0 }}
+              animate={{ x: '0%' }}
               exit={{ x: '100%' }}
               transition={detailTransition}
               style={{ x: detailX }}
@@ -278,7 +278,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
             <motion.div
               key="zola-cloud-drawer"
               initial={{ x: '100%' }}
-              animate={{ x: 0 }}
+              animate={{ x: '0%' }}
               exit={{ x: '100%' }}
               transition={detailTransition}
               style={{ x: detailX }}

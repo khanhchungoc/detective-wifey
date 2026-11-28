@@ -1,5 +1,5 @@
 import { useMotionState } from '../../shared/motion/useMotionState';
-import { useMemo, type ComponentType } from 'react';
+import { useMemo, useState, type ComponentType } from 'react';
 import {
   IoCard,
   IoCardOutline,
@@ -53,7 +53,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
   const [filter, setFilter] = useMotionState<TransactionFilter>('all', 'fade');
   const [selectedTx, setSelectedTx] = useMotionState<BankingTransaction | null>(null, 'sheet');
   const [selectedVaultId, setSelectedVaultId] = useMotionState<string | null>(null, 'navigation');
-  const [evidenceItem, setEvidenceItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
+  const [evidenceItem, setEvidenceItem] = useState<UniversalEvidenceItem | null>(null);
 
   const rootChallenge = data ? bankingAppChallenge(caseData, data) : undefined;
   const appLocked = caseData.levelNumber > 1 && Boolean(rootChallenge || data?.isAppLocked) && (!rootChallenge || !unlockedChallenges.has(rootChallenge.challengeId));

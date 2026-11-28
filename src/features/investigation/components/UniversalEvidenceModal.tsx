@@ -69,7 +69,7 @@ export const UniversalEvidenceModal = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="universal-evidence-title"
-        className="ios-evidence-modal w-full max-w-[340px] max-h-[calc(100%-2rem)] overflow-y-auto bg-[#F2F2F7] rounded-[26px] p-5 shadow-2xl flex flex-col gap-3.5"
+        className="ios-evidence-modal animate-scaleUp w-full max-w-[340px] max-h-[calc(100%-2rem)] overflow-y-auto bg-[#F2F2F7] rounded-[26px] p-5 shadow-2xl flex flex-col gap-3.5"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={e => {
           if (e.key === 'Escape') {

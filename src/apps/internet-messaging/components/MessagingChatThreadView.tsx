@@ -38,7 +38,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
     time?: string;
   } | null>(null, 'sheet');
 
-  const [evidenceSheetItem, setEvidenceSheetItem] = useMotionState<UniversalEvidenceItem | null>(null, 'sheet');
+  const [evidenceSheetItem, setEvidenceSheetItem] = React.useState<UniversalEvidenceItem | null>(null);
   const [selectedImage, setSelectedImage] = React.useState<MessagingMessage | null>(null);
   const messagesContainerRef = React.useRef<HTMLElement | null>(null);
 

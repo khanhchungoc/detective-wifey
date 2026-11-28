@@ -163,9 +163,11 @@
     inset 0 6px 14px rgba(0, 0, 0, 0.55);
 }
 
-/* Focus view pushes the detective office wall and overhead lamp back into shadow behind the board. */
+/* Focus view pushes the detective office wall and overhead lamp back into blurred shadow behind the board. */
 .notebook-wall-veil {
   background-color: rgba(2, 3, 5, 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   opacity: 0;
   transition: opacity 360ms ease-out;
   will-change: opacity;

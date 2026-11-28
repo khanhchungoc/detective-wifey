@@ -104,8 +104,8 @@ function computeWallViewport(board: HTMLElement | null): CorkboardViewport {
     (height - marginY * 2) / CANVAS_HEIGHT,
   );
   const zoom = Math.max(0.05, fit);
-  // Shift the board slightly higher on the wall in wall view so it sits cleanly above bottom controls.
-  const upwardShiftPx = Math.round(height * (isLandscape ? 0.04 : 0.08));
+  // Position the board slightly above center on the wall, sitting cleanly beneath the top lamp.
+  const upwardShiftPx = Math.round(height * (isLandscape ? 0.02 : 0.04));
   return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 + upwardShiftPx / zoom, zoom };
 }
 
