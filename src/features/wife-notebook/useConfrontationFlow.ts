@@ -14,38 +14,6 @@ import type { PlacedNode, TaggedEvidenceItem } from './types';
 import type { CaseKnowledgeGraph, CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
 import type { CaseConfig } from '../../shared/contracts/case-schema';
 
-function resolveFallbackCaseConfig(
-  caseConfig: CaseConfig | undefined,
-  caseId: string | undefined,
-  maxStrikes: number | undefined,
-): CaseConfig {
-  return caseConfig ?? {
-    caseId: caseId || 'case_01',
-    husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
-    levelNumber: 1,
-    allowedStrikes: maxStrikes || 5,
-    groundTruth: {
-      verdict: 'cheating',
-      culpritSuspectId: 'suspect_huong',
-      narrativeRoast:
-        'Khoa BE gì mà mặc váy size S, hẹn khao đúng hôm tròn một tháng, lại đúng hôm sếp hủy họp! Anh fix bug hay fix luôn lời khai?',
-      overJealousRoast:
-        'Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.',
-    },
-    suspectPool: [],
-    lockChallenges: [],
-    deviceMetadata: {
-      narrativeTime: '23:45',
-      batteryPercent: '42%',
-      carrierTag: '5G',
-      pwaThemeColor: '#0f172a',
-    },
-    activeAppIds: [],
-    appsData: {},
-  };
-}
-
 interface UseConfrontationFlowParams {
   caseId?: string;
   caseConfig?: CaseConfig;
@@ -104,8 +72,9 @@ export function useConfrontationFlow({
   }, [isConfirmingConfrontation, placedNodes, taggedSuspects, caseConfig, knowledgeGraph, edges, unmaskedSuspectIds]);
 
   const handleOpenConfrontation = useCallback(() => {
+    const resolvedConfig = caseConfig;
+    if (!resolvedConfig) return;
     onConfront?.();
-    const resolvedConfig = resolveFallbackCaseConfig(caseConfig, caseId, maxStrikes);
 
     // Reset selected suspect on open so user can pick from list on Step 1
     setSelectedConfrontationSuspectId(null);
@@ -121,11 +90,12 @@ export function useConfrontationFlow({
 
     setConfrontationPreflight(preflight);
     setIsConfirmingConfrontation(true);
-  }, [caseConfig, caseId, edges, knowledgeGraph, maxStrikes, onConfront, placedNodes, taggedSuspects]);
+  }, [caseConfig, edges, knowledgeGraph, onConfront, placedNodes, taggedSuspects]);
 
   const handleSelectConfrontationSuspect = useCallback((suspectId: string | null) => {
     setSelectedConfrontationSuspectId(suspectId);
-    const resolvedConfig = resolveFallbackCaseConfig(caseConfig, caseId, maxStrikes);
+    const resolvedConfig = caseConfig;
+    if (!resolvedConfig) return;
 
     const preflight = calculateConfrontationPreflight({
       caseConfig: resolvedConfig,
@@ -138,13 +108,14 @@ export function useConfrontationFlow({
     });
 
     setConfrontationPreflight(preflight);
-  }, [caseConfig, caseId, edges, knowledgeGraph, maxStrikes, placedNodes, taggedSuspects]);
+  }, [caseConfig, edges, knowledgeGraph, placedNodes, taggedSuspects]);
 
   const handleExecuteConfrontation = useCallback((confirmedSuspectId?: string) => {
     const targetSuspectId = confirmedSuspectId || selectedConfrontationSuspectId;
     if (!targetSuspectId || !suspectsOnBoard.some(suspect => suspect.id === targetSuspectId)) return;
     setIsConfirmingConfrontation(false);
-    const resolvedConfig = resolveFallbackCaseConfig(caseConfig, caseId, maxStrikes);
+    const resolvedConfig = caseConfig;
+    if (!resolvedConfig) return;
     const activeStrikes = currentStrikes ?? (maxStrikes || 5);
 
     if (hasConfrontationScript(resolvedConfig)) {

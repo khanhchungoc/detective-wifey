@@ -2,7 +2,7 @@ import type { CaseConfig } from '../../shared/contracts/case-schema';
 import type { CaseKnowledgeGraph, CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
 import type { TaggedEvidenceItem, PlacedNode } from './types';
 
-export const DEFAULT_CULPRIT_SUSPECT_ID = 'suspect_huong';
+export const DEFAULT_CULPRIT_SUSPECT_ID = 'suspect_01';
 
 export interface SuspectOnBoard {
   id: string;
@@ -109,7 +109,7 @@ export function getSuspectsOnBoard({
 
       let alias: string | undefined;
 
-      // 1. Check knowledge graph for canonical disguise alias (e.g. node_alias_khoa for suspect_huong)
+      // 1. Check knowledge graph for canonical disguise alias (e.g. node_alias_01 for suspect_01)
       const canonicalAliasNode = knowledgeGraph?.nodes.find(kn =>
         kn.type === 'alias' &&
         (kn.unmasksToSuspectId === poolItem.suspectId ||
@@ -224,7 +224,7 @@ export function getSuspectsOnBoard({
         continue;
       }
 
-      // Check if this contact alias belongs to an existing suspect in suspectsMap (e.g. the "Khoa BE" alias belongs to suspect_huong)
+      // Check if this contact alias belongs to an existing suspect in suspectsMap (e.g. the "Khoa BE" alias belongs to suspect_01)
       const existingEntry = Array.from(suspectsMap.values()).find(suspect => {
         if (suspect.id === suspectId) return true;
         if (suspect.displayName === node.label) return true;

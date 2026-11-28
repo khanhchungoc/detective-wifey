@@ -53,7 +53,7 @@ export const WebBrowserApp: React.FC<VirtualAppProps> = ({
               key={item.id}
               item={{
                 title: item.title,
-                profileName: caseData.husbandName,
+                profileName: caseData.husband.shortName,
                 subtitle: `${item.time} • ${item.url}`,
                 snippet: `Tìm kiếm: "${item.title}"\nURL: ${item.url}`,
                 suspectToTag: item.suspectName || item.title || 'Lịch sử duyệt web',

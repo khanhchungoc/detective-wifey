@@ -1,0 +1,110 @@
+[
+  {
+    "contactId": "contact_001",
+    "personId": "person_002",
+    "savedName": "Mẹ Ở Quê",
+    "phone": "0915220011"
+  },
+  {
+    "contactId": "contact_002",
+    "orgId": "org_007",
+    "savedName": "Giao Nước",
+    "phone": "0904556677"
+  },
+  {
+    "contactId": "contact_003",
+    "personId": "person_005",
+    "savedName": "Bé Ngọc KTX",
+    "phone": "0922334455"
+  },
+  {
+    "contactId": "contact_004",
+    "personId": "person_010",
+    "savedName": "Nam Dev",
+    "phone": "0933445566"
+  },
+  {
+    "contactId": "contact_005",
+    "personId": "person_007",
+    "savedName": "Thảo PT California",
+    "phone": "0944556677"
+  },
+  {
+    "contactId": "contact_006",
+    "personId": "person_009",
+    "savedName": "Tuấn Chó",
+    "phone": "0977112233"
+  },
+  {
+    "contactId": "contact_007",
+    "personId": "person_006",
+    "savedName": "Lan Anh Kế Toán",
+    "phone": "0966778899"
+  },
+  {
+    "contactId": "contact_008",
+    "orgId": "org_008",
+    "savedName": "Giao Hàng",
+    "phone": "0905667788"
+  },
+  {
+    "contactId": "contact_009",
+    "personId": "person_008",
+    "savedName": "Mai Lễ Tân",
+    "phone": "0988990011"
+  },
+  {
+    "contactId": "contact_010",
+    "personId": "person_001",
+    "savedName": "Vợ",
+    "phone": "0900112233"
+  },
+  {
+    "contactId": "contact_011",
+    "personId": "person_003",
+    "savedName": "Khoa BE",
+    "phone": "0988886677",
+    "avatarIndex": 12
+  },
+  {
+    "contactId": "contact_012",
+    "orgId": "org_006",
+    "savedName": "Ban Quản Lý",
+    "phone": "0243556677"
+  },
+  {
+    "contactId": "contact_013",
+    "personId": "person_004",
+    "savedName": "Anh Tuấn Thợ Điện",
+    "phone": "0912345801"
+  },
+  {
+    "contactId": "contact_014",
+    "personId": "person_011",
+    "savedName": "Bách Dev",
+    "phone": "0933778899"
+  },
+  {
+    "contactId": "contact_015",
+    "orgId": "org_009",
+    "savedName": "Tổng đài nhà mạng",
+    "phone": "18008098"
+  },
+  {
+    "contactId": "contact_016",
+    "orgId": "org_003",
+    "savedName": "California Fitness",
+    "phone": "19006868"
+  },
+  {
+    "contactId": "contact_017",
+    "orgId": "org_009",
+    "savedName": "Thông tin gói cước",
+    "phone": "191"
+  },
+  {
+    "contactId": "contact_018",
+    "orgId": "org_009",
+    "savedName": "Chăm sóc thuê bao"
+  }
+]

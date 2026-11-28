@@ -19,7 +19,7 @@ import { StoryEvidenceTarget } from '../../../features/investigation';
 import { MessagingEvidenceSheet } from './MessagingEvidenceSheet';
 
 export interface MessagingProfileViewProps {
-  currentUser?: {
+  currentUser: {
     name: string;
     handle: string;
     avatarInitials?: string;
@@ -67,12 +67,7 @@ const ProfileMenuRow: React.FC<ProfileMenuRowProps> = ({
 );
 
 export const MessagingProfileView: React.FC<MessagingProfileViewProps> = ({
-  currentUser = {
-    name: 'Nguyễn Huy Hoàng',
-    handle: 'hoang_tech88',
-    avatarInitials: 'H',
-    statusText: 'Đang làm việc...',
-  },
+  currentUser,
   onOpenCloudDrawer,
   onTagSuspect,
 }) => {

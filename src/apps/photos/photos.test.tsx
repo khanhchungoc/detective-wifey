@@ -8,6 +8,7 @@ import { deriveNodesFromTaggedEvidence } from '../../features/wife-notebook/Wife
 import { LEVEL_01_KNOWLEDGE_GRAPH } from '../../features/wife-notebook/level01Fixture';
 import { loadCase } from '../../features/case-runtime';
 import { CorkboardCanvas } from '../../features/wife-notebook/components/CorkboardCanvas';
+import { husbandFixture } from '../../tests/helpers/husbandFixture';
 
 describe('case-supplied photo library', () => {
   const albums = [
@@ -15,7 +16,7 @@ describe('case-supplied photo library', () => {
     { id: 'private', title: 'Riêng tư', isLocked: true, photos: [{ id: 'private-photo', title: 'Nội dung đã khóa' }] },
   ];
   const render = (payload: unknown) => renderToStaticMarkup(createElement(PhotosApp, {
-    caseData: { caseId: 'case', husbandName: 'Hoàng', levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: { photos: payload } },
+    caseData: { caseId: 'case', husband: husbandFixture, levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: { photos: payload } },
     onReturnHome: vi.fn(), onTagSuspect: vi.fn(), onRequestUnlock: vi.fn(), unlockedChallenges: new Set<string>(),
   }));
 
@@ -48,19 +49,19 @@ describe('case-supplied photo library', () => {
     expect(photos).toHaveLength(16);
     expect(photos.some(photo => photo.id === 'photo_dinner_claypot')).toBe(false);
     expect(photos.some(photo => photo.clueRefId || photo.locationTag)).toBe(false);
-    expect(photos.find(photo => photo.id === 'photo_7')?.title).toBe('Bình nóng lạnh hỏng');
+    expect(photos.find(photo => photo.id === 'photo_003')?.title).toBe('Bình nóng lạnh hỏng');
     expect(photos.every(photo => !/15\/10.*(19|2[0-3]):/.test(photo.timestamp ?? ''))).toBe(true);
   });
 
   it('pins an everyday photo with imageSrc onto the Corkboard', () => {
-    const photo = readPhotosData(loadCase('case_01').appsData.photos).photos.find(item => item.id === 'photo_0')!;
-    const evidence = buildPhotoEvidenceItem(photo, 'case_01', 'Hoàng', 'exif');
-    expect(evidence.source?.recordId).toBe('photo_0');
+    const photo = readPhotosData(loadCase('case_01').appsData.photos).photos.find(item => item.id === 'photo_010')!;
+    const evidence = buildPhotoEvidenceItem(photo, 'case_01', 'Thịnh', 'exif');
+    expect(evidence.source?.recordId).toBe('photo_010');
     expect(evidence.source?.imageSrc).toBeTruthy();
 
     const nodes = deriveNodesFromTaggedEvidence(LEVEL_01_KNOWLEDGE_GRAPH, [{
       suspectId: 'tag_photo_1',
-      displayName: 'Hoàng',
+      displayName: 'Thịnh',
       sourceApp: 'photos',
       timestamp: 1,
       evidence: evidence.source,
@@ -100,7 +101,7 @@ describe('case-supplied photo library', () => {
       prevPhoto: state.photos[0],
       nextPhoto: state.photos[2],
       caseId: 'case_01',
-      husbandName: 'Hoàng',
+      husbandName: 'Thịnh',
       onBack: vi.fn(),
       onToggleInfo: vi.fn(),
       isInfoOpen: false,

@@ -9,7 +9,7 @@ import {
   unlockBySwipeUp,
 } from './helpers/phone';
 
-const SESSION_KEY = 'detective:v1:jealous_wife:session';
+const SESSION_KEY = 'detective:v2:jealous_wife:session';
 
 interface SavedSession {
   caseId: string;
@@ -97,7 +97,7 @@ test.describe('Session & Case Runtime @smoke', () => {
 
     await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
     await page.getByRole('button', { name: 'Bắt đầu' }).click();
-    await page.locator('[data-husband-id="husband_hoang"]').click();
+    await page.locator('[data-husband-id="husband_01"]').click();
     await page.locator('[data-level-tab="case_01"]').click();
 
     const caseCta = page.locator('[data-case-id="case_01"]');
@@ -113,23 +113,21 @@ test.describe('Session & Case Runtime @smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('gates locked levels in the case file browser with a warning banner', async ({ page }) => {
+  test('shows later levels as coming soon in the case file browser', async ({ page }) => {
     const errors = collectErrors(page);
     await clearStorageOnFirstLoad(page);
 
     await page.goto('/');
     await page.getByRole('button', { name: 'Bắt đầu' }).click();
-    await page.locator('[data-husband-id="husband_hoang"]').click();
+    await page.locator('[data-husband-id="husband_01"]').click();
     await page.locator('[data-level-tab="case_02"]').click();
 
-    const locked = page.locator('[data-level-file="case_02"]');
-    await expect(locked).toHaveAttribute('data-level-unlocked', 'false');
-    // A locked file has no start button; tapping the file explains why.
-    await expect(locked.locator('[data-case-id]')).toHaveCount(0);
-    await locked.click();
-
-    await expect(page.getByRole('alert')).toHaveText('Bạn cần vượt qua màn chơi trước để mở khóa màn này');
-    // Still on the picker: no briefing or lock screen opened.
+    const comingSoon = page.locator('[data-level-file="case_02"]');
+    await expect(comingSoon).toHaveAttribute('data-level-coming-soon', 'true');
+    await expect(comingSoon).toContainText('Sắp ra mắt');
+    // A coming-soon file has no start button and tapping it opens nothing.
+    await expect(comingSoon.locator('[data-case-id]')).toHaveCount(0);
+    await comingSoon.click();
     await expect(page.getByRole('button', { name: /Bắt đầu điều tra/ })).toHaveCount(0);
     await expect(page.locator('[data-phone-lockscreen]')).toHaveCount(0);
 

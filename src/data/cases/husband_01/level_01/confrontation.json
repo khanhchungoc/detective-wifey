@@ -1,0 +1,149 @@
+{
+  "opening": [
+    {
+      "choiceId": "choice_001",
+      "slot": "left",
+      "wifeLine": "{{husband.shortName}}, anh có gì giấu tôi không?",
+      "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
+      "husbandMood": "confident"
+    },
+    {
+      "choiceId": "choice_002",
+      "slot": "right",
+      "wifeLine": "Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật.",
+      "husbandLine": "Giấu gì? Anh họp sprint tới tối mịt mới về. Em lại xem clip bắt ghen trên TikTok rồi đúng không?",
+      "husbandMood": "confident"
+    }
+  ],
+  "beats": [
+    {
+      "beatId": "beat_001",
+      "topic": "Khoa BE là ai?",
+      "choices": [
+        {
+          "choiceId": "choice_003",
+          "slot": "up",
+          "wifeLine": "Dev backend nào mà dùng chung số 0988886677 với người nhận váy lụa size S?",
+          "requiredEdgeIds": [
+            "edge_order_phone"
+          ],
+          "onTrue": {
+            "husbandLine": "Khoa... Khoa là dev mới bên anh. Nó nhờ anh đặt hộ váy cho người yêu nên để số nó thôi!",
+            "husbandMood": "nervous"
+          },
+          "onFalse": {
+            "husbandLine": "Khoa là dev backend, nhắn việc với anh suốt. Em ghen cả với đàn ông à?",
+            "husbandMood": "smug"
+          }
+        },
+        {
+          "choiceId": "choice_004",
+          "slot": "left",
+          "wifeLine": "Thợ điện nào nửa đêm dặn \"không để bà ấy biết\"?",
+          "onFalse": {
+            "husbandLine": "Bà ấy là mẹ anh! Bình nóng lạnh là quà sinh nhật mẹ. Em xem TikTok thợ điện nhiều quá nên ghen luôn với mẹ chồng à?",
+            "husbandMood": "smug"
+          }
+        },
+        {
+          "choiceId": "choice_005",
+          "slot": "right",
+          "wifeLine": "Thảo PT đợi anh tối nay là sao?",
+          "onFalse": {
+            "husbandLine": "Người ta đợi anh tập trị liệu cột sống rồi còn trừ buổi của anh. Em bắt được lưng đau, chưa bắt được người tình.",
+            "husbandMood": "smug"
+          }
+        }
+      ]
+    },
+    {
+      "beatId": "beat_002",
+      "topic": "Váy size S gửi cho ai?",
+      "choices": [
+        {
+          "choiceId": "choice_006",
+          "slot": "up",
+          "wifeLine": "Người nhận váy là Nguyễn Thị Thu Hương. Nhóm công ty ghim rõ: Hương - Marketing. 'Khoa' của anh mặc váy size S à? Tôi mặc size M.",
+          "requiredEdgeIds": [
+            "edge_order_name"
+          ],
+          "onTrue": {
+            "husbandLine": "À... Hương bên Marketing nhờ anh áp mã Freeship Extra thôi. Anh với nó chỉ là đồng nghiệp!",
+            "husbandMood": "nervous"
+          },
+          "onFalse": {
+            "husbandLine": "Váy với thiệp thì sao? Shop giao nhầm, em định bắt ghen cả shipper à?",
+            "husbandMood": "smug"
+          }
+        },
+        {
+          "choiceId": "choice_007",
+          "slot": "left",
+          "wifeLine": "Lẵng hoa gửi Đỗ Thị Mai là sao?",
+          "onFalse": {
+            "husbandLine": "Hoa sinh nhật sếp Hùng, Lan Anh dặn để tên Mai nhận cho kín. Sảnh lễ tân đâu phải danh sách người tình.",
+            "husbandMood": "smug"
+          }
+        },
+        {
+          "choiceId": "choice_008",
+          "slot": "right",
+          "wifeLine": "Bé Ngọc dặn anh \"đừng kể gì\" là chuyện gì?",
+          "onFalse": {
+            "husbandLine": "Em gái anh trượt môn Vĩ mô nhờ anh giấu mẹ. Em định bắt ghen hay đi méc mẹ?",
+            "husbandMood": "smug"
+          }
+        }
+      ]
+    },
+    {
+      "beatId": "beat_003",
+      "topic": "Tối nay anh thật sự ở đâu?",
+      "choices": [
+        {
+          "choiceId": "choice_009",
+          "slot": "up",
+          "wifeLine": "20:46 anh nhắn sếp Hùng đang chốt nốt. 20:48 thẻ anh quẹt 640 nghìn ở Cơm Niêu Phố Cổ. Mà sếp Hùng bay Đà Nẵng từ 6 giờ.",
+          "requiredEdgeIds": [
+            "edge_alibi_contradiction"
+          ],
+          "onTrue": {
+            "husbandLine": "Anh xin lỗi... không có họp nào cả. Anh đi ăn với Hương. Mới một tháng thôi, anh sai rồi...",
+            "husbandMood": "broken"
+          },
+          "onFalse": {
+            "husbandLine": "Anh họp tới khuya, cả Team Dev làm chứng. Em định gọi hỏi từng người à?",
+            "husbandMood": "smug"
+          }
+        },
+        {
+          "choiceId": "choice_010",
+          "slot": "down",
+          "wifeLine": "8 giờ tối anh chuyển tiền cho Lan Anh làm gì?",
+          "onFalse": {
+            "husbandLine": "Lan Anh thu quỹ sinh nhật sếp, cả nhóm mỗi người một trăm. Em đọc thêm hai dòng là giải oan được rồi.",
+            "husbandMood": "smug"
+          }
+        }
+      ]
+    }
+  ],
+  "ending": [
+    {
+      "choiceId": "choice_011",
+      "outcome": "divorce",
+      "slot": "left",
+      "wifeLine": "Chiều nay tôi đi khám. Tôi có thai 6 tuần. Con tôi không cần một người bố nói dối. Ký đơn đi.",
+      "husbandLine": "Vợ ơi... con mình? Anh van em, cho anh một cơ hội thôi!",
+      "husbandMood": "broken"
+    },
+    {
+      "choiceId": "choice_012",
+      "outcome": "forgive",
+      "slot": "right",
+      "wifeLine": "Chiều nay tôi đi khám. Tôi có thai 6 tuần. Vì con, tôi cho anh một lần. Chặn số 'Khoa BE' ngay trước mặt tôi.",
+      "husbandLine": "Anh chặn ngay. Anh thề với em và con, không có lần sau.",
+      "husbandMood": "broken"
+    }
+  ]
+}

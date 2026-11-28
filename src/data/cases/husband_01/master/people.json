@@ -1,0 +1,154 @@
+[
+  {
+    "personId": "person_001",
+    "legalName": "Trần Minh Thư",
+    "shortName": "Minh Thư",
+    "gender": "female",
+    "birthYear": 1998,
+    "role": "wife",
+    "occupation": "Kế toán · Vợ hợp pháp",
+    "phones": [
+      "0900112233"
+    ],
+    "anchors": [
+      "Áo/váy size M · Giày size 37",
+      "Chung cư An Bình, 18 ngõ 68 Trung Kính",
+      "Nhận 90% lương chồng ngày 10 hàng tháng"
+    ],
+    "avatarIndex": 6
+  },
+  {
+    "personId": "person_002",
+    "legalName": "Nguyễn Thị Hòa",
+    "shortName": "Hòa",
+    "gender": "female",
+    "birthYear": 1970,
+    "role": "family",
+    "occupation": "Mẹ ruột của chồng, ở quê (sinh nhật 18/10)",
+    "phones": [
+      "0915220011"
+    ],
+    "avatarIndex": 5
+  },
+  {
+    "personId": "person_003",
+    "legalName": "Nguyễn Thị Thu Hương",
+    "shortName": "Thu Hương",
+    "gender": "female",
+    "birthYear": 2001,
+    "role": "suspect",
+    "orgId": "org_001",
+    "occupation": "Marketing Executive",
+    "phones": [
+      "0988886677"
+    ],
+    "avatarIndex": 15
+  },
+  {
+    "personId": "person_004",
+    "legalName": "Trần Văn Tuấn",
+    "shortName": "Tuấn",
+    "gender": "male",
+    "birthYear": 1985,
+    "role": "suspect",
+    "occupation": "Thợ điện nước ở quê, hàng xóm của mẹ chồng",
+    "phones": [
+      "0912345801"
+    ],
+    "avatarIndex": 0
+  },
+  {
+    "personId": "person_005",
+    "legalName": "Nguyễn Bảo Ngọc",
+    "shortName": "Ngọc",
+    "gender": "female",
+    "birthYear": 2006,
+    "role": "suspect",
+    "occupation": "Sinh viên năm 2, em gái ruột của chồng, ở KTX An Hòa",
+    "phones": [
+      "0922334455"
+    ],
+    "avatarIndex": 3
+  },
+  {
+    "personId": "person_006",
+    "legalName": "Nguyễn Lan Anh",
+    "shortName": "Lan Anh",
+    "gender": "female",
+    "birthYear": 1999,
+    "role": "suspect",
+    "orgId": "org_001",
+    "occupation": "Kế toán nội bộ kiêm thủ quỹ công đoàn",
+    "phones": [
+      "0966778899"
+    ],
+    "avatarIndex": 1
+  },
+  {
+    "personId": "person_007",
+    "legalName": "Phạm Thu Thảo",
+    "shortName": "Thảo",
+    "gender": "female",
+    "birthYear": 2002,
+    "role": "suspect",
+    "orgId": "org_003",
+    "occupation": "Huấn luyện viên cá nhân",
+    "phones": [
+      "0944556677"
+    ],
+    "avatarIndex": 2
+  },
+  {
+    "personId": "person_008",
+    "legalName": "Đỗ Thị Mai",
+    "shortName": "Mai",
+    "gender": "female",
+    "birthYear": 2002,
+    "role": "suspect",
+    "occupation": "Lễ tân sảnh tòa nhà Minh An",
+    "phones": [
+      "0988990011"
+    ],
+    "avatarIndex": 4
+  },
+  {
+    "personId": "person_009",
+    "legalName": "Nguyễn Tuấn",
+    "shortName": "Tuấn",
+    "gender": "male",
+    "birthYear": 1997,
+    "role": "friend",
+    "occupation": "Dev Frontend, bạn thân của chồng",
+    "phones": [
+      "0977112233"
+    ],
+    "avatarIndex": 7
+  },
+  {
+    "personId": "person_010",
+    "legalName": "Trần Văn Nam",
+    "shortName": "Nam",
+    "gender": "male",
+    "birthYear": 1996,
+    "role": "colleague",
+    "orgId": "org_001",
+    "occupation": "Dev, đồng nghiệp Team Dev",
+    "phones": [
+      "0933445566"
+    ],
+    "avatarIndex": 8
+  },
+  {
+    "personId": "person_011",
+    "legalName": "Trần Bách",
+    "shortName": "Bách",
+    "gender": "male",
+    "role": "colleague",
+    "orgId": "org_001",
+    "occupation": "Dev, đồng nghiệp Team Dev",
+    "phones": [
+      "0933778899"
+    ],
+    "avatarIndex": 9
+  }
+]

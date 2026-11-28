@@ -17,12 +17,12 @@ const SAMPLE_BRIEFING: CaseBriefingData = {
   caseId: 'case_01',
   levelNumber: 1,
   levelTitle: 'Mùi nước hoa lạ sau chuyến công tác',
-  husbandId: 'husband_hoang',
-  husbandName: 'Chồng Hoàng',
-  husbandFullName: 'Nguyễn Huy Hoàng',
-  husbandAge: 29,
+  husbandId: 'husband_01',
+  husbandName: 'Chồng Thịnh',
+  husbandFullName: 'Nguyễn Huy Thịnh',
+  husbandAge: 31,
   husbandOccupation: 'Tech Lead · Technosoft (Hà Nội)',
-  husbandPortraitUrl: '/assets/portraits/hoang.png',
+  husbandPortraitUrl: '/assets/portraits/husband-01.png',
   personaTraits: [
     'Tự nhận sợ vợ số 1, nộp 90% lương tháng',
     'Hay úp màn hình điện thoại xuống bàn',
@@ -118,7 +118,7 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(initialHtml).toContain('aria-label="Chọn màn"');
     expect(initialHtml).toContain('Bỏ qua');
     expect(initialHtml).toContain(SAMPLE_BRIEFING.husbandPortraitUrl);
-    expect(initialHtml).toContain('Nguyễn Huy Hoàng');
+    expect(initialHtml).toContain('Nguyễn Huy Thịnh');
     expect(initialHtml).toContain('Tech Lead · Technosoft (Hà Nội)');
     expect(initialHtml).toContain('Minh Hoàng');
     expect(initialHtml).not.toContain('Phòng khách - 23:15');
@@ -319,9 +319,9 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(html).toContain('font-dossier');
     expect(html).toContain('aspect-[3/4]');
     // Husband name appears once (no duplicated header block)
-    expect(html.split('Nguyễn Huy Hoàng').length - 1).toBe(2); // img alt + identity line
-    expect(html).toContain('Nguyễn Huy Hoàng');
-    expect(html).toContain('29 tuổi');
+    expect(html.split('Nguyễn Huy Thịnh').length - 1).toBe(2); // img alt + identity line
+    expect(html).toContain('Nguyễn Huy Thịnh');
+    expect(html).toContain('31 tuổi');
     expect(html).toContain('Tech Lead · Technosoft (Hà Nội)');
     expect(html).toContain('Hồ sơ nhân vật');
     expect(html).toContain('Tự nhận sợ vợ số 1, nộp 90% lương tháng');

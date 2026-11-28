@@ -1,6 +1,7 @@
-import { CaseConfig, LevelMetadata } from '../../shared/contracts/case-schema';
+import { CaseConfig, CaseMaster, LevelMetadata } from '../../shared/contracts/case-schema';
 import { ALL_CASES } from '../../data/cases';
 import { DEFAULT_APPS_DATA } from '../../data/defaults';
+import { husband01Master } from '../../data/cases/husband_01/master';
 
 /**
  * Static Level Catalog Manifest for Level Selector (US-001 Business Rule).
@@ -8,8 +9,7 @@ import { DEFAULT_APPS_DATA } from '../../data/defaults';
 export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_01',
-    husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandId: 'husband_01',
     levelNumber: 1,
     levelTitle: 'MÀN 1: Điện thoại ngoài phòng tắm',
     storySnippet: 'Độ khó: Dễ (5 lượt nghi ngờ • 0 khóa PIN). 23:45, chồng đang tắm, điện thoại 8% pin cắm sạc ngoài phòng. Màn hình sáng lên hai lần...',
@@ -18,25 +18,30 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   },
   {
     caseId: 'case_02',
-    husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandId: 'husband_01',
     levelNumber: 2,
-    levelTitle: 'MÀN 2: Tin Nhắn Người Lạ',
-    storySnippet: 'Độ khó: Vừa (4 Strikes • 1 Khóa PIN). Xuất hiện chuyển khoản 1.000 VNĐ kèm lời nhắn trên Ngân hàng.',
+    levelTitle: 'MÀN 2: Hồ sơ đang thu thập',
+    storySnippet: 'Màn chơi đang được thiết kế.',
     allowedStrikes: 4,
     unlockRequirementLevel: 2,
+    comingSoon: true,
   },
   {
     caseId: 'case_03',
-    husbandId: 'husband_hoang',
-    husbandName: 'Hoàng',
+    husbandId: 'husband_01',
     levelNumber: 3,
-    levelTitle: 'MÀN 3: Quỹ Đen Bí Ẩn',
-    storySnippet: 'Độ khó: Khó (3 Strikes • 2 Khóa PIN). Cần hoàn thành Màn 2 để mở khóa.',
+    levelTitle: 'MÀN 3: Hồ sơ đang thu thập',
+    storySnippet: 'Màn chơi đang được thiết kế.',
     allowedStrikes: 3,
     unlockRequirementLevel: 3,
+    comingSoon: true,
   },
 ];
+
+/** Master data (husband identity, people) of every bundled husband universe. */
+export function getCaseMasters(): CaseMaster[] {
+  return [husband01Master];
+}
 
 /**
  * In-memory dataset registry of bundled cases.
@@ -110,7 +115,7 @@ export function validateCaseConfig(config: CaseConfig): { isValid: boolean; erro
 /**
  * Returns available levels for active husband (AC 5).
  */
-export function getAvailableLevels(husbandId: string = 'husband_hoang'): LevelMetadata[] {
+export function getAvailableLevels(husbandId: string = 'husband_01'): LevelMetadata[] {
   return LEVEL_CATALOG.filter((lvl) => lvl.husbandId === husbandId).sort(
     (a, b) => a.levelNumber - b.levelNumber
   );
@@ -172,7 +177,7 @@ export function loadCase(caseId: string): CaseConfig {
 /**
  * Loads a case configuration by level number (1..3).
  */
-export function loadCaseByLevel(levelNumber: number, husbandId: string = 'husband_hoang'): CaseConfig {
+export function loadCaseByLevel(levelNumber: number, husbandId: string = 'husband_01'): CaseConfig {
   if (levelNumber < 1 || levelNumber > 3) {
     throw new Error('Không tìm thấy màn chơi yêu cầu.');
   }

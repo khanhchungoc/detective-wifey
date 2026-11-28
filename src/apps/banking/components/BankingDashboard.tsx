@@ -215,7 +215,7 @@ export function BankingDashboard({ data, onOpenHistory, onOpenVaults }: BankingD
   );
 }
 
-export function BankingProfile({ data, husbandName = 'Pham Quoc Bao' }: { data: BankingData; husbandName?: string }) {
+export function BankingProfile({ data, husbandName }: { data: BankingData; husbandName: string }) {
   const initials = husbandName
     .split(' ')
     .filter(Boolean)

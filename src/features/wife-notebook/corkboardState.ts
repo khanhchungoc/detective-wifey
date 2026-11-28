@@ -50,7 +50,7 @@ export function computeWallViewport(board: HTMLElement | null): CorkboardViewpor
 }
 
 function getStorageKey(caseId?: string): string {
-  return `detective:v1:${caseId || 'case_hoang_01'}:corkboard_state`;
+  return `detective:v2:${caseId || 'case_01'}:corkboard_state`;
 }
 
 export function loadSavedCorkboard(caseId?: string): SavedCorkboardState | null {
@@ -118,7 +118,7 @@ function buildInitialPlacedNodes(
     for (const saved of savedState.placedNodes) {
       // Find matching node from allTaggedNodes
       let targetNode = allTaggedNodes.find(n => n.nodeId === saved.nodeId);
-      // If saved was legacy node for a conversation (e.g. node_internet-messaging_thread_tuan_m4 or node_record_zola_chat)
+      // If saved was legacy node for a conversation (e.g. node_internet-messaging_thread_004_m4 or node_record_zola_chat)
       if (!targetNode && (saved.nodeId.includes('thread_') || saved.nodeId.includes('chat:'))) {
         targetNode = allTaggedNodes.find(n =>
           (n.recordRefId && saved.nodeId.includes(n.recordRefId)) ||
@@ -175,7 +175,7 @@ export function deriveNodesFromTaggedEvidence(
 
   for (const tag of taggedSuspects) {
     const rawConvId = tag.conversationId || tag.evidence?.conversationId || (tag.evidence?.kind === 'conversation' ? tag.evidence.recordId : undefined);
-    // Resolve conversationId from recordId if format is thread_khoa_m4 or chat:shop:message:1
+    // Resolve conversationId from recordId if format is thread_003_m4 or chat:shop:message:1
     let conversationId = rawConvId ?? resolveConversationId(tag.sourceApp, tag.evidence?.recordId);
     const cleanedDisplayName = cleanLabel(tag.displayName);
     // Legacy contact tags carry no record id: resolve the thread from the visible contact name.
@@ -223,7 +223,7 @@ export function deriveNodesFromTaggedEvidence(
     }
 
     // 1. Match the canonical graph node: the conversation itself, then any pinned message, then the
-    // record id. Distinct records (e.g. tx_01 vs tx_ngoc) sharing a clueRefId must NOT collapse into one card.
+    // record id. Distinct records (e.g. tx_003 vs tx_005) sharing a clueRefId must NOT collapse into one card.
     const inApp = (n: CaseGraphNode) => n.sourceAppId === tag.sourceApp;
     let canonicalMatch = conversationId
       ? canonicalGraph.nodes.find(n => inApp(n) && n.recordRefId === conversationId)

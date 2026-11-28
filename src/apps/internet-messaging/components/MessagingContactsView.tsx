@@ -159,7 +159,7 @@ export const MessagingContactsView: React.FC<MessagingContactsViewProps> = ({
                     >
                       <div className="flex items-center justify-between px-3 py-2.5 hover:bg-slate-50 transition-all cursor-pointer min-h-[60px]">
                         <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <ContactAvatar name={contact.name} size={40} />
+                          <ContactAvatar name={contact.name} avatarIndex={contact.avatarIndex} size={40} />
                           <div className="min-w-0 flex-1">
                             <h4 className="text-ios-headline font-bold text-[#0F172A] truncate">
                               {contact.name}

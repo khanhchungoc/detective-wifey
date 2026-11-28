@@ -15,6 +15,7 @@ import {
   resolvePagerTarget,
 } from './LevelSelectorHub';
 import { LevelStage } from './case-files/LevelStage';
+import { LevelFile } from './case-files/LevelFile';
 import { resolveSheetRestPose } from './case-files/pagerLogic';
 
 const RAW_EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
@@ -23,10 +24,10 @@ const ARBITRARY_TEXT_PX_REGEX = /text-\[\d+px\]/;
 
 const HUSBANDS: HusbandProfile[] = [
   {
-    husbandId: 'hoang',
+    husbandId: 'husband_01',
     caseCode: 'HỒ SƠ #01',
-    displayName: 'Nguyễn Huy Hoàng',
-    age: 29,
+    displayName: 'Nguyễn Huy Thịnh',
+    age: 31,
     occupation: 'Tech Lead · Technosoft (Hà Nội)',
     teaserQuote: 'Anh chỉ đi họp với đối tác thôi mà em.',
     personaTraits: ['Hay úp màn hình, mang máy vào nhà tắm'],
@@ -37,7 +38,7 @@ const HUSBANDS: HusbandProfile[] = [
       portraitUrl: '/assets/avatars/minhthu.png',
       anchors: ['Áo/váy size M'],
     },
-    portraitUrl: '/assets/avatars/hoang.png',
+    portraitUrl: '/assets/avatars/husband-01.png',
   },
   {
     husbandId: 'tuan',
@@ -53,8 +54,8 @@ const HUSBANDS: HusbandProfile[] = [
 
 const LEVELS: LevelCardItem[] = [
   {
-    caseId: 'hoang_00',
-    husbandId: 'hoang',
+    caseId: 'case_00',
+    husbandId: 'husband_01',
     levelNumber: 0,
     levelTitle: 'Hướng dẫn điều tra',
     summary: 'Lần đầu soi điện thoại chồng? Học nghề ở đây trước.',
@@ -65,8 +66,8 @@ const LEVELS: LevelCardItem[] = [
     unlocked: true,
   },
   {
-    caseId: 'hoang_01',
-    husbandId: 'hoang',
+    caseId: 'case_01',
+    husbandId: 'husband_01',
     levelNumber: 1,
     levelTitle: 'Bữa trưa bí ẩn',
     summary: 'Hóa đơn cơm niêu và tin nhắn lạ lúc nửa đêm.',
@@ -76,8 +77,8 @@ const LEVELS: LevelCardItem[] = [
     bestStars: 2,
   },
   {
-    caseId: 'hoang_02',
-    husbandId: 'hoang',
+    caseId: 'case_02',
+    husbandId: 'husband_01',
     levelNumber: 2,
     levelTitle: 'Chuyến công tác Đà Nẵng',
     summary: 'Vé máy bay khứ hồi và mã khóa điện thoại mới.',
@@ -88,7 +89,7 @@ const LEVELS: LevelCardItem[] = [
   },
 ];
 
-const renderHub = (initialHusbandId = 'hoang') =>
+const renderHub = (initialHusbandId = 'husband_01') =>
   renderToStaticMarkup(
     <LevelSelectorHub
       husbands={HUSBANDS}
@@ -120,15 +121,15 @@ describe('LevelSelectorHub husband stage', () => {
     expect(html).not.toContain('Chọn màn');
     expect(html).toContain('aria-label="Tắt âm thanh"');
     expect(html).not.toContain('>Mở hồ sơ<');
-    expect(html).toContain('aria-label="Mở hồ sơ Nguyễn Huy Hoàng"');
+    expect(html).toContain('aria-label="Mở hồ sơ Nguyễn Huy Thịnh"');
     expect(html).toMatch(/role="button"[^>]*tabindex="0"|tabindex="0"[^>]*role="button"/);
     expect(html).not.toContain('>Đổi hồ sơ<');
-    expect(html).toContain('data-husband-id="hoang"');
+    expect(html).toContain('data-husband-id="husband_01"');
     expect(html).not.toContain('data-husband-id="tuan"');
     expect(html).toContain('HỒ SƠ #01');
     expect(html).toContain('Đang theo dõi');
-    expect(html).toContain('Nguyễn Huy Hoàng');
-    expect(html).toContain('/assets/avatars/hoang.png');
+    expect(html).toContain('Nguyễn Huy Thịnh');
+    expect(html).toContain('/assets/avatars/husband-01.png');
     expect(html).toContain('aria-label="Chồng trước"');
     expect(html).toContain('aria-label="Chồng tiếp theo"');
   });
@@ -174,7 +175,7 @@ describe('LevelSelectorHub husband stage', () => {
 describe('LevelStage (folder opened)', () => {
   it('shows a jump tab per file and the back button', () => {
     const html = renderLevelStage();
-    for (const id of ['hoang_00', 'hoang_01', 'hoang_02']) {
+    for (const id of ['case_00', 'case_01', 'case_02']) {
       expect(html).toContain(`data-level-tab="${id}"`);
     }
     expect(html).toContain('Đổi hồ sơ');
@@ -183,7 +184,7 @@ describe('LevelStage (folder opened)', () => {
   it('opens on the highest unlocked non-guide case with a single start button', () => {
     const html = renderLevelStage();
     expect(html.match(/data-case-id="/g)).toHaveLength(1);
-    expect(html).toContain('data-case-id="hoang_01"');
+    expect(html).toContain('data-case-id="case_01"');
     expect(html).toContain('>Điều tra màn này<');
     expect(html).toContain('Bữa trưa bí ẩn');
     expect(html).toContain('aria-label="Đạt 2 trên 3 sao"');
@@ -194,7 +195,7 @@ describe('LevelStage (folder opened)', () => {
     expect(html).toContain('Khóa');
     expect(html).toContain('Hoàn thành Màn 1');
     expect(html).toContain('data-level-unlocked="false"');
-    expect(html).not.toContain('data-case-id="hoang_02"');
+    expect(html).not.toContain('data-case-id="case_02"');
     expect(html).not.toContain('>Điều tra màn này<');
   });
 
@@ -244,21 +245,21 @@ describe('physical manila-folder stack', () => {
     expect(stageAtOne.match(/data-level-tab="/g)).toHaveLength(LEVELS.length);
     expect(stageAtOne.match(/aria-selected="true"/g)).toHaveLength(1);
     expect(stageAtOne.match(/aria-selected="false"/g)).toHaveLength(LEVELS.length - 1);
-    expect(stageAtOne).toMatch(/data-level-tab="hoang_01"[^>]*aria-selected="true"/);
-    expect(stageAtOne).toMatch(/data-level-tab="hoang_00"[^>]*aria-selected="false"/);
-    expect(stageAtOne).toMatch(/data-level-tab="hoang_02"[^>]*aria-selected="false"/);
-    expect(stageAtOne).toMatch(/data-level-tab="hoang_01"[^>]*z-index:30/);
-    expect(stageAtOne).toMatch(/data-level-tab="hoang_00"[^>]*z-index:19/);
-    expect(stageAtOne).toMatch(/data-level-tab="hoang_02"[^>]*z-index:19/);
-    expect(stageAtOne).toMatch(/data-level-file="hoang_01"[^>]*z-index:30/);
-    expect(stageAtOne).toMatch(/data-level-file="hoang_00"[^>]*z-index:19/);
-    expect(stageAtOne).toMatch(/data-level-file="hoang_02"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-tab="case_01"[^>]*aria-selected="true"/);
+    expect(stageAtOne).toMatch(/data-level-tab="case_00"[^>]*aria-selected="false"/);
+    expect(stageAtOne).toMatch(/data-level-tab="case_02"[^>]*aria-selected="false"/);
+    expect(stageAtOne).toMatch(/data-level-tab="case_01"[^>]*z-index:30/);
+    expect(stageAtOne).toMatch(/data-level-tab="case_00"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-tab="case_02"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-file="case_01"[^>]*z-index:30/);
+    expect(stageAtOne).toMatch(/data-level-file="case_00"[^>]*z-index:19/);
+    expect(stageAtOne).toMatch(/data-level-file="case_02"[^>]*z-index:19/);
 
     const stageAtTwo = renderLevelStage(2);
-    expect(stageAtTwo).toMatch(/data-level-tab="hoang_02"[^>]*aria-selected="true"/);
-    expect(stageAtTwo).toMatch(/data-level-tab="hoang_01"[^>]*aria-selected="false"/);
-    expect(stageAtTwo).toMatch(/data-level-tab="hoang_02"[^>]*z-index:30/);
-    expect(stageAtTwo).toMatch(/data-level-tab="hoang_00"[^>]*z-index:18/);
+    expect(stageAtTwo).toMatch(/data-level-tab="case_02"[^>]*aria-selected="true"/);
+    expect(stageAtTwo).toMatch(/data-level-tab="case_01"[^>]*aria-selected="false"/);
+    expect(stageAtTwo).toMatch(/data-level-tab="case_02"[^>]*z-index:30/);
+    expect(stageAtTwo).toMatch(/data-level-tab="case_00"[^>]*z-index:18/);
   });
 
   it('uses organic deckled paper edges and static masks without SVG turbulence filters', () => {
@@ -346,5 +347,48 @@ describe('case file helpers', () => {
       feedback: null,
     });
     expect(evaluateLevelCardClick(LEVELS[1], true, 0, 5000)).toEqual({ action: 'ignore', feedback: null });
+  });
+});
+
+describe('LevelFile coming soon', () => {
+  const comingSoonLevel: LevelCardItem = {
+    caseId: 'case_02',
+    husbandId: 'husband_01',
+    levelNumber: 2,
+    levelTitle: 'Hồ sơ đang thu thập',
+    summary: 'Màn chơi đang được thiết kế.',
+    activeAppCount: 6,
+    allowedStrikes: 4,
+    unlocked: false,
+    comingSoon: true,
+  };
+
+  const renderFile = (level: LevelCardItem) =>
+    renderToStaticMarkup(
+      <LevelFile
+        level={level}
+        subjectPortraitUrl="/assets/avatars/husband-01.png"
+        index={1}
+        total={3}
+        isActive
+        restPose={resolveSheetRestPose(1, 1)}
+        sheetRef={vi.fn()}
+        lockedFeedback={null}
+        isShaking={false}
+        onShakeDone={vi.fn()}
+        onFileTap={vi.fn()}
+        onStart={vi.fn()}
+      />,
+    );
+
+  it('shows the Sắp ra mắt stamp and no start button', () => {
+    const html = renderFile(comingSoonLevel);
+    expect(html).toContain('data-level-coming-soon="true"');
+    expect(html).toContain('Sắp ra mắt');
+    expect(html).not.toContain('data-case-id');
+  });
+
+  it('ignores clicks on a coming soon card', () => {
+    expect(evaluateLevelCardClick(comingSoonLevel, false, 0, 1000)).toEqual({ action: 'ignore', feedback: null });
   });
 });

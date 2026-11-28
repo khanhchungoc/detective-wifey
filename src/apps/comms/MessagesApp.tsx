@@ -64,7 +64,7 @@ export function MessagesApp(props: VirtualAppProps) {
     >
       <button type="button" className="messages-thread-row" onClick={() => openThread(t.id)}>
         <span className={`messages-unread ${t.unread ? 'is-unread' : ''}`} aria-label={t.unread ? 'Chưa đọc' : undefined} />
-        <ContactAvatar name={t.name} />
+        <ContactAvatar name={t.name} avatarIndex={t.avatarIndex} />
         <span className="communication-flex-copy">
           <span className="messages-thread-heading">
             <strong>{t.name}</strong>
@@ -79,7 +79,7 @@ export function MessagesApp(props: VirtualAppProps) {
     </StoryEvidenceTarget>
   );
   return <SwipeBackContainer className="min-h-[44px] communication-app messages-app" onBack={back} enabled={Boolean(threadId) && !draft && !evidence.active}>
-    <CommunicationHeader title={threadId ? thread?.name || 'Tin nhắn' : 'Tin nhắn'} backLabel="Tin nhắn" onBack={threadId ? back : undefined} avatarName={threadId ? thread?.name : undefined} />
+    <CommunicationHeader title={threadId ? thread?.name || 'Tin nhắn' : 'Tin nhắn'} backLabel="Tin nhắn" onBack={threadId ? back : undefined} avatarName={threadId ? thread?.name : undefined} avatarIndex={threadId ? thread?.avatarIndex : undefined} />
     {!threadId ? <main className="communication-scroll">
       <h2 className="communication-large-title">Tin nhắn</h2>
       <div className="messages-search"><IoSearch aria-hidden="true" /><input aria-label="Tìm kiếm tin nhắn" placeholder="Tìm kiếm tin nhắn" value={query} onChange={e => setQuery(e.target.value)} />{query && <button type="button" aria-label="Xóa tìm kiếm" onClick={() => setQuery('')}><IoClose /></button>}</div>
@@ -110,7 +110,7 @@ export function MessagesApp(props: VirtualAppProps) {
               onTriggerEvidence={evidence.setItem}
             >
               <button type="button" onClick={() => openThread(t.id)}>
-                <ContactAvatar name={t.name} size={64} />
+                <ContactAvatar name={t.name} avatarIndex={t.avatarIndex} size={64} />
                 <span>{t.name}</span>
               </button>
             </StoryEvidenceTarget>

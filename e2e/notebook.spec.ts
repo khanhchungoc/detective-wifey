@@ -71,7 +71,7 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await page.getByRole('button', { name: /Đối chất/i }).click();
     const picker = page.getByRole('dialog', { name: 'Chọn nghi phạm' });
     await expect(picker).toBeVisible();
-    await picker.locator('[data-suspect-polaroid="suspect_huong"]').click();
+    await picker.locator('[data-suspect-polaroid="suspect_01"]').click();
     const confirm = page.getByRole('dialog', { name: 'Xác nhận đối chất' });
     await expect(confirm).toBeVisible();
     await expect(confirm.getByRole('alert')).toContainText('Đối chất thất bại');
@@ -80,8 +80,8 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
     await confirm.getByRole('button', { name: /!/ }).click();
     const interrogation = page.getByRole('dialog', { name: /Đối chất · / });
     await expect(interrogation).toBeVisible();
-    await expect(interrogation.locator('[data-choice-id="open_ask"]')).toContainText('Hoàng, anh có gì giấu tôi không');
-    await expect(interrogation.locator('[data-choice-id="open_offer"]')).toContainText('Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật');
+    await expect(interrogation.locator('[data-choice-id="choice_001"]')).toContainText('Thịnh, anh có gì giấu tôi không');
+    await expect(interrogation.locator('[data-choice-id="choice_002"]')).toContainText('Tôi biết hết rồi. Tôi cho anh một cơ hội nói thật');
 
     // The interrogation can be closed without picking a line.
     await interrogation.getByRole('button', { name: 'Đóng đối chất' }).click();

@@ -13,6 +13,11 @@ export function groupSenderLabel(message: MessagingMessage, contacts: MessagingC
   return message.senderName || '';
 }
 
+/** Photo slot for a group message sender saved as a contact. */
+export function groupSenderAvatarIndex(message: MessagingMessage, contacts: MessagingContact[] = []): number | undefined {
+  return message.senderContactId ? contacts.find(entry => entry.id === message.senderContactId)?.avatarIndex : undefined;
+}
+
 /** Inbox preview: groups prefix the last message with its sender label. */
 export function threadPreview(thread: MessagingThread, contacts: MessagingContact[] = []): string {
   const last = thread.messages[thread.messages.length - 1];

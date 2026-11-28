@@ -16,13 +16,13 @@ vi.mock('../../features/investigation', () => ({
   },
 }));
 
-const contacts: MessagingContact[] = [{ id: 'contact_10', name: 'Khoa BE', section: 'K' }];
+const contacts: MessagingContact[] = [{ id: 'contact_011', name: 'Khoa BE', section: 'K' }];
 const thread: MessagingThread = {
-  threadId: 'thread_company', contactName: 'Technosoft All', lastMessage: 'x', timestamp: '09:10',
+  threadId: 'thread_012', contactName: 'Technosoft All', lastMessage: 'x', timestamp: '09:10',
   isGroup: true, memberCount: 46, pinnedMessageId: 'msg_pin',
   messages: [
     { id: 'msg_pin', sender: 'them', senderName: 'HR Technosoft', text: 'Quy định mới', timestamp: '08/09/2026 09:00' },
-    { id: 'msg_post', sender: 'them', senderContactId: 'contact_10', text: 'Share tài liệu nhé', timestamp: '08/09/2026 09:05' },
+    { id: 'msg_post', sender: 'them', senderContactId: 'contact_011', text: 'Share tài liệu nhé', timestamp: '08/09/2026 09:05' },
     { id: 'msg_thanks', sender: 'them', senderName: 'HR Technosoft', replyToId: 'msg_post', text: 'Cảm ơn nha', timestamp: '08/09/2026 09:10' },
   ],
 };
@@ -53,7 +53,7 @@ it('pins group messages with the displayed sender label and message id', () => {
   render();
   const post = captured.items.find(item => item.source?.recordId === 'msg_post')!;
   expect(post.source).toMatchObject({
-    recordId: 'msg_post', conversationId: 'thread_company', kind: 'message',
+    recordId: 'msg_post', conversationId: 'thread_012', kind: 'message',
     visibleAlias: 'Khoa BE', title: 'Khoa BE', snippet: 'Share tài liệu nhé',
   });
   expect(post.suspectToTag).toBe('Khoa BE');

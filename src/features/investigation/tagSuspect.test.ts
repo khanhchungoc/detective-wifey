@@ -19,35 +19,35 @@ describe('cleanDisplayName & resolveConversationId', () => {
   });
 
   it('resolves thread and ecommerce chat conversation IDs from recordIds', () => {
-    expect(resolveConversationId('internet-messaging', 'thread_khoa_m4')).toBe('thread_khoa');
-    expect(resolveConversationId('internet-messaging', 'thread_khoa')).toBe('thread_khoa');
+    expect(resolveConversationId('internet-messaging', 'thread_003_m4')).toBe('thread_003');
+    expect(resolveConversationId('internet-messaging', 'thread_003')).toBe('thread_003');
     expect(resolveConversationId('ecommerce', 'chat:shop_lingerie:message:msg_1')).toBe('shop_lingerie');
     expect(resolveConversationId('banking', 'tx_1001')).toBeUndefined();
   });
 
   it('keeps multi-word Level 1 thread ids intact and strips only the message suffix', () => {
-    expect(resolveConversationId('internet-messaging', 'thread_tuan_dien')).toBe('thread_tuan_dien');
-    expect(resolveConversationId('internet-messaging', 'thread_tuan_dien_m4')).toBe('thread_tuan_dien');
-    expect(resolveConversationId('internet-messaging', 'thread_lan_anh_m2')).toBe('thread_lan_anh');
-    expect(resolveConversationId('internet-messaging', 'thread_company')).toBe('thread_company');
+    expect(resolveConversationId('internet-messaging', 'thread_004')).toBe('thread_004');
+    expect(resolveConversationId('internet-messaging', 'thread_004_m4')).toBe('thread_004');
+    expect(resolveConversationId('internet-messaging', 'thread_007_m2')).toBe('thread_007');
+    expect(resolveConversationId('internet-messaging', 'thread_012')).toBe('thread_012');
   });
 
   it('maps legacy contact-name tags to their thread: Khoa BE and the real electrician are different threads', () => {
-    expect(resolveConversationId('internet-messaging', undefined, undefined, 'Khoa BE')).toBe('thread_khoa');
-    expect(resolveConversationId('internet-messaging', undefined, undefined, 'Tin nhắn: Anh Tuấn Thợ Điện')).toBe('thread_tuan_dien');
+    expect(resolveConversationId('internet-messaging', undefined, undefined, 'Khoa BE')).toBe('thread_003');
+    expect(resolveConversationId('internet-messaging', undefined, undefined, 'Tin nhắn: Anh Tuấn Thợ Điện')).toBe('thread_004');
     expect(resolveConversationId('internet-messaging', undefined, undefined, 'Bé Ngọc KTX')).toBeUndefined();
   });
 
   it('uses the explicit conversation id for group messages pinned by message id', () => {
-    expect(resolveConversationId('internet-messaging', 'msg_company_pin', 'thread_company')).toBe('thread_company');
+    expect(resolveConversationId('internet-messaging', 'msg_012_0001', 'thread_012')).toBe('thread_012');
   });
 });
 
 describe('tagSuspect aggregation, removal, and restore', () => {
   const msg1: EvidenceSource = {
     caseId: 'case_01',
-    recordId: 'thread_khoa_m1',
-    conversationId: 'thread_khoa',
+    recordId: 'thread_003_m1',
+    conversationId: 'thread_003',
     kind: 'message',
     title: 'Khoa BE',
     visibleAlias: 'Khoa BE',
@@ -57,15 +57,15 @@ describe('tagSuspect aggregation, removal, and restore', () => {
 
   const msg2: EvidenceSource = {
     ...msg1,
-    recordId: 'thread_khoa_m2',
+    recordId: 'thread_003_m2',
     snippet: 'Em mở cửa đi',
     eventTime: '23:45',
   };
 
   const convPin: EvidenceSource = {
     caseId: 'case_01',
-    recordId: 'thread_khoa',
-    conversationId: 'thread_khoa',
+    recordId: 'thread_003',
+    conversationId: 'thread_003',
     kind: 'conversation',
     title: 'Khoa BE',
     visibleAlias: 'Khoa BE',
@@ -106,12 +106,12 @@ describe('tagSuspect aggregation, removal, and restore', () => {
 
   it('removes empty non-explicit conversation card when its last message is removed, but keeps explicit card', () => {
     const implicit = tagSuspect([], 'Khoa BE', 'internet-messaging', 100, msg1).suspects;
-    const removedImplicit = removePinnedMessage(implicit, 'thread_khoa', 'thread_khoa_m1');
+    const removedImplicit = removePinnedMessage(implicit, 'thread_003', 'thread_003_m1');
     expect(removedImplicit.suspects).toHaveLength(0);
-    expect(removedImplicit.removedCard?.conversationId).toBe('thread_khoa');
+    expect(removedImplicit.removedCard?.conversationId).toBe('thread_003');
 
     const explicit = tagSuspect(implicit, 'Khoa BE', 'internet-messaging', 101, convPin).suspects;
-    const removedExplicit = removePinnedMessage(explicit, 'thread_khoa', 'thread_khoa_m1');
+    const removedExplicit = removePinnedMessage(explicit, 'thread_003', 'thread_003_m1');
     expect(removedExplicit.suspects).toHaveLength(1);
     expect(removedExplicit.suspects[0].messages).toEqual([]);
     expect(removedExplicit.removedCard).toBeUndefined();
@@ -119,7 +119,7 @@ describe('tagSuspect aggregation, removal, and restore', () => {
 
   it('removes and idempotently restores cards and individual messages', () => {
     const initial = tagSuspect([], 'Khoa BE', 'internet-messaging', 100, msg1).suspects;
-    const { suspects: afterRemove, removedCard } = removePinnedCard(initial, 'thread_khoa');
+    const { suspects: afterRemove, removedCard } = removePinnedCard(initial, 'thread_003');
     expect(afterRemove).toHaveLength(0);
     expect(removedCard).toBeDefined();
 
@@ -153,7 +153,7 @@ describe('tagSuspect aggregation, removal, and restore', () => {
         timestamp: 50,
         evidence: {
           caseId: 'case_01',
-          recordId: 'thread_khoa_m9',
+          recordId: 'thread_003_m9',
           kind: 'message',
           title: 'Tin nhắn: Khoa BE',
           snippet: 'Tối nay nhé',
@@ -164,7 +164,7 @@ describe('tagSuspect aggregation, removal, and restore', () => {
     const normalized = normalizeTaggedSuspects(legacy);
     expect(normalized).toHaveLength(1);
     expect(normalized[0].displayName).toBe('Khoa BE');
-    expect(normalized[0].conversationId).toBe('thread_khoa');
+    expect(normalized[0].conversationId).toBe('thread_003');
     expect(normalized[0].messages?.[0]?.eventTime).toBe('22:15');
   });
 });

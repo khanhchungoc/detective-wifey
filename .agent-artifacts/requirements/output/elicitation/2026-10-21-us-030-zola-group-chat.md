@@ -27,7 +27,7 @@ Provide players with an authentic, interactive group chat experience within the 
 | Persona / Role | Commercial Model | Demographics & Literacy | Devices & Hardware | Ergonomics & Preferences | Accessibility & Constraints | Jobs To Be Done (JTBD) & Pain Points | Status |
 |---|---|---|---|---|---|---|---|
 | Player (Jealous Wife) | B2C (Casual Detective Gamer) | Casual smartphone user; reads Vietnamese domestic comedy/drama tropes | Mobile portrait viewport (393px × 852px base) | Single-handed touch navigation; clear visual contrast; tap and long-press gestures | High text readability; tap targets $\ge 44 \times 44\text{px}$; distinct color contrast for sender names | Inspect husband's group chats to verify alibis, find inconsistencies, and identify suspicious collaborators without text fatigue | Confirmed |
-| Husband (Nguyễn Huy Hoàng) | Game Character / Target | Tech worker / corporate employee | Simulated iOS smartphone shell | N/A | N/A | Conceal illicit activities amidst everyday work and family group chats | Confirmed |
+| Husband (Nguyễn Huy Thịnh) | Game Character / Target | Tech worker / corporate employee | Simulated iOS smartphone shell | N/A | N/A | Conceal illicit activities amidst everyday work and family group chats | Confirmed |
 
 ### Activities
 - Navigating from Zola inbox by tapping a group chat row (e.g., *"Alpha Team BA & Dev"*, *"Hội Bỉm Sữa Cầu Giấy"*).

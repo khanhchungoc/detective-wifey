@@ -47,7 +47,7 @@ As a **Player**, I want to browse Zola chat threads, inspect disguised contact p
 2. Contact cards display contact names, corporate department tags (e.g., *"Phòng Marketing Technosoft"*), and phone numbers (`0988.456.234`), providing cross-app forensic evidence matching bank transfer counterparty accounts.
 
 #### AC05: Lightweight Profile & Cloud Document Vault
-1. Tapping the *Cá nhân* tab opens the lightweight user profile view (`ZolaProfileView`) showing the husband's profile name (*"Nguyễn Huy Hoàng"*), user handle, and settings items.
+1. Tapping the *Cá nhân* tab opens the lightweight user profile view (`ZolaProfileView`) showing the husband's profile name (*"Nguyễn Huy Thịnh"*), user handle, and settings items.
 2. Tapping *"Cloud của tôi (My Documents)"* opens the cloud backup document drawer (`ZolaCloudDocDrawer`) listing backed-up lease agreements and rental deposit receipts (`CLUE-ZOLA-07`).
 3. The player can pin individual cloud documents directly into the Wife's Detective Notebook via the document item action button.
 

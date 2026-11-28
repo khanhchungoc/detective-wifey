@@ -57,9 +57,6 @@ export const LevelSelectorSheet: React.FC<LevelSelectorSheetProps> = ({
             <h2 className="text-base font-bold text-white tracking-tight">
               HỒ SƠ VỤ ÁN & CHỌN MÀN CHƠI
             </h2>
-            <p className="text-xs text-slate-400">
-              Chồng: Hoàng (32 tuổi • CEO Triệu Phú)
-            </p>
           </div>
           <button
             type="button"

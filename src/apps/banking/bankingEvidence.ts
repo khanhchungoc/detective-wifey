@@ -8,7 +8,7 @@ export function bankingEvidence(
   title: string,
   snippet: string,
   subtitle?: string,
-  accountParty: string = caseData.husbandName,
+  accountParty: string = caseData.husband.shortName,
 ): UniversalEvidenceItem {
   const suspect = caseData.suspectPool.find(suspect => suspect.suspectId === record.suspectId);
   return {

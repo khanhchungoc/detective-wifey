@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getAvailableLevels, loadCase } from '../case-runtime';
+import { getAvailableLevels, getCaseMasters, loadCase } from '../case-runtime';
 import { buildCaseBriefing, buildHusbandProfiles, buildLevelCards, buildLockscreenConfig } from './gameFlowData';
 
 describe('buildLockscreenConfig for Level 1', () => {
@@ -27,19 +27,36 @@ describe('buildLockscreenConfig narrative clock', () => {
 
 describe('buildLevelCards', () => {
   it('puts a not-yet-playable Màn 0 guide file before the real cases', () => {
-    const cards = buildLevelCards(getAvailableLevels('husband_hoang'), 1, {});
+    const cards = buildLevelCards(getAvailableLevels('husband_01'), 1, {});
     expect(cards[0]).toMatchObject({ levelNumber: 0, isGuide: true, comingSoon: true });
     expect(cards.slice(1).map((c) => c.levelNumber)).toEqual([1, 2, 3]);
     expect(cards.filter((c) => c.levelNumber === 1)).toHaveLength(1);
+  });
+
+  it('marks Màn 2 and 3 as coming soon with no lock hint, and keeps Màn 1 playable', () => {
+    const cards = buildLevelCards(getAvailableLevels('husband_01'), 1, {});
+    for (const caseId of ['case_02', 'case_03']) {
+      const card = cards.find((c) => c.caseId === caseId);
+      expect(card?.comingSoon).toBe(true);
+      expect(card?.lockHint).toBeUndefined();
+    }
+    expect(cards.find((c) => c.caseId === 'case_01')?.comingSoon).toBeFalsy();
+  });
+
+  it('lists case_02 and case_03 as coming soon but ships no data for them', () => {
+    const levels = getAvailableLevels('husband_01');
+    expect(levels.filter((l) => l.comingSoon).map((l) => l.caseId)).toEqual(['case_02', 'case_03']);
+    expect(() => loadCase('case_02')).toThrow();
+    expect(() => loadCase('case_03')).toThrow();
   });
 });
 
 describe('buildCaseBriefing', () => {
   it('reads persona and wife profile from the husband profile SSOT', () => {
-    const [hoang] = buildHusbandProfiles();
-    const briefing = buildCaseBriefing(loadCase('case_01'), 'Điện thoại ngoài phòng tắm', hoang);
-    expect(briefing.personaTraits).toBe(hoang.personaTraits);
-    expect(briefing.wifeProfile).toBe(hoang.wifeProfile);
+    const [husband] = buildHusbandProfiles(getCaseMasters());
+    const briefing = buildCaseBriefing(loadCase('case_01'), 'Điện thoại ngoài phòng tắm', husband);
+    expect(briefing.personaTraits).toBe(husband.personaTraits);
+    expect(briefing.wifeProfile).toBe(husband.wifeProfile);
     expect(briefing.hookQuestion).toBe('Bạn có đủ tỉnh táo để tìm ra bằng chứng?');
     expect(briefing.introBeats.map((b) => b.speakerRole)).toEqual(['husband', 'wife']);
   });
@@ -47,7 +64,7 @@ describe('buildCaseBriefing', () => {
 
 describe('buildLevelCards summaries', () => {
   it('drops the difficulty prefix from case file summaries', () => {
-    const cards = buildLevelCards(getAvailableLevels('husband_hoang'), 1, {});
+    const cards = buildLevelCards(getAvailableLevels('husband_01'), 1, {});
     expect(cards.slice(1).every((c) => !c.summary.startsWith('Độ khó'))).toBe(true);
     expect(cards[1].summary.startsWith('23:45')).toBe(true);
   });

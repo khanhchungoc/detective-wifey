@@ -473,14 +473,14 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
       </div>
 
       {/* Pre-confrontation Confirmation Modal */}
-      {confrontation.isConfirmingConfrontation && confrontation.confrontationPreflight && (
+      {caseConfig && confrontation.isConfirmingConfrontation && confrontation.confrontationPreflight && (
         <ConfrontationConfirmModal
           isOpen={confrontation.isConfirmingConfrontation}
           preflight={confrontation.confrontationPreflight}
           suspectsOnBoard={confrontation.suspectsOnBoard}
           getSourceApp={getSourceApp}
           selectedSuspectId={confrontation.selectedConfrontationSuspectId}
-          husbandName={caseConfig?.husbandName || 'Hoàng'}
+          husbandName={caseConfig.husband.shortName}
           onSelectSuspect={confrontation.handleSelectConfrontationSuspect}
           onConfirmConfront={confrontation.handleExecuteConfrontation}
           onCancel={confrontation.handleCancelConfrontation}

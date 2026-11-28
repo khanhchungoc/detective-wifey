@@ -42,7 +42,7 @@ export function CommsApp(props: VirtualAppProps) {
                   <span className={`phone-direction ${call.direction === 'missed' ? 'is-missed' : ''}`}>
                     {call.direction === 'outgoing' ? <IoArrowUpOutline /> : <IoArrowDownOutline />}
                   </span>
-                  <ContactAvatar name={call.name || call.phone} size={40} />
+                  <ContactAvatar name={call.name || call.phone} avatarIndex={call.avatarIndex} size={40} />
                   <div className="communication-flex-copy">
                     <strong className={call.direction === 'missed' ? 'is-missed' : ''}>{call.name || call.phone}</strong>
                     <small>{callLabels[call.direction] || ''}{call.direction !== 'missed' && call.duration ? ` · ${call.duration}` : ''}</small>
@@ -55,14 +55,14 @@ export function CommsApp(props: VirtualAppProps) {
             <button className="phone-info" type="button" aria-label={`Chi tiết ${call.name || call.phone}`} onClick={() => openContact(findContact(call, data.contacts))}><IoInformationCircleOutline aria-hidden="true" /></button>
           </div>
         )) : <EmptyState>{missedOnly ? 'Không có cuộc gọi nhỡ' : 'Chưa có cuộc gọi'}</EmptyState>}
-      </> : data.contacts.length ? <div>{data.contacts.map(c => <button type="button" className="phone-contact-row" key={c.id} onClick={() => openContact(c)}><ContactAvatar name={c.name} /><strong>{c.name}</strong></button>)}</div> : <EmptyState>Chưa có liên hệ</EmptyState>}
+      </> : data.contacts.length ? <div>{data.contacts.map(c => <button type="button" className="phone-contact-row" key={c.id} onClick={() => openContact(c)}><ContactAvatar name={c.name} avatarIndex={c.avatarIndex} /><strong>{c.name}</strong></button>)}</div> : <EmptyState>Chưa có liên hệ</EmptyState>}
     </main>
     <nav className="app-bottom-nav phone-tabs" aria-label="Điều hướng Điện thoại">
       <button type="button" aria-current={tab === 'calls' ? 'page' : undefined} onClick={() => setTab('calls')}><IoTimeOutline />Gần đây</button>
       <button type="button" aria-current={tab === 'contacts' ? 'page' : undefined} onClick={() => setTab('contacts')}><IoPeopleOutline />Danh bạ</button>
     </nav>
     {contact && <BottomSheet title="Chi tiết liên hệ" onClose={() => setContact(null)} suspended={evidence.active}>
-      <div className="phone-contact-profile"><ContactAvatar name={contact.name} size={84} className="mb-3" /><h3>{contact.name}</h3></div>
+      <div className="phone-contact-profile"><ContactAvatar name={contact.name} avatarIndex={contact.avatarIndex} size={84} className="mb-3" /><h3>{contact.name}</h3></div>
       <div className="phone-contact-actions"><button type="button" onClick={() => {
         const thread = matchThread(contact, data.threads);
         if (!thread || !props.onOpenMessages?.(thread.id)) setFeedback('Không có cuộc trò chuyện');

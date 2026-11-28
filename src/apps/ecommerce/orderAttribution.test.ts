@@ -18,25 +18,25 @@ it('keeps delivery names, phone numbers and addresses consistent across all leve
   for (const order of orders) {
     expect(order.recipientPhone).toMatch(/^0\d{9}$/);
     if (order.suspectName) expect(order.suspectName).toBe(order.recipientName);
-    if (order.orderId === 'order_heater') {
+    if (order.orderId === 'order_004') {
       expect(order.suspectId).toBeUndefined();
       expect(order.recipientName).toBe('Nguyễn Thị Hòa');
       expect(order.recipientPhone).toBe(phoneFor('Mẹ Ở Quê'));
       expect(order.shippingAddress).toBe(countryside);
     } else if (order.suspectId === caseConfig.husbandId) {
-      expect(order.recipientName).toBe('Nguyễn Huy Hoàng');
+      expect(order.recipientName).toBe('Nguyễn Huy Thịnh');
       expect(order.recipientPhone).toBe('0901236789');
       expect(order.shippingAddress).toBe(home);
-    } else if (order.suspectId === 'suspect_huong') {
+    } else if (order.suspectId === 'suspect_01') {
       expect(order.recipientName).toBe('Nguyễn Thị Thu Hương');
       expect(order.recipientPhone).toBe(phoneFor('Khoa BE'));
       expect(order.shippingAddress).toBe(office);
-    } else if (order.suspectId === 'suspect_mai') {
+    } else if (order.suspectId === 'suspect_06') {
       expect(order.recipientName).toBe('Đỗ Thị Mai');
       expect(order.recipientPhone).toBe(phoneFor('Mai Lễ Tân'));
       expect(order.shippingAddress).toBe(office);
     } else {
-      expect(order.suspectId).toBe('suspect_ngoc');
+      expect(order.suspectId).toBe('suspect_03');
       expect(order.recipientPhone).toBe(phoneFor('Bé Ngọc KTX'));
       expect(order.shippingAddress).toBe(dorm);
     }
@@ -44,7 +44,7 @@ it('keeps delivery names, phone numbers and addresses consistent across all leve
   expect(new Set(orders.map(order => order.recipientPhone)).size).toBe(5);
   expect(contacts.some(contact => contact.primaryPhone === '0901236789')).toBe(false);
   // The culprit phone is shared only with the saved "Khoa BE" contact and the dress order.
-  expect(orders.filter(order => order.recipientPhone === phoneFor('Khoa BE')).map(order => order.orderId)).toEqual(['order_01']);
+  expect(orders.filter(order => order.recipientPhone === phoneFor('Khoa BE')).map(order => order.orderId)).toEqual(['order_005']);
 });
 
 it('preserves every order recipient identity through pinning and keeps the culprit masked until the bridge edge', () => {
@@ -53,7 +53,7 @@ it('preserves every order recipient identity through pinning and keeps the culpr
   const graph = { nodes: [], edges: [], requiredSmokingGunEdgeIds: [] };
   let tags: ReturnType<typeof tagSuspect>['suspects'] = [];
   const tagged = orders.filter(order => order.suspectName);
-  expect(tagged.map(order => order.orderId)).not.toContain('order_heater');
+  expect(tagged.map(order => order.orderId)).not.toContain('order_004');
   for (const [index, order] of tagged.entries()) {
     const expectedId = order.suspectId!;
     expect(order.suspectName).toBe(order.recipientName);
@@ -73,7 +73,7 @@ it('preserves every order recipient identity through pinning and keeps the culpr
   const nodes = deriveNodesFromTaggedEvidence(graph, tags).map(node => ({ ...node, x: 0, y: 0 }));
   expect(nodes).toHaveLength(tagged.length);
   expect(getSuspectsOnBoard({ placedNodes: nodes, taggedSuspects: tags, caseConfig }).map(s => s.id).sort())
-    .toEqual(['husband_hoang', 'suspect_huong', 'suspect_mai', 'suspect_ngoc']);
+    .toEqual(['husband_01', 'suspect_01', 'suspect_03', 'suspect_06']);
   const removed = removePinnedCard(tags, nodes[0].suspectId!);
   expect(removed.suspects).toHaveLength(tagged.length - 1);
   expect(removed.suspects.some(tag => tag.evidence?.recordId === tagged[1].orderId)).toBe(true);

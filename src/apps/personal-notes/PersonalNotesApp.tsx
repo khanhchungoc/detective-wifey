@@ -43,7 +43,7 @@ export const PersonalNotesApp: React.FC<VirtualAppProps> = ({
               key={note.id}
               item={{
                 title: note.title,
-                profileName: caseData.husbandName,
+                profileName: caseData.husband.shortName,
                 subtitle: 'Ghi chú bảo mật',
                 snippet: note.content,
                 suspectToTag: note.suspectName || note.title || 'Ghi chú bí mật',

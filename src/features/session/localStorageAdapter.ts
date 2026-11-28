@@ -1,12 +1,12 @@
 import type { ActiveSessionState, PlayerProgress, GameStateRepository } from './types';
 
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 const DEFAULT_GAME_ID = 'jealous_wife';
 
 const STORAGE_KEYS = {
   session: (gameId: string) => `detective:v${SCHEMA_VERSION}:${gameId}:session`,
   progress: `detective:v${SCHEMA_VERSION}:${DEFAULT_GAME_ID}:progress`,
-  corkboard: (caseId: string) => `detective:v${SCHEMA_VERSION}:${caseId || 'case_hoang_01'}:corkboard_state`,
+  corkboard: (caseId: string) => `detective:v${SCHEMA_VERSION}:${caseId || 'case_01'}:corkboard_state`,
 };
 
 /**
@@ -57,7 +57,7 @@ export class LocalStorageAdapter implements GameStateRepository {
   async getPlayerProgress(): Promise<PlayerProgress> {
     const defaultProgress: PlayerProgress = {
       schemaVersion: SCHEMA_VERSION,
-      unlockedHusbandId: 'husband_hoang',
+      unlockedHusbandId: 'husband_01',
       unlockedLevel: 1,
       bestStarRatings: {},
       earnedWifeTitles: [],

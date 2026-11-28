@@ -38,9 +38,9 @@ describe('Messaging image inspection', () => {
 
   it('prioritizes spouse and parent history without promoting the culprit in the inbox', () => {
     const data = readMessagingData(loadCase('case_01').appsData['internet-messaging']);
-    const wife = data.threads!.find(t => t.threadId === 'thread_wife')!;
-    const mother = data.threads!.find(t => t.threadId === 'thread_family')!;
-    const culprit = data.threads!.find(t => t.threadId === 'thread_khoa')!;
+    const wife = data.threads!.find(t => t.threadId === 'thread_005')!;
+    const mother = data.threads!.find(t => t.threadId === 'thread_010')!;
+    const culprit = data.threads!.find(t => t.threadId === 'thread_003')!;
     expect(wife.historyPriority).toBe('high');
     expect(mother.historyPriority).toBe('high');
     expect(wife.messages.length).toBeGreaterThanOrEqual(70);
@@ -53,7 +53,7 @@ describe('Messaging image inspection', () => {
 
   it('renders chat message container targeting latest message on thread opening', () => {
     const data = readMessagingData(loadCase('case_01').appsData['internet-messaging']);
-    const thread = data.threads!.find(t => t.threadId === 'thread_wife')!;
+    const thread = data.threads!.find(t => t.threadId === 'thread_005')!;
     const lastMessage = thread.messages[thread.messages.length - 1];
     const html = renderToStaticMarkup(createElement(MessagingChatThreadView, {
       thread,

@@ -2,7 +2,7 @@ import { useMotionState } from '../../../shared/motion/useMotionState';
 import React from 'react';
 import { IoCallOutline, IoCheckmark, IoCheckmarkDone, IoChevronBack, IoEllipsisHorizontal, IoEllipsisVertical, IoHappyOutline, IoImageOutline, IoLocation, IoMicOutline, IoPushOutline, IoTimeOutline, IoVideocamOutline } from 'react-icons/io5';
 import { MessagingThread, type MessagingContact, type MessagingMessage } from '../types';
-import { groupSenderLabel } from '../groupChat';
+import { groupSenderAvatarIndex, groupSenderLabel } from '../groupChat';
 import { chatImage } from '../assets/chatImages';
 import { MessagingImageViewer } from './MessagingImageViewer';
 import { MessagingLocationModal } from './MessagingLocationModal';
@@ -19,6 +19,8 @@ interface MessagingChatThreadViewProps {
   onTagSuspect: (suspectName: string, source?: EvidenceSource) => void;
   caseId?: string;
   contacts?: MessagingContact[];
+  /** Phone owner's full name, used to label the husband's own messages when tagged as evidence. */
+  husbandFullName?: string;
   onSwipeProgress?: (progress: number, displacement: number) => void;
   onSwipeEnd?: (committed: boolean) => void;
 }
@@ -29,6 +31,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
   onTagSuspect,
   caseId,
   contacts = [],
+  husbandFullName,
   onSwipeProgress,
   onSwipeEnd,
 }) => {
@@ -116,7 +119,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
 
           <div className="flex items-center gap-2 min-w-0 flex-1 ml-1">
             {/* Contact Avatar */}
-            <ContactAvatar name={thread.contactName} size={36} className="shadow-sm" />
+            <ContactAvatar name={thread.contactName} avatarIndex={thread.avatarIndex} size={36} className="shadow-sm" />
 
             <div className="min-w-0 flex-1">
               <h2 className="text-ios-headline font-bold truncate text-white leading-tight">
@@ -297,7 +300,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
             >
               {isGroup && !isMe && (
                 <div className="w-7 shrink-0 self-end" aria-hidden="true">
-                  {showSender && <ContactAvatar name={senderLabel} size={28} />}
+                  {showSender && <ContactAvatar name={senderLabel} avatarIndex={groupSenderAvatarIndex(msg, contacts)} size={28} />}
                 </div>
               )}
               <div className={`flex flex-col min-w-0 max-w-[80%] ${isMe ? 'items-end' : 'items-start'}`}>
@@ -310,7 +313,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                 item={{
                   title: evidenceName,
                   snippet: msg.text,
-                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Hoàng)' : 'Vợ')),
+                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? (husbandFullName ? `Chồng (${husbandFullName})` : 'Chồng') : 'Vợ')),
                   subtitle: msgTime,
                   kind: image ? 'photo' : 'message',
                   conversationId: thread.threadId,

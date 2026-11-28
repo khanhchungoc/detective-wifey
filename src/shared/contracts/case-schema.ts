@@ -48,13 +48,14 @@ export interface NotificationToast {
 export interface LevelMetadata {
   caseId: string;
   husbandId: string;
-  husbandName: string;
   levelNumber: 1 | 2 | 3;
   levelTitle: string;
   storySnippet: string;
   thumbnailAsset?: string;
   allowedStrikes: number;
   unlockRequirementLevel: number;
+  /** Listed in the selector but has no bundled data yet; cannot be started. */
+  comingSoon?: boolean;
 }
 
 export type ConfrontationMood = 'confident' | 'smug' | 'nervous' | 'broken';
@@ -93,6 +94,8 @@ export interface ConfrontationEndingChoice extends ConfrontationReply {
   choiceId: string;
   slot: ConfrontationSlot;
   wifeLine: string;
+  /** Author-set outcome; choice IDs are generic, so the UI cannot infer it from the ID. */
+  outcome: 'divorce' | 'forgive';
 }
 
 /** Beat 1 = opening; beats 2..N follow in order; the last lead's onTrue (broken) unlocks the ending. */
@@ -108,10 +111,81 @@ export interface EpilogueNotification {
   snippetBody: string;
 }
 
+
+/* ---------- Master data (per husband universe, shared by all levels) ---------- */
+
+/** Phone owner identity. The only place the husband's names live. */
+export interface HusbandMaster {
+  husbandId: string;
+  caseCode: string;
+  /** Story calendar year; ages are derived as storyYear - birthYear. */
+  storyYear: number;
+  shortName: string;
+  nickname: string;
+  fullName: string;
+  /** Uppercase without diacritics, as printed by banks. */
+  fullNameAscii: string;
+  handle: string;
+  initials: string;
+  birthYear: number;
+  occupation: string;
+  phone: string;
+  homeAddress: string;
+  wifePersonId: string;
+  teaserQuote: string;
+  personaTraits: string[];
+}
+
+/** Author-only classification. Never projected to apps (would spoil the answer). */
+export type PersonRole = 'wife' | 'family' | 'friend' | 'colleague' | 'suspect' | 'service' | 'other';
+
+export interface Person {
+  personId: string;
+  legalName: string;
+  shortName?: string;
+  gender: 'male' | 'female';
+  birthYear?: number;
+  role: PersonRole;
+  orgId?: string;
+  occupation?: string;
+  phones?: string[];
+  /** Dossier anchor lines (used for the wife profile). */
+  anchors?: string[];
+  /** Index in the shared contact avatar sprite sheet. */
+  avatarIndex?: number;
+}
+
+export interface Org {
+  orgId: string;
+  name: string;
+  /** Registered name when it differs from the display name (shown in bank statements as upper-case ASCII). */
+  legalName?: string;
+  kind: 'company' | 'shop' | 'venue' | 'bank' | 'service' | 'other';
+  address?: string;
+}
+
+/** How the husband saved a person or org in his phone in ONE level (the disguise layer). */
+export interface LevelContact {
+  contactId: string;
+  personId?: string;
+  orgId?: string;
+  savedName: string;
+  phone?: string;
+  /** Overrides the person's avatar, e.g. a disguised contact with a landscape photo. */
+  avatarIndex?: number;
+}
+
+export interface CaseMaster {
+  husband: HusbandMaster;
+  people: Person[];
+  orgs: Org[];
+}
+
 export interface CaseConfig {
   caseId: string;
   husbandId: string;
-  husbandName: string;
+  /** Phone owner identity, resolved from master data. The only source of the husband's names. */
+  husband: HusbandMaster;
   levelNumber: 1 | 2 | 3;
   allowedStrikes: number;
   groundTruth: GroundTruth;

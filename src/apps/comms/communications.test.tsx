@@ -6,6 +6,7 @@ import { CommsApp } from './CommsApp';
 import { MessagesApp } from './MessagesApp';
 import type { VirtualAppProps } from '../../shared/contracts/app-contracts';
 import type { UniversalEvidenceItem } from '../../shared/contracts/evidence';
+import { husbandFixture } from '../../tests/helpers/husbandFixture';
 
 vi.mock('../../features/investigation', async (importOriginal) => ({
   ...await importOriginal<typeof import('../../features/investigation')>(),
@@ -22,7 +23,7 @@ const payload = {
   ] }],
 };
 function props(appsData: Record<string, unknown>): VirtualAppProps {
-  return { caseData: { caseId: 'case', husbandName: '', levelNumber: 1, suspectPool: [], lockChallenges: [], appsData },
+  return { caseData: { caseId: 'case', husband: husbandFixture, levelNumber: 1, suspectPool: [], lockChallenges: [], appsData },
     onReturnHome: vi.fn(), onTagSuspect: vi.fn(), unlockedChallenges: new Set() };
 }
 

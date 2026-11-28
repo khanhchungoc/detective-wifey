@@ -13,7 +13,8 @@
     "test:e2e:smoke": "playwright test --grep @smoke",
     "test:e2e:ui": "playwright test --ui",
     "lint": "eslint src && node scripts/architecture.mjs",
-    "check:architecture": "node scripts/architecture.mjs"
+    "check:architecture": "node scripts/architecture.mjs",
+    "case:preview": "tsx scripts/case-preview.mjs"
   },
   "dependencies": {
     "motion": "^14.14.0",
