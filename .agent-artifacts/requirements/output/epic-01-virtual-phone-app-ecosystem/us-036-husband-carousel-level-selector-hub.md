@@ -72,7 +72,7 @@ As a **Player**, I want to browse husbands in a left/right swipeable carousel sh
 
 - [Case & Content Schema Engine (US-001)](./us-001-declarative-case-content-schema-engine.md)
 - [Level Progression Gating & Local Storage (US-018)](../functional-decomposition.md)
-- [Level 0 Entry, Skip & Replay (US-031)](./us-031-level-0-entry-skip-replay.md)
+- [Level 0 Tutorial: Bữa cà phê tăng ca (US-034)](../epic-04-detective-case-stories-level-content/us-034-level-0-tutorial.md)
 - [Detective App Startup & Entry Routing (US-035)](./us-035-detective-app-startup-entry-routing.md)
 
 ---

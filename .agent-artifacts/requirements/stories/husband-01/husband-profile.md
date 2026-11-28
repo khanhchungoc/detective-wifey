@@ -58,6 +58,7 @@ husband: husband_01
 
 | Màn chơi | Chủ đề Kịch bản | Cấp độ Tinh vi & Thay đổi Hành vi Che giấu | Kết luận (`verdict`) |
 |---|---|---|---|
+| **Màn 0 (Hướng dẫn)** | Bữa cà phê tăng ca | Tiền truyện hướng dẫn (3 app: `internet-messaging`, `phone`, `photos`; 0 khóa): lưu số Lê Ngọc Vy thành `"Tùng Gara"` nhưng quên xóa ghi chú danh bạ `"Lê Ngọc Vy - 45 Nguyễn Khang"`; nói dối vợ ngồi công ty lúc 20:10 nhưng chụp ảnh bàn 2 ly nước lúc 20:25 | `cheating` |
 | **Màn 1** | Cuộc gọi từ phòng tắm | Ngụy trang danh bạ cơ bản: lưu bồ thành đồng nghiệp nam "Khoa BE" (xưng `em` tự nhiên); lộ sơ hở qua số người nhận đơn váy size S, tên hiện trong nhóm chat công ty và biên lai ăn tối Cơm Niêu Phố Cổ trái lời khai họp; 0 khóa. Kết màn: Hương đổi kênh sang chuyển khoản 1.000đ kèm lời nhắn | `cheating` |
 | **Màn 2** | Quỹ đen & Tráo danh bạ | Rút kinh nghiệm màn 1: xóa/đổi cách liên lạc, đặt 1 mã khóa PIN ứng dụng ngân hàng/ghi chú, giấu qua kênh công việc/giao hàng | `cheating` |
 | **Màn 3** | Ngoại tình công sở đa tầng | Cảnh giác cao độ: 2 lớp khóa bảo mật, ảnh phản chiếu, hóa đơn ẩn, điều hướng qua nhiều ứng dụng | `cheating` |

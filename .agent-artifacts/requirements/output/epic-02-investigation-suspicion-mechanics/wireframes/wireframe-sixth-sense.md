@@ -64,7 +64,6 @@ Nhãn trong ngoặc mô tả hình hoặc trạng thái, không thêm chữ lên
 - Thu thập mục tiêu thì xóa dấu cũ, không tự gợi ý tiếp. Chuyển màn không mang mục tiêu hay dấu của màn cũ sang.
 - Giữ bảng và tiêu điểm khi hiện phản hồi. Không thêm nút trợ giúp nổi trên ứng dụng hoặc làm lộ đáp án.
 - Các quy tắc điều hướng, tính lượt dùng, lỗi và lưu hạn chờ đã được duyệt; thời gian chờ là 30 giây.
-- [Bước thực hành trong Màn 0](../../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-level-0-deduction-completion.md).
 
 ## Truy vết
 

@@ -46,7 +46,7 @@ Players can immediately immerse themselves in a fully realized, culturally reson
 ## User Stories
 
 * [US-027 - Husband Thịnh Level 1 Case Implementation ("Cơn ghen lúc nửa đêm")](us-027-husband-01-level-1-case-implementation.md) - *Status: planned*
-* [US-034 - Level 0 Practice Case Content](us-034-level-0-practice-case-content.md) - *Status: draft; shared revision-2 ASCII approved; implementation depends on separate level-design approval*.
+* [US-034 - Level 0 Tutorial: Bữa cà phê tăng ca (Popup Guide)](us-034-level-0-tutorial.md) - *Status: draft; consolidates former US-031..US-034 using 3 existing apps (`internet-messaging`, `phone`, `photos`) and step-by-step popup guide*.
 
 ## GUI Specifications
 
@@ -54,7 +54,7 @@ Players can immediately immerse themselves in a fully realized, culturally reson
 
 ## Wireframes
 
-* Content uses existing micro-app views. Level 0 behavior maps to the approved revision-2 [entry](../epic-01-virtual-phone-app-ecosystem/wireframes/wireframe-level-0-entry.md), [evidence coaching](../epic-02-investigation-suspicion-mechanics/wireframes/wireframe-level-0-evidence-coaching.md), [notebook/completion coaching](../epic-03-wife-notebook-verdict-social-sharing/wireframes/wireframe-level-0-deduction-completion.md), and [Sixth Sense](../epic-02-investigation-suspicion-mechanics/wireframes/wireframe-sixth-sense.md) wireframes. These do not invent case data.
+* [Level 0 Tutorial Popup Guide ASCII Wireframe](wireframes/wireframe-level-0-tutorial-popup-guide.md) - *Status: draft (Phase 1 - awaiting user signoff)*.
 
 ## Diagrams
 
@@ -62,10 +62,11 @@ Players can immediately immerse themselves in a fully realized, culturally reson
 
 ## Open Questions
 
-* Level 0 exact narrative and clues are deferred to a separate level-design review before implementation, as explicitly accepted in the discovery sign-off. Level 1 content is not changed by this addition.
+* Level 0 story package (`level-00-storyboard.md`, `level-00.md`, `level-00-phone-data.md`) and Phase 1 ASCII wireframe (`wireframe-level-0-tutorial-popup-guide.md`) await user signoff before generating `photo_l0_001` artwork and implementing `src/data/cases/husband_01/level_00/`.
 
 ## Citations
 
+* [Husband Thịnh Level 0 Tutorial Design Spec](../../stories/husband-01/level-00.md)
 * [Husband Thịnh Level 1 Design Spec](../../stories/husband-01/level-01.md)
 * [Clue Ideas Inventory](../../stories/clues/clue-ideas-inventory.md)
 * [Apps & Features Architecture](../../../project-knowledge-base/solution-context/architecture/apps-features-architecture.md)

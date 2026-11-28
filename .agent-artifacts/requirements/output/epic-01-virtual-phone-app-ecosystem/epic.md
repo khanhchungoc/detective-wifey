@@ -59,7 +59,6 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 * [US-024 - Unified Virtual Phone Motion Choreography, Transitions & App Animations](us-024-unified-virtual-phone-motion-choreography-transitions-app-animations.md) - *Status: planned*
 * [US-025 - Parody Virtual App Launch Splash Screens & Warm Resume Caching](us-025-game-boot-title-screen-parody-virtual-app-launch-splash-screens.md) - *Status: draft; ASCII approved (boot routing moved to US-035)*.
 * [US-030 - `Zola` Group Chat & Multi-Participant Thread Module](us-030-zola-group-chat-multi-participant-messaging.md) - *Status: draft*
-* [US-031 - Level 0 Entry, Skip & Replay](us-031-level-0-entry-skip-replay.md) - *Status: draft; revision-2 ASCII approved*.
 * [US-035 - Detective App Startup & Entry Routing](us-035-detective-app-startup-entry-routing.md) - *Status: draft; ASCII signed-off*
 * [US-036 - Husband Carousel & Level Selector Hub](us-036-husband-carousel-level-selector-hub.md) - *Status: draft; ASCII signed-off*
 * [US-037 - Level Context, Husband Persona & Interactive Intro Briefing](us-037-level-context-persona-intro-briefing.md) - *Status: draft; ASCII signed-off*
@@ -79,7 +78,6 @@ Players experience a fluid, culturally authentic smartphone simulation where sno
 * [Shopoo E-Commerce ASCII Wireframe](wireframes/wireframe-poshee-ecommerce.md)
 * [Phone Investigation ASCII Wireframe](wireframes/wireframe-phone-investigation.md)
 * [Messages Investigation ASCII Wireframe](wireframes/wireframe-messages-investigation.md)
-* [Màn 0: bắt đầu, bỏ qua và chơi lại](wireframes/wireframe-level-0-entry.md) - *Status: signed-off, revision 2*.
 * [Game Boot & Parody App Launch Splash Screens ASCII Wireframe](wireframes/wireframe-us-025-boot-and-splash-screens.md) - *Status: signed-off*.
 * [Startup, Level Selector Hub, Case Context & iOS 27 Lockscreen Flow ASCII Wireframe](wireframes/wireframe-startup-level-flow-lockscreen.md) - *Status: signed-off*.
 

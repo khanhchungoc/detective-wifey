@@ -55,7 +55,6 @@ Players experience engaging, high-stakes snooping gameplay with zero giveaway sp
 * [US-013 - Suspicion Meter Escalation & Lockout Animation](us-013-suspicion-meter-escalation-lockout-animation.md) - *Status: planned*
 * [US-014 - Caught-Snooping Fail State & Case Retry ("Bị giật lại máy")](us-014-caught-snooping-fail-state-case-retry.md) - *Status: planned*
 * [US-022 - "Giác Quan Thứ 6" (Sixth Sense) App-Badging Hint Engine](us-022-giac-quan-thu-6-sixth-sense-app-badging-hint-engine.md) - *Status: draft; revision-2 ASCII approved*.
-* [US-032 - Level 0 Guided Evidence Collection](us-032-level-0-guided-evidence-collection.md) - *Status: draft; revision-2 ASCII approved*.
 
 ## GUI Specifications
 
@@ -65,7 +64,6 @@ Players experience engaging, high-stakes snooping gameplay with zero giveaway sp
 
 * [`wireframe-us-011-universal-evidence-modal.md`](./wireframes/wireframe-us-011-universal-evidence-modal.md) - Universal Evidence Dark Context Menu, Red Pinned Marker & Quick Unpin (*Status: signed-off, revision 2*)
 * [Giác quan thứ 6](wireframes/wireframe-sixth-sense.md) - *Status: signed-off, revision 2*.
-* [Màn 0: tập xem và ghim thông tin](wireframes/wireframe-level-0-evidence-coaching.md) - *Status: signed-off, revision 2*.
 
 ## Diagrams
 
