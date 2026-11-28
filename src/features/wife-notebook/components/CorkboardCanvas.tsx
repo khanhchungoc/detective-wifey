@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useLayoutEffect, useMemo, useState, useRef } from 'react';
-import { useReducedMotion } from 'motion/react';
 import {
   IoNavigateOutline,
   IoGlassesOutline,
@@ -52,66 +51,15 @@ function getProfileName(node: PlacedNode): string | undefined {
   return undefined;
 }
 
-const LAMP_IGNITION = { duration: 850, offsets: [0, 0.18, 0.34, 0.55, 0.72, 1] };
-const LAMP_LIGHT_IGNITION = [0.12, 0.95, 0.22, 1, 0.55, 1];
-const LAMP_VEIL_IGNITION = [0.65, 0.04, 0.58, 0, 0.34, 0];
-/** Ambient flicker: a 420ms stutter every ~8.9s, compressed into the front of one looping animation. */
-const LAMP_AMBIENT_PERIOD = 8920;
-const LAMP_AMBIENT_OFFSETS = [0, 0.22, 0.48, 0.72, 1].map(offset => offset * 420 / LAMP_AMBIENT_PERIOD);
-const LAMP_LIGHT_AMBIENT = [1, 0.45, 0.94, 0.62, 1];
-const LAMP_VEIL_AMBIENT = [0, 0.42, 0.05, 0.28, 0];
-
-/**
- * One fixed set of lamp layers; the flicker is pure opacity WAAPI (compositor) with no React state.
- * Swapping layer trees mid-open used to re-rasterize full-board gradients right as the player
- * started dragging, which stuttered the board open/close and card drags.
- */
-const FluorescentLampHighlight = memo(function FluorescentLampHighlight({ active = true }: { active?: boolean }) {
-  const prefersReducedMotion = useReducedMotion();
-  const washRef = useRef<HTMLDivElement>(null);
-  const veilRef = useRef<HTMLDivElement>(null);
-  const tubeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wash = washRef.current, veil = veilRef.current, tube = tubeRef.current;
-    if (!active || prefersReducedMotion || !wash?.animate || !veil || !tube) return;
-    const running: Animation[] = [];
-    const play = (element: HTMLElement, values: number[], offsets: number[], options: KeyframeAnimationOptions) => {
-      const animation = element.animate(values.map((opacity, i) => ({ opacity, offset: offsets[i] })), { easing: 'linear', ...options });
-      running.push(animation);
-      return animation;
-    };
-    // Start after the board slide-in so its first frames stay smooth.
-    const timer = window.setTimeout(() => {
-      const ignition = { duration: LAMP_IGNITION.duration, fill: 'backwards' as const };
-      const ignite = play(wash, LAMP_LIGHT_IGNITION, LAMP_IGNITION.offsets, ignition);
-      play(tube, LAMP_LIGHT_IGNITION, LAMP_IGNITION.offsets, ignition);
-      play(veil, LAMP_VEIL_IGNITION, LAMP_IGNITION.offsets, ignition);
-      ignite.onfinish = () => {
-        const ambient = { duration: LAMP_AMBIENT_PERIOD, iterations: Infinity, delay: LAMP_AMBIENT_PERIOD - 420 };
-        play(wash, [...LAMP_LIGHT_AMBIENT, 1], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
-        play(tube, [...LAMP_LIGHT_AMBIENT, 1], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
-        play(veil, [...LAMP_VEIL_AMBIENT, 0], [...LAMP_AMBIENT_OFFSETS, 1], ambient);
-      };
-    }, 400);
-    return () => {
-      window.clearTimeout(timer);
-      for (const animation of running) animation.cancel();
-    };
-  }, [active, prefersReducedMotion]);
-
+const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
   return (
     <>
-      {/* Overhead light wash cast onto both wall and board (z-[14]); physical tube stays behind the board at z-[4] */}
-      <div ref={washRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]" style={{ willChange: 'opacity' }}>
+      {/* Steady overhead light wash cast onto both wall and board without opening flash/flicker */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]">
         <div className="h-full w-full bg-[radial-gradient(ellipse_110%_95%_at_50%_4%,rgba(226,236,248,0.2)_0%,rgba(148,163,184,0.09)_38%,rgba(148,163,184,0.02)_70%,transparent_96%)]" />
       </div>
-      {/* Room dimming veil inversely synced to the overhead lamp flicker (hidden at rest) */}
-      <div ref={veilRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[14]" style={{ opacity: 0, willChange: 'opacity' }}>
-        <div className="h-full w-full bg-[radial-gradient(ellipse_105%_85%_at_50%_4%,rgba(4,7,12,0.68)_0%,rgba(4,7,12,0.84)_55%,rgba(3,5,9,0.92)_100%)]" />
-      </div>
-      {/* Overhead fluorescent tube glow aligned to the wall fixture behind the board (covered when board moves forward) */}
-      <div ref={tubeRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[6.2%] md:top-[4.5%] z-[4] flex flex-col items-center" style={{ willChange: 'opacity' }}>
+      {/* Overhead fluorescent tube glow aligned to the wall fixture behind the board */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[6.2%] md:top-[4.5%] z-[4] flex flex-col items-center">
         <div className="notebook-lamp-tube h-[4px] w-[52%] md:w-[27%] max-w-[230px] md:max-w-[340px] rounded-full bg-[#E2ECF8]/75 shadow-[0_0_18px_6px_rgba(226,236,248,0.42),0_10px_36px_12px_rgba(148,163,184,0.2)]" />
       </div>
     </>
@@ -758,7 +706,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
   planeRef,
   surfaceRef,
   mode = 'focus',
-  isOpen = true,
+  isOpen: _isOpen = true,
   ...contentsProps
 }) => {
   const { placedNodes, activePairing, selectedEdgeId, onSelectCard, onSelectEdge, onSeverEdge, onCancelPairing } = contentsProps;
@@ -816,7 +764,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
       </picture>
 
       {/* Overhead Cold War Fluorescent Lamp Highlight: tube behind board (z-[4]), light wash over wall & board (z-[14]) */}
-      <FluorescentLampHighlight active={isOpen} />
+      <FluorescentLampHighlight />
 
       {/* Focus view: dims the office wall and overhead lamp behind the board (opacity fade only) */}
       <div aria-hidden="true" className="notebook-wall-veil pointer-events-none absolute inset-0 z-[5]" />

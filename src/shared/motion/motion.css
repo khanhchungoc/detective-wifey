@@ -154,6 +154,7 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-banner-out { to { transform: translateY(-120%); opacity: 0; } }
 @keyframes ios-dialog-in { from { transform: scale(.94); opacity: 0; } }
 @keyframes ios-dialog-out { to { transform: scale(.94); opacity: 0; } }
+::view-transition-group(phone-content) { background-color: #000000; }
 html[data-motion='push']::view-transition-new(phone-content) { animation-name: ios-push; }
 html[data-motion='push']::view-transition-old(phone-content) { animation-name: ios-under; }
 html[data-motion='pop']::view-transition-old(phone-content) { animation-name: ios-pop; z-index: 2; }
@@ -170,7 +171,7 @@ html:is([data-motion='push'], [data-motion='pop']) [data-zola-bottom-nav] { view
 html[data-motion='push']::view-transition-new(phone-detail) { animation-name: ios-push; }
 html[data-motion='pop']::view-transition-old(phone-detail) { animation-name: ios-pop; }
 html[data-layered][data-motion='push']::view-transition-old(phone-content),
-html[data-layered][data-motion='pop']::view-transition-old(phone-content) { animation: none; z-index: auto; }
+html[data-layered][data-motion='pop']::view-transition-old(phone-content) { animation: none; opacity: 1; z-index: auto; }
 html[data-layered][data-motion='push']::view-transition-new(phone-content),
 html[data-layered][data-motion='pop']::view-transition-new(phone-content) { animation-name: ios-app-fade-in; }
 html[data-motion='open']::view-transition-new(phone-app) {

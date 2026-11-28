@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import { buildPhotoEvidenceItem, readPhotosData } from './data';
 import { PhotosApp, appDefinition } from './PhotosApp';
+import { PhotoLightboxView } from './components/PhotoLightboxView';
 import { deriveNodesFromTaggedEvidence } from '../../features/wife-notebook/WifeNotebookModal';
 import { LEVEL_01_KNOWLEDGE_GRAPH } from '../../features/wife-notebook/level01Fixture';
 import { loadCase } from '../../features/case-runtime';
@@ -84,5 +85,31 @@ describe('case-supplied photo library', () => {
     }));
     expect(boardHtml).toContain(`data-pinned-photo="${nodes[0].nodeId}"`);
     expect(boardHtml).toContain('<img ');
+  });
+
+  it('does not render adjacent prev/next slides in PhotoLightboxView unless horizontally paging', () => {
+    const state = readPhotosData({
+      photos: [
+        { id: 'p1', title: 'Ảnh 1', date: '13/10' },
+        { id: 'p2', title: 'Ảnh 2', date: '14/10' },
+        { id: 'p3', title: 'Ảnh 3', date: '15/10' },
+      ],
+    });
+    const html = renderToStaticMarkup(createElement(PhotoLightboxView, {
+      photo: state.photos[1],
+      prevPhoto: state.photos[0],
+      nextPhoto: state.photos[2],
+      caseId: 'case_01',
+      husbandName: 'Hoàng',
+      onBack: vi.fn(),
+      onToggleInfo: vi.fn(),
+      isInfoOpen: false,
+      onTriggerEvidence: vi.fn(),
+      hasPrev: true,
+      hasNext: true,
+    }));
+    expect(html).toContain('data-photo-lightbox');
+    expect(html).not.toContain('data-lightbox-prev-slide');
+    expect(html).not.toContain('data-lightbox-next-slide');
   });
 });

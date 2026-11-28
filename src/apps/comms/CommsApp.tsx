@@ -2,7 +2,6 @@ import { useMotionState } from '../../shared/motion/useMotionState';
 import { useState } from 'react';
 import { IoCall, IoCallOutline, IoChatbubble, IoInformationCircleOutline, IoTimeOutline, IoPeopleOutline, IoArrowUpOutline, IoArrowDownOutline } from 'react-icons/io5';
 import type { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
-import { SwipeBackContainer } from '../../shared/ui/SwipeBackContainer';
 import { BottomSheet } from '../../shared/ui/BottomSheet';
 import { readCommunicationData, findContact, matchThread, type Contact } from './data';
 import { CommunicationHeader, EmptyState, useCommunicationEvidence } from './components/CommunicationChrome';
@@ -20,7 +19,7 @@ export function CommsApp(props: VirtualAppProps) {
   const evidence = useCommunicationEvidence(props.caseData.caseId, props.onTagSuspect, 'phone');
   const calls = data.calls.filter(call => !missedOnly || call.direction === 'missed');
   const openContact = (next: Contact) => { setContact(next); setFeedback(''); setNotesOpen(true); };
-  return <SwipeBackContainer className="min-h-[44px] communication-app phone-app" onBack={props.onReturnHome} enabled={!contact && !evidence.active} exitsApp>
+  return <div className="min-h-[44px] communication-app phone-app">
     <CommunicationHeader title="Điện thoại" />
     <main className="communication-scroll">
       <h2 className="communication-large-title">{tab === 'calls' ? 'Gần đây' : 'Danh bạ'}</h2>
@@ -74,7 +73,7 @@ export function CommsApp(props: VirtualAppProps) {
         {notesOpen && (contact.notes ? evidence.wrap(contact, contact.name, contact.notes, <p>{contact.notes}</p>) : <p>Chưa có ghi chú</p>)}</section>
     </BottomSheet>}
     {evidence.modal}
-  </SwipeBackContainer>;
+  </div>;
 }
 export const phoneDefinition: AppDefinition = {
   appId: 'phone', dataKeys: ['comms', 'phone', 'messages'], displayName: 'Điện thoại', icon: IoCall,

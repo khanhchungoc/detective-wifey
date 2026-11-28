@@ -35,7 +35,7 @@ describe('app surface and stationary system chrome', () => {
     expect(viewport).toBeGreaterThan(statusBackground);
     expect(bottomBackground).toBeGreaterThan(viewport);
     expect(homeControl).toBeGreaterThan(bottomBackground);
-    expect(html.slice(surface, statusBackground)).toContain('background-color:#ED1C24');
+    expect(html.slice(statusBackground, viewport)).toContain('background-color:#ED1C24');
     expect(html.slice(bottomBackground, homeControl)).toContain('background-color:#FFFFFF');
     expect(html.slice(homeControl)).toContain('color:#000000');
     // The app covers a live glass launcher; hiding its entire tree would force
@@ -162,5 +162,26 @@ describe('app surface and stationary system chrome', () => {
     expect(htmlOpen).toContain('aria-hidden="true"');
     expect(htmlOpen).toContain('phone-system-status');
   });
+
+  it('keeps brand themeColor on the status bar strip instead of the full app surface', () => {
+    const bankingApp = {
+      appId: 'banking',
+      displayName: 'Techcorn',
+      themeColor: '#ED1C24',
+      bottomBarColor: '#FFFFFF',
+    } as unknown as AppDefinition;
+    const html = renderToStaticMarkup(
+      <PhoneShell {...props} activeAppId="banking" activeAppDefinition={bankingApp} />,
+    );
+    const surfaceStart = html.indexOf('data-app-surface');
+    const surfaceTag = html.slice(surfaceStart, html.indexOf('>', surfaceStart));
+    expect(surfaceTag).toContain('background-color:#FFFFFF');
+    expect(surfaceTag).not.toContain('#ED1C24');
+
+    const statusStart = html.indexOf('data-app-status-background');
+    const statusTag = html.slice(statusStart, html.indexOf('>', statusStart));
+    expect(statusTag).toContain('background-color:#ED1C24');
+  });
 });
+
 

@@ -27,14 +27,16 @@ export const UniversalEvidenceModal = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const appVisible = useContext(AppVisibilityContext);
 
+  const isVisible = Boolean(isOpen && item && appVisible);
+
   useEffect(() => {
-    if (!isOpen || !item || !appVisible) return;
+    if (!isVisible) return;
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialogRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
     return () => previous?.focus();
-  }, [isOpen, item, appVisible]);
+  }, [isVisible]);
 
-  if (!isOpen || !item || !appVisible) return null;
+  if (!isVisible || !item) return null;
 
   const hasAttribution = item.suspectToTag.trim().length > 0;
   const hasSource = Boolean(item.source?.caseId && item.source.recordId && item.source.title.trim());

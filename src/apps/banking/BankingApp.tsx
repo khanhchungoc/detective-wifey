@@ -77,8 +77,8 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     else onReturnHome();
   };
 
-  const swipe = useSwipeBack({ onBack: handleBack, enabled: !selectedTx && !evidenceItem && !selectedVault, exitsApp: !selectedVaultId && activeTab === 'home' });
   const vaultSwipe = useSwipeBack({ onBack: () => setSelectedVaultId(null), enabled: Boolean(selectedVault) });
+  const profileSwipe = useSwipeBack({ onBack: () => navigate('home'), enabled: activeTab === 'profile' && !selectedTx && !evidenceItem && !selectedVault });
 
   const selectVault = (vault: BankingVault) => {
     setSelectedVaultId(vault.id);
@@ -99,7 +99,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
 
   return (
     <div
-      {...swipe}
+      {...(activeTab === 'profile' ? profileSwipe : {})}
       className="app-banking relative flex h-full min-h-0 w-full flex-col overflow-hidden select-none font-sans bg-[#F5F6F8]"
       onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); handleBack(); } }}
       onKeyDownCapture={event => { if (event.key === 'Escape' && evidenceItem) { event.stopPropagation(); setEvidenceItem(null); } }}
