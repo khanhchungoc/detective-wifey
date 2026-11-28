@@ -3,9 +3,9 @@
   --notebook-bg: #080b0f;
   --notebook-canvas: #0f151d;
   --notebook-frame: #1b2129;
-  /* Dimly-lit aged paper & muted border so notes sit naturally under the overhead lamp without glowing */
-  --notebook-paper: #cbc5b8;
-  --notebook-border: #9a9080;
+  /* Warm readable aged paper & border so handwritten text stays crisp and legible on the dark board */
+  --notebook-paper: #efe9dc;
+  --notebook-border: #c2b7a3;
   position: relative;
 }
 
@@ -195,29 +195,28 @@
 .corkboard-paper-card {
   background-color: var(--notebook-paper);
   background-image:
-    /* Horizontal & diagonal paper fold creases */
-    linear-gradient(178deg, transparent 47%, rgba(78, 62, 44, 0.1) 49%, rgba(255, 255, 255, 0.2) 50.5%, transparent 54%),
-    linear-gradient(104deg, transparent 36%, rgba(78, 62, 44, 0.07) 37.5%, rgba(255, 255, 255, 0.14) 38.5%, transparent 41%),
-    /* Soft aged tea-stain / hoen ố blotches */
-    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(122, 98, 68, 0.16) 0%, transparent 70%),
-    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(114, 92, 64, 0.13) 0%, transparent 68%),
-    radial-gradient(ellipse 46% 36% at 72% 72%, rgba(108, 86, 60, 0.09) 0%, transparent 72%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 42%, rgba(15, 18, 24, 0.14) 100%);
+    /* Subtle horizontal & diagonal paper fold creases */
+    linear-gradient(178deg, transparent 47%, rgba(90, 72, 50, 0.06) 49%, rgba(255, 255, 255, 0.24) 50.5%, transparent 54%),
+    linear-gradient(104deg, transparent 36%, rgba(90, 72, 50, 0.04) 37.5%, rgba(255, 255, 255, 0.16) 38.5%, transparent 41%),
+    /* Light aged tea-stain warmth without darkening text contrast */
+    radial-gradient(ellipse 68% 48% at 14% 88%, rgba(145, 118, 82, 0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 56% 42% at 88% 16%, rgba(135, 110, 76, 0.07) 0%, transparent 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 45%, rgba(40, 32, 22, 0.05) 100%);
   background-size: 100% 100%;
   box-shadow:
-    inset 0 0 18px rgba(24, 18, 12, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.26);
+    inset 0 0 12px rgba(48, 36, 22, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
-/* Muted ochre sticky note title tab stuck onto top-left of evidence card (dim-room saturation) */
+/* Warm ochre sticky note title tab stuck onto top-left of evidence card */
 .corkboard-sticky-note {
-  background-color: #c4b05e;
+  background-color: #ebda82;
   background-image:
-    linear-gradient(176deg, rgba(110, 84, 18, 0.14) 0%, rgba(235, 224, 170, 0.14) 36%, rgba(92, 70, 14, 0.16) 100%);
+    linear-gradient(176deg, rgba(140, 108, 28, 0.08) 0%, rgba(255, 248, 205, 0.22) 36%, rgba(120, 92, 22, 0.1) 100%);
   border: none;
   box-shadow:
-    2px 4px 6px -2px rgba(0, 0, 0, 0.34),
-    0 1px 2px rgba(0, 0, 0, 0.18);
+    2px 4px 6px -2px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.16);
 }
 
 /* Muted film photo frame for suspect/contact avatar */

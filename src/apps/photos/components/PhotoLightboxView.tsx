@@ -636,7 +636,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
         exit={{ opacity: 0, y: -8 }}
         transition={{ duration: 0.2, ease: IOS_EASE }}
         style={{ opacity: chromeOpacity }}
-        className="relative h-14 px-3 flex items-center justify-between border-b border-white/10 bg-black/80 backdrop-blur-md shrink-0 z-20"
+        className="relative h-14 px-3 flex items-center justify-between border-b border-white/10 bg-black/90 shrink-0 z-20"
       >
         <button
           type="button"
@@ -700,6 +700,7 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
             animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
             exit={heroExit}
             transition={IOS_SPRING}
+            style={{ willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
             className="relative w-full h-full flex items-center justify-center"
           >
             {/* Middle Swipe-Down Dismiss / 3-Slide Horizontal Pager Container */}
@@ -710,7 +711,8 @@ export const PhotoLightboxView: React.FC<PhotoLightboxViewProps> = ({
                 x: dragX,
                 y: dragY,
                 scale: dragScale,
-                willChange: manipulating ? 'transform' : 'auto',
+                willChange: 'transform',
+                backfaceVisibility: 'hidden',
               }}
             >
               {/* Previous Adjacent Photo Slot (rendered only during horizontal paging so it never peeks during open/dismiss/close) */}

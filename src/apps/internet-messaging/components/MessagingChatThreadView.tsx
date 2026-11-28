@@ -311,17 +311,18 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                   snippet: msg.text,
                   suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Hoàng)' : 'Vợ')),
                   subtitle: msgTime,
-                  kind: 'message',
+                  kind: image ? 'photo' : 'message',
                   conversationId: thread.threadId,
                   visibleAlias: evidenceName,
                   eventTime: msgTime,
                   direction: isMe ? 'outgoing' : 'incoming',
                   sender: isMe ? 'me' : 'them',
+                  imageSrc: image,
                   source: caseId ? {
                     caseId,
                     recordId: msg.id,
                     clueRefId: msg.clueRefId || undefined,
-                    kind: 'message',
+                    kind: image ? 'photo' : 'message',
                     conversationId: thread.threadId,
                     visibleAlias: evidenceName,
                     eventTime: msgTime,
@@ -329,6 +330,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                     snippet: msg.text,
                     direction: isMe ? 'outgoing' : 'incoming',
                     sender: isMe ? 'me' : 'them',
+                    imageSrc: image,
                   } : undefined,
                 }}
                 onTriggerEvidence={setEvidenceSheetItem}
