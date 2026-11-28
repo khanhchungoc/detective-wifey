@@ -8,6 +8,8 @@ import type {
   WifeProfile,
 } from '../../shared/contracts/game-flow';
 import wifeMinhThuUrl from './assets/wife-minh-thu.jpg';
+// 3:4 head-and-shoulders dossier portrait (not the phone wallpaper).
+import hoangPortraitUrl from './assets/hoang-dossier-portrait.jpg';
 
 const WIFE_MINH_THU: WifeProfile = {
   displayName: 'Trần Minh Thư',
@@ -30,7 +32,7 @@ export function formatNarrativeShortDate(date: Date): string {
   return `${weekday}, ${date.getDate()} thg ${date.getMonth() + 1}`;
 }
 
-export function buildHusbandProfiles(hoangPortraitUrl: string): HusbandProfile[] {
+export function buildHusbandProfiles(): HusbandProfile[] {
   return [
     {
       husbandId: 'husband_hoang',

@@ -75,6 +75,8 @@ export default {
           'sans-serif',
         ],
         handwriting: ['"Shantell Sans"', 'cursive', 'sans-serif'],
+        // Printed case-file labels (pre-level dossier only). Slab serif with full Vietnamese coverage.
+        dossier: ['Bitter', 'Georgia', 'serif'],
       },
     },
   },

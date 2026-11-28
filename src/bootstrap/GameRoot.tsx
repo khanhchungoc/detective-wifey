@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PhoneShell } from '../shell';
-import hoangPortraitUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
+import hoangWallpaperUrl from '../shell/assets/hoang-technosoft-selfie-wallpaper-v3.jpg';
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
 import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
@@ -74,7 +74,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     DOCK_APP_IDS.map(getAppDefinition).filter((app): app is AppDefinition => Boolean(app))
   ), []);
 
-  const husbands = useMemo(() => buildHusbandProfiles(hoangPortraitUrl), []);
+  const husbands = useMemo(() => buildHusbandProfiles(), []);
   const levelCards = useMemo(
     () => buildLevelCards(
       game.availableLevels(),
@@ -92,7 +92,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     [caseConfig, caseTitle, activeHusband],
   );
   const lockscreenConfig = useMemo(
-    () => buildLockscreenConfig(caseConfig, hoangPortraitUrl, (appId) => {
+    () => buildLockscreenConfig(caseConfig, hoangWallpaperUrl, (appId) => {
       const def = APP_REGISTRY[appId];
       return def ? { appName: def.displayName, iconAsset: def.iconAsset, themeGradient: def.themeGradient } : undefined;
     }),
@@ -148,7 +148,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
             transition={stageTransition}
           >
             <GameStartupScreen
-              preloadAssets={[hoangPortraitUrl]}
+              preloadAssets={[husbands[0].portraitUrl, hoangWallpaperUrl]}
               hasOngoingGame={Boolean(state.ongoingSession)}
               ongoingLevelNumber={state.ongoingSession?.levelNumber}
               isMuted={isMuted}
