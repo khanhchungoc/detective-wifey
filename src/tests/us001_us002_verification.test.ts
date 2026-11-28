@@ -85,13 +85,15 @@ console.log('  -> PASS: Missing or corrupt case triggers expected fallback error
 
 console.log('[US-001 - AC 5] Level Catalog Manifest Exposure for Level Selector');
 const levels = getAvailableLevels('husband_01');
-assert.equal(levels.length, 3, 'Catalog must return 3 levels');
-assert.equal(levels[0].levelNumber, 1);
+assert.equal(levels.length, 4, 'Catalog must return 4 levels (Level 0 tutorial + Levels 1-3)');
+assert.equal(levels[0].levelNumber, 0);
 assert.equal(levels[0].allowedStrikes, 5);
-assert.equal(levels[1].levelNumber, 2);
-assert.equal(levels[1].allowedStrikes, 4);
-assert.equal(levels[2].levelNumber, 3);
-assert.equal(levels[2].allowedStrikes, 3);
+assert.equal(levels[1].levelNumber, 1);
+assert.equal(levels[1].allowedStrikes, 5);
+assert.equal(levels[2].levelNumber, 2);
+assert.equal(levels[2].allowedStrikes, 4);
+assert.equal(levels[3].levelNumber, 3);
+assert.equal(levels[3].allowedStrikes, 3);
 console.log('  -> PASS: Catalog manifest returns ordered level metadata list.\n');
 
 console.log('[US-001 - AC 6] Ordinary Daily Activity in Supplied Apps');
