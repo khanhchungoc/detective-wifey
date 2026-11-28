@@ -3,7 +3,7 @@ import { motion, useTransform } from 'motion/react';
 import type { MotionValue } from 'motion/react';
 import { IoAlertCircleOutline, IoLockClosedOutline, IoStar, IoStarOutline } from 'react-icons/io5';
 import type { LevelCardItem } from '../../../shared/contracts/game-flow';
-import { ManilaWash, RuledLines, SubjectPolaroid } from './FolderParts';
+import { AttachedPhoto, CoffeeRing, PaperSurface, RubberStamp, Staple } from './FolderParts';
 
 interface LevelFileProps {
   level: LevelCardItem;
@@ -56,7 +56,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   const isGuide = Boolean(level.isGuide);
   const locked = !level.unlocked && !isGuide;
   const stars = clamp(level.bestStars ?? 0, 0, 3);
-  const paperTone = isGuide ? 'bg-game-paper-slip' : 'bg-game-paper';
+  const paperTone = isGuide ? 'bg-game-paper-slip' : 'bg-game-manila';
 
   return (
     <motion.div
@@ -66,32 +66,36 @@ export const LevelFile: React.FC<LevelFileProps> = ({
       inert={!isActive}
       aria-hidden={!isActive}
       onClick={isActive ? onFileTap : undefined}
-      style={{ x, y, scale, rotateZ, rotateY, opacity, zIndex, transformOrigin: 'left center' }}
-      className={`absolute inset-0 flex flex-col overflow-hidden rounded-lg border border-game-paper-border ${paperTone} shadow-[0_10px_24px_-10px_rgba(0,0,0,0.65)] will-change-transform select-none`}
+      style={{
+        x, y, scale, rotateZ, rotateY, opacity, zIndex,
+        transformOrigin: 'left center',
+      }}
+      className={`absolute inset-0 flex flex-col overflow-hidden rounded-lg border border-game-ink/25 ${paperTone} shadow-[0_10px_24px_-10px_rgba(0,0,0,0.65)] will-change-transform select-none`}
     >
-      {!isGuide && <ManilaWash />}
+      <PaperSurface />
+      <Staple className="absolute left-3 top-2 h-3 w-8 -rotate-6" />
+      {index % 2 === 1 && <CoffeeRing className="absolute -right-4 bottom-16 h-24 w-24 -rotate-12" />}
       <motion.div
         animate={isShaking ? { x: [0, -7, 7, -5, 5, 0] } : { x: 0 }}
         transition={isShaking ? { duration: 0.32, ease: 'easeInOut' } : { duration: 0 }}
         onAnimationComplete={() => {
           if (isShaking) onShakeDone();
         }}
-        className="relative flex min-h-0 flex-1 flex-col gap-3 p-4"
+        className="relative flex min-h-0 flex-1 flex-col gap-3 p-4 pt-6"
       >
-        <RuledLines />
         <div className="flex items-start justify-between gap-3">
-          <span className="text-ios-subheadline font-bold uppercase tabular-nums text-game-ink-secondary">
+          <span className="font-dossier text-ios-subheadline font-extrabold uppercase tabular-nums text-game-ink">
             Màn {level.levelNumber}
           </span>
           {isGuide && (
-            <span className="-rotate-6 rounded-sm border-2 border-game-ink-secondary px-2 py-0.5 text-ios-caption-2 font-bold uppercase text-game-ink-secondary">
+            <RubberStamp tone="slate" className="-rotate-6">
               Hướng dẫn
-            </span>
+            </RubberStamp>
           )}
           {locked && (
-            <span className="-rotate-6 rounded-sm border-2 border-game-crimson px-2 py-0.5 text-ios-caption-2 font-bold uppercase text-game-crimson">
+            <RubberStamp tone="red" className="-rotate-6">
               Khóa
-            </span>
+            </RubberStamp>
           )}
           {!isGuide && !locked && (
             <div className="flex items-center gap-0.5" role="img" aria-label={`Đạt ${stars} trên 3 sao`}>
@@ -99,22 +103,35 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 n <= stars ? (
                   <IoStar key={n} aria-hidden="true" className="h-5 w-5 text-game-amber" />
                 ) : (
-                  <IoStarOutline key={n} aria-hidden="true" className="h-5 w-5 text-game-ink-secondary/60" />
+                  <IoStarOutline key={n} aria-hidden="true" className="h-5 w-5 text-game-ink/60" />
                 ),
               )}
             </div>
           )}
         </div>
 
-        <h3 className="text-ios-title-2 font-bold leading-tight text-game-ink">{level.levelTitle}</h3>
-        <div aria-hidden="true" className="border-t border-dashed border-game-ink-secondary/40" />
-        <p className="text-ios-callout leading-snug text-game-ink-secondary">{level.summary}</p>
-
-        {!isGuide && <SubjectPolaroid src={subjectPortraitUrl} />}
+        <h3 className="font-dossier text-ios-title-2 font-extrabold leading-tight text-game-ink">{level.levelTitle}</h3>
+        <div aria-hidden="true" className="border-t border-dashed border-game-ink/40" />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-4 bottom-20 top-64"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(71,55,25,0.22) 27px, rgba(71,55,25,0.22) 28px)',
+          }}
+        />
+        <div className="flex items-start justify-between gap-3">
+          <p className="min-w-0 flex-1 text-ios-callout leading-snug text-game-ink">{level.summary}</p>
+          {!isGuide && (
+            <div className="h-36 shrink-0 pr-1 pt-2">
+              <AttachedPhoto src={subjectPortraitUrl} tilt="rotate-3" className="h-full" />
+            </div>
+          )}
+        </div>
 
         <div className="relative mt-auto flex flex-col gap-2">
           {locked && (
-            <p className="flex items-center gap-2 text-ios-footnote font-medium text-game-ink-secondary">
+            <p className="flex items-center gap-2 text-ios-footnote font-medium text-game-ink">
               <IoLockClosedOutline aria-hidden="true" className="h-4 w-4 shrink-0" />
               <span>{levelLockHint(level)}</span>
             </p>
@@ -129,7 +146,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
             </p>
           )}
           {isGuide && (
-            <span className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-game-ink-secondary/60 text-ios-subheadline font-semibold text-game-ink-secondary">
+            <span className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-game-ink/60 font-dossier text-ios-subheadline font-bold text-game-ink">
               Sắp có
             </span>
           )}
@@ -141,7 +158,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 e.stopPropagation();
                 onStart();
               }}
-              className="touch-target-min min-h-12 w-full rounded-xl bg-game-crimson px-4 text-ios-headline font-semibold text-game-text shadow-[0_8px_20px_-8px_rgba(225,29,72,0.7)] transition-[transform] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-ink focus-visible:ring-offset-2 focus-visible:ring-offset-game-paper"
+              className="touch-target-min min-h-12 w-full rounded-xl bg-game-crimson px-4 font-dossier text-ios-headline font-bold text-game-text shadow-[0_8px_20px_-8px_rgba(225,29,72,0.7)] transition-[transform] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-ink focus-visible:ring-offset-2 focus-visible:ring-offset-game-film-frame"
             >
               Điều tra màn này
             </button>

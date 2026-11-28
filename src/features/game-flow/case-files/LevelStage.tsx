@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { IoChevronBackOutline, IoLockClosedOutline } from 'react-icons/io5';
 import type { HusbandProfile, LevelCardItem } from '../../../shared/contracts/game-flow';
-import { ManilaWash } from './FolderParts';
+import { PaperSurface } from './FolderParts';
 import { LevelFile } from './LevelFile';
 import { SELECT_DEBOUNCE_MS, evaluateLevelCardClick, resolveDefaultLevelIndex } from './pagerLogic';
 import { usePager } from './usePager';
@@ -16,6 +16,8 @@ interface LevelStageProps {
   /** Test seam: starting file index. Defaults to the highest unlocked non-guide case. */
   initialIndex?: number;
 }
+
+const TAB_CLIP = 'polygon(0 100%, 0 32%, 9px 0, calc(100% - 9px) 0, 100% 32%, 100% 100%)';
 
 export const LevelStage: React.FC<LevelStageProps> = ({
   husband,
@@ -76,15 +78,15 @@ export const LevelStage: React.FC<LevelStageProps> = ({
           Đổi hồ sơ
         </button>
         <div className="min-w-0 text-right">
-          <p className="truncate text-ios-subheadline font-semibold text-game-text">{husband.displayName}</p>
-          <p className="text-ios-caption-1 uppercase text-game-text-secondary">{caseCode}</p>
+          <p className="truncate font-dossier text-ios-subheadline font-bold text-game-text">{husband.displayName}</p>
+          <p className="font-dossier text-ios-caption-1 font-bold uppercase text-game-text-secondary">{caseCode}</p>
         </div>
       </div>
 
       <div
         role="tablist"
         aria-label="Danh sách màn"
-        className="flex shrink-0 items-end gap-1.5 overflow-x-auto px-4 pt-1"
+        className="relative z-30 -mb-2 mx-4 flex shrink-0 items-end gap-1 pl-3 pt-1"
       >
         {levels.map((level, idx) => {
           const selected = idx === index;
@@ -97,25 +99,33 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               data-level-tab={level.caseId}
               aria-selected={selected}
               onClick={() => pager.goTo(idx)}
-              className={`relative touch-target-min inline-flex shrink-0 items-center justify-center gap-1.5 rounded-t-lg border border-b-0 px-4 text-ios-subheadline font-semibold tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson/70 ${
-                selected
-                  ? 'min-h-12 border-game-paper-border bg-game-paper text-game-ink'
-                  : 'min-h-11 border-white/10 bg-game-dossier text-game-text-secondary'
+              className={`relative touch-target-min inline-flex shrink-0 items-center justify-center gap-1.5 rounded-t-md px-4 font-dossier text-ios-subheadline font-bold tabular-nums text-game-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
+                selected ? 'min-h-14 -mb-3 pb-3' : 'min-h-11'
               }`}
             >
-              Màn {level.levelNumber}
-              {locked && <IoLockClosedOutline aria-label="Đã khóa" className="h-3.5 w-3.5" />}
+              <span aria-hidden="true" className="absolute inset-0 bg-game-manila-edge" style={{ clipPath: TAB_CLIP }} />
+              <span
+                aria-hidden="true"
+                className={`absolute inset-x-px bottom-0 top-px ${selected ? (level.isGuide ? 'bg-game-paper-slip' : 'bg-game-manila') : 'bg-game-kraft'}`}
+                style={{ clipPath: TAB_CLIP }}
+              >
+                <PaperSurface worn={false} />
+              </span>
+              <span className="relative">Màn {level.levelNumber}</span>
+              {locked && <IoLockClosedOutline aria-label="Đã khóa" className="relative h-3.5 w-3.5" />}
             </button>
           );
         })}
       </div>
 
       <div
-        className="relative mx-4 -mt-2 min-h-0 flex-1"
+        className="relative z-10 mx-4 min-h-0 flex-1"
         style={{ perspective: reduced ? undefined : '1200px' }}
       >
-        <div className="absolute inset-0 rounded-xl rounded-tl-none border border-game-paper-border bg-game-paper shadow-[0_18px_32px_-12px_rgba(0,0,0,0.7)]">
-          <ManilaWash />
+        <div
+          className="absolute inset-0 rounded-xl rounded-tl-none border border-game-ink/30 bg-game-kraft shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+        >
+          <PaperSurface />
         </div>
 
         <div
@@ -148,15 +158,15 @@ export const LevelStage: React.FC<LevelStageProps> = ({
         {!coverGone && (
           <motion.div
             aria-hidden="true"
-            initial={{ rotateY: 0, opacity: 1 }}
-            animate={reduced ? { opacity: 0 } : { rotateY: -112, opacity: [1, 1, 0] }}
-            transition={{ duration: reduced ? 0.15 : 0.32, ease: 'easeInOut' }}
+            initial={{ rotateY: 0 }}
+            animate={reduced ? { opacity: [1, 1, 0] } : { rotateY: -112 }}
+            transition={{ duration: reduced ? 0.18 : 0.34, ease: 'easeInOut' }}
             onAnimationComplete={() => setCoverGone(true)}
-            style={{ transformOrigin: 'left center' }}
-            className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center rounded-xl rounded-tl-none border border-game-paper-border bg-game-paper shadow-[0_18px_32px_-12px_rgba(0,0,0,0.7)]"
+            style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
+            className="pointer-events-none absolute inset-0 z-40 bg-game-manila flex items-center justify-center rounded-xl rounded-tl-none border border-game-ink/30 shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
           >
-            <ManilaWash />
-            <span className="relative text-ios-title-2 font-bold uppercase text-game-ink-secondary">{caseCode}</span>
+            <PaperSurface />
+            <span className="relative font-dossier text-ios-title-2 font-extrabold uppercase text-game-ink">{caseCode}</span>
           </motion.div>
         )}
       </div>

@@ -27,6 +27,11 @@ export default {
           paper: '#F5F1E8',
           'paper-border': '#C9BFAE',
           'paper-slip': '#EAEFF4',
+          // Aged case-folder papers (pre-level selector).
+          manila: '#EAD8AC',
+          kraft: '#D4BB86',
+          'manila-edge': '#9C7A3C',
+          'label-strip': '#F7F1DF',
           polaroid: '#EEF2F6',
           'film-frame': '#FBFAF7',
           sticky: '#F6E271',

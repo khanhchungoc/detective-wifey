@@ -2,7 +2,15 @@ import React from 'react';
 import { motion, useTransform } from 'motion/react';
 import type { MotionValue } from 'motion/react';
 import type { HusbandProfile } from '../../../shared/contracts/game-flow';
-import { ManilaWash, Paperclip, RedactedSilhouette, RedactionBar } from './FolderParts';
+import {
+  AttachedPhoto,
+  CoffeeRing,
+  LabelStrip,
+  PaperSurface,
+  RedactionBar,
+  RubberStamp,
+  Staple,
+} from './FolderParts';
 
 interface HusbandFolderProps {
   husband: HusbandProfile;
@@ -37,67 +45,81 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
   const comingSoon = Boolean(husband.comingSoon);
   const caseCode = husband.caseCode ?? `HỒ SƠ #${String(index + 1).padStart(2, '0')}`;
 
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onActivate();
+    }
+  };
+
   return (
     <motion.div
+      role={isActive ? 'button' : undefined}
+      tabIndex={isActive && !comingSoon ? 0 : -1}
+      aria-label={isActive ? `Mở hồ sơ ${husband.displayName}` : undefined}
+      aria-disabled={isActive && comingSoon ? true : undefined}
       data-husband-id={isActive ? husband.husbandId : undefined}
       data-husband-folder={husband.husbandId}
       onClick={onActivate}
+      onKeyDown={isActive ? onKeyDown : undefined}
       style={{ x, rotateY, scale, opacity, zIndex }}
-      className="absolute inset-y-0 left-0 right-0 mx-auto flex w-[78%] max-w-[22rem] flex-col will-change-transform select-none"
+      className={`absolute inset-y-0 left-0 right-0 mx-auto flex w-[86%] max-w-[24rem] flex-col will-change-transform select-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
+        isActive && !comingSoon ? 'cursor-pointer' : ''
+      }`}
     >
       <div
         data-case-folder-tab="true"
-        className="relative ml-3 flex h-8 w-fit items-center rounded-t-lg border border-b-0 border-game-paper-border bg-game-paper px-3 text-ios-caption-2 font-bold uppercase text-game-ink"
+        className="relative ml-3 flex h-8 w-fit items-center border border-b-0 border-game-ink/25 bg-game-manila px-4 font-dossier text-ios-caption-2 font-extrabold uppercase text-game-ink"
+        style={{
+          clipPath: 'polygon(0 100%, 0 30%, 10px 0, calc(100% - 10px) 0, 100% 30%, 100% 100%)',
+        }}
       >
-        <ManilaWash />
+        <PaperSurface worn={false} />
         <span className="relative">{caseCode}</span>
       </div>
 
-      <div className="relative flex min-h-0 flex-1 flex-col gap-3 rounded-xl rounded-tl-none border border-game-paper-border bg-game-paper p-3 shadow-[0_18px_32px_-12px_rgba(0,0,0,0.7)]">
-        <ManilaWash />
-        <Paperclip className="absolute -top-4 right-6 z-10 h-12 w-5 text-game-ink-secondary" />
+      <div
+        className="relative flex min-h-0 flex-1 flex-col gap-3 rounded-xl rounded-tl-none border border-game-ink/25 bg-game-manila p-4 shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+      >
+        <PaperSurface />
+        <Staple className="absolute left-3 top-2.5 h-3 w-8 -rotate-12" />
+        <CoffeeRing className="absolute -bottom-3 -right-3 h-24 w-24 rotate-12" />
 
-        <div className="relative min-h-0 flex-1 overflow-hidden rounded-lg border border-game-ink/20 bg-game-backdrop">
-          {comingSoon ? (
-            <RedactedSilhouette className="absolute inset-0 h-full w-full" />
-          ) : (
-            <img
-              src={husband.portraitUrl}
-              alt={husband.displayName}
-              draggable={false}
-              className="absolute inset-0 h-full w-full object-cover object-top"
-            />
-          )}
-          <span
-            data-case-status-stamp="true"
-            data-coming-soon-stamp={comingSoon ? 'true' : undefined}
-            className={`absolute bottom-3 right-3 -rotate-6 rounded-sm border-2 bg-game-paper/90 px-2 py-0.5 text-ios-caption-2 font-bold uppercase ${
-              comingSoon
-                ? 'border-game-ink-secondary text-game-ink-secondary'
-                : 'border-game-crimson text-game-crimson'
-            }`}
+        <LabelStrip className="-rotate-1">
+          <h2 className="font-dossier text-ios-title-2 font-extrabold uppercase leading-tight text-game-ink">
+            {husband.displayName}
+          </h2>
+        </LabelStrip>
+
+        <div className="relative flex min-h-0 flex-1 items-center justify-center pt-3">
+          <AttachedPhoto src={comingSoon ? null : husband.portraitUrl} className="h-full" />
+          <RubberStamp
+            tone={comingSoon ? 'slate' : 'red'}
+            dataAttrs={{
+              'data-case-status-stamp': 'true',
+              'data-coming-soon-stamp': comingSoon ? 'true' : undefined,
+            }}
+            className="absolute bottom-2 right-0 -rotate-12 bg-game-paper/40"
           >
             {comingSoon ? 'Sắp ra mắt' : 'Đang theo dõi'}
-          </span>
+          </RubberStamp>
         </div>
 
         <div className="relative flex shrink-0 flex-col gap-1">
-          <h2 className="text-ios-title-2 font-bold leading-tight text-game-ink">
-            {husband.displayName}
-          </h2>
           {comingSoon ? (
             <>
               <span className="sr-only">Thông tin đang bị che</span>
-              <RedactionBar className="mt-1 w-3/4" />
+              <RedactionBar className="w-3/4" />
               <RedactionBar className="w-full" />
               <RedactionBar className="w-1/2" />
             </>
           ) : (
             <>
-              <p className="text-ios-footnote leading-snug text-game-ink-secondary">
+              <p className="text-ios-footnote font-medium leading-snug text-game-ink">
                 {husband.age} tuổi · {husband.occupation}
               </p>
-              <p className="mt-1 line-clamp-2 border-l-2 border-game-crimson/60 pl-2 text-ios-footnote italic leading-snug text-game-ink">
+              <p className="line-clamp-2 -rotate-1 font-handwriting text-ios-footnote leading-snug text-game-ink">
                 {husband.teaserQuote}
               </p>
             </>

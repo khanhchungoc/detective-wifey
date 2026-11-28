@@ -29,8 +29,6 @@ export const HusbandStage: React.FC<HusbandStageProps> = ({
     strideRatio: 0.69,
     onIndexChange,
   });
-  const active = husbands[activeIndex] ?? null;
-  const canOpen = Boolean(active) && !active?.comingSoon;
   const canCycle = husbands.length > 1;
 
   return (
@@ -116,15 +114,6 @@ export const HusbandStage: React.FC<HusbandStageProps> = ({
             <IoChevronForwardOutline className="h-5 w-5" />
           </button>
         </div>
-
-        <button
-          type="button"
-          onClick={onOpen}
-          disabled={!canOpen}
-          className="touch-target-min min-h-12 w-full rounded-xl bg-game-crimson px-4 text-ios-headline font-semibold text-game-text shadow-[0_8px_20px_-8px_rgba(225,29,72,0.7)] transition-[transform,opacity] active:scale-[0.98] disabled:bg-game-elevated disabled:text-game-text-muted disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 focus-visible:ring-offset-2 focus-visible:ring-offset-game-canvas"
-        >
-          Mở hồ sơ
-        </button>
       </div>
     </section>
   );

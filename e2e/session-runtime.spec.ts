@@ -119,7 +119,7 @@ test.describe('Session & Case Runtime @smoke', () => {
 
     await page.goto('/');
     await page.getByRole('button', { name: 'Bắt đầu' }).click();
-    await page.getByRole('button', { name: 'Mở hồ sơ' }).click();
+    await page.locator('[data-husband-id="husband_hoang"]').click();
     await page.locator('[data-level-tab="case_02"]').click();
 
     const locked = page.locator('[data-level-file="case_02"]');

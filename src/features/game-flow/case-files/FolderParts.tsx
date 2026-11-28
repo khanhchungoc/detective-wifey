@@ -1,82 +1,166 @@
 import React from 'react';
 
+/**
+ * Aged case-folder paper. Every texture here is a STATIC layer (data-URI SVG noise, gradients,
+ * inset shadows). Nothing is animated or re-filtered per frame, so drags only move transforms.
+ */
+
+const svgUri = (svg: string) => `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+
+/** Speckled grain: dark brown flecks with noise-driven alpha. */
+const GRAIN_URI = svgUri(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="g" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.30  0 0 0 0 0.20  0 0 0 0 0.07  1.9 0 0 0 -0.78"/></filter><rect width="220" height="220" filter="url(#g)"/></svg>`,
+);
+
+/** Long soft fibres plus cloudy blotches, for uneven paper tone. */
+const FIBER_URI = svgUri(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="f" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.35" numOctaves="2" seed="3" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.30  0 0 0 0 0.10  0.9 0 0 0 -0.34"/></filter><rect width="300" height="300" filter="url(#f)"/></svg>`,
+);
+
+const BLOTCH_URI = svgUri(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="b" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" seed="11" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.50  0 0 0 0 0.33  0 0 0 0 0.12  1.8 0 0 0 -0.8"/></filter><rect width="400" height="400" filter="url(#b)"/></svg>`,
+);
+
+/** Rough ink: erodes a stamp with speckles. Used as a mask on a static element. */
+const INK_MASK_URI = svgUri(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="m" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="5" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.2 0 0 0 2.75"/></filter><rect width="160" height="160" filter="url(#m)"/></svg>`,
+);
+
+/** Paper surface: grain + fibres + blotches + worn, darker edges + corner scuffs. Parent must be `relative`. */
+export const PaperSurface: React.FC<{ worn?: boolean }> = ({ worn = true }) => (
+  <>
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 rounded-[inherit]"
+      style={{
+        backgroundImage: `${BLOTCH_URI}, ${FIBER_URI}, ${GRAIN_URI}`,
+        backgroundSize: '400px 400px, 300px 300px, 220px 220px',
+      }}
+    />
+    {worn && (
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[inherit]"
+        style={{
+          boxShadow:
+            'inset 0 0 14px 1px rgba(122,86,28,0.45), inset 3px 0 9px -2px rgba(122,86,28,0.35), inset 0 -5px 12px -3px rgba(100,68,20,0.4)',
+          backgroundImage:
+            'radial-gradient(circle at 0% 0%, rgba(110,75,25,0.38) 0, transparent 22%), radial-gradient(circle at 100% 100%, rgba(110,75,25,0.34) 0, transparent 26%), radial-gradient(circle at 100% 0%, rgba(110,75,25,0.2) 0, transparent 16%)',
+        }}
+      />
+    )}
+  </>
+);
+
+/** Coffee ring stain, drawn once as a static SVG. */
+export const CoffeeRing: React.FC<{ className?: string }> = ({ className }) => (
+  <svg aria-hidden="true" viewBox="0 0 100 100" className={`pointer-events-none ${className ?? ''}`} fill="none">
+    <circle cx="50" cy="50" r="38" fill="rgba(120,72,24,0.07)" />
+    <circle cx="50" cy="50" r="38" stroke="rgba(110,64,20,0.34)" strokeWidth="3.2" strokeDasharray="190 50" strokeLinecap="round" />
+    <circle cx="51" cy="49" r="36" stroke="rgba(110,64,20,0.16)" strokeWidth="1.4" />
+    <circle cx="79" cy="30" r="2.6" fill="rgba(110,64,20,0.3)" />
+  </svg>
+);
+
+/** Metal staple holding the corner of the sheet. */
+export const Staple: React.FC<{ className?: string }> = ({ className }) => (
+  <svg aria-hidden="true" viewBox="0 0 40 14" className={`pointer-events-none ${className ?? ''}`} fill="none">
+    <path d="M3 8h34" stroke="rgba(60,40,10,0.35)" strokeWidth="3.6" strokeLinecap="round" />
+    <path d="M3 6.5h34" stroke="#8B93A0" strokeWidth="3" strokeLinecap="round" />
+    <path d="M4 5.6h32" stroke="#D5DAE2" strokeWidth="1" strokeLinecap="round" />
+  </svg>
+);
+
 /** Paper-clip drawn inline so it ships with the folder. */
 export const Paperclip: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    aria-hidden="true"
-    viewBox="0 0 24 56"
-    fill="none"
-    className={className}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path
-      d="M8 40V14a5 5 0 0 1 10 0v30a8 8 0 0 1-16 0V18"
-      stroke="currentColor"
-      strokeWidth="2.4"
-    />
+  <svg aria-hidden="true" viewBox="0 0 24 56" fill="none" className={className} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M8 40V14a5 5 0 0 1 10 0v30a8 8 0 0 1-16 0V18" stroke="rgba(40,30,10,0.35)" strokeWidth="3" transform="translate(1.2 1.6)" />
+    <path d="M8 40V14a5 5 0 0 1 10 0v30a8 8 0 0 1-16 0V18" stroke="#7B8494" strokeWidth="2.4" />
+    <path d="M8 40V14a5 5 0 0 1 10 0" stroke="#D5DAE2" strokeWidth="0.8" />
   </svg>
+);
+
+/** Rubber stamp with rough, uneven ink. The mask is a static speckle layer. */
+export const RubberStamp: React.FC<{
+  children: React.ReactNode;
+  tone: 'red' | 'slate';
+  className?: string;
+  dataAttrs?: Record<string, string | undefined>;
+}> = ({ children, tone, className, dataAttrs }) => (
+  <span
+    {...dataAttrs}
+    style={{
+      WebkitMaskImage: INK_MASK_URI,
+      maskImage: INK_MASK_URI,
+      WebkitMaskSize: '160px 160px',
+      maskSize: '160px 160px',
+    }}
+    className={`inline-block rounded-sm border-2 px-2 py-0.5 font-dossier text-ios-caption-2 font-extrabold uppercase ${
+      tone === 'red' ? 'border-game-crimson-deep text-game-crimson-deep' : 'border-game-ink text-game-ink'
+    } ${className ?? ''}`}
+  >
+    {children}
+  </span>
+);
+
+/** Typed label strip glued on the folder. */
+export const LabelStrip: React.FC<{ className?: string; children: React.ReactNode }> = ({ className, children }) => (
+  <div
+    className={`relative rounded-[2px] border border-game-ink/20 bg-game-label-strip px-3 py-1.5 shadow-[0_2px_3px_-1px_rgba(60,40,10,0.45)] ${className ?? ''}`}
+  >
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{ backgroundImage: `${GRAIN_URI}`, backgroundSize: '220px 220px', opacity: 0.55 }}
+    />
+    <div className="relative">{children}</div>
+  </div>
 );
 
 /** Redacted silhouette for dossiers that are not released yet. Never uses a real portrait. */
 export const RedactedSilhouette: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    aria-hidden="true"
-    viewBox="0 0 120 140"
-    preserveAspectRatio="xMidYMid slice"
-    className={className}
-  >
+  <svg aria-hidden="true" viewBox="0 0 120 160" preserveAspectRatio="xMidYMid slice" className={className}>
     <defs>
       <pattern id="redacted-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
         <rect width="8" height="8" fill="#141A22" />
         <rect width="3" height="8" fill="#1B2330" />
       </pattern>
     </defs>
-    <rect width="120" height="140" fill="url(#redacted-hatch)" />
-    <circle cx="60" cy="52" r="24" fill="#080B0F" />
-    <path d="M14 140c0-30 20-50 46-50s46 20 46 50z" fill="#080B0F" />
-    <rect x="30" y="44" width="60" height="12" fill="#000000" />
-    <rect x="30" y="44" width="60" height="12" fill="none" stroke="#64748B" strokeWidth="0.6" strokeDasharray="3 2" />
+    <rect width="120" height="160" fill="url(#redacted-hatch)" />
+    <circle cx="60" cy="62" r="26" fill="#080B0F" />
+    <path d="M10 160c0-34 22-56 50-56s50 22 50 56z" fill="#080B0F" />
+    <rect x="26" y="54" width="68" height="14" fill="#000000" />
   </svg>
 );
 
 export const RedactionBar: React.FC<{ className?: string }> = ({ className }) => (
-  <span
-    aria-hidden="true"
-    className={`block h-3.5 rounded-sm bg-black ${className ?? ''}`}
-  />
+  <span aria-hidden="true" className={`block h-3.5 rounded-sm bg-black ${className ?? ''}`} />
 );
 
-/** Manila paper texture: tan wash plus a faint fiber gradient. Pure CSS, token colors only. */
-export const ManilaWash: React.FC = () => (
-  <span
-    aria-hidden="true"
-    className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-game-tape/45 via-game-tape/20 to-game-tape/40"
-  />
-);
-
-/** Faint ruled-paper lines (ink-secondary at low alpha) so empty paper reads as a form, not a void. */
-export const RuledLines: React.FC = () => (
-  <span
-    aria-hidden="true"
-    className="pointer-events-none absolute inset-x-4 top-1/2 bottom-24 opacity-70"
-    style={{
-      backgroundImage:
-        'repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(71,85,105,0.22) 27px, rgba(71,85,105,0.22) 28px)',
-    }}
-  />
-);
-
-/** Taped polaroid of the subject, clipped to the case file. */
-export const SubjectPolaroid: React.FC<{ src: string }> = ({ src }) => (
-  <figure className="relative ml-auto mr-1 w-28 rotate-3 rounded-sm bg-game-film-frame p-1.5 pb-5 shadow-[0_6px_14px_-6px_rgba(0,0,0,0.6)]">
-    <span
-      aria-hidden="true"
-      className="absolute -top-2 left-1/2 h-4 w-12 -translate-x-1/2 -rotate-3 bg-game-tape/70"
-    />
-    <img src={src} alt="" draggable={false} className="aspect-square w-full object-cover object-top" />
-    <figcaption className="absolute inset-x-1 bottom-1 truncate text-center text-ios-caption-2 text-game-ink-secondary">
-      Đối tượng
-    </figcaption>
+/**
+ * Photo of the subject: 3:4, head and shoulders, white print border, slight tilt, paper-clipped.
+ * `src` null renders the redacted placeholder instead.
+ */
+export const AttachedPhoto: React.FC<{
+  src: string | null;
+  className?: string;
+  tilt?: string;
+}> = ({ src, className, tilt = '-rotate-2' }) => (
+  <figure
+    className={`relative ${tilt} rounded-[2px] bg-game-film-frame p-1.5 shadow-[0_6px_12px_-4px_rgba(60,40,10,0.6),0_1px_2px_rgba(60,40,10,0.4)] ${className ?? ''}`}
+  >
+    <div className="relative aspect-[3/4] h-full overflow-hidden bg-game-backdrop">
+      {src ? (
+        <img src={src} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover object-center" />
+      ) : (
+        <RedactedSilhouette className="absolute inset-0 h-full w-full" />
+      )}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.25)' }}
+      />
+    </div>
+    <Paperclip className="absolute -top-5 right-3 z-10 h-11 w-5" />
   </figure>
 );

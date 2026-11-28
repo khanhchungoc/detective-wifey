@@ -112,13 +112,15 @@ const renderLevelStage = (initialIndex?: number) =>
   );
 
 describe('LevelSelectorHub husband stage', () => {
-  it('opens on the husband stage with the case file header and one primary CTA', () => {
+  it('opens on the husband stage with the case file header and a tappable folder', () => {
     const html = renderHub();
     expect(html).toContain('data-selector-stage="husbands"');
     expect(html).toContain('Hồ sơ vụ án');
     expect(html).not.toContain('Chọn màn');
     expect(html).toContain('aria-label="Tắt âm thanh"');
-    expect(html).toContain('>Mở hồ sơ<');
+    expect(html).not.toContain('>Mở hồ sơ<');
+    expect(html).toContain('aria-label="Mở hồ sơ Nguyễn Huy Hoàng"');
+    expect(html).toMatch(/role="button"[^>]*tabindex="0"|tabindex="0"[^>]*role="button"/);
     expect(html).not.toContain('>Đổi hồ sơ<');
     expect(html).toContain('data-husband-id="hoang"');
     expect(html).not.toContain('data-husband-id="tuan"');
@@ -158,11 +160,13 @@ describe('LevelSelectorHub husband stage', () => {
     expect(html).toContain('Thông tin đang bị che');
     expect(html).not.toContain('Kiến trúc sư trưởng');
     expect(html).not.toContain('Công trình ở xa');
-    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Mở hồ sơ<\/button>/);
+    expect(html).toContain('aria-disabled="true"');
+    expect(html).toContain('aria-label="Mở hồ sơ Trần Quốc Tuấn"');
+    expect(html).not.toMatch(/data-husband-id="tuan"[^>]*tabindex="0"/);
   });
 
-  it('enables the open button for a released husband', () => {
-    expect(renderHub()).not.toMatch(/<button[^>]*disabled=""[^>]*>Mở hồ sơ<\/button>/);
+  it('keeps a released husband folder openable (no aria-disabled)', () => {
+    expect(renderHub()).not.toContain('aria-disabled');
   });
 });
 
