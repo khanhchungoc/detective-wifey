@@ -149,7 +149,7 @@ describe('US-004 banking inspection', () => {
     expect(evidence.source).toMatchObject({ caseId: caseData.caseId, recordId: 'test-source', clueRefId: 'CLUE-BANK-05' });
     expect(evidence.source?.snippet).toContain(row.memo);
     const vault = bankingEvidence(caseData, { id: 'vault' }, 'Hũ từ dữ liệu', 'Nội dung');
-    expect(vault.suspectToTag).toBe(caseData.husbandName);
+    expect(vault.suspectToTag).toBe(caseData.husband.shortName);
   });
 
   it('persists evidence source metadata through the existing repository', async () => {

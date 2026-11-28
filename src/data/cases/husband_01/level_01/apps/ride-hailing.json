@@ -5,7 +5,7 @@
       "time": "14/10/2026 08:20",
       "cost": "29.000đ",
       "pickup": "Cà phê đen ít đá, giao Technosoft",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "driver": "Thanh toán bằng số dư ví",
       "timestamp": "14/10/2026 08:20"
     },
@@ -32,7 +32,7 @@
       "time": "11/10/2026 11:45",
       "cost": "45.000đ",
       "pickup": "Cơm gà văn phòng, một phần, ít cay, giao Technosoft",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "driver": "Thanh toán bằng số dư ví",
       "timestamp": "11/10/2026 11:45"
     },
@@ -40,7 +40,7 @@
       "id": "trip_005",
       "time": "10/10/2026 18:10",
       "cost": "41.000đ",
-      "pickup": "Technosoft",
+      "pickupOrgId": "org_001",
       "dropoff": "Nhà, xe máy, hoàn thành",
       "driver": "Thanh toán bằng số dư ví",
       "timestamp": "10/10/2026 18:10"
@@ -58,7 +58,7 @@
       "id": "trip_007",
       "time": "07/10/2026 08:00",
       "pickup": "Nhà",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "cost": "38.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "07/10/2026 08:00"
@@ -76,7 +76,7 @@
       "id": "trip_009",
       "time": "03/10/2026 11:45",
       "pickup": "Cơm gà",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "cost": "49.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "03/10/2026 11:45"
@@ -93,7 +93,7 @@
     {
       "id": "trip_011",
       "time": "30/09/2026 17:50",
-      "pickup": "Technosoft",
+      "pickupOrgId": "org_001",
       "dropoff": "Nhà",
       "cost": "40.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
@@ -103,7 +103,7 @@
       "id": "trip_012",
       "time": "29/09/2026 08:00",
       "pickup": "Nhà",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "cost": "38.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "29/09/2026 08:00"
@@ -139,7 +139,7 @@
       "id": "trip_016",
       "time": "25/09/2026 12:00",
       "pickup": "Cơm văn phòng",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "cost": "45.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "25/09/2026 12:00"
@@ -147,7 +147,7 @@
     {
       "id": "trip_017",
       "time": "23/09/2026 18:15",
-      "pickup": "Technosoft",
+      "pickupOrgId": "org_001",
       "dropoff": "Nhà",
       "cost": "42.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
@@ -157,7 +157,7 @@
       "id": "trip_018",
       "time": "23/09/2026 08:10",
       "pickup": "Nhà",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "cost": "39.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "23/09/2026 08:10"
@@ -165,7 +165,7 @@
     {
       "id": "trip_019",
       "time": "21/09/2026 18:00",
-      "pickup": "Technosoft",
+      "pickupOrgId": "org_001",
       "dropoff": "Nhà",
       "cost": "41.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
@@ -175,7 +175,7 @@
       "id": "trip_020",
       "time": "21/09/2026 08:00",
       "pickup": "Nhà",
-      "dropoff": "Technosoft",
+      "dropoffOrgId": "org_001",
       "cost": "38.000đ",
       "driver": "Đã hoàn thành · Thanh toán bằng số dư ví",
       "timestamp": "21/09/2026 08:00"

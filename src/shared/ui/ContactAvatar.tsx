@@ -7,39 +7,7 @@ import {
 } from 'react-icons/io5';
 import contactAvatarSheet from '../assets/contact-avatar-persona-sheet.webp';
 import kindergartenChildAvatar from '../assets/kindergarten-child-avatar.webp';
-
-const AVATAR_PROFILES: Array<{ index: number; names: string[] }> = [
-  { index: 0, names: ['Anh Tuấn Thợ Điện'] }, // Anonymous electrician tools preserve the alias mystery.
-  { index: 1, names: ['Lan Anh Kế Toán'] }, // Ordinary workplace group photo.
-  { index: 2, names: ['Thảo PT California', 'Thảo PT Gym'] }, // Full-body gym mirror photo.
-  { index: 3, names: ['Bé Ngọc KTX'] }, // Anime student avatar.
-  { index: 4, names: ['Mai Lễ Tân'] }, // Casual side-angle lobby selfie.
-  { index: 5, names: ['Mẹ Ở Quê', 'Mẹ'] }, // Her garden and vegetables.
-  { index: 6, names: ['Vợ'] }, // Candid adult couple photo.
-  { index: 7, names: ['Tuấn Chó'] }, // Amateur football team photo from a distance.
-  { index: 8, names: ['Nam Dev'] }, // Cat photo beside a laptop.
-  { index: 9, names: ['Bách Dev'] }, // Anime developer avatar.
-  { index: 10, names: ['Anh Bách QLDA - Ban Quản Lý Toà Nhà'] }, // Distant team gathering photo.
-  { index: 11, names: ['Bác Bảo Vệ Chung Cư'] }, // Everyday security-booth photo.
-  { index: 12, names: ['Đức Nghĩa', 'Khoa BE'] }, // Landscape photo; an ordinary choice that never leaks who is behind an alias.
-  { index: 13, names: ['Bé Mèo Dễ Thương'] }, // Cat profile photo.
-  { index: 14, names: ['Bé Trang SV (0904***888)', 'Bé Trang SV'] }, // Off-center cafe selfie.
-  { index: 15, names: ['Nguyễn Thị Thu Hương', 'Thu Hương', 'Nguyễn Thị Thu Hương · Marketing', 'Thu Huong'] }, // Marketing specialist persona.
-];
-
-const normalize = (name: string) =>
-  name
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/gi, 'd')
-    .toLocaleLowerCase('vi')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-
-const avatarIndexByName = new Map<string, number>();
-for (const profile of AVATAR_PROFILES) {
-  for (const name of profile.names) avatarIndexByName.set(normalize(name), profile.index);
-}
+import { avatarIndexForName, normalizeAvatarName as normalize } from './avatarDirectory';
 
 const groupNames = new Set([
   'Alpha Team BA & Dev',
@@ -77,13 +45,15 @@ for (const names of [groupNames, flowerShopNames, propertyOfficeNames, serviceNa
 
 type ContactAvatarProps = {
   name: string;
+  /** Photo slot in the avatar sheet. Falls back to the name directory for name-only callers. */
+  avatarIndex?: number;
   size?: number;
   shape?: 'circle' | 'square';
   fluid?: boolean;
   className?: string;
 };
 
-export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
+export function ContactAvatar({ name, avatarIndex, size = 44, shape = 'circle', fluid = false, className = '' }: ContactAvatarProps) {
   const normalizedName = normalize(name);
   const dimensions: CSSProperties = fluid ? { width: '100%', height: '100%' } : { width: size, height: size, flexShrink: 0 };
   const displayClass = fluid ? 'flex' : 'inline-flex';
@@ -132,7 +102,7 @@ export function ContactAvatar({ name, size = 44, shape = 'circle', fluid = false
     );
   }
 
-  const index = avatarIndexByName.get(normalizedName);
+  const index = avatarIndex ?? avatarIndexForName(name);
   // Names without an assigned photo get an initial: borrowing another persona's photo would
   // show the wrong person (e.g. a colleague wearing the receptionist's face).
   if (index === undefined) {

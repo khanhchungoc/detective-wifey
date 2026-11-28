@@ -34,9 +34,9 @@
 | `friend_minh_bc` | Minh Bằng Cổ | Vũ Văn Minh | 1994 (32) | Thịnh `em`, gọi `anh` | IT | Chưa có người yêu; nhà Trung Kính (cùng khu với Thịnh) | Mê chơi game Nintendo Switch |
 | `friend_namzua` | Namzua | Nguyễn Ức Nam | 1995 (31) | Cùng tuổi: `ông - tôi` | Dev Frontend, công ty outsource lớn nhất Việt Nam | 1 vợ, 1 con, ở chung cư | Đẹp trai, tập gym, chơi cầu lông; chơi poker |
 | `friend_linh` | Linh Yoyo | Linh (chưa rõ họ) | 1995 (31) | Cùng tuổi: `bà - tôi` hoặc gọi tên | Kế toán | (chưa rõ) | Hào phóng, hay bao cả nhóm |
-| `friend_bach` | Bách Dev | Trần Bách | 1995 (31) | Cùng tuổi: `ông - tôi` | Dev | Mới có người yêu; nhà Tây Tựu | Trồng rau ở nhà; gợi ý gán vào liên hệ "Bách Dev" đã có trong Màn 1 (xem mục 5) |
+| `friend_bach` (`person_011`) | Bách Dev | Trần Bách | 1995 (31) | Cùng tuổi: `ông - tôi` | Dev | Mới có người yêu; nhà Tây Tựu | Trồng rau ở nhà; gợi ý gán vào liên hệ "Bách Dev" đã có trong Màn 1 (xem mục 5) |
 | `friend_phuong` | Phương Bé | Trần Thị Phương | 1996 (30) | Thịnh `anh`, gọi `em` | Dev Backend | Mới có người yêu kém tuổi | Hay "phát cơm chó"; thần tượng anh Bình và anh Chính; cực kỳ đảm đang |
-| `char_best_friend` | Tuấn Chó | Nguyễn Tuấn | 1997 (29) | Bạn thân: `ông - tôi` | Dev Frontend | Độc thân, chưa người yêu | **Đã thay "Tuấn Đụt" làm bạn thân cố định** (xem hồ sơ người chồng). Vui tính, trẻ con; thích cầu lông; thích thịt chó; chơi poker |
+| `char_best_friend` (`person_009`) | Tuấn Chó | Nguyễn Tuấn | 1997 (29) | Bạn thân: `ông - tôi` | Dev Frontend | Độc thân, chưa người yêu | **Đã thay "Tuấn Đụt" làm bạn thân cố định** (xem hồ sơ người chồng). Vui tính, trẻ con; thích cầu lông; thích thịt chó; chơi poker |
 | `friend_trung` | Trung Khỉm | Nguyễn Trung | 1997 (29) | Thịnh `anh`, gọi `em` (hoặc `ông - tôi` khi đùa) | Dev Backend, công ty IT khác công ty của Namzua | 1 vợ, 1 con mèo | Đầu óc "bậy bạ", thích gái xinh ("sếch giốc"); chơi poker |
 | `friend_duong` | Dương Ocean | Dương Trần | 1998 (28) | Thịnh `anh`, gọi `em` | IT | (chưa rõ) | Đẹp trai, cao, tập gym, "sát gái"; câu cửa miệng: "nhất buổi trưa, nhì trời mưa" |
 | `friend_trang` | Trang Bịp | Hồng Trang | 1999 (27) | Thịnh `anh`, gọi `em` | Bí ẩn | Nhà giàu, quê Vinh; độc thân | Câu cửa miệng: cần người yêu có 500 tỷ |
@@ -68,7 +68,7 @@ Thành viên: **A9 (Chính), Namzua, Bình Đại Bàng, Sếp Tuấn Anh, Tuấ
 ## 5. Trùng tên cần lưu ý
 
 - **Tuấn**: "Tuấn Đụt" đã đổi thành "Tuấn Chó" trong dữ liệu Màn 1 và hồ sơ. Vẫn còn "Anh Tuấn Thợ Điện" và "Sếp Tuấn Anh": luôn hiện đủ tên lưu danh bạ. Chat cũ của Tuấn Chó vẫn nói chuyện đá bóng (ảnh đại diện là ảnh đội bóng); muốn khớp sở thích cầu lông thì sửa ở lần chỉnh Màn 1 sau.
-- **Nam**: Đã có "Nam Dev" (đồng nghiệp Technosoft, `char_boss`). "Namzua" làm ở công ty khác; luôn hiện tên "Namzua". Sếp thật của Thịnh là "Sếp Tuấn Anh".
+- **Nam**: Đã có "Nam Dev" (đồng nghiệp Technosoft, `char_boss`, `person_010`). "Namzua" làm ở công ty khác; luôn hiện tên "Namzua". Sếp thật của Thịnh là "Sếp Tuấn Anh".
 - **Minh**: Hai bạn tên Minh. Luôn dùng "Minh Worm" và "Minh Bằng Cổ", không dùng "Minh" trơn.
 - **Bách**: Màn 1 đã có "Bách Dev" (`contact_014`, nhóm "Team Dev Technosoft"). Trần Bách trùng tên và nghề nên dùng luôn cho liên hệ này, không tạo Bách thứ hai. Chat cũ không mâu thuẫn; có thể thêm chi tiết rau nhà trồng hoặc người yêu mới ở màn sau.
 - **Kế toán**: Đã có "Lan Anh Kế Toán" ở Technosoft. Linh Yoyo làm kế toán ở nơi khác; lưu "Linh Yoyo", không gắn chữ "Kế Toán".

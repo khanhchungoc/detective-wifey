@@ -50,7 +50,7 @@ export function EcommerceNotificationView({
           {(n.orderId || n.trackingId) && (
             <p className="ecommerce-meta">
               {[
-                n.orderId && `Đơn hàng: ${n.orderId}`,
+                n.orderId && `Đơn hàng: ${order?.displayCode ?? n.orderId}`,
                 n.trackingId && `Mã vận đơn: ${n.trackingId}`,
               ]
                 .filter(Boolean)
@@ -68,7 +68,7 @@ export function EcommerceNotificationView({
           caseId,
           `notification:${n.id}`,
           n.title,
-          [n.snippet, n.orderId, n.trackingId].filter(Boolean).join('\n'),
+          [n.snippet, order?.displayCode ?? n.orderId, n.trackingId].filter(Boolean).join('\n'),
           n,
           n.timestamp,
         )}
@@ -79,7 +79,7 @@ export function EcommerceNotificationView({
             type="button"
             className="ecommerce-card ecommerce-notification"
             onClick={() => onOpen(order)}
-            aria-label={`Xem đơn ${order.orderId}`}
+            aria-label={`Xem đơn ${order.displayCode ?? order.orderId}`}
           >
             {content}
           </button>

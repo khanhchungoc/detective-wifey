@@ -82,12 +82,12 @@ export function EcommerceOrderHistory({
             type="button"
             className="ecommerce-card ecommerce-order"
             onClick={() => onOpen(order)}
-            aria-label={`Xem đơn ${order.orderId}`}
+            aria-label={`Xem đơn ${order.displayCode ?? order.orderId}`}
           >
             <div className="ecommerce-row">
               <strong>
                 {order.isFavorite && <span className="ecommerce-favorite">Yêu thích</span>}
-                {order.shopName ?? order.orderId}
+                {order.shopName ?? order.displayCode ?? order.orderId}
               </strong>
               <span className="ecommerce-order-status">{orderStatus(order.status)}</span>
             </div>
@@ -249,7 +249,7 @@ export function EcommerceOrderDetailDrawer({
           >
             <div className="ecommerce-card">
               <strong>{orderStatus(order.status)}</strong>
-              <p>Mã đơn: {order.orderId}</p>
+              <p>Mã đơn: {order.displayCode ?? order.orderId}</p>
               <p>Ngày đặt: {order.orderDate ?? '-'}</p>
             </div>
             <section className="ecommerce-card">

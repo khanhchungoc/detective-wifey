@@ -2,21 +2,21 @@
   "posts": [
     {
       "id": "post_001",
-      "author": "Bách Dev",
+      "authorContactId": "contact_014",
       "time": "14/10",
-      "content": "Cập nhật dự án nội bộ. Thịnh bình luận: Cảm ơn cả nhóm."
+      "content": "Cập nhật dự án nội bộ. {{husband.shortName}} bình luận: Cảm ơn cả nhóm."
     },
     {
       "id": "post_002",
-      "author": "Technosoft",
+      "authorOrgId": "org_001",
       "time": "13/10",
       "content": "Buổi chia sẻ kỹ thuật tuần sau: khả năng tiếp cận trong giao diện."
     },
     {
       "id": "post_003",
-      "author": "Nam Dev",
+      "authorContactId": "contact_004",
       "time": "12/10",
-      "content": "Đã hoàn thành khóa TypeScript. Thịnh bình luận: Chúc mừng ông."
+      "content": "Đã hoàn thành khóa TypeScript. {{husband.shortName}} bình luận: Chúc mừng ông."
     },
     {
       "id": "post_004",
@@ -28,47 +28,47 @@
       "id": "post_005",
       "author": "Đồng nghiệp",
       "time": "10/10",
-      "content": "Tách giao diện khỏi dữ liệu để dễ kiểm thử. Thịnh đã lưu bài viết."
+      "content": "Tách giao diện khỏi dữ liệu để dễ kiểm thử. {{husband.shortName}} đã lưu bài viết."
     },
     {
       "id": "post_006",
-      "author": "Nam Dev",
+      "authorContactId": "contact_004",
       "time": "22/09",
       "content": "Chia sẻ cách viết kiểm thử giao diện dễ bảo trì."
     },
     {
       "id": "post_007",
-      "author": "Technosoft",
+      "authorOrgId": "org_001",
       "time": "23/09",
       "content": "Nhóm kỹ thuật mở buổi trao đổi về khả năng tiếp cận."
     },
     {
       "id": "post_008",
-      "author": "Bách Dev",
+      "authorContactId": "contact_014",
       "time": "24/09",
       "content": "Vừa hoàn thành khóa học quản lý trạng thái."
     },
     {
       "id": "post_009",
-      "author": "Nam Dev",
+      "authorContactId": "contact_004",
       "time": "25/09",
       "content": "Ghi chú sau một buổi đọc mã cùng đồng nghiệp."
     },
     {
       "id": "post_010",
-      "author": "Technosoft",
+      "authorOrgId": "org_001",
       "time": "26/09",
       "content": "Tài liệu hướng dẫn kiểm tra lỗi được cập nhật."
     },
     {
       "id": "post_011",
-      "author": "Bách Dev",
+      "authorContactId": "contact_014",
       "time": "27/09",
       "content": "Cảm ơn mọi người đã góp ý cho bản trình bày."
     },
     {
       "id": "post_012",
-      "author": "Nam Dev",
+      "authorContactId": "contact_004",
       "time": "28/09",
       "content": "Nhóm đang tuyển thêm đồng nghiệp frontend."
     }

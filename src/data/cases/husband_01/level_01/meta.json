@@ -1,7 +1,6 @@
 {
   "caseId": "case_01",
   "husbandId": "husband_01",
-  "husbandName": "Thịnh",
   "levelNumber": 1,
   "allowedStrikes": 5,
   "groundTruth": {
@@ -13,32 +12,39 @@
   "suspectPool": [
     {
       "suspectId": "suspect_01",
-      "displayName": "Nguyễn Thị Thu Hương · Marketing",
+      "personId": "person_003",
+      "contactId": "contact_011",
+      "displayTitle": "Marketing",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
       "suspectId": "suspect_02",
-      "displayName": "Anh Tuấn Thợ Điện",
+      "personId": "person_004",
+      "contactId": "contact_013",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
       "suspectId": "suspect_03",
-      "displayName": "Bé Ngọc KTX",
+      "personId": "person_005",
+      "contactId": "contact_003",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
       "suspectId": "suspect_04",
-      "displayName": "Lan Anh Kế Toán",
+      "personId": "person_006",
+      "contactId": "contact_007",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
       "suspectId": "suspect_05",
-      "displayName": "Thảo PT California",
+      "personId": "person_007",
+      "contactId": "contact_005",
       "initialDiscoveredApp": "internet-messaging"
     },
     {
       "suspectId": "suspect_06",
-      "displayName": "Mai Lễ Tân",
+      "personId": "person_008",
+      "contactId": "contact_009",
       "initialDiscoveredApp": "internet-messaging"
     }
   ],

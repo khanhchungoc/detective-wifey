@@ -16,6 +16,10 @@ export function textFields<K extends string>(value: unknown, fields: readonly K[
   return Object.fromEntries(fields.map(field => [field, text(source[field])])) as Record<K, string>;
 }
 
+export function optionalNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
 export function number(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : 0;
 }

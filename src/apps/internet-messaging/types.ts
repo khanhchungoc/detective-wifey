@@ -29,6 +29,8 @@ export interface MessagingThread {
   historyPriority?: HistoryPriority;
   threadId: string;
   contactName: string;
+  /** Photo slot in the avatar sheet, resolved from the level contact. */
+  avatarIndex?: number;
   avatarGradient?: string;
   lastMessage: string;
   timestamp: string;
@@ -56,6 +58,7 @@ export interface MessagingContact {
   note?: string;
   isBlocked?: boolean;
   avatarGradient?: string;
+  avatarIndex?: number;
   section: string;
   suspectName?: string;
 }
