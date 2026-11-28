@@ -7,6 +7,7 @@ interface AppIconSquircleProps {
   overrideBadgeCount?: number;
   hideLabel?: boolean;
   isGrayedOut?: boolean;
+  isOpen?: boolean;
 }
 
 export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
@@ -15,6 +16,7 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
   overrideBadgeCount,
   hideLabel = false,
   isGrayedOut = false,
+  isOpen = false,
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const downTimeRef = useRef(0);
@@ -97,7 +99,10 @@ export const AppIconSquircle: React.FC<AppIconSquircleProps> = ({
       data-grayed-out={isGrayedOut ? 'true' : undefined}
       data-pressed={isPressed ? 'true' : undefined}
       aria-disabled={isGrayedOut ? 'true' : undefined}
-      style={{ '--launcher-motion-name': `launcher-${app.appId ?? 'camera'}` } as CSSProperties}
+      style={{
+        '--launcher-motion-name': `launcher-${app.appId ?? 'camera'}`,
+        opacity: isOpen ? 0 : undefined,
+      } as CSSProperties}
       onClick={handleButtonClick}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}

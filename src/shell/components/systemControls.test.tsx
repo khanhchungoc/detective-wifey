@@ -84,7 +84,7 @@ describe('system control gesture ownership', () => {
     expect(subsequentHtml).not.toContain('bg-slate-900/35');
   });
 
-  it('uses a subtle backdrop blur on the overlay', () => {
+  it('uses a flicker-free translucent scrim on the overlay without backdrop blur', () => {
     const html = renderToStaticMarkup(
       <ControlCenter
         disabled={false}
@@ -95,10 +95,9 @@ describe('system control gesture ownership', () => {
         onOpenChange={() => {}}
       />
     );
-    expect(html).toContain('backdrop-blur-md');
-    expect(html).toContain('bg-slate-950/40');
+    expect(html).toContain('bg-slate-950/80');
+    expect(html).not.toContain('backdrop-blur-md');
     expect(html).not.toContain('backdrop-blur-2xl');
-    expect(html).not.toContain('bg-slate-950/65');
   });
 
   it('renders status bar trigger covering system bar height and meeting touch target minimums', () => {

@@ -20,6 +20,7 @@ const COVER_OPEN_EASE = 'cubic-bezier(0.45, 0, 0.25, 1)';
 interface LevelStageProps {
   husband: HusbandProfile;
   levels: LevelCardItem[];
+  ongoingCaseId?: string;
   reduced: boolean;
   onBack: () => void;
   onSelectLevel: (level: LevelCardItem) => void;
@@ -30,6 +31,7 @@ interface LevelStageProps {
 export const LevelStage: React.FC<LevelStageProps> = ({
   husband,
   levels,
+  ongoingCaseId,
   reduced,
   onBack,
   onSelectLevel,
@@ -173,6 +175,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 index={idx}
                 total={levels.length}
                 isActive={idx === index}
+                isOngoing={Boolean(ongoingCaseId && level.caseId === ongoingCaseId)}
                 restPose={resolveSheetRestPose(idx, index)}
                 sheetRef={binder.registerSheet(idx)}
                 lockedFeedback={idx === index ? lockedFeedback : null}

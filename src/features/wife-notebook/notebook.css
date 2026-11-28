@@ -163,18 +163,47 @@
     inset 0 6px 14px rgba(0, 0, 0, 0.55);
 }
 
-/* Focus view pushes the detective office wall and overhead lamp back into blurred shadow behind the board. */
+/* Focus view dims the detective office wall and overhead lamp behind the board (compositor opacity only, no backdrop-filter blur pass). */
 .notebook-wall-veil {
-  background-color: rgba(2, 3, 5, 0.72);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  background-color: rgba(2, 4, 8, 0.78);
   opacity: 0;
-  transition: opacity 360ms ease-out;
+  transition: opacity 320ms ease-out;
   will-change: opacity;
 }
 
 [data-board-mode='focus'] .notebook-wall-veil {
   opacity: 1;
+}
+
+/* Top-down directional cone of cold fluorescent light from the overhead wall fixture (zero mask-image pass) */
+.notebook-lamp-cone {
+  background-image: conic-gradient(
+    from 134deg at 50% 5.5%,
+    transparent 0deg,
+    rgba(218, 234, 255, 0.14) 20deg,
+    rgba(242, 248, 255, 0.34) 46deg,
+    rgba(218, 234, 255, 0.14) 72deg,
+    transparent 92deg
+  );
+  will-change: opacity;
+}
+
+.notebook-lamp-tube {
+  will-change: opacity;
+}
+
+@keyframes notebook-lamp-flicker {
+  0%, 74%, 78%, 82%, 100% { opacity: 1; }
+  75.5% { opacity: 0.72; }
+  77% { opacity: 0.96; }
+  80% { opacity: 0.78; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-board-mode='wall'] .notebook-lamp-cone,
+  [data-board-mode='wall'] .notebook-lamp-tube {
+    animation: notebook-lamp-flicker 7.5s linear infinite;
+  }
 }
 
 /* Subtle screen-fixed edge vignette; never repaints during pan/zoom */

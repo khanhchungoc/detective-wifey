@@ -326,12 +326,12 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
     const cardA: PlacedNode = { nodeId: 'a', type: 'record_clue', label: 'Card A', x: 200, y: 150 };
     const cardB: PlacedNode = { nodeId: 'b', type: 'record_clue', label: 'Card B', x: 500, y: 350 };
 
-    // Card width is 210px; pin is at top center: (x + PIN_OFFSET_X, y + PIN_OFFSET_Y)
+    // Card width is 176px; pin is at top center: (x + PIN_OFFSET_X, y + PIN_OFFSET_Y)
     const pinA = { x: cardA.x + PIN_OFFSET_X, y: cardA.y + PIN_OFFSET_Y };
     const pinB = { x: cardB.x + PIN_OFFSET_X, y: cardB.y + PIN_OFFSET_Y };
 
-    expect(pinA).toEqual({ x: 305, y: 153 });
-    expect(pinB).toEqual({ x: 605, y: 353 });
+    expect(pinA).toEqual({ x: 200 + PIN_OFFSET_X, y: 153 });
+    expect(pinB).toEqual({ x: 500 + PIN_OFFSET_X, y: 353 });
   });
 
   it('calculates realistic catenary quadratic Bézier curves with gravity sag for detective yarn', () => {
@@ -404,26 +404,24 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         nodeId: 'card_1',
         type: 'record_clue' as const,
         label: 'Tin nhắn bí mật',
-        x: 795,
+        x: 812,
         y: 160,
       }];
       const center = calculateClueCardsCenter(singleNode);
-      // X center: (795 + 795 + 210) / 2 = 900
-      expect(center.x).toBe(795 + Math.round(CARD_WIDTH / 2));
+      expect(center.x).toBe(812 + Math.round(CARD_WIDTH / 2));
       // Y center: (160 + 160 + estimatedHeight) / 2
       expect(center.y).toBeGreaterThan(160);
       expect(center.y).toBeLessThan(300);
     });
 
     it('centers horizontally and vertically across 3 columns at row 0', async () => {
-      const { calculateClueCardsCenter } = await import('./graphEngine');
+      const { calculateClueCardsCenter, CORKBOARD_COLUMNS_X } = await import('./graphEngine');
       const rowNodes = [
-        { nodeId: 'c1', type: 'record_clue' as const, label: 'C1', x: 545, y: 160 },
-        { nodeId: 'c2', type: 'record_clue' as const, label: 'C2', x: 795, y: 160 },
-        { nodeId: 'c3', type: 'record_clue' as const, label: 'C3', x: 1045, y: 160 },
+        { nodeId: 'c1', type: 'record_clue' as const, label: 'C1', x: CORKBOARD_COLUMNS_X[0], y: 160 },
+        { nodeId: 'c2', type: 'record_clue' as const, label: 'C2', x: CORKBOARD_COLUMNS_X[1], y: 160 },
+        { nodeId: 'c3', type: 'record_clue' as const, label: 'C3', x: CORKBOARD_COLUMNS_X[2], y: 160 },
       ];
       const center = calculateClueCardsCenter(rowNodes);
-      // Min X = 545, Max X = 1045 + 210 = 1255. (545 + 1255) / 2 = 900
       expect(center.x).toBe(900);
       expect(center.y).toBeGreaterThan(160);
     });
@@ -480,19 +478,19 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       },
     ];
 
-    it('places initial new nodes across 3 centered columns (545, 795, 1045) at row 0', async () => {
+    it('places initial new nodes across 3 centered columns at row 0', async () => {
       const { placeNewNodesBelow, CORKBOARD_COLUMNS_X, INITIAL_BASE_Y } = await import('./graphEngine');
       const placed = placeNewNodesBelow([], mockNodes.slice(0, 3));
 
       expect(placed).toHaveLength(3);
-      expect(placed[0].x).toBe(CORKBOARD_COLUMNS_X[0]); // 545
-      expect(placed[1].x).toBe(CORKBOARD_COLUMNS_X[1]); // 795 (center)
-      expect(placed[2].x).toBe(CORKBOARD_COLUMNS_X[2]); // 1045
+      expect(placed[0].x).toBe(CORKBOARD_COLUMNS_X[0]);
+      expect(placed[1].x).toBe(CORKBOARD_COLUMNS_X[1]);
+      expect(placed[2].x).toBe(CORKBOARD_COLUMNS_X[2]);
       expect(placed.every(n => n.y === INITIAL_BASE_Y)).toBe(true);
     });
 
     it('fills a row of up to 6 cards across the wide board before wrapping to the next row', async () => {
-      const { placeNewNodesBelow, CORKBOARD_ROW_HEIGHT, INITIAL_BASE_Y, MAX_ROW_COLUMNS, CANVAS_WIDTH } = await import('./graphEngine');
+      const { placeNewNodesBelow, CARD_WIDTH, CORKBOARD_COLUMNS_X, CORKBOARD_ROW_HEIGHT, INITIAL_BASE_Y, MAX_ROW_COLUMNS, CANVAS_WIDTH } = await import('./graphEngine');
       const many = Array.from({ length: MAX_ROW_COLUMNS + 1 }, (_, i) => ({ ...mockNodes[0], nodeId: `n${i}`, label: `N${i}` }));
       const placed = placeNewNodesBelow([], many);
 
@@ -500,9 +498,9 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
       const firstRow = placed.slice(0, MAX_ROW_COLUMNS);
       expect(firstRow.every(n => n.y === INITIAL_BASE_Y)).toBe(true);
       expect(Math.min(...firstRow.map(n => n.x))).toBeGreaterThanOrEqual(30);
-      expect(Math.max(...firstRow.map(n => n.x)) + 210).toBeLessThanOrEqual(CANVAS_WIDTH - 30);
-      // 7th card wraps to row 1, centered at 900 - 105 = 795
-      expect(placed[6].x).toBe(795);
+      expect(Math.max(...firstRow.map(n => n.x)) + CARD_WIDTH).toBeLessThanOrEqual(CANVAS_WIDTH - 30);
+      // 7th card wraps to row 1, centered on the middle column
+      expect(placed[6].x).toBe(CORKBOARD_COLUMNS_X[1]);
       expect(placed[6].y).toBe(INITIAL_BASE_Y + CORKBOARD_ROW_HEIGHT);
     });
 
@@ -525,15 +523,15 @@ describe('US-015: Wife Detective Corkboard & Graph Engine Suite', () => {
         },
       ];
 
-      // clusterLeft = 360, clusterRight = 710 + 210 = 920. clusterCenter = 640.
+      const expectedCenter = Math.round((360 + 710 + CARD_WIDTH) / 2);
       const placed = placeNewNodesBelow(existing, mockNodes.slice(0, 2));
       expect(placed).toHaveLength(2);
       // Must be on the same row below existing cards
       expect(placed[0].y).toBe(placed[1].y);
       expect(placed[0].y).toBeGreaterThan(450);
-      // Midpoint between the 2 cards must be exactly clusterCenter (640)
+      // Midpoint between the 2 cards must be exactly clusterCenter
       const mid = (placed[0].x + placed[1].x + CARD_WIDTH) / 2;
-      expect(mid).toBe(640);
+      expect(mid).toBe(expectedCenter);
     });
   });
 

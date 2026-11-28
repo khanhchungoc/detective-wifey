@@ -26,6 +26,7 @@ export interface LevelSelectorHubProps {
   husbands: HusbandProfile[];
   levels: LevelCardItem[];
   initialHusbandId?: string;
+  ongoingCaseId?: string;
   isMuted?: boolean;
   onToggleMute?: () => void;
   onSelectLevel: (level: LevelCardItem) => void;
@@ -37,6 +38,7 @@ export const LevelSelectorHub: React.FC<LevelSelectorHubProps> = ({
   husbands,
   levels,
   initialHusbandId,
+  ongoingCaseId,
   isMuted = false,
   onToggleMute,
   onSelectLevel,
@@ -111,6 +113,7 @@ export const LevelSelectorHub: React.FC<LevelSelectorHubProps> = ({
             key="levels"
             husband={activeHusband}
             levels={husbandLevels}
+            ongoingCaseId={ongoingCaseId}
             reduced={reduced}
             onBack={closeFolder}
             onSelectLevel={onSelectLevel}
