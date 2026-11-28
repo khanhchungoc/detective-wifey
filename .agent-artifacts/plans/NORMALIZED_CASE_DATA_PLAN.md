@@ -14,12 +14,27 @@ Renaming the husband from Hoàng to Thịnh touched 64 files. The cause is that 
 | Contact photo chosen by display name | `AVATAR_PROFILES` in `src/shared/ui/ContactAvatar.tsx` | Renaming a contact silently drops its photo. |
 | Defaults carry the husband identity | `src/data/defaults/*.json` | A second husband would inherit Hoàng/Thịnh data. |
 
+## ID policy: generic, name-free
+
+Every ID is a neutral slot that any name can be plugged into. An ID never contains a person's name, nickname, role or story meaning.
+
+| Rule | Why |
+|---|---|
+| IDs are type prefix + zero-padded number: `husband_01`, `person_001`, `org_001`, `contact_001`, `thread_001`, `call_001`, `tx_001`, `order_001`, `suspect_01`, `msg_001_0001` | Renaming a character changes one name field and nothing else. |
+| No role in IDs (`person_mistress`, `suspect_culprit` are not allowed) | IDs can show up in devtools and saved state. A role in the ID would spoil the answer. Role lives in an author-only `role` field. |
+| No name in IDs (`suspect_huong`, `thread_khoa`, `call_khoa_late`, `tx_lan_anh`, `husband_hoang` are migrated) | Today's IDs carry old names; renaming a person leaves misleading IDs behind. |
+| Clue IDs keep their existing generic form (`CLUE-PHONE-01`) | Already name-free. |
+| Folder and file names follow the same rule: `src/data/cases/husband_01/`, `stories/husband-01/` | The folder `hoang/` is itself a name. |
+| Numbers are never reused after a record is deleted | Stops old saves or docs pointing at the wrong record. |
+
+Readability for authors comes from tooling, not from IDs: `npm run case:preview` prints a level with IDs resolved to current names. No `_label` copy fields in data, since they go stale on rename.
+
 ## Target model
 
-Split case data into **master data** (who and what exists) and **transactional data** (what happened). Transactional records point to master records by ID, never by name. A loader joins them at build time into the payload shapes the apps already read.
+Split case data into **master data** (who and what exists) and **transactional data** (what happened). Transactional records point to master records by ID, never by name. Every ID is generic (see ID policy). A loader joins them at build time into the payload shapes the apps already read.
 
 ```
-src/data/cases/<husband>/
+src/data/cases/husband_01/
   master/                     shared by every level of this husband
     husband.json              identity of the phone owner
     people.json               every real person in this universe
@@ -36,9 +51,9 @@ src/data/cases/<husband>/
 
 | File | Record | Key fields |
 |---|---|---|
-| `husband.json` | phone owner | `husbandId`, `shortName` (Thịnh), `nickname` (Thịnh Doom), `fullName`, `fullNameAscii` (NGUYEN HUY THINH), `handle`, `initials`, `birthYear`, `occupation`, `phone`, `homeAddress`, `portraitAsset`, `comicAssetSet`, `wifePersonId` |
-| `people.json` | person | `personId` (readable slug: `p_huong`, `p_tuan_cho`, `p_mom`), `legalName`, `gender`, `birthYear`, `role` (wife, family, friend, colleague, suspect, service), `orgId`, `phones[]`, `avatar` (sprite index or asset), `personaNotes` |
-| `orgs.json` | company, shop, venue | `orgId` (`o_technosoft`, `o_com_nieu_pho_co`), `name`, `kind`, `address` |
+| `husband.json` | phone owner | `husbandId` (`husband_01`), `shortName` (Thịnh), `nickname` (Thịnh Doom), `fullName`, `fullNameAscii` (NGUYEN HUY THINH), `handle`, `initials`, `birthYear`, `occupation`, `phone`, `homeAddress`, `portraitAsset`, `comicAssetSet`, `wifePersonId` |
+| `people.json` | person | `personId` (`person_001`), `legalName`, `gender`, `birthYear`, `role` (wife, family, friend, colleague, suspect, service), `orgId`, `phones[]`, `avatar` (sprite index or asset), `personaNotes` |
+| `orgs.json` | company, shop, venue | `orgId` (`org_001`), `name`, `kind`, `address` |
 
 Age is derived from `birthYear` and the story year, not stored.
 
@@ -48,8 +63,8 @@ The game's core mechanic is the husband disguising people in his phone ("Khoa BE
 
 | Field | Example |
 |---|---|
-| `contactId` | `contact_10` (keep existing IDs) |
-| `personId` | `p_huong` |
+| `contactId` | `contact_010` |
+| `personId` | `person_014` |
 | `savedName` | `Khoa BE` |
 | `phone` | `0988886677` |
 | `avatarOverride` | optional, for disguised contacts |
@@ -93,17 +108,22 @@ Chat bubbles, notes and roasts stay plain text. Turning prose into templates mak
 
 ## Save-game safety
 
-Saved progress and pinned evidence key on `caseId`, `husbandId`, thread IDs, order IDs and contact IDs. The plan keeps every existing record ID (`contact_10`, `thread_khoa`, `order_01`, `husband_hoang`). New IDs (`personId`, `orgId`) are added beside them, so existing saves keep working. No storage schema bump.
+Saved sessions and pinned evidence store `caseId`, `husbandId`, `suspectId` and record IDs. Migrating name-based IDs to generic IDs changes some of them, so:
+
+- Bump `SCHEMA_VERSION` in `src/features/session/localStorageAdapter.ts` from 1 to 2 in the same PR as the ID migration. Old saves are ignored and players start the case fresh. Acceptable while the game is pre-release.
+- Alternative (not recommended now): ship an old-to-new ID map and rewrite saved state on load. Only worth it once real players have long-running saves.
+- The migration is done by a one-off script with an explicit old-to-new ID map (`scripts/migrate-generic-ids.mjs`). It rewrites data JSON, tests, e2e specs, `requiredEdgeIds` in `confrontation.json` and story docs in one pass, then is deleted. The map is committed in the PR description for review.
 
 ## Phases
 
 | Phase | Scope | Visible change |
 |---|---|---|
 | 0 | Fix leftover `hoang_tech88` / `H`. Add snapshot parity test. | Chat profile shows Thịnh's handle and initial. |
-| 1 | `husband.json` + `CaseConfig.husband`; generate `LEVEL_CATALOG` and husband profiles; remove all hard-coded fallbacks; neutral defaults; no-hard-coded-identity test. | None. |
-| 2 | `people.json`, `orgs.json`, level `contacts.json`; phone, messages, messaging contacts and threads switch to `contactId`; avatar by ID; integrity test. | None. |
-| 3 | Remaining apps: ecommerce, banking, email, posts, team-collaboration, ride-hailing; tokens for the two allowed cases. | None. |
-| 4 | Migrate placeholder `level_02.json` / `level_03.json` to the same layout when they are authored. Update `level-designer` skill references and `husband-profile.md` to point at master IDs. | None. |
+| 1 | Generic ID migration: run `migrate-generic-ids` over data, tests, e2e, docs; rename folders `cases/hoang` to `cases/husband_01` and `stories/husband-hoang` to `stories/husband-01`; bump storage schema to v2. Snapshot updated once, IDs only. | Old local saves reset. |
+| 2 | `husband.json` + `CaseConfig.husband`; generate `LEVEL_CATALOG` and husband profiles; remove all hard-coded fallbacks; neutral defaults; no-hard-coded-identity test. | None. |
+| 3 | `people.json`, `orgs.json`, level `contacts.json`; phone, messages, messaging contacts and threads switch to `contactId`; avatar by ID; integrity test; `case:preview` script. | None. |
+| 4 | Remaining apps: ecommerce, banking, email, posts, team-collaboration, ride-hailing; tokens for the two allowed cases. | None. |
+| 5 | Migrate placeholder `level_02.json` / `level_03.json` to the same layout when they are authored. Update `level-designer` skill references, `husband-profile.md` and `friend-aliases.md` to point at master IDs. | None. |
 
 Each phase is one PR to `stg`, passing unit tests and the snapshot.
 
@@ -112,12 +132,12 @@ Each phase is one PR to `stg`, passing unit tests and the snapshot.
 | Choice | Recommended | Alternative | Why |
 |---|---|---|---|
 | Where to join data | Join at load time, apps unchanged | Apps look up IDs at runtime | Load-time join keeps the 12 apps untouched and the change reversible. Runtime lookup spreads the change across every app for no player benefit. |
-| ID style | Readable slugs for new IDs (`p_huong`) | Numeric (`person_7`) | Raw JSON stays readable for story authors. |
-| Existing IDs | Keep as is | Rename to slugs | Renaming breaks saved games and evidence pins. |
+| ID style | Generic numbered IDs (`person_014`) | Readable name slugs (`p_huong`) | Any name can be plugged in; no spoilers; no stale IDs after rename. Cost: raw JSON is less readable, covered by `case:preview`. |
+| Existing name-based IDs | Migrate once, reset saves (schema v2) | Keep forever, or migrate saves with an ID map | Pre-release, a reset is cheap; a save migrator is extra code to maintain. |
 | Prose names | Plain text | Full templating | Writing stays natural; renaming a friend in prose is rare and search-replace is fine. |
 
-Cost to watch: authors editing raw JSON now see `contact_10` instead of "Khoa BE" in a call record. Mitigation: readable slugs for new IDs and a small script `npm run case:preview` that prints the resolved level as a readable table.
+Cost to watch: authors editing raw JSON see `contact_010` instead of "Khoa BE". Mitigation: `npm run case:preview` prints the resolved level as a readable table, and story docs list each slot's ID next to its current name.
 
 ## Out of scope
 
-Rewriting chat content, new levels, storage schema changes, UI changes, story docs restructuring beyond adding master IDs.
+Rewriting chat content, new levels, UI changes, story docs restructuring beyond adding master IDs.
