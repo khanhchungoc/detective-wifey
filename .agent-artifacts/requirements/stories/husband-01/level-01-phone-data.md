@@ -280,8 +280,8 @@ Không có SMS mang manh mối từ "Khoa BE".
 
 Không gắn clue hoặc nghi phạm, không khóa, không tạo bằng chứng kết tội.
 
-### `ride-hailing` - 6 hoạt động
-Giữ nguyên bản trước: `trip_006` 10/10 08:00, `trip_005` 10/10 18:10, `trip_004` 11/10 11:45, `trip_003` 12/10 16:30, `trip_002` 13/10 07:50 (0đ), `trip_001` 14/10 08:20. Thịnh đi xe máy. Ngày D chỉ có `trip_021` (D 18:58, Technosoft -> Cơm Niêu Phố Cổ, 52.000đ, "Đặt hộ · SĐT người đi 0988886677", `CLUE-GRAP-04`): Thịnh đặt xe cho Hương tới quán.
+### `ride-hailing` - 20 hoạt động sinh hoạt (khóa xám ở Màn 1, app chưa hoàn thiện)
+Giữ nguyên bản trước: `trip_006` 10/10 08:00, `trip_005` 10/10 18:10, `trip_004` 11/10 11:45, `trip_003` 12/10 16:30, `trip_002` 13/10 07:50 (0đ), `trip_001` 14/10 08:20. Thịnh đi xe máy. Không có chuyến ngày D.
 
 ### `web-browser` - 8 lịch sử, 2 tab + 1 manh mối
 12/10 08:52 "Váy lụa dáng suông - bảng size" (`hist_026`, `CLUE-BROW-05`): bảng size S/M, xem trước khi đặt `order_005`; vợ mặc size M.
@@ -305,11 +305,11 @@ Giữ nguyên bản trước (bài kiểm thử giao diện, tin tuyển fronten
 
 ## 8. Kiểm tra nội dung trước triển khai
 
-1. Số `0988886677` chỉ xuất hiện ở danh bạ "Khoa BE", hai cuộc gọi "Khoa BE", người nhận `order_005` và chuyến đặt hộ `trip_021`.
+1. Số `0988886677` chỉ xuất hiện ở danh bạ "Khoa BE", hai cuộc gọi "Khoa BE", người nhận `order_005`.
 2. Tên `Nguyễn Thị Thu Hương` chỉ xuất hiện ở tin ghim HR và người nhận `order_005`. Lời "Cảm ơn Hương nha" là gợi ý nối, không có họ tên đầy đủ.
 3. Hai thông báo khởi phát trùng nguyên văn và giờ với tin trong `thread_004` (22:58) và `thread_046` (23:42). Không thông báo nào nhắc "Khoa BE".
 4. Mọi bẫy nghi ngờ có lời giải đọc được trước đối chất: Tuấn (luồng Mẹ, luồng Tuấn, `order_004`, ghi chú), Ngọc (trọn luồng), Lan Anh (luồng Lan Anh), Thảo (luồng Thảo + `thread_015`), Mai (luồng Lan Anh, `shopchat_002`, luồng Mai).
-5. Tỷ lệ: 13/15 luồng chat, 19/20 giao dịch, 8/9 đơn, 12/14 cuộc gọi, 32/32 luồng SMS, 20/21 chuyến xe, 25/26 lịch sử web không mang manh mối kết tội.
+5. Tỷ lệ: 13/15 luồng chat, 19/20 giao dịch, 8/9 đơn, 12/14 cuộc gọi, 32/32 luồng SMS, 25/26 lịch sử web không mang manh mối kết tội.
 6. Xưng hô đã kiểm: Thịnh - thợ điện `em - anh`; Thịnh - Mẹ `con - mẹ`; Thịnh - Ngọc, Lan Anh, Thảo, Mai, Khoa BE `a - e`; Thịnh - Nam, Tuấn Chó, Namzua `tôi - ông`; Thịnh - Linh Yoyo `tôi - bà`; Thịnh - A9, Bình, Thành, Minh Worm, Minh Bằng Cổ, Phòng, Vượng, Sếp Tuấn Anh `em - anh`; Thịnh - Hồng Emerald `em - chị`; Thịnh - Trung, Phương, Trang, Dương `a - e`.
 
 ## 9. Mạch sự kiện liên tục - chỉ dành cho tác giả
@@ -318,6 +318,6 @@ Giữ nguyên bản trước (bài kiểm thử giao diện, tin tuyển fronten
 - **Chuẩn bị quà**: 12/10 đặt váy size S, để tên và số Hương làm người nhận; nếu bị hỏi sẽ nói "đặt hộ". Shipper gọi Hương lúc giao; Hương dặn để ở lễ tân và đưa anh Thịnh.
 - **Lịch trùng**: 13/10 Thảo chốt PT 18:00 thứ Năm vì 19:00 có họp sprint. 14/10 Hương nhắc tròn 1 tháng; Thịnh từ chối vì họp.
 - **Biến cố**: 17:30 D họp bị hủy. 17:35 Thịnh chủ động hẹn Hương, quên buổi PT, và không báo vợ dù vợ đang chờ nói tin vui.
-- **Buổi tối**: 18:00 rời văn phòng (Lan Anh thấy). 18:58 Thịnh đặt Grab hộ Hương từ Technosoft tới quán (`trip_021`, hiện SĐT người đi). 19:18 gọi Hương, 19:20 Hương tới, hai người ăn ở tầng 2 Cơm Niêu Phố Cổ; Thịnh trao hộp váy. Trong bữa, Thịnh chuyển tiền cho Ngọc và Lan Anh bằng điện thoại. 20:46 nói dối vợ lần 2; 20:48 trả tiền bằng thẻ.
+- **Buổi tối**: 18:00 rời văn phòng (Lan Anh thấy). 18:00 - 19:20 không app nào ghi vị trí. 19:18 gọi Hương, 19:20 Hương tới, hai người ăn ở tầng 2 Cơm Niêu Phố Cổ; Thịnh trao hộp váy. Trong bữa, Thịnh chuyển tiền cho Ngọc và Lan Anh bằng điện thoại. 20:46 nói dối vợ lần 2; 20:48 trả tiền bằng thẻ.
 - **Kết thúc buổi tối**: Thịnh về tới hầm 22:10. 23:20 Thịnh gọi Hương từ ban công hỏi đã về tới nhà chưa. Từ 22:31 nhóm poker, cầu lông và Minh Bằng Cổ chat khuya. 23:45 Thịnh vào tắm, máy 8% pin cắm sạc ngoài phòng.
 - **Hậu kết (sau đối chất)**: Thịnh chặn số "Khoa BE". Hương chuyển `+1.000 đ` kèm lời nhắn "Anh chan so em that a?" - mở đầu Màn 2.
