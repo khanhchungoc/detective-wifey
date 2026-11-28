@@ -162,7 +162,7 @@ html[data-motion='close'] :is(::view-transition-old(system-status), ::view-trans
 @keyframes ios-dialog-out { to { transform: scale(.94); opacity: 0; } }
 ::view-transition-old(app-content) { animation: none; opacity: 1; }
 ::view-transition-new(app-content) { animation: ios-app-fade-in .18s var(--ease-ios-default) both; }
-::view-transition-group(phone-content) { background-color: #000000; }
+::view-transition-group(phone-content) { background-color: #000000; animation-duration: .32s; }
 html[data-motion='push']::view-transition-new(phone-content) { animation-name: ios-push; }
 html[data-motion='push']::view-transition-old(phone-content) { animation-name: ios-under; }
 html[data-motion='pop']::view-transition-old(phone-content) { animation-name: ios-pop; z-index: 2; }
@@ -170,8 +170,7 @@ html[data-motion='pop']::view-transition-new(phone-content) { animation-name: io
 /* Stacked detail layers: only the detail slides; the retained parent just loses/gains its scrim. */
 html[data-motion='push'] [data-detail-layer],
 html[data-motion='pop'] [data-detail-layer] { view-transition-name: phone-detail; }
-html:is([data-motion='push'], [data-motion='pop']) [data-zola-bottom-nav] { view-transition-name: zola-bottom-nav; }
-::view-transition-group(zola-bottom-nav) { z-index: 30; }
+::view-transition-group(phone-detail) { z-index: 20; animation-duration: .32s; }
 ::view-transition-old(phone-detail), ::view-transition-new(phone-detail) {
   animation-duration: .32s;
   animation-timing-function: var(--ease-ios-default);

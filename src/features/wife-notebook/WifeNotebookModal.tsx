@@ -103,7 +103,10 @@ function computeWallViewport(board: HTMLElement | null): CorkboardViewport {
     (width - marginX * 2) / CANVAS_WIDTH,
     (height - marginY * 2) / CANVAS_HEIGHT,
   );
-  return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2, zoom: Math.max(0.05, fit) };
+  const zoom = Math.max(0.05, fit);
+  // Shift the board slightly higher on the wall in wall view so it sits cleanly above bottom controls.
+  const upwardShiftPx = Math.round(height * (isLandscape ? 0.04 : 0.08));
+  return { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 + upwardShiftPx / zoom, zoom };
 }
 
 function getStorageKey(caseId?: string): string {
@@ -694,7 +697,9 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
   });
 
   const flightMs = prefersReducedMotion ? 0 : 420;
+  const suppressWallClickUntilRef = useRef(0);
   const enterWallView = useCallback(() => {
+    suppressWallClickUntilRef.current = performance.now() + 450;
     handleDismissSelection();
     setBoardMode('wall');
     boardModeRef.current = 'wall';
@@ -734,6 +739,7 @@ export const WifeNotebookModal: React.FC<WifeNotebookModalProps> = ({
     if (isBoardChromeControl(e.target)) return;
     e.stopPropagation();
     e.preventDefault();
+    if (performance.now() < suppressWallClickUntilRef.current) return;
     const cardEl = (e.target as HTMLElement).closest<HTMLElement>('[data-node-id]');
     const node = cardEl ? placedNodes.find(n => n.nodeId === cardEl.dataset.nodeId) : undefined;
     if (node && cardEl) {
