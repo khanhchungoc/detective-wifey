@@ -5,6 +5,7 @@ import {
   launchApp,
   longPressAndPin,
   startCleanPhone,
+  swipeDownControlCenter,
   unlockBySwipeUp,
 } from './helpers/phone';
 
@@ -39,6 +40,17 @@ test.describe('Session & Case Runtime @smoke', () => {
     // Wait for the save to land in localStorage.
     await expect.poll(async () => (await readSavedSession(page))?.taggedSuspects.length).toBe(1);
     expect((await readSavedSession(page))?.caseId).toBe('case_01');
+
+    // Going back to the start screen via Control Center immediately offers "Tiếp tục" without reloading.
+    const controlCenter = page.getByRole('dialog', { name: 'Trung tâm điều khiển' });
+    await swipeDownControlCenter(page);
+    if (!(await controlCenter.isVisible())) {
+      await swipeDownControlCenter(page);
+    }
+    await controlCenter.getByRole('button', { name: 'Màn hình chính' }).click();
+    await expect(page.getByRole('button', { name: /Tiếp tục/ })).toBeVisible();
+    await page.getByRole('button', { name: /Tiếp tục/ }).click();
+    await expect(page.locator('[data-notebook-tab]')).toHaveAttribute('aria-label', /1 manh mối/);
 
     // Reload keeps storage (cleared only on the first load of the test) and shows Tiếp tục on the start screen.
     await page.reload();

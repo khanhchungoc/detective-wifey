@@ -81,7 +81,7 @@ export class PlaySession {
         ...session,
         taggedSuspects: normalizeTaggedSuspects(session.taggedSuspects || []),
       } : null;
-      this.savedSession = normalizedSession && normalizedSession.taggedSuspects.length > 0 ? normalizedSession : null;
+      this.savedSession = normalizedSession;
       this.update({
         playerProgress,
         ongoingSession: this.savedSession,
@@ -329,17 +329,29 @@ export class PlaySession {
       resumableSession: null, ongoingSession: null, systemAlertToast: null });
   }
 
-  private save() {
-    // New progress replaces the startup save, so it must not be offered again.
-    this.savedSession = null;
+  /** Snapshots and persists the active level so returning to the start screen offers "Tiếp tục". */
+  parkOngoingSession = () => {
+    const snapshot = this.buildSessionSnapshot();
+    this.savedSession = snapshot;
+    this.update({ ongoingSession: snapshot, resumableSession: snapshot });
+    void this.writer.save(snapshot).catch(() => this.notify('Không thể lưu phiên điều tra.'));
+  };
+
+  private buildSessionSnapshot(): ActiveSessionState {
     const state = this.state;
-    const snapshot: ActiveSessionState = {
+    return {
       schemaVersion: 1, gameId: 'jealous_wife', caseId: state.caseConfig.caseId,
       levelNumber: state.caseConfig.levelNumber, activeApp: state.activeAppId,
       suspicionStrikes: state.strikes, taggedSuspects: state.taggedSuspects,
       unlockedChallenges: [...state.unlockedChallenges], elapsedSeconds: 0,
       lastSavedAt: this.dependencies.now(),
     };
+  }
+
+  private save() {
+    // New progress replaces the startup save, so it must not be offered again.
+    this.savedSession = null;
+    const snapshot = this.buildSessionSnapshot();
     void this.writer.save(snapshot).catch(() => this.notify('Không thể lưu phiên điều tra.'));
   }
 

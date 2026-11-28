@@ -17,6 +17,7 @@ const level1Config: PhoneLockscreenConfig = {
   narrativeDate: 'Thứ Sáu, 14 tháng 11',
   narrativeTime: '23:45',
   batteryPercent: '42%',
+  wallpaperUrl: '/assets/wallpaper.webp',
   notifications: [
     {
       id: 'notif-1',
@@ -77,7 +78,10 @@ describe('PhoneLockscreen (US-038)', () => {
     expect(html).toContain('Techcornbank');
     expect(html).toContain('from-rose-600 to-red-700');
     expect(html).toContain('Thông báo biến động số dư');
-    expect(html).toContain('bg-slate-950/55');
+    expect(html).toContain('bg-slate-950/55 backdrop-blur-xl');
+    expect(html).toContain('data-lockscreen-wallpaper="true"');
+    expect(html).toContain('data-lockscreen-ui="true"');
+    expect(html.indexOf('data-lockscreen-wallpaper="true"')).toBeLessThan(html.indexOf('data-lockscreen-ui="true"'));
     expect(html).toContain('data-lockscreen-notif-peek="true"');
     expect(html).toContain('data-lockscreen-back="true"');
     expect(html).toContain('data-lockscreen-camera="true"');

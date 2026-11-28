@@ -246,4 +246,22 @@ describe('save compatibility and ordering', () => {
     expect(game.getSnapshot().resumableSession).toBeNull();
     game.stop();
   });
+
+  it('parks the active session for the start screen and restores it via resumeOngoing', async () => {
+    const { game, saved } = setup();
+    game.launch('messages');
+    game.tag('Khoa BE', 'internet-messaging');
+    game.parkOngoingSession();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(game.getSnapshot().ongoingSession?.caseId).toBe('case_01');
+    expect(game.getSnapshot().ongoingSession?.activeApp).toBe('messages');
+    expect(game.getSnapshot().ongoingSession?.taggedSuspects).toHaveLength(1);
+    expect(saved()?.caseId).toBe('case_01');
+
+    expect(game.resumeOngoing()).toBe(true);
+    expect(game.getSnapshot().activeAppId).toBe('messages');
+    expect(game.getSnapshot().taggedSuspects).toHaveLength(1);
+    game.stop();
+  });
 });

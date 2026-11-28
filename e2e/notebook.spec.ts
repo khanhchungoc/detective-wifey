@@ -28,17 +28,25 @@ test.describe('Wife Notebook & Confrontation @smoke', () => {
 
     // Opens in wall view; 1 tap on the board/card brings the board forward, double-tap puts it back on the wall.
     const board = page.locator('[data-board-mode]');
+    const lampBeam = page.locator('.notebook-lamp-beam');
+    const lampTube = page.locator('.notebook-lamp-tube');
     await expect(board).toHaveAttribute('data-board-mode', 'wall');
+    await expect.poll(async () => Number(await lampBeam.evaluate(el => getComputedStyle(el).opacity))).toBeGreaterThan(0.5);
+    await expect.poll(async () => Number(await lampTube.evaluate(el => getComputedStyle(el).opacity))).toBeGreaterThan(0.5);
     const card = page.locator('[data-node-id="node_record_ecommerce_order"]');
+    await expect.poll(async () => (await card.boundingBox())!.width).toBeLessThan(100);
     const wallWidth = (await card.boundingBox())!.width;
     await card.click();
     await expect(board).toHaveAttribute('data-board-mode', 'focus');
+    await expect.poll(async () => Number(await lampBeam.evaluate(el => getComputedStyle(el).opacity))).toBe(0);
+    await expect.poll(async () => Number(await lampTube.evaluate(el => getComputedStyle(el).opacity))).toBe(0);
     await expect.poll(async () => (await card.boundingBox())!.width).toBeGreaterThan(wallWidth * 3);
 
     // Double tap on empty board puts the board back on the wall.
     const vp = page.viewportSize()!;
     await page.mouse.dblclick(vp.width / 2, vp.height - 190);
     await expect(board).toHaveAttribute('data-board-mode', 'wall');
+    await expect.poll(async () => Number(await lampBeam.evaluate(el => getComputedStyle(el).opacity))).toBeGreaterThan(0.5);
     await expect.poll(async () => Math.round((await card.boundingBox())!.width)).toBe(Math.round(wallWidth));
 
     // Tapping the card again brings it forward; closing and reopening keeps the current view.

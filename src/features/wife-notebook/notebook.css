@@ -1,3 +1,13 @@
+:root {
+  --in-oklab: ;
+}
+
+@supports (background: linear-gradient(in oklab, white, black)) {
+  :root {
+    --in-oklab: in oklab;
+  }
+}
+
 .wife-notebook {
   color-scheme: dark;
   --notebook-bg: #080b0f;
@@ -11,10 +21,24 @@
 
 /* Dark room behind the evidence board (visible past the board frame) */
 .notebook-cardboard {
+  container-type: size;
   background-color: var(--notebook-bg);
   box-shadow:
     inset 12px 0 24px rgba(0, 0, 0, 0.68),
     inset -12px 0 24px rgba(0, 0, 0, 0.68);
+  /* Exact neon bar geometry matched to object-cover detective-office-wall.webp (768x1376) */
+  --lamp-width: calc(0.4987 * max(100cqw, 55.814cqh));
+  --lamp-height: calc(0.0065 * max(100cqh, 179.167cqw));
+  --lamp-top: calc(50cqh - 0.4339 * max(100cqh, 179.167cqw));
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .notebook-cardboard {
+    /* Exact neon bar geometry matched to object-cover detective-office-wall-desktop.webp (1440x804) */
+    --lamp-width: calc(0.2521 * max(100cqw, 179.104cqh));
+    --lamp-height: calc(0.0062 * max(100cqh, 55.833cqw));
+    --lamp-top: calc(50cqh - 0.4552 * max(100cqh, 55.833cqw));
+  }
 }
 
 /* Cold War chalkboard surface: fixed 1800x1200 GPU-scaled layer (no CSS zoom)
@@ -175,21 +199,57 @@
   opacity: 1;
 }
 
-/* Top-down directional cone of cold fluorescent light from the overhead wall fixture (zero mask-image pass) */
-.notebook-lamp-cone {
-  background-image: conic-gradient(
-    from 134deg at 50% 5.5%,
-    transparent 0deg,
-    rgba(218, 234, 255, 0.14) 20deg,
-    rgba(242, 248, 255, 0.34) 46deg,
-    rgba(218, 234, 255, 0.14) 72deg,
-    transparent 92deg
-  );
+/* Subtle bar-shaped overhead fluorescent light wash originating across the full width of the neon tube (wall view only) */
+.notebook-lamp-beam {
+  top: var(--lamp-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--lamp-width) * 1.45);
+  height: 52%;
+  background-image:
+    radial-gradient(
+      ellipse 46% 16% at 50% 0% var(--in-oklab),
+      rgba(224, 238, 255, 0.14) 0%,
+      rgba(198, 222, 252, 0.05) 58%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 50% 72% at 50% 0% var(--in-oklab),
+      rgba(196, 220, 250, 0.075) 0%,
+      rgba(176, 206, 244, 0.025) 52%,
+      transparent 100%
+    );
+  mix-blend-mode: screen;
+  opacity: 1;
+  transition: opacity 320ms ease-out;
   will-change: opacity;
 }
 
+/* Crisp fluorescent bar aligned to the exact shape of the overhead neon fixture */
 .notebook-lamp-tube {
+  top: var(--lamp-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--lamp-width);
+  height: max(4px, var(--lamp-height));
+  border-radius: 1.5px;
+  background-image: linear-gradient(
+    180deg var(--in-oklab),
+    rgba(240, 248, 255, 0.96) 0%,
+    rgba(222, 238, 255, 0.88) 100%
+  );
+  box-shadow:
+    0 0 8px 1px rgba(224, 240, 255, 0.52),
+    0 4px 16px 2px rgba(186, 214, 250, 0.2);
+  opacity: 1;
+  transition: opacity 320ms ease-out;
   will-change: opacity;
+}
+
+/* Hide room light completely when zoomed into the board */
+[data-board-mode='focus'] .notebook-lamp-beam,
+[data-board-mode='focus'] .notebook-lamp-tube {
+  opacity: 0;
 }
 
 @keyframes notebook-lamp-flicker {
@@ -200,7 +260,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  [data-board-mode='wall'] .notebook-lamp-cone,
+  [data-board-mode='wall'] .notebook-lamp-beam,
   [data-board-mode='wall'] .notebook-lamp-tube {
     animation: notebook-lamp-flicker 7.5s linear infinite;
   }

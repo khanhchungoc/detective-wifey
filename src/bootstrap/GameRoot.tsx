@@ -232,6 +232,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
               systemAlertToast={state.systemAlertToast}
               onLaunchApp={launch} onReturnHome={returnHome}
               onGoToStartScreen={() => {
+                game.parkOngoingSession();
                 setOpenNotebookCase(null);
                 setBriefingRecallOpen(false);
                 setFlowStage('startup');

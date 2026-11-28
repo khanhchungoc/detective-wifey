@@ -54,12 +54,10 @@ function getProfileName(node: PlacedNode): string | undefined {
 const FluorescentLampHighlight = memo(function FluorescentLampHighlight() {
   return (
     <>
-      {/* Top-down directional cone of fluorescent light (flickers subtly only in zoomed-out wall view) */}
-      <div aria-hidden="true" className="notebook-lamp-cone pointer-events-none absolute inset-0 z-[14]" />
-      {/* Bright overhead fluorescent tube glow aligned to the wall fixture behind the board */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[6.2%] md:top-[4.5%] z-[4] flex flex-col items-center">
-        <div className="notebook-lamp-tube h-[5px] w-[54%] md:w-[28%] max-w-[240px] md:max-w-[360px] rounded-full bg-[#F4F8FF]/95 shadow-[0_4px_18px_2px_rgba(232,242,255,0.78),0_14px_34px_6px_rgba(186,214,250,0.38)]" />
-      </div>
+      {/* Subtle bar-shaped fluorescent light wash on the room wall (hidden when zoomed into focus mode) */}
+      <div aria-hidden="true" className="notebook-lamp-beam pointer-events-none absolute z-[4]" />
+      {/* Overhead fluorescent bar matched to the exact shape of the wall neon fixture */}
+      <div aria-hidden="true" className="notebook-lamp-tube pointer-events-none absolute z-[4]" />
     </>
   );
 });
@@ -791,7 +789,7 @@ export const CorkboardCanvas: React.FC<CorkboardCanvasProps> = ({
         />
       </picture>
 
-      {/* Overhead Cold War Fluorescent Lamp Highlight: tube behind board (z-[4]), light wash over wall & board (z-[14]) */}
+      {/* Overhead Cold War Fluorescent Lamp Highlight: neon bar & subtle wall wash behind board (z-[4], hidden in focus mode) */}
       <FluorescentLampHighlight />
 
       {/* Focus view: dims the office wall and overhead lamp behind the board (opacity fade only) */}
