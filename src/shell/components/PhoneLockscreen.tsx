@@ -522,14 +522,13 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
     if (dragY.get() !== 0) animate(dragY, 0, SNAP_SPRING);
   };
 
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     if (state.mode !== 'lockscreen' || event.button !== 0 || !event.isPrimary) return;
-    if (event.target instanceof Element && event.target.closest('button')) return;
     swipeStartRef.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
     swipeLastRef.current = null;
   };
 
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
     const start = swipeStartRef.current;
     if (!start || start.id !== event.pointerId || state.mode !== 'lockscreen') return;
     const dx = event.clientX - start.x;
@@ -538,7 +537,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
     if (!shouldReduceMotion) dragY.set(lockscreenDragOffset(dy));
   };
 
-  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerUp = (event: React.PointerEvent<HTMLElement>) => {
     const start = swipeStartRef.current;
     if (!start || start.id !== event.pointerId) return;
     swipeLastRef.current = { dx: event.clientX - start.x, dy: event.clientY - start.y };
@@ -550,7 +549,7 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
   const visibleNotifications: LockscreenNotificationItem[] = config.notifications.slice(0, 2);
 
   return (
-    <motion.section
+    <section
       aria-label="Màn hình khóa điện thoại"
       data-phone-lockscreen="true"
       data-lockscreen-mode={state.mode}
@@ -558,13 +557,17 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
-      // Without this, mobile browsers claim the vertical drag as a scroll and cancel the pointer.
-      style={{ touchAction: 'none', y: dragY, willChange: 'transform', backfaceVisibility: 'hidden' }}
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: shouldReduceMotion ? 0.14 : 0.26, ease: EASE_OUT_IOS }}
-      className="absolute inset-0 z-30 flex flex-col justify-between overflow-hidden select-none font-sans text-white bg-gradient-to-b from-zinc-900 via-zinc-950 to-black"
+      // Stationary hit target so sliding the overlay panel up never moves it out from under the finger.
+      style={{ touchAction: 'none' }}
+      className="absolute inset-0 z-30 overflow-hidden select-none"
     >
+      <motion.div
+        style={{ y: dragY, willChange: 'transform', backfaceVisibility: 'hidden' }}
+        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: shouldReduceMotion ? 0.14 : 0.26, ease: EASE_OUT_IOS }}
+        className="absolute inset-0 flex flex-col justify-between overflow-hidden font-sans text-white bg-gradient-to-b from-zinc-900 via-zinc-950 to-black"
+      >
       {config.wallpaperUrl ? (
         <img
           src={config.wallpaperUrl}
@@ -908,7 +911,8 @@ export const PhoneLockscreen: React.FC<PhoneLockscreenProps> = ({
           </div>
         )}
       </AnimatePresence>
-    </motion.section>
+      </motion.div>
+    </section>
   );
 };
 
