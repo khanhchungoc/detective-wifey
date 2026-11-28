@@ -2,7 +2,8 @@ import React, { useCallback, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { IoChevronBackOutline, IoLockClosedOutline } from 'react-icons/io5';
 import type { HusbandProfile, LevelCardItem } from '../../../shared/contracts/game-flow';
-import { PaperSurface } from './FolderParts';
+import { INK_TEXT_STRONG, PaperSurface } from './FolderParts';
+import { CTA_SECONDARY } from './ctaStyles';
 import { LevelFile } from './LevelFile';
 import { SELECT_DEBOUNCE_MS, evaluateLevelCardClick, resolveDefaultLevelIndex } from './pagerLogic';
 import { usePager } from './usePager';
@@ -72,7 +73,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
         <button
           type="button"
           onClick={onBack}
-          className="touch-target-min inline-flex items-center gap-1 rounded-xl border border-white/10 bg-game-dossier py-2 pl-2 pr-4 text-ios-subheadline font-medium text-game-text hover:bg-game-elevated active:scale-95 transition-[transform,background-color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson/70"
+          className={`${CTA_SECONDARY} pl-2 pr-4`}
         >
           <IoChevronBackOutline aria-hidden="true" className="h-5 w-5" />
           Đổi hồ sơ
@@ -99,7 +100,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               data-level-tab={level.caseId}
               aria-selected={selected}
               onClick={() => pager.goTo(idx)}
-              className={`relative touch-target-min inline-flex shrink-0 items-center justify-center gap-1.5 rounded-t-md px-4 font-dossier text-ios-subheadline font-bold tabular-nums text-game-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
+              className={`relative touch-target-min inline-flex shrink-0 items-center justify-center gap-1.5 rounded-t-md px-4 text-ios-subheadline tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
                 selected ? 'min-h-14 -mb-3 pb-3' : 'min-h-11'
               }`}
             >
@@ -111,64 +112,72 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               >
                 <PaperSurface worn={false} />
               </span>
-              <span className="relative">Màn {level.levelNumber}</span>
+              <span className={`relative uppercase tracking-wider ${INK_TEXT_STRONG}`}>Màn {level.levelNumber}</span>
               {locked && <IoLockClosedOutline aria-label="Đã khóa" className="relative h-3.5 w-3.5" />}
             </button>
           );
         })}
       </div>
 
-      <div
-        className="relative z-10 mx-4 min-h-0 flex-1"
-        style={{ perspective: reduced ? undefined : '1200px' }}
-      >
-        <div
-          className="absolute inset-0 rounded-xl rounded-tl-none border border-game-ink/30 bg-game-kraft shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
-        >
+      {/*
+        Stacking: this wrapper must NOT create a stacking context (no z-index, no perspective, no
+        transform). Perspective/transform on the old wrapper trapped the flipping cover and pages
+        inside its z-10 context, so the z-30 tab row painted over them. Now the static back board
+        sits under the tabs (z-10) and the 3D layer (cover + pages) is a sibling above them (z-40)
+        in the section context. The 3D layer ignores pointer events except on the pager surface,
+        which starts below the tab overlap, so tabs stay tappable.
+      */}
+      <div className="relative mx-4 min-h-0 flex-1">
+        <div className="absolute inset-0 z-10 rounded-xl rounded-tl-none border border-game-ink/30 bg-game-kraft shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]">
           <PaperSurface />
         </div>
 
         <div
-          ref={pager.surfaceRef}
-          {...pager.handlers}
-          style={{ touchAction: 'pan-y' }}
-          className="absolute inset-3 overflow-visible"
+          className="pointer-events-none absolute inset-0 z-40"
+          style={{ perspective: reduced ? undefined : '1200px' }}
         >
-          {levels.map((level, idx) => (
-            <LevelFile
-              key={level.caseId}
-              level={level}
-              subjectPortraitUrl={husband.portraitUrl}
-              index={idx}
-              isActive={idx === index}
-              pos={pager.pos}
-              reduced={reduced}
-              lockedFeedback={idx === index ? lockedFeedback : null}
-              isShaking={shakingId === level.caseId}
-              onShakeDone={() => setShakingId(null)}
-              onFileTap={() => {
-                if (pager.consumeDragClick()) return;
-                if (!level.unlocked && !level.isGuide) handleLevelAction(level);
-              }}
-              onStart={() => handleLevelAction(level)}
-            />
-          ))}
-        </div>
-
-        {!coverGone && (
-          <motion.div
-            aria-hidden="true"
-            initial={{ rotateY: 0 }}
-            animate={reduced ? { opacity: [1, 1, 0] } : { rotateY: -112 }}
-            transition={{ duration: reduced ? 0.18 : 0.34, ease: 'easeInOut' }}
-            onAnimationComplete={() => setCoverGone(true)}
-            style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
-            className="pointer-events-none absolute inset-0 z-40 bg-game-manila flex items-center justify-center rounded-xl rounded-tl-none border border-game-ink/30 shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+          <div
+            ref={pager.surfaceRef}
+            {...pager.handlers}
+            style={{ touchAction: 'pan-y' }}
+            className="pointer-events-auto absolute inset-3 overflow-visible"
           >
-            <PaperSurface />
-            <span className="relative font-dossier text-ios-title-2 font-extrabold uppercase text-game-ink">{caseCode}</span>
-          </motion.div>
-        )}
+            {levels.map((level, idx) => (
+              <LevelFile
+                key={level.caseId}
+                level={level}
+                subjectPortraitUrl={husband.portraitUrl}
+                index={idx}
+                isActive={idx === index}
+                pos={pager.pos}
+                reduced={reduced}
+                lockedFeedback={idx === index ? lockedFeedback : null}
+                isShaking={shakingId === level.caseId}
+                onShakeDone={() => setShakingId(null)}
+                onFileTap={() => {
+                  if (pager.consumeDragClick()) return;
+                  if (!level.unlocked && !level.isGuide) handleLevelAction(level);
+                }}
+                onStart={() => handleLevelAction(level)}
+              />
+            ))}
+          </div>
+
+          {!coverGone && (
+            <motion.div
+              aria-hidden="true"
+              initial={{ rotateY: 0 }}
+              animate={reduced ? { opacity: [1, 1, 0] } : { rotateY: -112 }}
+              transition={{ duration: reduced ? 0.18 : 0.34, ease: 'easeInOut' }}
+              onAnimationComplete={() => setCoverGone(true)}
+              style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
+              className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center rounded-xl rounded-tl-none border border-game-ink/30 bg-game-manila shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
+            >
+              <PaperSurface />
+              <span className={`relative text-ios-title-2 uppercase tracking-wider ${INK_TEXT_STRONG}`}>{caseCode}</span>
+            </motion.div>
+          )}
+        </div>
       </div>
     </section>
   );

@@ -374,7 +374,7 @@ describe('LevelContextBriefing (US-037)', () => {
     );
     expect(startButtons).toHaveLength(1);
     expect(String(startButtons[0].props.className)).toContain('game-btn-primary');
-    expect(String(startButtons[0].props.className)).toContain('min-h-[48px]');
+    expect(String(startButtons[0].props.className)).toContain('min-h-[52px]');
     expect(String(startButtons[0].props.className)).toContain('touch-target-min');
     (startButtons[0].props.onClick as () => void)();
     expect(onStartInvestigation).toHaveBeenCalledTimes(1);

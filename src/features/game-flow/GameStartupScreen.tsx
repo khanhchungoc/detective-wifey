@@ -9,6 +9,7 @@ import {
 } from 'react-icons/io5';
 import startupHeroUrl from './assets/startup-hero.jpg';
 import gameLogoUrl from './assets/game-logo.png';
+import { CTA_PRIMARY, CTA_SECONDARY } from './case-files/ctaStyles';
 
 export interface GameStartupScreenProps {
   onStart: () => void;
@@ -234,7 +235,7 @@ export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
                 onClick={onContinueClick}
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.98, y: 1 }}
                 transition={{ duration: 0.12 }}
-                className="game-btn-primary touch-target-min w-full min-h-[52px] px-6 py-3 inline-flex items-center justify-center gap-2.5 rounded-xl text-ios-callout font-semibold text-white transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-game-paper disabled:opacity-75"
+                className={`${CTA_PRIMARY} w-full disabled:opacity-75`}
               >
                 <IoPlay aria-hidden="true" className="w-[18px] h-[18px] shrink-0" />
                 <span>
@@ -251,8 +252,8 @@ export const StartupActionArea: React.FC<StartupActionAreaProps> = ({
               transition={{ duration: 0.12 }}
               className={
                 showContinue
-                  ? 'game-btn-secondary touch-target-min w-full min-h-[48px] px-6 py-3 inline-flex items-center justify-center gap-2.5 rounded-xl text-ios-subheadline font-medium text-game-paper transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-game-paper disabled:opacity-75'
-                  : 'game-btn-primary touch-target-min w-full min-h-[52px] px-6 py-3 inline-flex items-center justify-center gap-2.5 rounded-xl text-ios-callout font-semibold text-white transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-game-paper disabled:opacity-75'
+                  ? `game-btn-secondary ${CTA_SECONDARY} w-full min-h-[52px] px-6 text-game-paper disabled:opacity-75`
+                  : `${CTA_PRIMARY} w-full disabled:opacity-75`
               }
             >
               {showContinue ? (

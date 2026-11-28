@@ -7,18 +7,12 @@ import React from 'react';
 
 const svgUri = (svg: string) => `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 
-/** Speckled grain: dark brown flecks with noise-driven alpha. */
-const GRAIN_URI = svgUri(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="g" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.30  0 0 0 0 0.20  0 0 0 0 0.07  1.9 0 0 0 -0.78"/></filter><rect width="220" height="220" filter="url(#g)"/></svg>`,
-);
-
-/** Long soft fibres plus cloudy blotches, for uneven paper tone. */
-const FIBER_URI = svgUri(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="f" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.35" numOctaves="2" seed="3" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.30  0 0 0 0 0.10  0.9 0 0 0 -0.34"/></filter><rect width="300" height="300" filter="url(#f)"/></svg>`,
-);
-
-const BLOTCH_URI = svgUri(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="b" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" seed="11" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.50  0 0 0 0 0.33  0 0 0 0 0.12  1.8 0 0 0 -0.8"/></filter><rect width="400" height="400" filter="url(#b)"/></svg>`,
+/**
+ * Paper speckle: isotropic fine fibre noise (same frequency on both axes, so no streaks), dark brown,
+ * very low alpha. A 256px tile with stitching so repeats are invisible at this contrast.
+ */
+const SPECK_URI = svgUri(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><filter id="s" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="21" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.36  0 0 0 0 0.27  0 0 0 0 0.14  0 0 0 -3 1.3"/></filter><rect width="256" height="256" filter="url(#s)"/></svg>`,
 );
 
 /** Rough ink: erodes a stamp with speckles. Used as a mask on a static element. */
@@ -26,30 +20,82 @@ const INK_MASK_URI = svgUri(
   `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="m" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="5" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.2 0 0 0 2.75"/></filter><rect width="160" height="160" filter="url(#m)"/></svg>`,
 );
 
-/** Paper surface: grain + fibres + blotches + worn, darker edges + corner scuffs. Parent must be `relative`. */
-export const PaperSurface: React.FC<{ worn?: boolean }> = ({ worn = true }) => (
+/** A few faint foxing spots (age freckles), fixed positions so the sheet looks the same on every render. */
+const FOXING =
+  'radial-gradient(circle at 18% 24%, rgba(150,100,40,0.13) 0, transparent 9px), radial-gradient(circle at 71% 12%, rgba(150,100,40,0.10) 0, transparent 14px), radial-gradient(circle at 84% 63%, rgba(150,100,40,0.12) 0, transparent 11px), radial-gradient(circle at 33% 82%, rgba(150,100,40,0.09) 0, transparent 16px), radial-gradient(circle at 9% 57%, rgba(150,100,40,0.08) 0, transparent 7px)';
+
+/** Soft darker edges, as if the sheet yellowed from the rim inward. */
+const VIGNETTE = 'radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(112,80,30,0.2) 100%)';
+
+/** One faint horizontal fold: a thin shadow line with a highlight right below it. */
+const CREASE =
+  'linear-gradient(to bottom, transparent calc(50% - 3px), rgba(90,62,22,0.1) calc(50% - 1px), rgba(255,255,255,0.28) calc(50% + 1px), transparent calc(50% + 4px))';
+
+/**
+ * The ONE paper look used by folder, files, tabs and the briefing sheet: flat paper colour (set by the
+ * parent's bg token) + fine isotropic speckle + faint foxing + darker rim. Static layers only.
+ * Parent must be `relative`; pass `behind` (with `isolate` on the parent) when the content is not itself positioned.
+ */
+export const PaperSurface: React.FC<{ worn?: boolean; crease?: boolean; behind?: boolean }> = ({
+  worn = true,
+  crease = false,
+  behind = false,
+}) => (
   <>
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 rounded-[inherit]"
+      className={`pointer-events-none absolute inset-0 rounded-[inherit] ${behind ? '-z-10' : ''}`}
       style={{
-        backgroundImage: `${BLOTCH_URI}, ${FIBER_URI}, ${GRAIN_URI}`,
-        backgroundSize: '400px 400px, 300px 300px, 220px 220px',
+        backgroundImage: `${worn ? `${FOXING}, ` : ''}${SPECK_URI}`,
+        backgroundSize: worn ? 'auto, auto, auto, auto, auto, 256px 256px' : '256px 256px',
+        opacity: 0.42,
       }}
     />
     {worn && (
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[inherit]"
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] ${behind ? '-z-10' : ''}`}
         style={{
-          boxShadow:
-            'inset 0 0 14px 1px rgba(122,86,28,0.45), inset 3px 0 9px -2px rgba(122,86,28,0.35), inset 0 -5px 12px -3px rgba(100,68,20,0.4)',
-          backgroundImage:
-            'radial-gradient(circle at 0% 0%, rgba(110,75,25,0.38) 0, transparent 22%), radial-gradient(circle at 100% 100%, rgba(110,75,25,0.34) 0, transparent 26%), radial-gradient(circle at 100% 0%, rgba(110,75,25,0.2) 0, transparent 16%)',
+          backgroundImage: crease ? `${CREASE}, ${VIGNETTE}` : VIGNETTE,
+          boxShadow: 'inset 0 0 10px rgba(122,86,28,0.22)',
         }}
       />
     )}
   </>
+);
+
+/**
+ * Typewriter ink. `INK_FILTER_ID` is defined once per screen by <InkFilterDefs />; the filter is static
+ * (no animation), so it is rasterised once and never re-run during drags.
+ */
+export const INK_TEXT = 'font-typewriter font-normal text-game-ink [filter:url(#ink-spread)]';
+/** Slightly stronger bleed for headings. Xanh Mono has a single weight, so emphasis comes from here. */
+export const INK_TEXT_STRONG = 'font-typewriter font-normal text-game-ink [filter:url(#ink-press)]';
+/** Secondary typed text (labels). Still AA on paper. */
+export const INK_TEXT_SOFT = 'font-typewriter font-normal text-game-ink-secondary [filter:url(#ink-spread)]';
+
+const inkFilter = (id: string, blur: number, displace: number, table: string) => (
+  <filter id={id} x="-2%" y="-8%" width="104%" height="116%" colorInterpolationFilters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="9" result="grain" />
+    <feDisplacementMap in="SourceGraphic" in2="grain" scale={displace} xChannelSelector="R" yChannelSelector="G" result="wobble" />
+    <feGaussianBlur in="wobble" stdDeviation={blur} result="bleed" />
+    <feComponentTransfer in="bleed" result="inked">
+      <feFuncA type="table" tableValues={table} />
+    </feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="cloud" />
+    <feColorMatrix in="cloud" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.8 1.4" result="density" />
+    <feComposite in="inked" in2="density" operator="in" />
+  </filter>
+);
+
+/** Render once per screen that shows typed paper text. */
+export const InkFilterDefs: React.FC = () => (
+  <svg aria-hidden="true" focusable="false" width="0" height="0" className="pointer-events-none absolute">
+    <defs>
+      {inkFilter('ink-spread', 0.35, 1.0, '0 0.2 0.8 1 1 1')}
+      {inkFilter('ink-press', 0.5, 1.2, '0 0.3 0.9 1 1 1')}
+    </defs>
+  </svg>
 );
 
 /** Coffee ring stain, drawn once as a static SVG. */
@@ -111,7 +157,7 @@ export const LabelStrip: React.FC<{ className?: string; children: React.ReactNod
     <span
       aria-hidden="true"
       className="pointer-events-none absolute inset-0"
-      style={{ backgroundImage: `${GRAIN_URI}`, backgroundSize: '220px 220px', opacity: 0.55 }}
+      style={{ backgroundImage: SPECK_URI, backgroundSize: '256px 256px', opacity: 0.8 }}
     />
     <div className="relative">{children}</div>
   </div>
@@ -134,7 +180,10 @@ export const RedactedSilhouette: React.FC<{ className?: string }> = ({ className
 );
 
 export const RedactionBar: React.FC<{ className?: string }> = ({ className }) => (
-  <span aria-hidden="true" className={`block h-3.5 rounded-sm bg-black ${className ?? ''}`} />
+  <span
+    aria-hidden="true"
+    className={`block h-3.5 rounded-[1px] bg-black [filter:url(#ink-press)] ${className ?? ''}`}
+  />
 );
 
 /**

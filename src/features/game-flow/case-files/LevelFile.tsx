@@ -3,7 +3,17 @@ import { motion, useTransform } from 'motion/react';
 import type { MotionValue } from 'motion/react';
 import { IoAlertCircleOutline, IoLockClosedOutline, IoStar, IoStarOutline } from 'react-icons/io5';
 import type { LevelCardItem } from '../../../shared/contracts/game-flow';
-import { AttachedPhoto, CoffeeRing, PaperSurface, RubberStamp, Staple } from './FolderParts';
+import {
+  AttachedPhoto,
+  CoffeeRing,
+  INK_TEXT,
+  INK_TEXT_SOFT,
+  INK_TEXT_STRONG,
+  PaperSurface,
+  RubberStamp,
+  Staple,
+} from './FolderParts';
+import { CTA_PRIMARY } from './ctaStyles';
 
 interface LevelFileProps {
   level: LevelCardItem;
@@ -84,7 +94,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
         className="relative flex min-h-0 flex-1 flex-col gap-3 p-4 pt-6"
       >
         <div className="flex items-start justify-between gap-3">
-          <span className="font-dossier text-ios-subheadline font-extrabold uppercase tabular-nums text-game-ink">
+          <span className={`text-ios-subheadline uppercase tracking-widest tabular-nums ${INK_TEXT_STRONG}`}>
             Màn {level.levelNumber}
           </span>
           {isGuide && (
@@ -110,7 +120,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
           )}
         </div>
 
-        <h3 className="font-dossier text-ios-title-2 font-extrabold leading-tight text-game-ink">{level.levelTitle}</h3>
+        <h3 className={`text-ios-title-2 leading-tight ${INK_TEXT_STRONG}`}>{level.levelTitle}</h3>
         <div aria-hidden="true" className="border-t border-dashed border-game-ink/40" />
         <span
           aria-hidden="true"
@@ -121,7 +131,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
           }}
         />
         <div className="flex items-start justify-between gap-3">
-          <p className="min-w-0 flex-1 text-ios-callout leading-snug text-game-ink">{level.summary}</p>
+          <p className={`min-w-0 flex-1 text-ios-callout leading-snug ${INK_TEXT}`}>{level.summary}</p>
           {!isGuide && (
             <div className="h-36 shrink-0 pr-1 pt-2">
               <AttachedPhoto src={subjectPortraitUrl} tilt="rotate-3" className="h-full" />
@@ -131,7 +141,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
 
         <div className="relative mt-auto flex flex-col gap-2">
           {locked && (
-            <p className="flex items-center gap-2 text-ios-footnote font-medium text-game-ink">
+            <p className={`flex items-center gap-2 text-ios-footnote ${INK_TEXT}`}>
               <IoLockClosedOutline aria-hidden="true" className="h-4 w-4 shrink-0" />
               <span>{levelLockHint(level)}</span>
             </p>
@@ -146,7 +156,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
             </p>
           )}
           {isGuide && (
-            <span className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-game-ink/60 font-dossier text-ios-subheadline font-bold text-game-ink">
+            <span className={`inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-game-ink/60 text-ios-subheadline uppercase tracking-widest ${INK_TEXT_SOFT}`}>
               Sắp có
             </span>
           )}
@@ -158,7 +168,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
                 e.stopPropagation();
                 onStart();
               }}
-              className="touch-target-min min-h-12 w-full rounded-xl bg-game-crimson px-4 font-dossier text-ios-headline font-bold text-game-text shadow-[0_8px_20px_-8px_rgba(225,29,72,0.7)] transition-[transform] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-ink focus-visible:ring-offset-2 focus-visible:ring-offset-game-film-frame"
+              className={`${CTA_PRIMARY} w-full active:scale-[0.98]`}
             >
               Điều tra màn này
             </button>

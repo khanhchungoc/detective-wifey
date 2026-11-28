@@ -5,6 +5,8 @@ import type { HusbandProfile } from '../../../shared/contracts/game-flow';
 import {
   AttachedPhoto,
   CoffeeRing,
+  INK_TEXT,
+  INK_TEXT_STRONG,
   LabelStrip,
   PaperSurface,
   RedactionBar,
@@ -70,13 +72,13 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
     >
       <div
         data-case-folder-tab="true"
-        className="relative ml-3 flex h-8 w-fit items-center border border-b-0 border-game-ink/25 bg-game-manila px-4 font-dossier text-ios-caption-2 font-extrabold uppercase text-game-ink"
+        className="relative ml-3 flex h-8 w-fit items-center border border-b-0 border-game-ink/25 bg-game-manila px-4 text-ios-caption-1 uppercase tracking-wider text-game-ink"
         style={{
           clipPath: 'polygon(0 100%, 0 30%, 10px 0, calc(100% - 10px) 0, 100% 30%, 100% 100%)',
         }}
       >
         <PaperSurface worn={false} />
-        <span className="relative">{caseCode}</span>
+        <span className={`relative ${INK_TEXT}`}>{caseCode}</span>
       </div>
 
       <div
@@ -87,7 +89,7 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
         <CoffeeRing className="absolute -bottom-3 -right-3 h-24 w-24 rotate-12" />
 
         <LabelStrip className="-rotate-1">
-          <h2 className="font-dossier text-ios-title-2 font-extrabold uppercase leading-tight text-game-ink">
+          <h2 className={`text-ios-title-3 uppercase leading-tight tracking-wide ${INK_TEXT_STRONG}`}>
             {husband.displayName}
           </h2>
         </LabelStrip>
@@ -116,7 +118,7 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
             </>
           ) : (
             <>
-              <p className="text-ios-footnote font-medium leading-snug text-game-ink">
+              <p className={`text-ios-footnote leading-snug ${INK_TEXT}`}>
                 {husband.age} tuổi · {husband.occupation}
               </p>
               <p className="line-clamp-2 -rotate-1 font-handwriting text-ios-footnote leading-snug text-game-ink">

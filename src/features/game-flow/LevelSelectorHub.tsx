@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { IoVolumeHighOutline, IoVolumeMuteOutline } from 'react-icons/io5';
 import type { HusbandProfile, LevelCardItem } from '../../shared/contracts/game-flow';
+import { InkFilterDefs } from './case-files/FolderParts';
 import { HusbandStage } from './case-files/HusbandStage';
 import { LevelStage } from './case-files/LevelStage';
 import { clampPageIndex, resolveInitialHusbandIndex } from './case-files/pagerLogic';
@@ -67,6 +68,7 @@ export const LevelSelectorHub: React.FC<LevelSelectorHubProps> = ({
       data-screen="level-selector-hub"
       data-selector-stage={stage}
     >
+      <InkFilterDefs />
       <header className="w-full shrink-0 border-b border-white/10 bg-game-backdrop">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-3 md:px-8">
           <h1 className="text-ios-headline font-semibold leading-tight text-game-text">Hồ sơ vụ án</h1>
