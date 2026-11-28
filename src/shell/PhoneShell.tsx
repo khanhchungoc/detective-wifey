@@ -287,7 +287,7 @@ export const PhoneShell: React.FC<PhoneShellProps> = ({
         <div
           role="status"
           aria-live="polite"
-          className="absolute left-1/2 -translate-x-1/2 z-[75] max-w-[90%] w-auto px-4 py-2 rounded-full bg-slate-900/90 backdrop-blur-2xl border border-white/20 text-white shadow-[0_12px_28px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 animate-slideDown pointer-events-none select-none"
+          className="glass-elevated absolute left-1/2 -translate-x-1/2 z-[75] max-w-[90%] w-auto px-4 py-2 rounded-full text-white flex items-center justify-center gap-2 animate-slideDown pointer-events-none select-none"
           style={{ top: 'calc(var(--phone-system-top, 59px) + 8px)' }}
         >
           <IoShieldCheckmarkOutline className="w-4 h-4 text-emerald-400 shrink-0" />

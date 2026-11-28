@@ -223,7 +223,7 @@ export const AssistiveTouch: React.FC<AssistiveTouchProps> = ({
           top: 0,
           touchAction: 'none',
         }}
-        className={`absolute z-40 flex h-14 w-14 cursor-grab data-[dragging]:cursor-grabbing select-none items-center justify-center rounded-[18px] bg-[#242426]/70 shadow-lg backdrop-blur-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${isPresent ? 'pointer-events-none' : ''}`}
+        className={`glass-elevated absolute z-40 flex h-14 w-14 cursor-grab data-[dragging]:cursor-grabbing select-none items-center justify-center rounded-[18px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${isPresent ? 'pointer-events-none' : ''}`}
       >
         <span aria-hidden="true" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/25 shadow-[0_0_0_1px_rgba(0,0,0,0.25)]">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/50">
