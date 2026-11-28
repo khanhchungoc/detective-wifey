@@ -65,38 +65,17 @@ export const PaperSurface: React.FC<{ worn?: boolean; crease?: boolean; behind?:
 );
 
 /**
- * Typewriter ink. `INK_FILTER_ID` is defined once per screen by <InkFilterDefs />; the filter is static
- * (no animation), so it is rasterised once and never re-run during drags.
+ * Typewriter ink. Uses lightweight CSS text-shadow ink bleed instead of live SVG turbulence
+ * filters so animated sheets stay 120Hz on Chrome Android GPUs without per-frame shader passes.
  */
-export const INK_TEXT = 'font-typewriter font-normal text-game-ink [filter:url(#ink-spread)]';
+export const INK_TEXT = 'font-typewriter font-normal text-game-ink [text-shadow:0_0_0.5px_rgba(42,30,12,0.28)]';
 /** Slightly stronger bleed for headings; emphasis comes from the ink, not a bold weight. */
-export const INK_TEXT_STRONG = 'font-typewriter font-normal text-game-ink [filter:url(#ink-press)]';
+export const INK_TEXT_STRONG = 'font-typewriter font-normal text-game-ink [text-shadow:0_0_0.75px_rgba(42,30,12,0.42)]';
 /** Secondary typed text (labels). Still AA on paper. */
-export const INK_TEXT_SOFT = 'font-typewriter font-normal text-game-ink-secondary [filter:url(#ink-spread)]';
+export const INK_TEXT_SOFT = 'font-typewriter font-normal text-game-ink-secondary [text-shadow:0_0_0.5px_rgba(42,30,12,0.22)]';
 
-const inkFilter = (id: string, blur: number, displace: number, table: string) => (
-  <filter id={id} x="-2%" y="-8%" width="104%" height="116%" colorInterpolationFilters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="9" result="grain" />
-    <feDisplacementMap in="SourceGraphic" in2="grain" scale={displace} xChannelSelector="R" yChannelSelector="G" result="wobble" />
-    <feGaussianBlur in="wobble" stdDeviation={blur} result="bleed" />
-    <feComponentTransfer in="bleed" result="inked">
-      <feFuncA type="table" tableValues={table} />
-    </feComponentTransfer>
-    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="cloud" />
-    <feColorMatrix in="cloud" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.8 1.4" result="density" />
-    <feComposite in="inked" in2="density" operator="in" />
-  </filter>
-);
-
-/** Render once per screen that shows typed paper text. */
-export const InkFilterDefs: React.FC = () => (
-  <svg aria-hidden="true" focusable="false" width="0" height="0" className="pointer-events-none absolute">
-    <defs>
-      {inkFilter('ink-spread', 0.35, 1.0, '0 0.2 0.8 1 1 1')}
-      {inkFilter('ink-press', 0.5, 1.2, '0 0.3 0.9 1 1 1')}
-    </defs>
-  </svg>
-);
+/** Kept as a no-op export for screen callers; ink styling is pure CSS now. */
+export const InkFilterDefs: React.FC = () => null;
 
 /** Coffee ring stain, drawn once as a static SVG. */
 export const CoffeeRing: React.FC<{ className?: string }> = ({ className }) => (
@@ -182,7 +161,7 @@ export const RedactedSilhouette: React.FC<{ className?: string }> = ({ className
 export const RedactionBar: React.FC<{ className?: string }> = ({ className }) => (
   <span
     aria-hidden="true"
-    className={`block h-3.5 rounded-[1px] bg-black [filter:url(#ink-press)] ${className ?? ''}`}
+    className={`block h-3.5 rounded-[1px] bg-black ${className ?? ''}`}
   />
 );
 

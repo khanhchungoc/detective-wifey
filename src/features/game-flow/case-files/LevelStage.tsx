@@ -6,7 +6,12 @@ import { INK_TEXT_STRONG, PaperSurface } from './FolderParts';
 import { LevelTab } from './LevelTab';
 import { CTA_SECONDARY } from './ctaStyles';
 import { LevelFile } from './LevelFile';
-import { SELECT_DEBOUNCE_MS, evaluateLevelCardClick, resolveDefaultLevelIndex } from './pagerLogic';
+import {
+  SELECT_DEBOUNCE_MS,
+  evaluateLevelCardClick,
+  resolveDefaultLevelIndex,
+  resolveSheetRestPose,
+} from './pagerLogic';
 import { useBinder } from './useBinder';
 
 interface LevelStageProps {
@@ -96,7 +101,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
 
         <div
           className="pointer-events-none absolute inset-0 z-40"
-          style={{ perspective: reduced ? undefined : '1200px' }}
+          style={{ perspective: !coverGone && !reduced ? '1200px' : undefined }}
         >
           <div role="tablist" aria-label="Danh sách màn" className="pointer-events-none absolute inset-x-3 top-0 z-40 h-16">
             {levels.map((level, idx) => (
@@ -106,7 +111,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 index={idx}
                 total={levels.length}
                 selected={idx === index}
-                zIndex={binder.sheets[idx].zIndex}
+                zIndex={resolveSheetRestPose(idx, index).zIndex}
                 onSelect={() => binder.goTo(idx)}
               />
             ))}
@@ -126,7 +131,8 @@ export const LevelStage: React.FC<LevelStageProps> = ({
                 index={idx}
                 total={levels.length}
                 isActive={idx === index}
-                sheet={binder.sheets[idx]}
+                restPose={resolveSheetRestPose(idx, index)}
+                sheetRef={binder.registerSheet(idx)}
                 lockedFeedback={idx === index ? lockedFeedback : null}
                 isShaking={shakingId === level.caseId}
                 onShakeDone={() => setShakingId(null)}

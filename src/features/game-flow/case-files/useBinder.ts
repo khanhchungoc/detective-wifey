@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react';
-import { animate, motionValue } from 'motion/react';
-import type { AnimationPlaybackControls, MotionValue } from 'motion/react';
 import {
   DRAG_START_PX,
   STACK_ACTIVE_Z,
@@ -11,25 +9,16 @@ import {
 } from './pagerLogic';
 import type { PagerHandlers } from './usePager';
 
-const SHUFFLE_DURATION_S = 0.31;
-const SHUFFLE_EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-const INCOMING_LIFT_PX = -34;
-const OUTGOING_TUCK_PX = 18;
-const SNAP_SPRING = { type: 'spring' as const, stiffness: 360, damping: 32, mass: 0.85 };
+const SHUFFLE_DURATION_MS = 280;
+const SNAP_DURATION_MS = 220;
+const SHUFFLE_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const INCOMING_LIFT_PX = -28;
+const OUTGOING_TUCK_PX = 14;
 const MAX_DRAG_ROTATE_DEG = 3;
 
-export interface SheetMotion {
-  x: MotionValue<number>;
-  y: MotionValue<number>;
-  scale: MotionValue<number>;
-  rotate: MotionValue<number>;
-  zIndex: MotionValue<number>;
-  shade: MotionValue<number>;
-}
-
 export interface Binder {
-  /** Per-sheet compositor motion values (no React renders during drag or shuffle). */
-  sheets: SheetMotion[];
+  /** Ref callback to attach each sheet DOM node for compositor-thread WAAPI transitions. */
+  registerSheet: (index: number) => (el: HTMLDivElement | null) => void;
   goTo: (index: number) => void;
   handlers: PagerHandlers;
   /** True when the last pointer gesture was a drag, so the following click must be ignored. */
@@ -46,27 +35,20 @@ interface DragState {
   lastT: number;
   velocityX: number;
   dragging: boolean;
+  currentDx: number;
+  currentRotate: number;
 }
-
-const createSheetMotion = (sheetIndex: number, activeIndex: number): SheetMotion => {
-  const rest = resolveSheetRestPose(sheetIndex, activeIndex);
-  return {
-    x: motionValue(0),
-    y: motionValue(rest.y),
-    scale: motionValue(rest.scale),
-    rotate: motionValue(0),
-    zIndex: motionValue(rest.zIndex),
-    shade: motionValue(rest.shade),
-  };
-};
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
+const restTransform = (y: number) => `translate3d(0px, ${y}px, 0px)`;
+const dragTransform = (x: number, y: number, deg: number) =>
+  `translate3d(${x.toFixed(1)}px, ${y}px, 0px) rotate(${deg.toFixed(2)}deg)`;
+
 /**
- * Physical manila-folder stack: every sheet stays in the stack at all times.
- * Switching pulls the newly selected sheet up and forward onto the top while
- * tucking the outgoing sheet behind the stack. Horizontal drags move the active
- * sheet sideways with subtle tilt and settle cleanly on release.
+ * Physical manila-folder stack driven by native compositor-thread WAAPI (`element.animate`).
+ * Only the moving sheets animate (`transform: translate3d(...)` only, zero scale or filter
+ * re-rasterization), keeping 120Hz smooth frame times on Chrome Android.
  */
 export function useBinder(params: {
   index: number;
@@ -77,10 +59,8 @@ export function useBinder(params: {
   onIndexChange: (index: number) => void;
 }): Binder {
   const { index, total, reduced, strideRatio = 0.7, onIndexChange } = params;
-  const [sheets] = useState<SheetMotion[]>(() =>
-    Array.from({ length: total }, (_, i) => createSheetMotion(i, index)),
-  );
-  const controlsRef = useRef<AnimationPlaybackControls[]>([]);
+  const sheetElsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const activeAnimsRef = useRef<Animation[]>([]);
   const logicalIndexRef = useRef(index);
   const surfaceRef = useRef<HTMLDivElement | null>(null);
   const widthRef = useRef(0);
@@ -102,90 +82,75 @@ export function useBinder(params: {
     return () => observer.disconnect();
   }, []);
 
-  const stopAnimations = useCallback(() => {
-    controlsRef.current.forEach((c) => c.stop());
-    controlsRef.current = [];
+  const cancelAnimations = useCallback(() => {
+    for (const anim of activeAnimsRef.current) {
+      anim.cancel();
+    }
+    activeAnimsRef.current = [];
   }, []);
 
-  const track = useCallback((ctrl: AnimationPlaybackControls) => {
-    controlsRef.current.push(ctrl);
+  const applyRestTransforms = useCallback((target: number) => {
+    for (let i = 0; i < sheetElsRef.current.length; i += 1) {
+      const el = sheetElsRef.current[i];
+      if (!el) continue;
+      const rest = resolveSheetRestPose(i, target);
+      el.style.transform = restTransform(rest.y);
+      el.style.zIndex = String(rest.zIndex);
+    }
   }, []);
 
-  const applyRestImmediate = useCallback(
-    (target: number) => {
-      stopAnimations();
-      sheets.forEach((mv, sheetIdx) => {
-        const rest = resolveSheetRestPose(sheetIdx, target);
-        mv.x.set(0);
-        mv.y.set(rest.y);
-        mv.scale.set(rest.scale);
-        mv.rotate.set(0);
-        mv.zIndex.set(rest.zIndex);
-        mv.shade.set(rest.shade);
-      });
-    },
-    [sheets, stopAnimations],
-  );
+  const runShuffle = useCallback(
+    (from: number, to: number, fromDrag?: { dx: number; rotate: number }) => {
+      cancelAnimations();
+      applyRestTransforms(to);
+      if (reduced) return;
 
-  const shuffleTo = useCallback(
-    (from: number, to: number) => {
-      if (reduced) {
-        applyRestImmediate(to);
-        return;
+      const toEl = sheetElsRef.current[to];
+      const fromEl = sheetElsRef.current[from];
+      const toRest = resolveSheetRestPose(to, to);
+      const fromRest = resolveSheetRestPose(from, to);
+      const toPrev = resolveSheetRestPose(to, from);
+      const fromPrev = resolveSheetRestPose(from, from);
+
+      if (toEl && typeof toEl.animate === 'function') {
+        toEl.style.zIndex = String(STACK_ACTIVE_Z + 1);
+        const anim = toEl.animate(
+          [
+            { transform: restTransform(toPrev.y), offset: 0 },
+            { transform: restTransform(INCOMING_LIFT_PX), offset: 0.45 },
+            { transform: restTransform(toRest.y), offset: 1 },
+          ],
+          { duration: SHUFFLE_DURATION_MS, easing: SHUFFLE_EASE },
+        );
+        const settleZ = () => {
+          if (logicalIndexRef.current === to) {
+            toEl.style.zIndex = String(toRest.zIndex);
+          }
+        };
+        anim.onfinish = settleZ;
+        anim.oncancel = settleZ;
+        activeAnimsRef.current.push(anim);
       }
 
-      stopAnimations();
-
-      sheets.forEach((mv, sheetIdx) => {
-        const rest = resolveSheetRestPose(sheetIdx, to);
-        const tween = { duration: SHUFFLE_DURATION_S, ease: SHUFFLE_EASE };
-
-        if (sheetIdx === to) {
-          // Incoming sheet lifts upward from behind and settles onto the front of the stack.
-          mv.zIndex.set(STACK_ACTIVE_Z + 1);
-          track(
-            animate(mv.y, [mv.y.get(), INCOMING_LIFT_PX, rest.y], {
-              duration: SHUFFLE_DURATION_S,
-              times: [0, 0.45, 1],
-              ease: SHUFFLE_EASE,
-              onComplete: () => mv.zIndex.set(rest.zIndex),
-            }),
-          );
-          track(animate(mv.x, 0, tween));
-          track(
-            animate(mv.scale, [mv.scale.get(), 1.01, rest.scale], {
-              duration: SHUFFLE_DURATION_S,
-              times: [0, 0.45, 1],
-              ease: SHUFFLE_EASE,
-            }),
-          );
-          track(animate(mv.rotate, 0, tween));
-          track(animate(mv.shade, rest.shade, tween));
-        } else if (sheetIdx === from) {
-          // Outgoing sheet tucks smoothly behind the incoming front sheet.
-          mv.zIndex.set(rest.zIndex);
-          track(
-            animate(mv.y, [mv.y.get(), OUTGOING_TUCK_PX, rest.y], {
-              duration: SHUFFLE_DURATION_S,
-              times: [0, 0.45, 1],
-              ease: SHUFFLE_EASE,
-            }),
-          );
-          track(animate(mv.x, 0, tween));
-          track(animate(mv.scale, rest.scale, tween));
-          track(animate(mv.rotate, 0, tween));
-          track(animate(mv.shade, rest.shade, tween));
-        } else {
-          mv.zIndex.set(rest.zIndex);
-          track(animate(mv.x, 0, tween));
-          track(animate(mv.y, rest.y, tween));
-          track(animate(mv.scale, rest.scale, tween));
-          track(animate(mv.rotate, 0, tween));
-          track(animate(mv.shade, rest.shade, tween));
-        }
-      });
+      if (fromEl && from !== to && typeof fromEl.animate === 'function') {
+        const startFrame = fromDrag
+          ? dragTransform(fromDrag.dx, fromPrev.y, fromDrag.rotate)
+          : restTransform(fromPrev.y);
+        const midFrame = fromDrag
+          ? dragTransform(fromDrag.dx * 0.35, OUTGOING_TUCK_PX, fromDrag.rotate * 0.35)
+          : restTransform(OUTGOING_TUCK_PX);
+        const anim = fromEl.animate(
+          [
+            { transform: startFrame, offset: 0 },
+            { transform: midFrame, offset: 0.45 },
+            { transform: restTransform(fromRest.y), offset: 1 },
+          ],
+          { duration: SHUFFLE_DURATION_MS, easing: SHUFFLE_EASE },
+        );
+        activeAnimsRef.current.push(anim);
+      }
     },
-    [applyRestImmediate, reduced, sheets, stopAnimations, track],
+    [applyRestTransforms, cancelAnimations, reduced],
   );
 
   // Tab taps and external index changes animate here.
@@ -193,31 +158,35 @@ export function useBinder(params: {
     const from = logicalIndexRef.current;
     if (from === index) return;
     logicalIndexRef.current = index;
-    shuffleTo(from, index);
-  }, [index, shuffleTo]);
+    runShuffle(from, index);
+  }, [index, runShuffle]);
 
-  useEffect(() => () => stopAnimations(), [stopAnimations]);
+  useEffect(() => () => cancelAnimations(), [cancelAnimations]);
 
   const stride = useCallback(() => widthRef.current * strideRatio, [strideRatio]);
 
   const snapActiveBack = useCallback(
-    (activeIdx: number) => {
-      if (reduced) {
-        applyRestImmediate(activeIdx);
-        return;
-      }
-      stopAnimations();
-      sheets.forEach((mv, sheetIdx) => {
-        const rest = resolveSheetRestPose(sheetIdx, activeIdx);
-        mv.zIndex.set(rest.zIndex);
-        track(animate(mv.x, 0, SNAP_SPRING));
-        track(animate(mv.y, rest.y, SNAP_SPRING));
-        track(animate(mv.scale, rest.scale, SNAP_SPRING));
-        track(animate(mv.rotate, 0, SNAP_SPRING));
-        track(animate(mv.shade, rest.shade, SNAP_SPRING));
-      });
+    (activeIdx: number, dx: number, rotate: number) => {
+      cancelAnimations();
+      const el = sheetElsRef.current[activeIdx];
+      const rest = resolveSheetRestPose(activeIdx, activeIdx);
+      if (!el) return;
+      el.style.transform = restTransform(rest.y);
+      if (reduced || typeof el.animate !== 'function') return;
+      const anim = el.animate(
+        [{ transform: dragTransform(dx, rest.y, rotate) }, { transform: restTransform(rest.y) }],
+        { duration: SNAP_DURATION_MS, easing: SHUFFLE_EASE },
+      );
+      activeAnimsRef.current.push(anim);
     },
-    [applyRestImmediate, reduced, sheets, stopAnimations, track],
+    [cancelAnimations, reduced],
+  );
+
+  const registerSheet = useCallback(
+    (sheetIndex: number) => (el: HTMLDivElement | null) => {
+      sheetElsRef.current[sheetIndex] = el;
+    },
+    [],
   );
 
   const handlers = useMemo<PagerHandlers>(
@@ -234,6 +203,8 @@ export function useBinder(params: {
           lastT: e.timeStamp,
           velocityX: 0,
           dragging: false,
+          currentDx: 0,
+          currentRotate: 0,
         };
       },
       onPointerMove: (e: ReactPointerEvent<HTMLElement>) => {
@@ -245,7 +216,7 @@ export function useBinder(params: {
           if (Math.abs(dx) < DRAG_START_PX || Math.abs(dx) <= Math.abs(dy)) return;
           d.dragging = true;
           draggedRef.current = true;
-          stopAnimations();
+          cancelAnimations();
           e.currentTarget.setPointerCapture(e.pointerId);
         }
         const dt = Math.max(1, e.timeStamp - d.lastT);
@@ -254,16 +225,18 @@ export function useBinder(params: {
         d.lastT = e.timeStamp;
         if (reduced) return;
 
-        const mv = sheets[d.base];
-        if (!mv) return;
+        const el = sheetElsRef.current[d.base];
+        if (!el) return;
         const atStartEdge = d.base === 0 && dx > 0;
         const atEndEdge = d.base === total - 1 && dx < 0;
         const visualDx = atStartEdge || atEndEdge ? dx * 0.3 : dx;
         const s = Math.max(1, stride());
         const ratio = clamp(visualDx / s, -1, 1);
+        const rot = ratio * MAX_DRAG_ROTATE_DEG;
+        d.currentDx = visualDx;
+        d.currentRotate = rot;
 
-        mv.x.set(visualDx);
-        mv.rotate.set(ratio * MAX_DRAG_ROTATE_DEG);
+        el.style.transform = dragTransform(visualDx, 0, rot);
       },
       onPointerUp: (e) => {
         const d = dragRef.current;
@@ -277,21 +250,21 @@ export function useBinder(params: {
           total,
         });
         if (target === d.base) {
-          snapActiveBack(d.base);
+          snapActiveBack(d.base, d.currentDx, d.currentRotate);
           return;
         }
         logicalIndexRef.current = target;
-        shuffleTo(d.base, target);
+        runShuffle(d.base, target, { dx: d.currentDx, rotate: d.currentRotate });
         if (target !== index) onChangeRef.current(target);
       },
       onPointerCancel: (e) => {
         const d = dragRef.current;
         dragRef.current = null;
         if (!d || d.pointerId !== e.pointerId) return;
-        if (d.dragging) snapActiveBack(d.base);
+        if (d.dragging) snapActiveBack(d.base, d.currentDx, d.currentRotate);
       },
     }),
-    [index, reduced, sheets, shuffleTo, snapActiveBack, stopAnimations, stride, total],
+    [cancelAnimations, index, reduced, runShuffle, snapActiveBack, stride, total],
   );
 
   const consumeDragClick = useCallback(() => {
@@ -309,5 +282,5 @@ export function useBinder(params: {
     [total],
   );
 
-  return { sheets, goTo, handlers, consumeDragClick, surfaceRef };
+  return { registerSheet, goTo, handlers, consumeDragClick, surfaceRef };
 }

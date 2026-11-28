@@ -20,7 +20,7 @@ import {
 import { CTA_PRIMARY } from "./ctaStyles";
 import { TAB_LABEL_CLASS, TabLabel } from "./LevelTab";
 import { sheetClip, tabButtonBox } from "./tabShape";
-import type { SheetMotion } from "./useBinder";
+import type { SheetRestPose } from "./pagerLogic";
 
 interface LevelFileProps {
   level: LevelCardItem;
@@ -28,7 +28,8 @@ interface LevelFileProps {
   index: number;
   total: number;
   isActive: boolean;
-  sheet: SheetMotion;
+  restPose: SheetRestPose;
+  sheetRef: (el: HTMLDivElement | null) => void;
   lockedFeedback: string | null;
   isShaking: boolean;
   onShakeDone: () => void;
@@ -51,7 +52,8 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   index,
   total,
   isActive,
-  sheet,
+  restPose,
+  sheetRef,
   lockedFeedback,
   isShaking,
   onShakeDone,
@@ -64,7 +66,8 @@ export const LevelFile: React.FC<LevelFileProps> = ({
   const paperTone = isGuide ? "bg-game-paper-slip" : "bg-game-manila";
 
   return (
-    <motion.div
+    <div
+      ref={sheetRef}
       data-level-file={level.caseId}
       data-level-unlocked={level.unlocked ? "true" : "false"}
       data-level-guide={isGuide ? "true" : undefined}
@@ -72,30 +75,30 @@ export const LevelFile: React.FC<LevelFileProps> = ({
       aria-hidden={!isActive}
       onClick={isActive ? onFileTap : undefined}
       style={{
-        x: sheet.x,
-        y: sheet.y,
-        scale: sheet.scale,
-        rotate: sheet.rotate,
-        zIndex: sheet.zIndex,
+        transform: `translate3d(0px, ${restPose.y}px, 0px)`,
+        zIndex: restPose.zIndex,
         bottom: 0,
         transformOrigin: "center bottom",
-        // One static outline + shadow that follows the whole silhouette, tab included.
-        filter:
-          "drop-shadow(0 0 0.75px rgba(50,36,14,0.6)) drop-shadow(0 8px 9px rgba(0,0,0,0.38))",
+        contain: "layout paint",
+        backfaceVisibility: "hidden",
       }}
       className="absolute inset-x-0 -top-12 will-change-transform select-none"
     >
-      {/* Sheet and tab are ONE clipped piece: one paper colour, one grain, one rim. */}
+      {/* Sheet and tab are ONE clipped piece: one paper colour, one grain, crisp inset rim. */}
       <div
         className={`absolute inset-0 flex flex-col overflow-hidden ${paperTone}`}
-        style={{ clipPath: sheetClip(index, total) }}
+        style={{
+          clipPath: sheetClip(index, total),
+          boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.42), inset 0 0 0 1px rgba(50,36,14,0.34)",
+        }}
       >
         <PaperSurface />
-        <motion.span
+        <span
           aria-hidden="true"
           data-level-shade={level.caseId}
-          className="pointer-events-none absolute inset-0 bg-game-ink"
-          style={{ opacity: sheet.shade }}
+          className="pointer-events-none absolute inset-0 bg-game-ink transition-opacity duration-200"
+          style={{ opacity: restPose.shade }}
         />
         <span
           aria-hidden="true"
@@ -240,6 +243,6 @@ export const LevelFile: React.FC<LevelFileProps> = ({
           </div>
         </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 };
