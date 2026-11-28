@@ -8,6 +8,7 @@ import { deriveNodesFromTaggedEvidence } from '../../features/wife-notebook/Wife
 import { LEVEL_01_KNOWLEDGE_GRAPH } from '../../features/wife-notebook/level01Fixture';
 import { loadCase } from '../../features/case-runtime';
 import { CorkboardCanvas } from '../../features/wife-notebook/components/CorkboardCanvas';
+import { husbandFixture } from '../../tests/helpers/husbandFixture';
 
 describe('case-supplied photo library', () => {
   const albums = [
@@ -15,7 +16,7 @@ describe('case-supplied photo library', () => {
     { id: 'private', title: 'Riêng tư', isLocked: true, photos: [{ id: 'private-photo', title: 'Nội dung đã khóa' }] },
   ];
   const render = (payload: unknown) => renderToStaticMarkup(createElement(PhotosApp, {
-    caseData: { caseId: 'case', husbandName: 'Thịnh', levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: { photos: payload } },
+    caseData: { caseId: 'case', husband: husbandFixture, levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: { photos: payload } },
     onReturnHome: vi.fn(), onTagSuspect: vi.fn(), onRequestUnlock: vi.fn(), unlockedChallenges: new Set<string>(),
   }));
 

@@ -4,7 +4,7 @@ import { PhoneShell } from '../shell';
 import husbandWallpaperUrl from '../shell/assets/husband-01-technosoft-selfie-wallpaper-v3.webp';
 import { getAppDefinition, APP_REGISTRY, DOCK_APP_IDS, UPPER_GRID_APP_IDS, ALL_LAUNCHER_APP_IDS } from './appRegistry';
 import { createAppContext } from './appContext';
-import { getAvailableLevels, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
+import { getAvailableLevels, getCaseMasters, loadCaseByLevel, LevelSelectorSheet } from '../features/case-runtime';
 import { LocalStorageAdapter, type GameStateRepository } from '../features/session';
 import { PlaySession } from '../features/play-session';
 import { SharedPinLockpad } from '../features/locks';
@@ -54,8 +54,8 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
   const notebookOpen = openNotebookCase === caseConfig.caseId;
   const caseTitle = useMemo(() => {
     const match = getAvailableLevels(caseConfig.husbandId).find(lvl => lvl.caseId === caseConfig.caseId);
-    return match?.levelTitle.replace(/^MÀN\s+\d+:\s*/i, '').trim() || `Hồ sơ ${caseConfig.husbandName}`;
-  }, [caseConfig.caseId, caseConfig.husbandId, caseConfig.husbandName]);
+    return match?.levelTitle.replace(/^MÀN\s+\d+:\s*/i, '').trim() || `Hồ sơ ${caseConfig.husband.shortName}`;
+  }, [caseConfig.caseId, caseConfig.husbandId, caseConfig.husband.shortName]);
   const activeApp = activeAppId !== 'home' ? getAppDefinition(activeAppId) ?? null : null;
   const contexts = useMemo(() => Object.fromEntries(Object.values(APP_REGISTRY)
     .map(app => [app.appId, createAppContext(caseConfig, app.appId)])), [caseConfig]);
@@ -77,7 +77,7 @@ export function GameRoot({ repository, initialCaseConfig, initialStage = 'startu
     DOCK_APP_IDS.map(getAppDefinition).filter((app): app is AppDefinition => Boolean(app))
   ), []);
 
-  const husbands = useMemo(() => buildHusbandProfiles(), []);
+  const husbands = useMemo(() => buildHusbandProfiles(getCaseMasters()), []);
   const levelCards = useMemo(
     () => buildLevelCards(
       game.availableLevels(),

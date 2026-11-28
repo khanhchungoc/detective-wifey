@@ -19,6 +19,8 @@ interface MessagingChatThreadViewProps {
   onTagSuspect: (suspectName: string, source?: EvidenceSource) => void;
   caseId?: string;
   contacts?: MessagingContact[];
+  /** Phone owner's full name, used to label the husband's own messages when tagged as evidence. */
+  husbandFullName?: string;
   onSwipeProgress?: (progress: number, displacement: number) => void;
   onSwipeEnd?: (committed: boolean) => void;
 }
@@ -29,6 +31,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
   onTagSuspect,
   caseId,
   contacts = [],
+  husbandFullName,
   onSwipeProgress,
   onSwipeEnd,
 }) => {
@@ -309,7 +312,7 @@ export const MessagingChatThreadView: React.FC<MessagingChatThreadViewProps> = (
                 item={{
                   title: evidenceName,
                   snippet: msg.text,
-                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? 'Chồng (Nguyễn Huy Thịnh)' : 'Vợ')),
+                  suspectToTag: senderLabel || (thread.contactName !== 'Vợ' ? thread.contactName : (isMe ? (husbandFullName ? `Chồng (${husbandFullName})` : 'Chồng') : 'Vợ')),
                   subtitle: msgTime,
                   kind: image ? 'photo' : 'message',
                   conversationId: thread.threadId,

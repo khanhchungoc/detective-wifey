@@ -170,7 +170,7 @@ export class PlaySession {
       this.savedSession = null;
       this.reset(next);
       void this.clearSavedSession(next.caseId);
-      this.notify(`Đã nạp ${next.husbandName} - Màn ${level}!`);
+      this.notify(`Đã nạp ${next.husband.shortName} - Màn ${level}!`);
       return true;
     } catch (error: unknown) {
       this.notify(error instanceof Error ? error.message : 'Không tìm thấy màn chơi yêu cầu.');

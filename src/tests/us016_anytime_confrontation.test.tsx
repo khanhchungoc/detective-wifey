@@ -18,12 +18,13 @@ import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { CaseGraphEdge } from '../shared/contracts/knowledge-graph';
 import type { AppId } from '../shared/contracts/app-contracts';
 import type { GameStateRepository, ActiveSessionState, PlayerProgress } from '../features/session';
+import { husbandFixture } from './helpers/husbandFixture';
 
 describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () => {
   const mockCaseConfig: CaseConfig = {
     caseId: 'case_01',
     husbandId: 'husband_01',
-    husbandName: 'Thịnh',
+    husband: husbandFixture,
     levelNumber: 1,
     allowedStrikes: 5,
     groundTruth: {
@@ -941,7 +942,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Renders vector SVG for all 4 moods with distinct aura and facial expressions', () => {
       for (const mood of ['confident', 'surprised', 'nervous', 'broken'] as const) {
         const html = renderToStaticMarkup(
-          <HusbandCharacterImage mood={mood} size={140} />,
+          <HusbandCharacterImage husbandName={husbandFixture.shortName} mood={mood} size={140} />,
         );
 
         expect(html).toContain('<svg');
@@ -953,7 +954,7 @@ describe('US-016 - Anytime Confrontation Hub & Dynamic Excuse Engine Suite', () 
     it('Strict Zero-Emoji Invariant: HusbandCharacterImage contains zero raw emojis', () => {
       for (const mood of ['confident', 'surprised', 'nervous', 'broken'] as const) {
         const html = renderToStaticMarkup(
-          <HusbandCharacterImage mood={mood} size={140} />,
+          <HusbandCharacterImage husbandName={husbandFixture.shortName} mood={mood} size={140} />,
         );
         const rawEmojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
         expect(rawEmojiRegex.test(html)).toBe(false);

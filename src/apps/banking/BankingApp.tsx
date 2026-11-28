@@ -91,9 +91,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
     : activeTab === 'profile' ? 'Thông tin tài khoản'
     : tabs.find(tab => tab.id === activeTab)?.label || BRAND.brandName;
 
-  const initials = caseData.husbandName
-    ? caseData.husbandName.split(' ').filter(Boolean).slice(-2).map(p => p[0]).join('').toUpperCase()
-    : 'PB';
+  const initials = caseData.husband.shortName.split(' ').filter(Boolean).slice(-2).map(p => p[0]).join('').toUpperCase();
 
   const tier = data?.tier ? data.tier.charAt(0).toUpperCase() + data.tier.slice(1) : 'Inspire';
 
@@ -128,7 +126,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
               <button
                 type="button"
                 onClick={() => navigate('profile')}
-                aria-label={`Hồ sơ ${caseData.husbandName || 'Pham Quoc Bao'}, Hạng ${tier}`}
+                aria-label={`Hồ sơ ${caseData.husband.shortName}, Hạng ${tier}`}
                 className="bank-control flex items-center gap-1.5 rounded-full p-1 hover:bg-neutral-100"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#C81018] text-xs font-bold text-white shadow-xs">
@@ -243,7 +241,7 @@ export function BankingApp({ caseData, onTagSuspect, onReturnHome, onRequestUnlo
                 </>
               )}
               {activeTab === 'profile' && (
-                <BankingProfile data={data} husbandName={caseData.husbandName} />
+                <BankingProfile data={data} husbandName={caseData.husband.shortName} />
               )}
             </>
           )}

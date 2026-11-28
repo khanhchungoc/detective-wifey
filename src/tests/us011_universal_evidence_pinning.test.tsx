@@ -15,6 +15,7 @@ import type { CaseConfig } from '../shared/contracts/case-schema';
 import type { GameStateRepository, ActiveSessionState, PlayerProgress } from '../features/session';
 import { MessagingEvidenceSheet } from '../apps/internet-messaging/components/MessagingEvidenceSheet';
 import { ContactAvatar } from '../shared/ui/ContactAvatar';
+import { husbandFixture } from './helpers/husbandFixture';
 
 describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
   const mockEvidenceItem: UniversalEvidenceItem = {
@@ -281,7 +282,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     const mockCase: CaseConfig = {
       caseId: 'case_01',
       husbandId: 'husband_01',
-      husbandName: 'Thịnh',
+      husband: husbandFixture,
       levelNumber: 1,
       allowedStrikes: 5,
       groundTruth: {

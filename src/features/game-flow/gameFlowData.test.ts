@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getAvailableLevels, loadCase } from '../case-runtime';
+import { getAvailableLevels, getCaseMasters, loadCase } from '../case-runtime';
 import { buildCaseBriefing, buildHusbandProfiles, buildLevelCards, buildLockscreenConfig } from './gameFlowData';
 
 describe('buildLockscreenConfig for Level 1', () => {
@@ -53,7 +53,7 @@ describe('buildLevelCards', () => {
 
 describe('buildCaseBriefing', () => {
   it('reads persona and wife profile from the husband profile SSOT', () => {
-    const [husband] = buildHusbandProfiles();
+    const [husband] = buildHusbandProfiles(getCaseMasters());
     const briefing = buildCaseBriefing(loadCase('case_01'), 'Điện thoại ngoài phòng tắm', husband);
     expect(briefing.personaTraits).toBe(husband.personaTraits);
     expect(briefing.wifeProfile).toBe(husband.wifeProfile);

@@ -122,7 +122,7 @@ export interface ConfrontationConfirmModalProps {
   preflight: ConfrontationPreflightInfo;
   suspectsOnBoard?: SuspectOnBoard[];
   selectedSuspectId?: string | null;
-  husbandName?: string;
+  husbandName: string;
   getSourceApp?: (id: string) => Pick<AppDefinition, 'displayName' | 'icon' | 'iconAsset' | 'themeGradient'> | undefined;
   onSelectSuspect?: (suspectId: string | null) => void;
   onConfirmConfront: (suspectId?: string) => void;
@@ -135,7 +135,7 @@ export const ConfrontationConfirmModal: React.FC<ConfrontationConfirmModalProps>
   suspectsOnBoard = [],
   selectedSuspectId,
   getSourceApp,
-  husbandName = 'Thịnh',
+  husbandName,
   onSelectSuspect,
   onConfirmConfront,
   onCancel,

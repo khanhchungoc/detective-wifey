@@ -1,11 +1,5 @@
 {
   "unreadBadge": 4,
-  "currentUser": {
-    "name": "Nguyễn Huy Thịnh",
-    "handle": "thinh_doom95",
-    "avatarInitials": "T",
-    "statusText": "Đang làm việc..."
-  },
   "threads": [
     {
       "threadId": "thread_007",
@@ -15,7 +9,7 @@
       "unreadCount": 0,
       "isPinned": false,
       "messages": [
-        { "id": "msg_007_0015", "sender": "them", "text": "Anh Thịnh ơi, đã tổng hợp xong danh sách liên hoan quý 3 rồi nhé.", "time": "14:10" },
+        { "id": "msg_007_0015", "sender": "them", "text": "Anh ơi, đã tổng hợp xong danh sách liên hoan quý 3 rồi nhé.", "time": "14:10" },
         { "id": "msg_007_0016", "sender": "me", "text": "Ok em, quỹ team còn dư bao nhiêu?", "time": "14:15" },
         { "id": "msg_007_0017", "sender": "them", "text": "Lan Anh: Quỹ team còn đủ cho đợt này anh nhé.", "time": "14:30" }
       ]

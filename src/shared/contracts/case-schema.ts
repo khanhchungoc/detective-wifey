@@ -48,7 +48,6 @@ export interface NotificationToast {
 export interface LevelMetadata {
   caseId: string;
   husbandId: string;
-  husbandName: string;
   levelNumber: 1 | 2 | 3;
   levelTitle: string;
   storySnippet: string;
@@ -183,9 +182,8 @@ export interface CaseMaster {
 export interface CaseConfig {
   caseId: string;
   husbandId: string;
-  husbandName: string;
-  /** Resolved from master data by the level loader. Optional only until Phase 2 removes husbandName. */
-  husband?: HusbandMaster;
+  /** Phone owner identity, resolved from master data. The only source of the husband's names. */
+  husband: HusbandMaster;
   levelNumber: 1 | 2 | 3;
   allowedStrikes: number;
   groundTruth: GroundTruth;

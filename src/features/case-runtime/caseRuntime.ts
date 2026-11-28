@@ -1,6 +1,7 @@
-import { CaseConfig, LevelMetadata } from '../../shared/contracts/case-schema';
+import { CaseConfig, CaseMaster, LevelMetadata } from '../../shared/contracts/case-schema';
 import { ALL_CASES } from '../../data/cases';
 import { DEFAULT_APPS_DATA } from '../../data/defaults';
+import { husband01Master } from '../../data/cases/husband_01/master';
 
 /**
  * Static Level Catalog Manifest for Level Selector (US-001 Business Rule).
@@ -9,7 +10,6 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_01',
     husbandId: 'husband_01',
-    husbandName: 'Thịnh',
     levelNumber: 1,
     levelTitle: 'MÀN 1: Điện thoại ngoài phòng tắm',
     storySnippet: 'Độ khó: Dễ (5 lượt nghi ngờ • 0 khóa PIN). 23:45, chồng đang tắm, điện thoại 8% pin cắm sạc ngoài phòng. Màn hình sáng lên hai lần...',
@@ -19,7 +19,6 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_02',
     husbandId: 'husband_01',
-    husbandName: 'Thịnh',
     levelNumber: 2,
     levelTitle: 'MÀN 2: Hồ sơ đang thu thập',
     storySnippet: 'Màn chơi đang được thiết kế.',
@@ -30,7 +29,6 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
   {
     caseId: 'case_03',
     husbandId: 'husband_01',
-    husbandName: 'Thịnh',
     levelNumber: 3,
     levelTitle: 'MÀN 3: Hồ sơ đang thu thập',
     storySnippet: 'Màn chơi đang được thiết kế.',
@@ -39,6 +37,11 @@ export const LEVEL_CATALOG: LevelMetadata[] = [
     comingSoon: true,
   },
 ];
+
+/** Master data (husband identity, people) of every bundled husband universe. */
+export function getCaseMasters(): CaseMaster[] {
+  return [husband01Master];
+}
 
 /**
  * In-memory dataset registry of bundled cases.

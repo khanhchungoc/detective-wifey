@@ -12,6 +12,7 @@ import {
 } from './confrontationEngine';
 import { ConfrontationModal } from './components/ConfrontationModal';
 import { HUSBAND_COMIC_ASSETS, HusbandCharacterImage } from './components/HusbandCharacterImage';
+import { husbandFixture } from '../../tests/helpers/husbandFixture';
 
 const VERIFIED_EDGES_ALL: CaseGraphEdge[] = [
   {
@@ -376,7 +377,7 @@ describe('Beat-by-Beat Scripted Confrontation Flow & Interrogation UI', () => {
     for (const mood of ['confident', 'smug', 'nervous', 'broken'] as const) {
       expect(HUSBAND_COMIC_ASSETS[mood]).toBeTruthy();
       const html = renderToStaticMarkup(
-        <HusbandCharacterImage mood={mood} hitTrigger={1} size={172} />,
+        <HusbandCharacterImage husbandName={husbandFixture.shortName} mood={mood} hitTrigger={1} size={172} />,
       );
       expect(html).toContain('<svg');
       expect(html).toContain(`url(#bg-${mood})`);

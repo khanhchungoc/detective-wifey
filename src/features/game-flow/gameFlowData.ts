@@ -1,26 +1,18 @@
-import type { CaseConfig, LevelMetadata } from '../../shared/contracts/case-schema';
+import type { CaseConfig, CaseMaster, LevelMetadata } from '../../shared/contracts/case-schema';
 import type {
   CaseBriefingData,
   HusbandProfile,
   LevelCardItem,
   LockscreenNotificationItem,
   PhoneLockscreenConfig,
-  WifeProfile,
 } from '../../shared/contracts/game-flow';
 import wifeMinhThuUrl from './assets/wife-minh-thu.webp';
 // 3:4 head-and-shoulders dossier portrait (not the phone wallpaper).
 import husbandPortraitUrl from './assets/husband-01-dossier-portrait.webp';
 
-const WIFE_MINH_THU: WifeProfile = {
-  displayName: 'Trần Minh Thư',
-  age: 28,
-  occupation: 'Kế toán · Vợ hợp pháp',
-  portraitUrl: wifeMinhThuUrl,
-  anchors: [
-    'Áo/váy size M · Giày size 37',
-    'Chung cư An Bình, 18 ngõ 68 Trung Kính',
-    'Nhận 90% lương chồng ngày 10 hàng tháng',
-  ],
+/** Portrait assets per husband universe. Names and facts come from master data, never from here. */
+const PORTRAITS: Record<string, { husband: string; wife: string }> = {
+  husband_01: { husband: husbandPortraitUrl, wife: wifeMinhThuUrl },
 };
 
 // Story calendar: 15/10 is the night of Level 1 (a Thursday in 2026).
@@ -32,24 +24,33 @@ export function formatNarrativeShortDate(date: Date): string {
   return `${weekday}, ${date.getDate()} thg ${date.getMonth() + 1}`;
 }
 
-export function buildHusbandProfiles(): HusbandProfile[] {
-  return [
-    {
-      husbandId: 'husband_01',
-      caseCode: 'HỒ SƠ #01',
-      displayName: 'Thịnh Doom',
-      fullName: 'Nguyễn Huy Thịnh',
-      age: 31,
-      occupation: 'Tech Lead · Technosoft (Hà Nội)',
-      teaserQuote: '"Sợ vợ số 1, lương nộp 90%, nhưng hay úp màn hình và kêu OT fix bug."',
-      personaTraits: [
-        'Tự nhận sợ vợ số 1, nộp 90% lương',
-        'Hay úp màn hình, mang máy vào nhà tắm',
-        'Cửa miệng: "OT fix bug cho kịp sprint"',
-      ],
-      wifeProfile: WIFE_MINH_THU,
-      portraitUrl: husbandPortraitUrl,
+function buildMasterProfile({ husband, people }: CaseMaster): HusbandProfile[] {
+  const portraits = PORTRAITS[husband.husbandId];
+  const wife = people.find(person => person.personId === husband.wifePersonId);
+  if (!portraits || wife?.birthYear === undefined) return [];
+  return [{
+    husbandId: husband.husbandId,
+    caseCode: husband.caseCode,
+    displayName: husband.nickname,
+    fullName: husband.fullName,
+    age: husband.storyYear - husband.birthYear,
+    occupation: husband.occupation,
+    teaserQuote: husband.teaserQuote,
+    personaTraits: husband.personaTraits,
+    wifeProfile: {
+      displayName: wife.legalName,
+      age: husband.storyYear - wife.birthYear,
+      occupation: wife.occupation ?? '',
+      portraitUrl: portraits.wife,
+      anchors: wife.anchors ?? [],
     },
+    portraitUrl: portraits.husband,
+  }];
+}
+
+export function buildHusbandProfiles(masters: CaseMaster[]): HusbandProfile[] {
+  return [
+    ...masters.flatMap(buildMasterProfile),
     {
       husbandId: 'husband_02',
       caseCode: 'HỒ SƠ #02',
@@ -120,7 +121,7 @@ export function buildCaseBriefing(
     levelNumber: caseConfig.levelNumber,
     levelTitle,
     husbandId: caseConfig.husbandId,
-    husbandName: `Chồng ${caseConfig.husbandName}`,
+    husbandName: `Chồng ${caseConfig.husband.shortName}`,
     husbandFullName: husband.fullName ?? husband.displayName,
     husbandAge: husband.age,
     husbandOccupation: husband.occupation,
@@ -134,7 +135,7 @@ export function buildCaseBriefing(
     introBeats: [
       {
         beatId: 'intro_1',
-        speaker: `Chồng ${caseConfig.husbandName}`,
+        speaker: `Chồng ${caseConfig.husband.shortName}`,
         speakerRole: 'husband',
         locationTime: '23:40 - Phòng ngủ',
         mood: 'confident',
@@ -142,7 +143,7 @@ export function buildCaseBriefing(
       },
       {
         beatId: 'intro_2',
-        speaker: `Vợ (${husband.wifeProfile?.displayName.split(' ').slice(-2).join(' ') ?? 'Minh Thư'})`,
+        speaker: husband.wifeProfile ? `Vợ (${husband.wifeProfile.displayName.split(' ').slice(-2).join(' ')})` : 'Vợ',
         speakerRole: 'wife',
         locationTime: '23:44 - Phòng ngủ',
         mood: 'nervous',

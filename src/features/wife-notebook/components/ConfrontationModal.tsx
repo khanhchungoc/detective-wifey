@@ -411,6 +411,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
             <div className="relative z-10 mt-1 flex flex-col items-center">
               <HusbandCharacterImage
                 mood={session.husbandMood}
+                husbandName={session.husbandName}
                 hitTrigger={session.hitSeq}
                 size={172}
                 className="short:scale-90 origin-center"
@@ -745,7 +746,7 @@ export const ConfrontationModal: React.FC<ConfrontationModalProps> = ({
 
         <div className="flex-1 flex flex-col items-center justify-center py-5 space-y-4">
           <div className="flex flex-col items-center gap-2">
-            <HusbandCharacterImage mood={husbandMood} size={140} />
+            <HusbandCharacterImage mood={husbandMood} husbandName={husbandName} size={140} />
             <span className="inline-block px-3 py-1 rounded-full bg-white/10 font-sans text-ios-caption-1 text-slate-300 border border-white/10 shadow-sm">
               ({currentMoodText})
             </span>

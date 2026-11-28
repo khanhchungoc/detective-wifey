@@ -208,7 +208,7 @@ describe('Level 1 story content through runtime adapters', () => {
     expect(mergedMessages.contacts!.some(contact => contact.name.includes('Hương'))).toBe(false);
     const html = renderToStaticMarkup(createElement(InternetMessagingApp, {
       caseData: {
-        caseId: level01.caseId, husbandName: level01.husbandName, levelNumber: 1,
+        caseId: level01.caseId, husband: level01.husband, levelNumber: 1,
         suspectPool: level01.suspectPool, lockChallenges: [], appsData: merged,
       },
       onReturnHome: () => {}, onTagSuspect: () => {}, unlockedChallenges: new Set<string>(),

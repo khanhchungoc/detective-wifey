@@ -104,12 +104,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
       ? messagingData.cloudDocuments
       : DEFAULT_CLOUD_DOCS;
 
-  const currentUser = messagingData.currentUser || {
-    name: 'Nguyễn Huy Thịnh',
-    handle: 'thinh_doom95',
-    avatarInitials: 'T',
-    statusText: 'Đang làm việc...',
-  };
+  const currentUser = messagingData.currentUser;
 
   const [activeTab, setActiveTab] = useState<MessagingTab>('messages');
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -301,7 +296,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
               />
             )}
 
-            {activeTab === 'profile' && (
+            {activeTab === 'profile' && currentUser && (
               <MessagingProfileView
                 currentUser={currentUser}
                 cloudDocuments={cloudDocuments}
@@ -343,6 +338,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
               <MessagingChatThreadView
                 caseId={caseData.caseId}
                 contacts={contacts}
+                husbandFullName={caseData.husband.fullName}
                 thread={activeThread}
                 onBack={() => closeDetail(() => setSelectedThreadId(null))}
                 onTagSuspect={handleTag}
@@ -352,6 +348,7 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
             ) : (
               <MessagingMyDocumentsView
                 documents={cloudDocuments}
+                husbandFullName={caseData.husband.fullName}
                 onBack={() => closeDetail(() => setShowCloudDrawer(false))}
                 onTagSuspect={handleTag}
                 onSwipeProgress={handleDetailSwipeProgress}

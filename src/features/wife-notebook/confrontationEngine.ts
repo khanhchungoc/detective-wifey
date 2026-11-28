@@ -179,7 +179,7 @@ export function createScriptedConfrontation({
 
   return {
     phase: 'opening',
-    husbandName: caseConfig.husbandName || 'Thịnh',
+    husbandName: caseConfig.husband.shortName,
     husbandMood: 'confident',
     husbandLine: null,
     lastWifeLine: null,

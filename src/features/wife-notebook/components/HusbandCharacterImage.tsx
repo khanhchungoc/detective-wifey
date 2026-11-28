@@ -18,17 +18,18 @@ export const HUSBAND_COMIC_ASSETS: Record<ConfrontationMood, string> = {
 
 export interface HusbandCharacterImageProps {
   mood: HusbandMood;
+  husbandName: string;
   size?: number;
   hitTrigger?: number;
   className?: string;
 }
 
 const MOOD_DESCRIPTIONS: Record<HusbandMood, string> = {
-  confident: 'Thịnh khoanh tay điềm tĩnh tự tin chối tội dưới ánh đèn thẩm vấn',
-  smug: 'Thịnh nhếch mép cười cợt kệch cỡm khi thiếu chứng cứ',
-  surprised: 'Thịnh giật mình phân bua dưới ánh đèn thẩm vấn',
-  nervous: 'Thịnh toát mồ hôi lúng túng kéo cổ áo bao biện',
-  broken: 'Thịnh cúi đầu bật khóc chắp tay suy sụp xin tha',
+  confident: 'khoanh tay điềm tĩnh tự tin chối tội dưới ánh đèn thẩm vấn',
+  smug: 'nhếch mép cười cợt kệch cỡm khi thiếu chứng cứ',
+  surprised: 'giật mình phân bua dưới ánh đèn thẩm vấn',
+  nervous: 'toát mồ hôi lúng túng kéo cổ áo bao biện',
+  broken: 'cúi đầu bật khóc chắp tay suy sụp xin tha',
 };
 
 const SPOTLIGHT_ACCENT: Record<HusbandMood, { beam: string; rim: string }> = {
@@ -45,11 +46,12 @@ function resolveComicMood(mood: HusbandMood): ConfrontationMood {
 }
 
 /**
- * Noir Comic Portrait of Husband Thịnh in a dark interrogation room with overhead spotlight.
+ * Noir Comic Portrait of the husband in a dark interrogation room with overhead spotlight.
  * Animates exclusively compositor-safe `transform` and `opacity`, honoring `useReducedMotion()`.
  */
 export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({
   mood,
+  husbandName,
   size = 180,
   hitTrigger = 0,
   className = '',
@@ -62,7 +64,7 @@ export const HusbandCharacterImage: React.FC<HusbandCharacterImageProps> = ({
   return (
     <div
       role="img"
-      aria-label={MOOD_DESCRIPTIONS[mood]}
+      aria-label={`${husbandName} ${MOOD_DESCRIPTIONS[mood]}`}
       className={`relative inline-flex items-center justify-center shrink-0 overflow-hidden rounded-2xl ${className}`}
       style={{ width: size, height: size }}
     >

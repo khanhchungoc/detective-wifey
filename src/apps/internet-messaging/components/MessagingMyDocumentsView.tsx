@@ -8,6 +8,7 @@ import { StoryEvidenceTarget } from '../../../features/investigation';
 
 interface MessagingMyDocumentsViewProps {
   documents: MessagingCloudDocument[];
+  husbandFullName?: string;
   onBack: () => void;
   onTagSuspect: (suspectName: string) => void;
   onSwipeProgress?: (progress: number, displacement: number) => void;
@@ -18,6 +19,7 @@ type CategoryTab = 'all' | 'photos' | 'files' | 'links' | 'notes' | 'collections
 
 export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> = ({
   documents,
+  husbandFullName,
   onBack,
   onTagSuspect,
   onSwipeProgress,
@@ -381,9 +383,11 @@ export const MessagingMyDocumentsView: React.FC<MessagingMyDocumentsViewProps> =
                                 <div className="text-ios-subheadline font-extrabold text-rose-600 font-sans">
                                   5.000.000 VNĐ
                                 </div>
-                                <div className="text-ios-caption-2 text-slate-500">
-                                  Người nộp: Nguyễn Huy Thịnh
-                                </div>
+                                {husbandFullName && (
+                                  <div className="text-ios-caption-2 text-slate-500">
+                                    Người nộp: {husbandFullName}
+                                  </div>
+                                )}
                               </div>
                               <div className="text-ios-caption-2 text-[#52525B] flex justify-between">
                                 <span>Ban Quản Lý Toà Nhà</span>

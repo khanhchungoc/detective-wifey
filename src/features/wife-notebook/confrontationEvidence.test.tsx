@@ -4,6 +4,7 @@ import type { CaseGraphEdge } from '../../shared/contracts/knowledge-graph';
 import type { PlacedNode } from './types';
 import { calculateConfrontationPreflight } from './confrontationEngine';
 import { CONFRONTATION_LABELS, ConfrontationConfirmModal } from './components/ConfrontationConfirmModal';
+import { husbandFixture } from '../../tests/helpers/husbandFixture';
 
 const nodes: PlacedNode[] = [
   { nodeId: 'suspect', type: 'alias', label: 'Contact', suspectId: 'suspect_01', x: 0, y: 0 },
@@ -41,7 +42,7 @@ describe('confrontation evidence review', () => {
 
   it.each([null, 'suspect_01', 'removed-suspect'])('never reveals a preflight identity without a pinned suspect (selection: %s)', selectedSuspectId => {
     const preflight = calculateConfrontationPreflight({ placedNodes: nodes, activeEdges });
-    const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
+    const html = renderToStaticMarkup(<ConfrontationConfirmModal husbandName={husbandFixture.shortName} isOpen
       preflight={{ ...preflight, accusedSuspectName: 'HIDDEN_CULPRIT' }}
       suspectsOnBoard={[]} selectedSuspectId={selectedSuspectId}
       onCancel={() => {}} onConfirmConfront={vi.fn()} />);
@@ -53,7 +54,7 @@ describe('confrontation evidence review', () => {
   });
 
   it.each([[0, 1], [20, 1], [21, 2], [45, 3], [80, 4], [100, 5]])('shows a rough five-segment estimate for rate %s', (successRate, filledSegments) => {
-    const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
+    const html = renderToStaticMarkup(<ConfrontationConfirmModal husbandName={husbandFixture.shortName} isOpen
       suspectsOnBoard={[{ id: 'suspect_01', displayName: 'Contact' }]} selectedSuspectId="suspect_01"
       preflight={{ ...calculateConfrontationPreflight({ placedNodes: nodes, activeEdges }), successRate }}
       onCancel={() => {}} onConfirmConfront={() => {}} />);
@@ -69,7 +70,7 @@ describe('confrontation evidence review', () => {
   it('renders a Manila dossier popup with Polaroid face-off, linkage bridges, no clue count, and one approved CTA', () => {
     const random = vi.spyOn(Math, 'random').mockReturnValue(0);
     try {
-      const html = renderToStaticMarkup(<ConfrontationConfirmModal isOpen
+      const html = renderToStaticMarkup(<ConfrontationConfirmModal husbandName={husbandFixture.shortName} isOpen
         suspectsOnBoard={[{ id: 'suspect_01', displayName: 'Contact' }]} selectedSuspectId="suspect_01"
         preflight={calculateConfrontationPreflight({ placedNodes: nodes, activeEdges })}
         getSourceApp={() => ({ displayName: 'Zola', iconAsset: '/zola.svg', icon: () => null, themeGradient: '' })}

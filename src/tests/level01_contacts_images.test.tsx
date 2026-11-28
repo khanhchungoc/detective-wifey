@@ -7,6 +7,7 @@ import { readCommunicationData, matchThread } from '../apps/comms/data';
 import { MessagesApp } from '../apps/comms/MessagesApp';
 import { readMessagingData } from '../apps/internet-messaging/data';
 import { MessagingChatThreadView } from '../apps/internet-messaging/components/MessagingChatThreadView';
+import { husbandFixture } from './helpers/husbandFixture';
 
 describe('Level 1 shared contacts and conversation images', () => {
   it('resolves every Phone contact to the same saved identity and a readable SMS thread', () => {
@@ -31,7 +32,7 @@ describe('Level 1 shared contacts and conversation images', () => {
   });
 
   it('matches IDs and formatted full numbers without sending duplicate names to the wrong person', () => {
-    const data = readCommunicationData({ caseId: 'test', husbandName: '', levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: {
+    const data = readCommunicationData({ caseId: 'test', husband: husbandFixture, levelNumber: 1, suspectPool: [], lockChallenges: [], appsData: {
       phone: { contacts: [{ contactId: 'one', displayName: 'Nam', primaryPhone: '0933445566' }] },
       messages: { threads: [
         { threadId: 'wrong', contactId: 'two', senderTitle: 'Nam', phoneNumber: '0900000099', messages: [] },
