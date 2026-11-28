@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion } from 'motion/react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useMotionState } from '../../shared/motion/useMotionState';
 import { readMessagingData } from './data';
 import { VirtualAppProps, AppDefinition } from '../../shared/contracts/app-contracts';
@@ -113,36 +112,25 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
     statusText: 'Đang làm việc...',
   };
 
-  const prefersReducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useMotionState<MessagingTab>('messages', 'fade');
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [showCloudDrawer, setShowCloudDrawer] = useState(false);
-  const detailX = useMotionValue<string>('0%');
+  const detailLayerRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
   const swipeProgressRef = useRef(0);
+  const swipeDisplacementRef = useRef(0);
+  const closingRef = useRef(false);
+  const activeAnimsRef = useRef<Animation[]>([]);
 
-  const detailTransition = prefersReducedMotion
-    ? { duration: 0 }
-    : { duration: 0.28, ease: [0.32, 0.72, 0, 1] as const };
+  const DETAIL_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+  const isReducedMotion = () =>
+    typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
 
-  const handleDetailSwipeProgress = (progress: number) => {
-    swipeProgressRef.current = progress;
-    if (scrimRef.current) {
-      scrimRef.current.style.opacity = String(Math.max(0, 1 - progress));
+  const cancelActiveAnims = () => {
+    for (const anim of activeAnimsRef.current) {
+      anim.cancel();
     }
-  };
-
-  const handleDetailSwipeEnd = (committed: boolean) => {
-    if (committed) {
-      // Carry the live finger offset in % (same unit as exit: '100%') so exit glides smoothly with zero snap.
-      detailX.set(`${Math.max(0, Math.min(100, swipeProgressRef.current * 100)).toFixed(2)}%`);
-      swipeProgressRef.current = 0;
-    } else {
-      swipeProgressRef.current = 0;
-      if (scrimRef.current) {
-        scrimRef.current.style.opacity = '1';
-      }
-    }
+    activeAnimsRef.current = [];
   };
 
   // Active chat thread if any
@@ -150,7 +138,101 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
     threads.find((t) => t.threadId === selectedThreadId) ||
     otherThreads.find((t) => t.threadId === selectedThreadId);
 
-  const isDetailActive = Boolean(selectedThreadId || showCloudDrawer);
+  const isDetailActive = Boolean((selectedThreadId && activeThread) || showCloudDrawer);
+  const detailKey = selectedThreadId && activeThread ? `thread-${activeThread.threadId}` : showCloudDrawer ? 'cloud' : null;
+
+  useLayoutEffect(() => {
+    if (!detailKey) return;
+    closingRef.current = false;
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
+    cancelActiveAnims();
+
+    const detailEl = detailLayerRef.current;
+    const scrimEl = scrimRef.current;
+    if (detailEl) detailEl.style.pointerEvents = '';
+    if (scrimEl) scrimEl.style.opacity = '1';
+
+    if (isReducedMotion() || !detailEl || typeof detailEl.animate !== 'function') return;
+
+    const anims: Animation[] = [
+      detailEl.animate(
+        [{ transform: 'translate3d(100%, 0, 0)' }, { transform: 'translate3d(0, 0, 0)' }],
+        { duration: 280, easing: DETAIL_EASE }
+      ),
+    ];
+    if (scrimEl && typeof scrimEl.animate === 'function') {
+      anims.push(scrimEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: DETAIL_EASE }));
+    }
+    activeAnimsRef.current = anims;
+    return () => cancelActiveAnims();
+  }, [detailKey]);
+
+  const handleDetailSwipeProgress = (progress: number, displacement: number) => {
+    swipeProgressRef.current = progress;
+    swipeDisplacementRef.current = displacement;
+    if (scrimRef.current) {
+      scrimRef.current.style.opacity = String(Math.max(0, 1 - progress));
+    }
+  };
+
+  const handleDetailSwipeEnd = (committed: boolean) => {
+    if (committed) return;
+    const fromOpacity = Math.max(0, 1 - swipeProgressRef.current);
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
+    const scrimEl = scrimRef.current;
+    if (!scrimEl) return;
+    scrimEl.style.opacity = '1';
+    if (!isReducedMotion() && typeof scrimEl.animate === 'function' && fromOpacity < 1) {
+      scrimEl.animate([{ opacity: fromOpacity }, { opacity: 1 }], { duration: 280, easing: DETAIL_EASE });
+    }
+  };
+
+  const closeDetail = (commitClose: () => void) => {
+    if (closingRef.current) return;
+    const displacementPx = swipeDisplacementRef.current;
+    const progress = swipeProgressRef.current;
+    swipeProgressRef.current = 0;
+    swipeDisplacementRef.current = 0;
+
+    const detailEl = detailLayerRef.current;
+    const scrimEl = scrimRef.current;
+    if (isReducedMotion() || !detailEl || typeof detailEl.animate !== 'function') {
+      commitClose();
+      return;
+    }
+
+    closingRef.current = true;
+    cancelActiveAnims();
+    detailEl.style.pointerEvents = 'none';
+
+    const duration = displacementPx > 0 ? Math.max(150, Math.round(280 * (1 - progress))) : 280;
+    const fromTransform = displacementPx > 0 ? `translate3d(${displacementPx}px, 0, 0)` : 'translate3d(0, 0, 0)';
+    const detailAnim = detailEl.animate(
+      [{ transform: fromTransform }, { transform: 'translate3d(100%, 0, 0)' }],
+      { duration, easing: DETAIL_EASE, fill: 'forwards' }
+    );
+    const anims: Animation[] = [detailAnim];
+
+    if (scrimEl && typeof scrimEl.animate === 'function') {
+      const fromOpacity = Math.max(0, 1 - progress);
+      anims.push(
+        scrimEl.animate([{ opacity: fromOpacity }, { opacity: 0 }], {
+          duration,
+          easing: DETAIL_EASE,
+          fill: 'forwards',
+        })
+      );
+    }
+    activeAnimsRef.current = anims;
+
+    const finish = () => {
+      closingRef.current = false;
+      commitClose();
+    };
+    void detailAnim.finished.then(finish, finish);
+  };
 
   const handleTag = (suspectName: string, source?: EvidenceSource) => {
     onTagSuspect(suspectName, 'internet-messaging', source);
@@ -234,66 +316,43 @@ export const InternetMessagingApp: React.FC<VirtualAppProps> = ({
           />
 
           {/* Dimmed Scrim Overlay over previous screen when a detail screen is active */}
-          <AnimatePresence>
-            {isDetailActive && (
-              <motion.div
-                ref={scrimRef}
-                key="zola-detail-scrim"
-                aria-hidden="true"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={detailTransition}
-                className="absolute inset-0 bg-black/35 z-10 pointer-events-none"
-              />
-            )}
-          </AnimatePresence>
+          {isDetailActive && (
+            <div
+              ref={scrimRef}
+              aria-hidden="true"
+              className="absolute inset-0 bg-black/35 z-10 pointer-events-none will-change-[opacity]"
+            />
+          )}
         </div>
 
-        {/* Top Layer: Active Chat Thread & My Documents (compositor-only GPU slide, zero View Transition teardown flicker) */}
-        <AnimatePresence>
-          {selectedThreadId && activeThread && (
-            <motion.div
-              key={`thread-${activeThread.threadId}`}
-              initial={{ x: '100%' }}
-              animate={{ x: '0%' }}
-              exit={{ x: '100%' }}
-              transition={detailTransition}
-              style={{ x: detailX }}
-              className="absolute inset-0 z-20 will-change-transform"
-            >
+        {/* Top Layer: Active Chat Thread & My Documents (compositor-thread WAAPI slide, 120Hz flicker-free) */}
+        {isDetailActive && (
+          <div
+            ref={detailLayerRef}
+            key={detailKey}
+            className="absolute inset-0 z-20 will-change-transform"
+          >
+            {selectedThreadId && activeThread ? (
               <MessagingChatThreadView
                 caseId={caseData.caseId}
                 contacts={contacts}
                 thread={activeThread}
-                onBack={() => setSelectedThreadId(null)}
+                onBack={() => closeDetail(() => setSelectedThreadId(null))}
                 onTagSuspect={handleTag}
                 onSwipeProgress={handleDetailSwipeProgress}
                 onSwipeEnd={handleDetailSwipeEnd}
               />
-            </motion.div>
-          )}
-
-          {showCloudDrawer && (
-            <motion.div
-              key="zola-cloud-drawer"
-              initial={{ x: '100%' }}
-              animate={{ x: '0%' }}
-              exit={{ x: '100%' }}
-              transition={detailTransition}
-              style={{ x: detailX }}
-              className="absolute inset-0 z-20 will-change-transform"
-            >
+            ) : (
               <MessagingMyDocumentsView
                 documents={cloudDocuments}
-                onBack={() => setShowCloudDrawer(false)}
+                onBack={() => closeDetail(() => setShowCloudDrawer(false))}
                 onTagSuspect={handleTag}
                 onSwipeProgress={handleDetailSwipeProgress}
                 onSwipeEnd={handleDetailSwipeEnd}
               />
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
