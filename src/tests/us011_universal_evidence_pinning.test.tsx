@@ -57,8 +57,9 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     // Evidence Quotation Block
     expect(html).toContain('Tối nay 20h48 anh qua kiểm tra đường điện cho em nhé!');
 
-    // Overlay width
-    expect(html).toContain('max-w-[340px]');
+    // Overlay width & Game Design System surface
+    expect(html).toContain('max-w-[342px]');
+    expect(html).toContain('bg-game-dossier');
 
     // Primary and Secondary Buttons
     expect(html).toContain('Ghim');
@@ -67,7 +68,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     expect(html).not.toContain('shadow-rose-500/25');
   });
 
-  it('AC 4: UniversalEvidenceModal renders centered over blurred, dimmed backdrop (bg-black/60 backdrop-blur-md)', () => {
+  it('AC 4: UniversalEvidenceModal renders centered over clean dimmed backdrop (bg-black/45) with Game Design System card', () => {
     const html = renderToStaticMarkup(
       <UniversalEvidenceModal
         isOpen={true}
@@ -77,8 +78,9 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
       />,
     );
 
-    expect(html).toContain('bg-black/60');
-    expect(html).toContain('backdrop-blur-md');
+    expect(html).toContain('bg-black/45');
+    expect(html).toContain('bg-game-dossier');
+    expect(html).not.toContain('backdrop-blur');
   });
 
   it('shows structured event time in the shared subtitle without changing narrative text', () => {
@@ -106,7 +108,7 @@ describe('US-011 - Universal Evidence Long-Press & Pinning Suite', () => {
     const html = renderToStaticMarkup(<UniversalEvidenceModal isOpen item={{
       title: 'Tin nhắn', snippet: 'Nội dung', visibleAlias: 'Anh Tuấn Thợ Điện', suspectToTag: 'Tên khác',
     }} onPinEvidence={vi.fn()} onClose={vi.fn()} />);
-    expect(html).toContain(renderToStaticMarkup(<ContactAvatar name="Anh Tuấn Thợ Điện" size={44} />));
+    expect(html).toContain(renderToStaticMarkup(<ContactAvatar name="Anh Tuấn Thợ Điện" size={40} />));
   });
 
   it.each(['transaction', 'order', 'note', 'photo', 'search', 'notification', 'generic'] as const)(
