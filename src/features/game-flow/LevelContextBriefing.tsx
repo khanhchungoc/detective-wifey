@@ -73,6 +73,12 @@ export interface LevelContextBriefingSurfaceProps extends LevelContextBriefingPr
 
 const EASE_OUT_CINEMATIC = [0.22, 1, 0.36, 1] as const;
 
+// Static paper grain (decorative SVG noise); colour/shape tokens come from Tailwind classes.
+const PAPER_GRAIN_STYLE: React.CSSProperties = {
+  backgroundImage:
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.27 0 0 0 0 0.16 0 0 0 0.1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+};
+
 export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfaceProps> = ({
   briefing,
   mode,
@@ -98,7 +104,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
         onClick={onClose}
         whileTap={tapFeedback}
         transition={{ duration: 0.12 }}
-        className="game-btn-primary touch-target-min flex min-h-[48px] w-full items-center justify-center rounded-xl px-5 py-3 text-ios-subheadline font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-paper"
+        className="game-btn-primary touch-target-min flex min-h-[48px] w-full items-center justify-center rounded-xl px-5 py-3 font-sans text-ios-subheadline font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-paper"
       >
         Đóng
       </motion.button>
@@ -108,10 +114,10 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
         onClick={onStartInvestigation}
         whileTap={tapFeedback}
         transition={{ duration: 0.12 }}
-        className="game-btn-primary touch-target-min flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-ios-subheadline font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-paper"
+        className="game-btn-primary touch-target-min flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl px-5 py-3 font-sans text-ios-subheadline font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-paper"
       >
         <IoPhonePortraitOutline className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
-        <span>Mở điện thoại</span>
+        <span>Bắt đầu điều tra</span>
       </motion.button>
     );
 
@@ -121,63 +127,82 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
       initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.22, ease: EASE_OUT_CINEMATIC }}
-      className="mx-auto flex w-full max-w-2xl flex-col gap-5"
+      style={PAPER_GRAIN_STYLE}
+      className="relative mx-auto mt-3 flex w-full max-w-2xl flex-col gap-6 rounded-md border border-game-paper-border bg-game-paper px-5 pb-7 pt-6 text-game-ink shadow-xl"
     >
-      {/* Compact subject header (name is already shown on the selector) */}
-      <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-        <img
-          src={briefing.husbandPortraitUrl}
-          alt={husbandDisplayName}
-          className="h-12 w-12 shrink-0 rounded-xl border border-white/10 bg-game-backdrop object-cover object-top"
-        />
-        <div className="min-w-0 flex-1">
-          <p className="text-ios-footnote font-medium text-game-text-secondary tabular-nums">
-            Màn {briefing.levelNumber} · Hồ sơ điều tra
-          </p>
-          <h2 className="truncate text-ios-headline font-semibold text-game-text">
-            {husbandDisplayName}
-          </h2>
-          <p className="truncate text-ios-footnote text-game-text-secondary tabular-nums">
-            {typeof briefing.husbandAge === 'number'
-              ? `${briefing.husbandAge} tuổi · ${briefing.husbandOccupation}`
-              : briefing.husbandOccupation}
-          </p>
+      {/* Rubber stamp accent (decorative; level number is also in the title) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 top-4 rotate-6 rounded-sm border-2 border-game-crimson-deep px-2 py-0.5 font-dossier text-ios-caption-1 font-bold uppercase tracking-widest text-game-crimson-deep opacity-80"
+      >
+        Màn {briefing.levelNumber}
+      </span>
+
+      {/* Photo taped to the sheet + compact identity line */}
+      <div className="flex items-end gap-4 pr-16">
+        <div className="relative shrink-0">
+          <span
+            aria-hidden="true"
+            className="absolute -top-2 left-1/2 z-10 h-4 w-12 -translate-x-1/2 -rotate-3 bg-game-tape/70"
+          />
+          <img
+            src={briefing.husbandPortraitUrl}
+            alt={husbandDisplayName}
+            data-briefing-portrait="husband"
+            className="aspect-[3/4] w-24 rounded-sm border-4 border-game-film-frame bg-game-paper-slip object-cover object-center shadow-md"
+          />
         </div>
+        <p
+          data-briefing-identity="true"
+          className="min-w-0 pb-1 font-sans text-ios-subheadline text-game-ink-secondary"
+        >
+          <span className="block font-semibold text-game-ink">{husbandDisplayName}</span>
+          {typeof briefing.husbandAge === 'number' && (
+            <span className="block tabular-nums">{briefing.husbandAge} tuổi</span>
+          )}
+          <span className="block text-balance">{briefing.husbandOccupation}</span>
+        </p>
       </div>
 
       <h3
         data-briefing-hook="true"
-        className="border-y-2 border-game-crimson/70 py-4 font-sans text-ios-title-1 font-extrabold leading-tight text-game-paper"
+        className="font-dossier text-ios-title-3 font-extrabold leading-snug text-game-ink"
       >
         {briefing.hookQuestion}
       </h3>
 
-      <section data-briefing-suspicion="true" className="border-l-2 border-game-crimson pl-4">
-        <p className="text-ios-footnote font-semibold text-game-crimson">Nghi vấn</p>
-        <p className="mt-1.5 text-ios-callout font-normal leading-relaxed text-game-text">
+      <section data-briefing-suspicion="true">
+        <p className="font-dossier text-ios-caption-1 font-bold uppercase tracking-widest text-game-ink-secondary">
+          Nghi vấn
+        </p>
+        <p className="mt-2 font-sans text-ios-subheadline leading-relaxed text-game-ink">
           {briefing.suspicionHook}
         </p>
       </section>
 
       <section data-briefing-alibi="true">
-        <p className="text-ios-footnote font-semibold text-game-text">Lời khai tối nay</p>
-        <p className="mt-1.5 text-ios-callout font-normal leading-relaxed text-game-text">
+        <p className="font-dossier text-ios-caption-1 font-bold uppercase tracking-widest text-game-ink-secondary">
+          Lời khai tối nay
+        </p>
+        <p className="mt-2 font-sans text-ios-subheadline leading-relaxed text-game-ink">
           &ldquo;{briefing.statedAlibi}&rdquo;
         </p>
       </section>
 
       {personaTraits.length > 0 && (
-        <section data-briefing-persona="true" className="border-t border-white/10 pt-5">
-          <p className="text-ios-footnote font-semibold text-game-text">Hồ sơ nhân vật</p>
-          <ul className="mt-2.5 space-y-2">
+        <section data-briefing-persona="true">
+          <p className="font-dossier text-ios-caption-1 font-bold uppercase tracking-widest text-game-ink-secondary">
+            Hồ sơ nhân vật
+          </p>
+          <ul className="mt-2 space-y-2">
             {personaTraits.map((trait) => (
               <li
                 key={trait}
-                className="flex items-start gap-2.5 text-ios-footnote leading-relaxed text-game-text/90"
+                className="flex items-start gap-2.5 font-sans text-ios-subheadline leading-relaxed text-game-ink"
               >
                 <span
                   aria-hidden="true"
-                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-text-secondary"
+                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-ink-secondary"
                 />
                 <span>{trait}</span>
               </li>
@@ -187,33 +212,33 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
       )}
 
       {wifeProfile && (
-        <section data-briefing-wife-profile="true" className="border-t border-white/10 pt-5">
-          <p className="text-ios-footnote font-semibold text-game-text">Hồ sơ người vợ</p>
+        <section data-briefing-wife-profile="true">
+          <p className="font-dossier text-ios-caption-1 font-bold uppercase tracking-widest text-game-ink-secondary">
+            Hồ sơ người vợ
+          </p>
           <div className="mt-3 flex items-center gap-3">
             <img
               src={wifeProfile.portraitUrl}
               alt={wifeProfile.displayName}
-              className="h-11 w-11 shrink-0 rounded-xl border border-white/10 bg-game-backdrop object-cover object-top"
+              className="aspect-[3/4] w-12 shrink-0 rounded-sm border-2 border-game-film-frame bg-game-paper-slip object-cover object-center shadow-sm"
             />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-ios-footnote font-medium text-game-text tabular-nums">
+            <p className="min-w-0 flex-1 font-sans text-ios-subheadline text-game-ink-secondary">
+              <span className="block font-semibold tabular-nums text-game-ink">
                 {wifeProfile.displayName} · {wifeProfile.age} tuổi
-              </p>
-              <p className="truncate text-ios-footnote text-game-text-secondary">
-                {wifeProfile.occupation}
-              </p>
-            </div>
+              </span>
+              <span className="block">{wifeProfile.occupation}</span>
+            </p>
           </div>
           {wifeProfile.anchors.length > 0 && (
-            <ul data-briefing-wife-anchor="true" className="mt-3 space-y-1.5">
+            <ul data-briefing-wife-anchor="true" className="mt-3 space-y-2">
               {wifeProfile.anchors.map((anchor) => (
                 <li
                   key={anchor}
-                  className="flex items-start gap-2.5 text-ios-footnote leading-relaxed text-game-text/90"
+                  className="flex items-start gap-2.5 font-sans text-ios-subheadline leading-relaxed text-game-ink"
                 >
                   <span
                     aria-hidden="true"
-                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-text-secondary"
+                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-game-ink-secondary"
                   />
                   <span>{anchor}</span>
                 </li>
@@ -249,7 +274,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
           <header className="shrink-0 border-b border-white/10 bg-game-backdrop px-5 py-3">
             <h1
               id="case-briefing-recall-title"
-              className="truncate text-ios-subheadline font-semibold text-game-text"
+              className="truncate font-dossier text-ios-subheadline font-bold text-game-text"
             >
               {briefing.levelTitle}
             </h1>
@@ -318,7 +343,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
               <button
                 type="button"
                 onClick={onSkipIntro}
-                className="touch-target-min inline-flex items-center justify-center rounded-lg px-3 text-ios-footnote font-medium text-game-text-secondary transition-colors hover:text-game-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson"
+                className="touch-target-min inline-flex items-center justify-center rounded-lg px-3 font-sans text-ios-subheadline font-medium text-game-text-secondary transition-colors hover:text-game-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson"
               >
                 Bỏ qua
               </button>
@@ -329,7 +354,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
           <div className="relative z-10 flex min-h-0 w-full flex-1 flex-col items-center justify-center px-4 py-2">
             <div
               data-intro-portrait-stage="true"
-              className="relative h-60 w-48 max-h-[40dvh] overflow-hidden rounded-2xl border border-white/15 bg-game-dossier shadow-2xl sm:h-72 sm:w-56 md:h-80 md:w-64"
+              className="relative aspect-[3/4] h-[38dvh] max-h-72 overflow-hidden rounded-2xl border border-white/15 bg-game-dossier shadow-2xl"
             >
               <AnimatePresence initial={false}>
                 <motion.img
@@ -341,15 +366,15 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
                   animate={{ opacity: 1 }}
                   exit={prefersReducedMotion ? undefined : { opacity: 0 }}
                   transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeOut' }}
-                  className="absolute inset-0 h-full w-full object-cover object-top"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
                 />
               </AnimatePresence>
 
               <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-game-backdrop via-game-backdrop/85 to-transparent px-4 pb-3 pt-12 text-center">
-                <p className="text-ios-subheadline font-semibold leading-snug text-game-text">
+                <p className="font-sans text-ios-subheadline font-semibold leading-snug text-game-text">
                   {portraitName}
                 </p>
-                <p className="mt-0.5 text-ios-caption-1 font-normal text-game-text-secondary">
+                <p className="mt-0.5 font-sans text-ios-caption-1 font-normal text-game-text-secondary">
                   {portraitCaption}
                 </p>
               </div>
@@ -364,7 +389,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
             <div className="mx-auto w-full max-w-4xl">
               <div className="border-l-2 border-game-crimson pl-3.5 md:pl-4">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-ios-footnote font-semibold text-game-crimson md:text-ios-subheadline">
+                  <span className="font-dossier text-ios-caption-1 font-bold uppercase tracking-widest text-game-crimson">
                     {currentBeat.speaker}
                   </span>
 
@@ -406,7 +431,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
                         duration: prefersReducedMotion ? 0 : 0.2,
                         ease: EASE_OUT_CINEMATIC,
                       }}
-                      className="text-ios-body font-normal leading-relaxed text-game-text md:text-ios-title-3"
+                      className="font-sans text-ios-title-3 font-normal leading-snug text-game-text"
                     >
                       {currentBeat.line}
                     </motion.p>
@@ -429,8 +454,8 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
                   transition={{ duration: 0.12 }}
                   className={
                     isFirstBeat
-                      ? 'touch-target-min inline-flex cursor-not-allowed items-center justify-center gap-1 rounded-xl px-3.5 text-ios-footnote font-medium text-game-text-muted opacity-40'
-                      : 'touch-target-min inline-flex items-center justify-center gap-1 rounded-xl border border-white/10 bg-game-dossier px-3.5 text-ios-footnote font-medium text-game-text-secondary transition-colors hover:border-white/20 hover:text-game-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson'
+                      ? 'touch-target-min inline-flex cursor-not-allowed items-center justify-center gap-1 rounded-xl px-3.5 font-sans text-ios-subheadline font-medium text-game-text-muted opacity-40'
+                      : 'touch-target-min inline-flex items-center justify-center gap-1 rounded-xl border border-white/10 bg-game-dossier px-3.5 font-sans text-ios-subheadline font-medium text-game-text-secondary transition-colors hover:border-white/20 hover:text-game-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-crimson'
                   }
                 >
                   <IoChevronBackOutline className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -446,7 +471,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
                   }}
                   whileTap={tapFeedback}
                   transition={{ duration: 0.12 }}
-                  className="game-btn-primary touch-target-min inline-flex items-center justify-center gap-1.5 rounded-xl px-5 text-ios-footnote font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text"
+                  className="game-btn-primary touch-target-min inline-flex items-center justify-center gap-1.5 rounded-xl px-5 font-sans text-ios-subheadline font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text"
                 >
                   <span>{isLastBeat ? 'Xem hồ sơ' : 'Tiếp'}</span>
                   <IoChevronForwardOutline className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -479,7 +504,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
 
               <h1
                 id="case-briefing-entry-title"
-                className="truncate px-2 text-ios-subheadline font-medium text-game-text"
+                className="truncate px-2 font-dossier text-ios-subheadline font-bold text-game-text"
               >
                 {briefing.levelTitle}
               </h1>

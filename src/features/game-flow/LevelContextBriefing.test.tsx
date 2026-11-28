@@ -109,8 +109,8 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(initialHtml).toContain('data-intro-backdrop="true"');
     expect(initialHtml).toContain('opacity-35');
     expect(initialHtml).toContain('blur-[2px]');
-    expect(initialHtml).toContain('w-48');
-    expect(initialHtml).toContain('h-60');
+    expect(initialHtml).toContain('aspect-[3/4]');
+    expect(initialHtml).toContain('object-center');
     expect(initialHtml).toContain('data-intro-portrait="husband"');
     expect(initialHtml).not.toContain('/assets/portraits/minh-thu.png');
     expect(initialHtml).toContain('bg-game-backdrop');
@@ -313,8 +313,13 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(html).toContain('max-w-2xl');
     expect(html).toContain('bg-game-canvas');
     expect(html).toContain('text-game-text');
-    expect(html).toContain('Màn 1');
     expect(html).not.toContain('HỒ SƠ MÀN 1');
+    expect(html).not.toContain('Hồ sơ điều tra');
+    expect(html).toContain('bg-game-paper');
+    expect(html).toContain('font-dossier');
+    expect(html).toContain('aspect-[3/4]');
+    // Husband name appears once (no duplicated header block)
+    expect(html.split('Nguyễn Huy Hoàng').length - 1).toBe(2); // img alt + identity line
     expect(html).toContain('Nguyễn Huy Hoàng');
     expect(html).toContain('29 tuổi');
     expect(html).toContain('Tech Lead · Technosoft (Hà Nội)');
@@ -336,14 +341,15 @@ describe('LevelContextBriefing (US-037)', () => {
       'Lời khai tối nay',
       'Hồ sơ nhân vật',
       'Hồ sơ người vợ',
-      'Mở điện thoại',
+      'Bắt đầu điều tra',
     ].map(label => html.indexOf(label));
     expect(order.every(i => i >= 0)).toBe(true);
     expect([...order].sort((x, y) => x - y)).toEqual(order);
     expect(html).not.toContain('Ứng dụng');
     expect(html).not.toContain('Lượt nghi ngờ');
     expect(html).not.toContain('Bảo mật');
-    expect(html).toContain('Mở điện thoại');
+    expect(html).toContain('Bắt đầu điều tra');
+    expect(html).not.toContain('Mở điện thoại');
     expect(RAW_EMOJI_REGEX.test(html)).toBe(false);
     expect(EM_DASH_REGEX.test(html)).toBe(false);
     expect(html).not.toContain('font-mono');
@@ -364,7 +370,7 @@ describe('LevelContextBriefing (US-037)', () => {
       tree,
       el =>
         isButtonElement(el) &&
-        extractText(el.props.children as React.ReactNode).includes('Mở điện thoại'),
+        extractText(el.props.children as React.ReactNode).includes('Bắt đầu điều tra'),
     );
     expect(startButtons).toHaveLength(1);
     expect(String(startButtons[0].props.className)).toContain('game-btn-primary');
@@ -400,7 +406,7 @@ describe('LevelContextBriefing (US-037)', () => {
     expect(recallHtml).toContain('Minh Thư');
     expect(recallHtml).toContain('Lời khai tối nay');
     expect(recallHtml).toContain('Nghi vấn');
-    expect(recallHtml).not.toContain('Mở điện thoại');
+    expect(recallHtml).not.toContain('Bắt đầu điều tra');
     expect(recallHtml).not.toContain('Bỏ qua');
     expect(recallHtml).not.toContain('Trước');
     expect(RAW_EMOJI_REGEX.test(recallHtml)).toBe(false);
