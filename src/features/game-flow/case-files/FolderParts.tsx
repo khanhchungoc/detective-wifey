@@ -69,7 +69,7 @@ export const PaperSurface: React.FC<{ worn?: boolean; crease?: boolean; behind?:
  * (no animation), so it is rasterised once and never re-run during drags.
  */
 export const INK_TEXT = 'font-typewriter font-normal text-game-ink [filter:url(#ink-spread)]';
-/** Slightly stronger bleed for headings. Xanh Mono has a single weight, so emphasis comes from here. */
+/** Slightly stronger bleed for headings; emphasis comes from the ink, not a bold weight. */
 export const INK_TEXT_STRONG = 'font-typewriter font-normal text-game-ink [filter:url(#ink-press)]';
 /** Secondary typed text (labels). Still AA on paper. */
 export const INK_TEXT_SOFT = 'font-typewriter font-normal text-game-ink-secondary [filter:url(#ink-spread)]';

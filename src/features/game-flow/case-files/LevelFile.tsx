@@ -94,7 +94,7 @@ export const LevelFile: React.FC<LevelFileProps> = ({
         className="relative flex min-h-0 flex-1 flex-col gap-3 p-4 pt-6"
       >
         <div className="flex items-start justify-between gap-3">
-          <span className={`text-ios-subheadline uppercase tracking-widest tabular-nums ${INK_TEXT_STRONG}`}>
+          <span className={`text-ios-subheadline uppercase tabular-nums ${INK_TEXT_STRONG}`}>
             Màn {level.levelNumber}
           </span>
           {isGuide && (

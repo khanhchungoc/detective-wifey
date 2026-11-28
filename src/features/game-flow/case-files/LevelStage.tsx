@@ -100,7 +100,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               data-level-tab={level.caseId}
               aria-selected={selected}
               onClick={() => pager.goTo(idx)}
-              className={`relative touch-target-min inline-flex shrink-0 items-center justify-center gap-1.5 rounded-t-md px-4 text-ios-subheadline tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
+              className={`relative touch-target-min inline-flex shrink-0 items-center justify-center gap-1.5 rounded-t-md px-3 text-ios-subheadline tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-game-text/80 ${
                 selected ? 'min-h-14 -mb-3 pb-3' : 'min-h-11'
               }`}
             >
@@ -112,7 +112,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               >
                 <PaperSurface worn={false} />
               </span>
-              <span className={`relative uppercase tracking-wider ${INK_TEXT_STRONG}`}>Màn {level.levelNumber}</span>
+              <span className={`relative uppercase ${INK_TEXT_STRONG}`}>Màn {level.levelNumber}</span>
               {locked && <IoLockClosedOutline aria-label="Đã khóa" className="relative h-3.5 w-3.5" />}
             </button>
           );
@@ -174,7 +174,7 @@ export const LevelStage: React.FC<LevelStageProps> = ({
               className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center rounded-xl rounded-tl-none border border-game-ink/30 bg-game-manila shadow-[0_18px_32px_-12px_rgba(0,0,0,0.75)]"
             >
               <PaperSurface />
-              <span className={`relative text-ios-title-2 uppercase tracking-wider ${INK_TEXT_STRONG}`}>{caseCode}</span>
+              <span className={`relative text-ios-title-2 uppercase ${INK_TEXT_STRONG}`}>{caseCode}</span>
             </motion.div>
           )}
         </div>

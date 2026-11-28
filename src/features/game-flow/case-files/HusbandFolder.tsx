@@ -89,7 +89,7 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
         <CoffeeRing className="absolute -bottom-3 -right-3 h-24 w-24 rotate-12" />
 
         <LabelStrip className="-rotate-1">
-          <h2 className={`text-ios-title-3 uppercase leading-tight tracking-wide ${INK_TEXT_STRONG}`}>
+          <h2 className={`text-ios-title-3 uppercase leading-tight ${INK_TEXT_STRONG}`}>
             {husband.displayName}
           </h2>
         </LabelStrip>
@@ -121,7 +121,7 @@ export const HusbandFolder: React.FC<HusbandFolderProps> = ({
               <p className={`text-ios-footnote leading-snug ${INK_TEXT}`}>
                 {husband.age} tuổi · {husband.occupation}
               </p>
-              <p className="line-clamp-2 -rotate-1 font-handwriting text-ios-footnote leading-snug text-game-ink">
+              <p className={`line-clamp-2 text-ios-footnote leading-snug ${INK_TEXT}`}>
                 {husband.teaserQuote}
               </p>
             </>

@@ -161,7 +161,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
           data-briefing-identity="true"
           className={`min-w-0 pb-1 text-ios-subheadline ${INK_TEXT}`}
         >
-          <span className="block uppercase tracking-wide">{husbandDisplayName}</span>
+          <span className="block uppercase">{husbandDisplayName}</span>
           {typeof briefing.husbandAge === 'number' && (
             <span className="block tabular-nums">{briefing.husbandAge} tuổi</span>
           )}
@@ -177,7 +177,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
       </h3>
 
       <section data-briefing-suspicion="true">
-        <p className={`text-ios-caption-1 uppercase tracking-widest ${INK_TEXT_SOFT}`}>
+        <p className={`text-ios-caption-1 uppercase tracking-wide ${INK_TEXT_SOFT}`}>
           Nghi vấn
         </p>
         <p className={`mt-2 text-ios-subheadline leading-relaxed ${INK_TEXT}`}>
@@ -186,7 +186,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
       </section>
 
       <section data-briefing-alibi="true">
-        <p className={`text-ios-caption-1 uppercase tracking-widest ${INK_TEXT_SOFT}`}>
+        <p className={`text-ios-caption-1 uppercase tracking-wide ${INK_TEXT_SOFT}`}>
           Lời khai tối nay
         </p>
         <p className={`mt-2 text-ios-subheadline leading-relaxed ${INK_TEXT}`}>
@@ -196,7 +196,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
 
       {personaTraits.length > 0 && (
         <section data-briefing-persona="true">
-          <p className={`text-ios-caption-1 uppercase tracking-widest ${INK_TEXT_SOFT}`}>
+          <p className={`text-ios-caption-1 uppercase tracking-wide ${INK_TEXT_SOFT}`}>
             Hồ sơ nhân vật
           </p>
           <ul className="mt-2 space-y-2">
@@ -218,7 +218,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
 
       {wifeProfile && (
         <section data-briefing-wife-profile="true">
-          <p className={`text-ios-caption-1 uppercase tracking-widest ${INK_TEXT_SOFT}`}>
+          <p className={`text-ios-caption-1 uppercase tracking-wide ${INK_TEXT_SOFT}`}>
             Hồ sơ người vợ
           </p>
           <div className="mt-3 flex items-center gap-3">
@@ -228,7 +228,7 @@ export const LevelContextBriefingSurface: React.FC<LevelContextBriefingSurfacePr
               className="aspect-[3/4] w-12 shrink-0 rounded-sm border-2 border-game-film-frame bg-game-paper-slip object-cover object-center shadow-sm"
             />
             <p className={`min-w-0 flex-1 text-ios-subheadline ${INK_TEXT}`}>
-              <span className="block uppercase tabular-nums tracking-wide">
+              <span className="block uppercase tabular-nums">
                 {wifeProfile.displayName} · {wifeProfile.age} tuổi
               </span>
               <span className="block">{wifeProfile.occupation}</span>
